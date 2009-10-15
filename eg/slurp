@@ -1,0 +1,202 @@
+#!/usr/local/bin/perl
+
+use strict;
+use warnings;
+
+use Cwd qw{ abs_path getcwd };
+use File::Find;
+use File::Temp;
+use Getopt::Long;
+use PPI::Document;
+use PPIx::Regexp;
+use PPIx::Regexp::Dumper;
+use PPIx::Regexp::Tokenizer;
+
+my @legal;
+
+BEGIN {
+    @legal = qw{ 
+	encoding=s failures! ignore=s include! ordinal!
+	recurse! significant! tokens! verbose+
+    };
+
+    eval {
+	require Archive::Any;
+	unshift @legal, 'archive!';
+    };
+}
+
+my %opt = (
+    verbose	=> 0,
+);
+
+our $BASE = getcwd();
+our @PREFIX;
+
+GetOptions( \%opt, @legal )
+    or die "Bad option";
+
+my @ignore;
+if ( $opt{ignore} ) {
+    open my $fh, '<', $opt{ignore}
+	or die "Unable to open $opt{ignore}: $!\n";
+    while ( <$fh> ) {
+	s/ \s+ \z //smx;
+	$_ or next;
+	s/ \A \s+ //smx;
+	'#' eq substr $_, 0, 1
+	    and next;
+	push @ignore, qr{$_}smx;
+    }
+    close $fh;
+}
+
+my %dumper_opt = (
+    encoding	=> $opt{encoding},
+    margin	=> 4,
+    ordinal	=> $opt{ordinal},
+    significant => $opt{significant},
+);
+
+my $parser = $opt{tokens} ? 'PPIx::Regexp::Tokenizer' : 'PPIx::Regexp';
+
+if ( $opt{include} ) {
+    push @ARGV, @INC;
+    $opt{recurse} = 1;
+}
+
+$opt{recurse} ||= $opt{archive};
+
+if ( $opt{recurse} ) {
+    @ARGV or push @ARGV, File::Spec->curdir();
+    find(
+	{
+	    no_chdir => 1,
+	    wanted => sub {
+		foreach my $re ( @ignore ) {
+		    $File::Find::name =~ $re and return;
+		}
+		handle_perl( $_ ) || handle_archive( $_ );
+	    },
+	},
+	@ARGV );
+} else {
+    foreach ( @ARGV ) {
+	-T $_ && slurp( $_ );
+    }
+}
+
+sub handle_archive {
+    my ( $fn ) = @_;
+    $opt{archive} or return;
+    -f $fn or return;
+    -T $fn and return;
+    $fn =~ m/ [.] (?: gz | bz2 | zip | tgz | tar ) \z /smx or return;
+    $opt{verbose} and warn "$fn\n";
+    my $arch = Archive::Any->new( $fn ) or return;
+    $arch->is_naughty() and do {
+	warn "$fn is naughty. Skipping.\n";
+	return;
+    };
+    $arch->is_impolite() and do {
+	warn "$fn is impolite. Skipping.\n";
+	return;
+    };
+    my $dir = File::Temp->newdir();
+    eval {
+	$arch->extract( $dir );
+	1;
+    } or do {
+	warn "Extract from $fn failed.\n";
+    };
+
+    local @PREFIX = File::Spec->abs2rel( $fn );
+    local $BASE = $dir;
+
+    find( {
+	    no_chdir => 1,
+	    wanted => sub {
+		foreach my $re ( @ignore ) {
+		    $File::Find::name =~ $re and return;
+		}
+		handle_perl( $_ )
+	    }
+	}, $dir );
+
+    return 1;
+}
+
+sub handle_perl {
+    my ( $fn ) = @_;
+    is_perl( $fn ) or return;
+    $opt{verbose} and warn "$fn\n";
+    slurp( $fn );
+    return 1;
+}
+
+sub is_perl {
+    my ( $fn ) = @_;
+    -T $fn or return;
+    $fn =~ m/ [.] pm \z /smx  and return 1;
+    $fn =~ m/ [.] pl \z /smxi and return 1;
+    open ( my $fh, '<', $fn ) or return;
+    local $_ = <$fh>;
+    close $fh;
+    defined $_ or return;
+    m/ \A [#] ! .*? perl /smx and return 1;
+    m/ \A [#] ! /smx and return;
+    $fn =~ m/ [.] t  \z /smx  and return 1;
+    return;
+}
+
+sub slurp {
+    my ( $fn ) = @_;
+
+    my $doc = PPI::Document->new( $fn )
+	or do {
+	warn "Unable to make a PPI::Document from $fn: ",
+	    PPI::Document->errstr;
+	return;
+    };
+
+    my @found;
+    foreach my $class ( qw{
+	    PPI::Token::QuoteLike::Regexp
+	    PPI::Token::Regexp::Match
+	    PPI::Token::Regexp::Substitute
+	}
+    ) {
+	foreach my $token ( @{ $doc->find( $class )
+		|| [] } ) {
+	    my $display = !$opt{failures};
+	    my @regex = ( $token );
+	    if ( my $re = $parser->new( $token, encoding => $opt{encoding} ) ) {
+		if ( $re->isa( 'PPIx::Regexp::Tokenizer' ) ) {
+		    push @regex, [ $re->tokens() ];
+		} else {
+		    push @regex, $re;
+		}
+		$display ||= $re->failures();
+	    } else {
+		$display = 1;
+		push @regex, $token->class(), ' not handled';
+	    }
+	    $display and push @found, \@regex;
+	}
+    }
+    if ( @found ) {
+	print "\n",
+	    join( ' ', @PREFIX, $fn ),
+	    "\n";
+	foreach ( @found ) {
+	    my ( $thing, $content ) = @{ $_ };
+	    print '  ', $thing->class(), "\t", $thing->content(), "\n";
+	    my $dmp = PPIx::Regexp::Dumper->new( $content, %dumper_opt );
+	    $dmp->print();
+	}
+    }
+}
+
+__END__
+
+# ex: set textwidth=72 :

@@ -1,0 +1,38 @@
+#!/usr/local/bin/perl
+
+use strict;
+use warnings;
+
+use autodie;
+
+use File::Find;
+use YAML;
+
+find ( \&heritage, 'lib' );
+
+my %roots;
+
+print Dump( \%roots );
+
+sub heritage {
+    my ( $fn ) = $_;
+    -T $fn or return;
+    $fn =~ m/ [.] pm \z /smx or return;
+    local $/ = undef;
+    open my $fh, '<', $fn;
+    local $_ = <$fh>;
+    close $fh;
+    m/ \b package \s+ ( (?: \w+ :: )* \w+ ) \s* ; /smx or return;
+    my @parents;
+    $roots{$1} = \@parents;
+    m/ \b use \s+ base \s+ ( [^;]* ) /smx or return;
+    my $ancest = $1;
+    foreach my $class ( split qr{\s+}smx, $ancest ) {
+	$class =~ m/ \A (?: \w+ :: )* \w+ \z /smx or next;
+	push @parents, $class;
+    }
+}
+
+__END__
+
+# ex: set textwidth=72 :

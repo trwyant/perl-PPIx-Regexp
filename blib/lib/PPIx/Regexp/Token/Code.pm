@@ -1,0 +1,134 @@
+=head1 NAME
+
+PPIx::Regexp::Token::Code - Represent a chunk of Perl embedded in a regular expression.
+
+=head1 SYNOPSIS
+
+ use PPIx::Regexp::Dumper;
+ PPIx::Regexp::Dumper->new(
+     'qr{(?{print "hello sailor\n"})}smx')->print;
+
+=head1 INHERITANCE
+
+ PPIx::Regexp::Token::Code
+ isa PPIx::Regexp::Token
+
+=head1 DESCRIPTION
+
+This class represents a chunk of Perl code embedded in a regular
+expression. Specifically, it results from parsing things like
+
+ (?{ code })
+ (??{ code })
+
+or from the replacement side of an s///e. Technically, interpolations
+are also code, but they parse differently and therefore end up in a
+different token.
+
+=head1 METHODS
+
+This class provides the following public methods. Methods not documented
+here are private, and unsupported in the sense that the author reserves
+the right to change or remove them without notice.
+
+=cut
+
+package PPIx::Regexp::Token::Code;
+
+use strict;
+use warnings;
+
+use base qw{ PPIx::Regexp::Token };
+
+use Params::Util 0.25 qw{ _INSTANCE };
+use PPI::Document;
+
+our $VERSION = '0.000_01';
+
+sub _new {
+    my ( $class, $content ) = @_;
+    ref $class and $class = ref $class;
+
+    my $self = {};
+    if ( _INSTANCE( $content, 'PPI::Document' ) ) {
+	$self->{ppi} = $content;
+    } elsif ( ref $content ) {
+	return;
+    } else {
+	$self->{content} = $content;
+    }
+    bless $self, $class;
+    return $self;
+}
+
+sub content {
+    my ( $self ) = @_;
+    if ( exists $self->{content} ) {
+	return $self->{content};
+    } elsif ( exists $self->{ppi} ) {
+	return ( $self->{content} = $self->{ppi}->content() );
+    } else {
+	return;
+    }
+}
+
+=head2 ppi
+
+This convenience method returns the L<PPI::Document|PPI::Document>
+representing the content. This document should be considered read only.
+
+=cut
+
+sub ppi {
+    my ( $self ) = @_;
+    if ( exists $self->{ppi} ) {
+	return $self->{ppi};
+    } elsif ( exists $self->{content} ) {
+	return ( $self->{ppi} = PPI::Document->new( \{$self->{content}}) );
+    } else {
+	return;
+    }
+}
+
+# Return true if the token can be quantified, and false otherwise
+# sub can_be_quantified { return };
+
+sub __PPIX_TOKENIZER__regexp {
+    my ( $class, $tokenizer, $character ) = @_;
+
+    $character eq '{' or return;
+
+    my $doc = $tokenizer->ppi_document()
+	or return;
+
+    my $block = ( $doc->find_first( 'PPI::Structure::Block' ) ||
+	$doc->find_first( 'PPI::Structure::Constructor' ) )
+	or return;
+
+    $block->isa( 'PPI::Structure::Constructor' )
+	and $block->content() !~ m/ \A \{ /smx
+	and return;
+
+    return length ( $block->content() );
+}
+
+1;
+
+__END__
+
+=head1 SUPPORT
+
+Support is by the author. Please file bug reports at
+L<http://rt.cpan.org>, or in electronic mail to the author.
+
+=head1 AUTHOR
+
+Thomas R. Wyant, III F<wyant at cpan dot org>
+
+=head1 COPYRIGHT
+
+Copyright 2009 by Thomas R. Wyant, III.
+
+=cut
+
+# ex: set textwidth=72 :

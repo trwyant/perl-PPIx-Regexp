@@ -1,0 +1,147 @@
+#!/usr/local/bin/perl
+
+use strict;
+use warnings;
+
+use File::Find;
+use Scalar::Util qw{ looks_like_number };
+use Text::Wrap;
+
+local $Text::Wrap::columns = 72;
+
+chdir 'lib' or die "Unable to chdir to lib: $!\n";
+
+my %special = (
+    'PPIx::Regexp' => {
+	instance => undef,
+	parent => 'PPIx::Regexp::Node',
+    },
+    'PPIx::Regexp::Constant' => {
+	instance => undef,
+	parent => undef,
+    },
+    'PPIx::Regexp::Element' => {
+	instance => undef,
+	parent => undef,
+    },
+    'PPIx::Regexp::Dumper' => {
+	instance => [ new => [ 'xyzzy' ] ],
+	parent	=> undef,
+    },
+    'PPIx::Regexp::Token::Backreference' => {
+	parent => 'PPIx::Regexp::Token::Reference',
+    },
+    'PPIx::Regexp::Token::Condition' => {
+	parent => 'PPIx::Regexp::Token::Reference',
+    },
+    'PPIx::Regexp::Token::GroupType::Modifier' => {
+	parent	=> [ 'PPIx::Regexp::Token::GroupType',
+		    'PPIx::Regexp::Token::Modifier', ],
+    },
+    'PPIx::Regexp::Token::Interpolation' => {
+	parent	=> 'PPIx::Regexp::Token::Code',
+    },
+    'PPIx::Regexp::Lexer' => {
+	parent => undef,
+    },
+    'PPIx::Regexp::Node' => {
+	parent => 'PPIx::Regexp::Element',
+    },
+    'PPIx::Regexp::Token::Recursion' => {
+	parent => 'PPIx::Regexp::Token::Reference',
+    },
+    'PPIx::Regexp::Structure' => {
+	parent => 'PPIx::Regexp::Node',
+    },
+    'PPIx::Regexp::Structure::NamedCapture' => {
+	parent => 'PPIx::Regexp::Structure::Capture',
+    },
+    'PPIx::Regexp::Tokenizer' => {
+	instance => [ new => [ 'xyzzy' ] ],
+	parent	=> undef,
+    },
+    'PPIx::Regexp::Token' => {
+	parent	=> 'PPIx::Regexp::Element',
+    },
+);
+
+my %normal = (
+    instance => sub {
+	my ( $pkg ) = @_;
+	if ( $pkg =~ m/ \A PPIx::Regexp::Token /smx ) {
+	    return [ _new => [ 'xyzzy' ] ];
+	}
+	return;
+    },
+    parent => sub {
+	my ( $pkg ) = @_;
+	( my $parent = $pkg ) =~ s/ :: \w+ \z //smx;
+	return $parent;
+    },
+);
+
+my @found;
+
+find( {
+	no_chdir => 1,
+	wanted => sub {
+	    s/ [.] pm \z //smx or return;
+	    s/ \A .*? PPIx /PPIx/smx;
+	    s{ / }{::}smxg;
+	    push @found, $_;
+	},
+    }, File::Spec->curdir() );
+
+my @tests;
+foreach my $pkg ( sort @found ) {
+    push @tests, "require_ok( '$pkg' )";
+
+    if ( defined( my $parent = determine( $pkg, 'parent' ) ) ) {
+	my @folks = ref $parent eq 'ARRAY' ? @{ $parent } : $parent;
+	foreach my $pop ( @folks ) {
+	    push @tests, "isa_ok( '$pkg', '$pop' )";
+	}
+    }
+
+    if ( defined( my $instance = determine( $pkg, 'instance' ) ) ) {
+	my ( $method, $args ) = @{ $instance };
+	push @tests, "isa_ok( $pkg->$method( " . join(', ', map{ safe(
+		    $_ ) } @{ $args } ) . "), '$pkg' )";
+    }
+
+}
+
+print <<EOD;
+package main;
+
+use strict;
+use warnings;
+
+use Test::More 0.40 tests => @{[ scalar @tests ]};
+EOD
+
+foreach my $tst ( @tests ) {
+    $tst =~ m/ \A require_ok \b /smx
+	and print "\n";
+    print wrap( '', '    ', "$tst;\n");
+}
+
+print "\n1;\n";
+
+sub determine {
+    my ( $pkg, $what ) = @_;
+    exists $special{$pkg}{$what}
+	and return $special{$pkg}{$what};
+    return $normal{$what}->( $pkg );
+}
+
+sub safe {
+    my ( $string ) = @_;
+    looks_like_number( $string ) and return $string;
+    $string =~ s/ ( [\\'] ) /\\$1/smxg;
+    return "'$string'";
+}
+
+__END__
+
+# ex: set textwidth=72 :

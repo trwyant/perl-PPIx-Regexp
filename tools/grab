@@ -1,0 +1,24 @@
+#!/usr/local/bin/perl
+
+use strict;
+use warnings;
+
+use File::Copy;
+use File::Spec;
+
+foreach my $out ( @ARGV ) {
+    my $in = File::Spec->catfile( qw{ .. PPIx-Regexp }, $out );
+    if ( -f $in ) {
+	if ( copy( $in, $out ) ) {
+	    warn "Copied $out\n";
+	} else {
+	    warn "Failed to copy $out: $!\n";
+	}
+    } else {
+	warn "File $in not found\n";
+    }
+}
+
+__END__
+
+# ex: set textwidth=72 :

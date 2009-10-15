@@ -1,0 +1,108 @@
+#!/usr/local/bin/perl
+
+use strict;
+use warnings;
+
+my @parses;
+
+{
+    local $/ = undef;
+    open (my $fh, '<', 't/parse.t') or die "Unable to open t/parse.t: $!";
+    local $_ = <$fh>;
+    close $fh;
+    while( m/ (?<=\n) parse \s* \( .*? \);\n /smxg ) {
+	push @parses, substr $_, $-[0], $+[0] - $-[0];
+    }
+}
+
+print <<'EOD';
+package main;
+
+use strict;
+use warnings;
+
+BEGIN {
+
+    eval {
+	require Test::More;
+	Test::More->VERSION( 0.40 );
+	Test::More->import();
+	1;
+    } or do {
+	print "1..0 # skip Test::More 0.40 required for test.\n";
+	exit;
+    };
+
+    eval {
+	require Test::Memory::Cycle;
+	Test::Memory::Cycle->import();
+	1;
+    } or do {
+	print "1..0 # skip Test::Memory::Cycle required for test.\n";
+	exit;
+    };
+
+    eval {
+	require PPI::Document;
+	1;
+    } or do {
+	print "1..0 # skip PPI::Document required for test.\n";
+	exit;
+    };
+
+    eval {
+	require PPIx::Regexp;
+	1;
+    } or do {
+	print "1..0 # skip PPIx::Regexp required for test.\n";
+	exit;
+    };
+
+}
+
+EOD
+
+print "plan( tests => ", scalar @parses, " );\n";
+
+foreach ( @parses ) {
+    print;
+}
+
+print <<'EOD';
+
+sub parse {
+    my ( $text ) = @_;
+
+SKIP: {
+
+	my $doc = PPI::Document->new( \$text )
+	    or skip PPI::Document->errstr(), 1;
+
+	my $obj;
+	foreach my $class ( qw{
+	    PPI::Token::QuoteLike::Regexp
+	    PPI::Token::Regexp::Match
+	    PPI::Token::Regexp::Substitute
+	} ) {
+	    $obj = $doc->find_first( $class ) and last;
+	}
+
+	$obj or skip "No regular expression found in '$text'", 1;
+
+	my $re = PPIx::Regexp->new( $obj )
+	    or skip "Unable to make PPIx::Regexp from '$text'", 1;
+
+	memory_cycle_ok( $re );
+
+    }
+
+    return;
+
+}
+
+1;
+
+# ex: set textwidth=72 :
+EOD
+
+# ex: set textwidth=72 :

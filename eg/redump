@@ -1,0 +1,32 @@
+#!/usr/local/bin/perl
+
+use strict;
+use warnings;
+
+use Encode;
+use Getopt::Long;
+use PPIx::Regexp::Dumper;
+
+my %opt = (
+    verbose => 0,
+);
+
+GetOptions( \%opt, qw{
+    encoding=s
+    indent=i margin=i ordinal! perl_version!
+    significant!
+    test! tokens! trace+ unescape! verbose+
+    } )
+    and @ARGV
+    or die "Invalid options";
+
+my $unescape = delete $opt{unescape};
+foreach my $re ( @ARGV ) {
+    $unescape and $re =~ s{ \\\\ }{\\}smxg;
+    $opt{test} or print "\n$re\n";
+    PPIx::Regexp::Dumper->new( $re, %opt )->print();
+}
+
+__END__
+
+# ex: set textwidth=72 :

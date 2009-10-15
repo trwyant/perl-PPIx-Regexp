@@ -1,0 +1,4 @@
+#!/bin/sh
+
+bld
+perl -Mblib eg/slurp "$@"
