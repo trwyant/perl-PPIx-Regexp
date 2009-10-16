@@ -42,9 +42,14 @@ my $test = 0;
 foreach my $file (@check) {
     open (my $fh, '<', $file) or die "Unable to open $file: $!\n";
     local $_ = <$fh>;
+    defined $_ or $_ = '';
     close $fh;
-    my @stat = stat $file;
-    ok( !($stat[2] & oct(111) || m/^#!.*perl/), $file );
+    if ( my @stat = stat $file ) {
+	ok( !($stat[2] & oct(111) || m/^#!.*perl/), $file );
+    } else {
+	warn "Can not stat $file";
+	ok ( 1, $file );
+    }
 }
 
 1;
