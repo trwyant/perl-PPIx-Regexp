@@ -187,7 +187,7 @@ sub list {
 	and return ( map { $_->$lister( $self ) } @{ $self->{object} } );
     $self->{tokens}
 	and return ( map { $_->$lister( $self ) } (
-	    $self->{object}->tokens() ) );
+	    $self->{object}, $self->{object}->tokens() ) );
     return $self->{object}->$lister( $self );
 }
 
