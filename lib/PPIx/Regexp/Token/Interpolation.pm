@@ -62,7 +62,7 @@ our $VERSION = '0.000_01';
 # Match the beginning of an interpolation.
 
 my $interp_re =
-	qr{ \A (?: \$ [-\w&`'+^./\\";%=~:?!\@\$<>\[\]\{\},] |
+	qr{ \A (?: \$ [-\w&`'+^./\\";%=~:?!\@\$<>\[\]\{\},#] |
 		   \@ [\w\{] )
 	}smx;
 
@@ -88,6 +88,7 @@ sub _interpolation {
 	or return;
 
     my @accum;	# The elements of the interpolation
+    my $allow_subscript;	# Assume no subscripts allowed
 
     # Find the beginning of the interpolation
     my $next = $stmt->child( 0 ) or return;
@@ -97,20 +98,33 @@ sub _interpolation {
 
 	# A symbol
 	push @accum, $next;
+	$allow_subscript = 1;	# Subscripts are allowed
 
     } elsif ( $next->isa( 'PPI::Token::Cast' ) ) {
 
 	# Or a cast followed by a block
 	push @accum, $next;
 	$next = $next->next_sibling() or return;
-	$next->isa( 'PPI::Structure::Block' ) or return;
-	local $_ = $next->content();
-	if ( m< \A { / } >smx ) {
-	    push @accum, 3;	# Number of characters to accept.
-	    $next = undef;	# No subscript scan
-	} else {
+	if ( $next->isa( 'PPI::Token::Symbol' ) ) {
+	    $accum[-1]->content() eq '$#'
+		or return;
 	    push @accum, $next;
+	} elsif ( $next->isa( 'PPI::Structure::Block' ) ) {
+	    local $_ = $next->content();
+	    if ( m< \A { / } >smx ) {
+		push @accum, 3;	# Number of characters to accept.
+	    } else {
+		$allow_subscript = $accum[-1]->content() ne '$#';
+		push @accum, $next;
+	    }
+	} else {
+	    return;
 	}
+
+    } elsif ( $next->isa( 'PPI::Token::ArrayIndex' ) ) {
+
+	# Or an array index
+	push @accum, $next;
 
     } else {
 
@@ -122,10 +136,11 @@ sub _interpolation {
     # The interpolation _may_ be subscripted. If so ...
     {
 
-	my @subscr;
+	# Only accept a subscript if wanted and available
+	$allow_subscript and $next = $next->next_sibling() or last;
 
 	# Accept an optional dereference operator.
-	$next and $next = $next->next_sibling() or last;
+	my @subscr;
 	if ( $next->isa( 'PPI::Token::Operator' ) ) {
 	    $next->content() eq '->' or last;
 	    push @subscr, $next;
