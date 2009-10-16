@@ -183,11 +183,10 @@ element. The output has no left margin applied, and no newlines.
 sub list {
     my ( $self ) = @_;
     my $lister = $self->{test} ? '__PPIX_DUMPER__test' : '__PPIX_DUMPER__dump';
+
     ref $self->{object} eq 'ARRAY'
 	and return ( map { $_->$lister( $self ) } @{ $self->{object} } );
-    $self->{tokens}
-	and return ( map { $_->$lister( $self ) } (
-	    $self->{object}, $self->{object}->tokens() ) );
+
     return $self->{object}->$lister( $self );
 }
 
@@ -279,8 +278,42 @@ sub _content {
     return $self->encode( $elem->content() );
 }
 
+sub _tokens_dump {
+    my ( $self, $elem ) = @_;
+
+    not $self->{significant} or $elem->significant() or return;
+
+    my @rslt;
+    foreach my $token ( $elem->tokens() ) {
+	not $self->{significant} or $token->significant() or next;
+	push @rslt, $token->__PPIX_DUMPER__dump( $self );
+    }
+    return @rslt;
+}
+
+sub _tokens_test {
+    my ( $self, $elem ) = @_;
+
+    not $self->{significant} or $elem->significant() or return;
+
+    my @tokens = $elem->tokens();
+    my @rslt = (
+	'tokenize( ' . $self->_safe( $elem ) . ' );',
+	'count   ( ' . scalar @tokens . ' );',
+    );
+    my $inx = 0;
+    foreach my $token ( @tokens ) {
+	not $self->{significant} or $token->significant() or next;
+	push @rslt, $token->__PPIX_DUMPER__test( $self, $inx++ );
+    }
+    return @rslt;
+}
+
 sub PPIx::Regexp::__PPIX_DUMPER__test {
     my ( $self, $dumper ) = @_;
+
+    $dumper->{tokens}
+	and return $dumper->_tokens_test( $self );
 
     not $dumper->{significant} or $self->significant() or return;
 
@@ -299,6 +332,9 @@ sub PPIx::Regexp::__PPIX_DUMPER__test {
 
 sub PPIx::Regexp::Node::__PPIX_DUMPER__dump {
     my ( $self, $dumper ) = @_;
+
+    $dumper->{tokens}
+	and return $dumper->_tokens_dump( $self );
 
     not $dumper->{significant} or $self->significant() or return;
 
@@ -413,26 +449,14 @@ sub PPIx::Regexp::Structure::__PPIX_DUMPER__test {
 sub PPIx::Regexp::Tokenizer::__PPIX_DUMPER__dump {
     my ( $self, $dumper ) = @_;
 
-    not $dumper->{significant} or $self->significant() or return;
+    return $dumper->_tokens_dump( $self );
 
-    return ( map { $_->__PPIX_DUMPER__dump( $dumper ) } $self->tokens() );
 }
 
 sub PPIx::Regexp::Tokenizer::__PPIX_DUMPER__test {
     my ( $self, $dumper ) = @_;
 
-    not $dumper->{significant} or $self->significant() or return;
-
-    my @tokens = $self->tokens();
-    my @rslt = (
-	'tokenize( ' . $dumper->_safe( $self ) . ' );',
-	'count   ( ' . scalar @tokens . ' );',
-    );
-    my $inx = 0;
-    foreach my $elem ( @tokens ) {
-	push @rslt, $elem->__PPIX_DUMPER__test( $dumper, $inx++ );
-    }
-    return @rslt;
+    return $dumper->_tokens_test( $self );
 }
 
 sub PPIx::Regexp::Token::__PPIX_DUMPER__dump {

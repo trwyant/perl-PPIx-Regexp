@@ -482,6 +482,10 @@ sub prior {
     return $self->{prior}->$method( @args );
 }
 
+sub significant {
+    return 1;
+}
+
 sub tokens {
     my ( $self ) = @_;
 
@@ -812,6 +816,11 @@ stack, to guard against unmatched right parentheses.
 
 This method returns the next token in the token stream, or nothing if
 there are no more tokens.
+
+=head2 significant
+
+This method exists simply for the convenience of
+L<PPIx::Regexp::Dumper|PPIx::Regexp::Dumper>. It always returns true.
 
 =head2 tokens
 
