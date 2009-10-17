@@ -171,6 +171,35 @@ sub find {
 
 }
 
+=head2 find_parents
+
+This method takes the same arguments as C<find>, but instead of the
+found objects themselves returns their parents. No parent will appear
+more than once in the output.
+
+The return is a reference to the array of parents if any were found. If
+none were found the return is false but defined. If an error occurred
+the return is C<undef>.
+
+=cut
+
+sub find_parents {
+    my ( $self, $want ) = @_;
+
+    my $found;
+    $found = $self->find( $want ) or return $found;
+
+    my %parents;
+    my @rslt;
+    foreach my $elem ( @{ $found } ) {
+	my $dad = $elem->parent() or next;
+	$parents{ refaddr( $dad ) }++
+	    or push @rslt, $dad;
+    }
+
+    return \@rslt;
+}
+
 =head2 find_first
 
 This method has the same arguments as C<find()>, but returns either a
