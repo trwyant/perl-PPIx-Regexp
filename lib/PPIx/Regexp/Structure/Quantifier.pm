@@ -34,7 +34,7 @@ use Params::Util 0.25 qw{ _INSTANCE };
 
 use base qw{ PPIx::Regexp::Structure };
 
-our $VERSION = '0.000_01';
+our $VERSION = '0.000_02';
 
 # Called by the lexer to record the capture number.
 sub __PPIX_LEXER__record_capture_number {

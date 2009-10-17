@@ -12,7 +12,7 @@ use PPIx::Regexp::Tokenizer;
 use Scalar::Util qw{ looks_like_number refaddr };
 use Test::More 0.40;
 
-our $VERSION = '0.000_01';
+our $VERSION = '0.000_02';
 
 our @EXPORT_OK = qw{
     choose

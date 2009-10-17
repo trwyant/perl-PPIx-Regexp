@@ -30,7 +30,7 @@ package PPIx::Regexp::Support;
 use strict;
 use warnings;
 
-our $VERSION = '0.000_01';
+our $VERSION = '0.000_02';
 
 =head2 decode
 

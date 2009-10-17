@@ -38,7 +38,7 @@ use Scalar::Util qw{ blessed looks_like_number };
 use PPIx::Regexp;
 use PPIx::Regexp::Tokenizer;
 
-our $VERSION = '0.000_01';
+our $VERSION = '0.000_02';
 
 =head2 new
 
