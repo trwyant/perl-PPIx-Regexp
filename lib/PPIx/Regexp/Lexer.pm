@@ -41,6 +41,7 @@ use PPIx::Regexp::Structure::Code			();
 use PPIx::Regexp::Structure::Capture			();
 use PPIx::Regexp::Structure::CharClass			();
 use PPIx::Regexp::Structure::Subexpression		();
+use PPIx::Regexp::Structure::Main			();
 use PPIx::Regexp::Structure::Modifier			();
 use PPIx::Regexp::Structure::NamedCapture		();
 use PPIx::Regexp::Structure::Quantifier			();
@@ -362,7 +363,7 @@ sub _get_delimited {
 	my @last = @{ pop @rslt };
 	shift @last;
 	push @last, $self->get_token();
-	return PPIx::Regexp::Structure->_new( @last );
+	return PPIx::Regexp::Structure::Main->_new( @last );
     } else {
 	confess "Missing data";
     }
