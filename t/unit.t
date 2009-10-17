@@ -98,6 +98,36 @@ plan 'no_plan';
 
 }
 
+SKIP:
+{
+
+    # The cache tests get done in their own scope to ensure the objects
+    # are destroyed.
+
+    my $num_tests = 3;
+    eval {
+	require PPI::Document;
+	1;
+    } or skip( $num_tests, 'Failed to load PPI::Document' );
+    my $doc = PPI::Document->new( \'m/foo/smx' )
+	or skip( $num_tests, 'Failed to create PPI::Document' );
+    my $m = $doc->find_first( 'PPI::Token::Regexp::Match' )
+	or skip( $num_tests, 'Failed to find PPI::Token::Regexp::Match' );
+
+    my $o1 = PPIx::Regexp->new_from_cache( $m );
+    my $o2 = PPIx::Regexp->new_from_cache( $m );
+
+    equals( $o1, $o2, 'new_from_cache() same object' );
+
+    cache_count( 1 );
+
+    PPIx::Regexp->flush_cache();
+
+    cache_count();
+
+}
+
+
 tokenize( '//smx' );
 count   ( 4 );
 choose  ( 3 );

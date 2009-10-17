@@ -60,7 +60,7 @@ use base qw{ PPIx::Regexp::Node };
 
 use Params::Util 0.25 qw{ _INSTANCE };
 use PPIx::Regexp::Lexer ();
-use Scalar::Util qw{ refaddr weaken };
+use Scalar::Util qw{ refaddr };
 
 our $VERSION = '0.000_02';
 
@@ -97,7 +97,6 @@ Regexp classes mentioned previously are likely to do anything useful.
 	my @nodes = $lexer->lex();
 	my $self = $class->SUPER::_new( @nodes );
 	$self->{source} = $content;
-	ref $content and weaken( $self->{source} );
 	$self->{failures} = $lexer->failures();
 	$self->{max_capture_number} = $lexer->max_capture_number();
 	return $self;
@@ -122,6 +121,10 @@ the optional arguments are ignored.
 Calls to this method with the regular expression in a string rather than
 a L<PPI::Element> will not be cached.
 
+B<Caveat:> This method is provided for code like
+L<Perl::Critic|Perl::Critic> which might instantiate the same object
+multiple times. The cache will persist until L</flush_cache> is called.
+
 =head2 flush_cache
 
  $re->flush_cache();            # Remove $re from cache
@@ -137,6 +140,10 @@ any objects specified are removed from the cache.
 
     my %cache;
 
+    sub _cache_size {
+	return scalar keys %cache;
+    }
+
     sub new_from_cache {
 	my ( $class, $content, %args ) = @_;
 
@@ -149,7 +156,7 @@ any objects specified are removed from the cache.
 	my $self = $class->new( $content, %args )
 	    or return;
 
-	weaken( $cache{$addr} = $self );
+	$cache{$addr} = $self;
 
 	return $self;
 
@@ -171,15 +178,6 @@ any objects specified are removed from the cache.
 	    %cache = ();
 	}
 	return;
-    }
-
-    sub DESTROY {
-	my ( $self ) = @_;
-	if ( _INSTANCE( ( my $parent = $self->parent() ),
-		'PPI::Element' ) ) {
-	    delete $cache{ refaddr( $parent ) };
-	}
-	return $self->SUPER::DESTROY();
     }
 
 }

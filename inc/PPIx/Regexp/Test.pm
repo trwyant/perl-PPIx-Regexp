@@ -15,6 +15,7 @@ use Test::More 0.40;
 our $VERSION = '0.000_02';
 
 our @EXPORT_OK = qw{
+    cache_count
     choose
     class
     content
@@ -33,6 +34,17 @@ our @EXPORT_OK = qw{
 our @EXPORT = @EXPORT_OK;
 
 my ( $parse, $kind, @nav, $nav, $obj );
+
+sub cache_count {		## no critic (RequireArgUnpacking)
+    my ( $expect ) = @_;
+    defined $expect or $expect = 0;
+    $obj = undef;
+    $parse = undef;
+    _pause();
+    @_ = ( PPIx::Regexp->_cache_size(), $expect,
+	"Should be $expect leftover cache contents" );
+    goto &is;
+}
 
 sub choose {
     my @args = @_;
@@ -142,11 +154,7 @@ sub false {		## no critic (RequireArgUnpacking)
 sub finis {		## no critic (RequireArgUnpacking)
     $obj = undef;
     $parse = undef;
-    if ( eval { require Time::HiRes; 1 } ) {	# Cargo cult programming.
-	Time::HiRes::sleep( 0.1 );		# Something like this is
-    } else {					# in PPI's
-	sleep 1;				# t/08_regression.t, and
-    }						# who am I to argue?
+    _pause();
     @_ = ( PPIx::Regexp::Element->_parent_keys(), 0,
 	'Should be no leftover objects' );
     goto &is;
@@ -248,6 +256,14 @@ sub value {		## no critic (RequireArgUnpacking)
 
     @_ = ( $obj->$method( @{ $args || [] } ), $expect, $method );
     goto &is;
+}
+
+sub _pause {
+    if ( eval { require Time::HiRes; 1 } ) {	# Cargo cult programming.
+	Time::HiRes::sleep( 0.1 );		# Something like this is
+    } else {					# in PPI's
+	sleep 1;				# t/08_regression.t, and
+    }						# who am I to argue?
 }
 
 1;
