@@ -36,7 +36,7 @@ use base qw{ PPIx::Regexp::Token };
 
 use PPIx::Regexp::Constant qw{ $MINIMUM_PERL };
 
-our $VERSION = '0.000_02';
+our $VERSION = '0.000_03';
 
 sub _new {
     my ( $class, @args ) = @_;

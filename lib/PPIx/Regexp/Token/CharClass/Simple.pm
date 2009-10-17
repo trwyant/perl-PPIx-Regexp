@@ -38,7 +38,7 @@ use base qw{ PPIx::Regexp::Token::CharClass };
 
 use PPIx::Regexp::Constant qw{ $COOKIE_CLASS $TOKEN_LITERAL };
 
-our $VERSION = '0.000_02';
+our $VERSION = '0.000_03';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
