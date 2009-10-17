@@ -1,6 +1,7 @@
 Build.PL
 Changes
 eg/nav
+eg/README
 eg/redump
 eg/slurp
 inc/PPIx/Regexp/Build.pm
