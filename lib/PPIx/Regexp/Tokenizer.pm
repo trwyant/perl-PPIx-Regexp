@@ -725,9 +725,26 @@ change or remove them without notice.
 This static method instantiates the tokenizer. You must pass it the
 regular expression to be parsed, either as a string or as a
 L<PPI::Element|PPI::Element> of some sort. You can also pass optional
-name/value pairs of arguments. Supported arguments are:
+name/value pairs of arguments. The option names are specified B<without>
+a leading dash. Supported options are:
 
- trace: numeric -- causes trace output;
+=over
+
+=item encoding name
+
+This option specifies the encoding of the string to be tokenized. If
+specified, an C<Encode::decode> is done on the string (or the C<content>
+of the PPI class) before it is tokenized.
+
+=item trace number
+
+Specifying a positive value for this option causes a trace of the
+tokenization. This option is unsupported in the sense that the author
+reserves the right to alter it without notice.
+
+=back
+
+Undocumented options are unsupported.
 
 The returned value is the instantiated tokenizer, or C<undef> if
 instantiation failed. In the latter case a call to L</errstr> will

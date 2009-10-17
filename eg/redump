@@ -3,22 +3,33 @@
 use strict;
 use warnings;
 
-use Encode;
 use Getopt::Long;
+use Pod::Usage;
 use PPIx::Regexp::Dumper;
 
 my %opt = (
     verbose => 0,
 );
 
-GetOptions( \%opt, qw{
-    encoding=s
-    indent=i margin=i ordinal! perl_version!
-    significant!
-    test! tokens! trace+ unescape! verbose+
+GetOptions( \%opt,
+    help => sub { pod2usage ( {
+		-exitval	=> 0,
+		-verbose	=> 2,
+		-output		=> \*STDOUT,
+	    } )
+    },
+    qw{
+	encoding=s
+	indent=i margin=i ordinal! perl_version!
+	significant!
+	test! tokens! trace+ unescape! verbose+
     } )
     and @ARGV
-    or die "Invalid options";
+    or pod2usage( {
+	-exitval	=> 2,
+	-verbose	=> 1,
+	-output		=> \*STDERR,
+    } );
 
 my $unescape = delete $opt{unescape};
 foreach my $re ( @ARGV ) {
@@ -28,5 +39,122 @@ foreach my $re ( @ARGV ) {
 }
 
 __END__
+
+=head1 NAME
+
+redump - Dump a regular expression
+
+=head1 SYNOPSIS
+
+ redump -ordinal 'm/foo/x'
+
+You can use
+
+ redump -help
+
+for full documentation on usage.
+
+=head1 DESCRIPTION
+
+This Perl script parses the regular expression given on its command line
+and dumps the results of the parse to standard out. The following
+options are recognized:
+
+=over
+
+=item -encoding name
+
+This option specifies the encoding of the regular expression. It is
+simply passed through to L<< PPIx::Regexp->new()|PPIx::Regexp/new >>.
+
+=item -indent number
+
+This option specifies the number of spaces to indent each level of the
+parse hierarchy. It is simply passed through to
+L<< PPIx::Regexp::Dumper->new()|PPIx::Regexp::Dumper/new >>.
+
+=item -margin number
+
+This option specifies the width of the left margin of the dump output.
+It is simply passed through to
+L<< PPIx::Regexp::Dumper->new()|PPIx::Regexp::Dumper/new >>.
+
+=item -ordinal
+
+If true, this option specifies that the ordinal value of all
+L<PPIx::Regexp::Token::Literal|PPIx::Regexp::Token::Literal> objects be
+displayed as part of the dump. The default is false. This is simply
+passed through to
+L<< PPIx::Regexp::Dumper->new()|PPIx::Regexp::Dumper/new >>.
+
+=item -perl_version
+
+If true, this option specifies that the dump include the perl version
+applicable to each dumped item. The default is false. This is simply
+passed through to
+L<< PPIx::Regexp::Dumper->new()|PPIx::Regexp::Dumper/new >>.
+
+=item -significant
+
+If true, this option specifies that the dump include only significant
+syntax elements. That is, no comments or non-significant white space.
+The default is false. This is simply passed through to
+L<< PPIx::Regexp::Dumper->new()|PPIx::Regexp::Dumper/new >>.
+
+=item -test
+
+If true, this option specifies that the dump take the form of a
+predefined set of tests be generated for the regular expression. This
+option is unsupported in the sense that the author makes no commitment
+to what it will do, and reserves the right to change it without notice.
+This is simply passed through to
+L<< PPIx::Regexp::Dumper->new()|PPIx::Regexp::Dumper/new >>.
+
+=item -tokens
+
+If true, this option specifies that only tokenization be done on the
+regular expression, and the output tokens dumped to standard out.
+This is simply passed through to
+L<< PPIx::Regexp::Dumper->new()|PPIx::Regexp::Dumper/new >>.
+
+=item -trace
+
+If true, this option specifies the generation of trace output from the
+parse. It is unsupported in the sense that the author makes no
+commitment to what it will do, and reserves the right to change it
+without notice.  This is simply passed through to
+L<< PPIx::Regexp->new()|PPIx::Regexp/new >>.
+
+=item -unescape
+
+If true, this option causes the argument to be unescaped before
+processing. You would use it if the argument is a Perl single-quotish
+string, since Perl's single-quoted syntax differs from that of the usual
+Unix shell.
+
+=item -verbose
+
+If true, this option causes more information to be dumped about each
+object produced by the parse.  It is unsupported in the sense that the
+author makes no commitment to what it will do, and reserves the right to
+change it without notice. This is simply passed through to L<<
+PPIx::Regexp::Dumper->new()|PPIx::Regexp::Dumper/new >>.
+
+=back
+
+=head1 SUPPORT
+
+Support is by the author. Please file bug reports at
+L<http://rt.cpan.org>, or in electronic mail to the author.
+
+=head1 AUTHOR
+
+Thomas R. Wyant, III F<wyant at cpan dot org>
+
+=head1 COPYRIGHT
+
+Copyright 2009 by Thomas R. Wyant, III.
+
+=cut
 
 # ex: set textwidth=72 :

@@ -49,11 +49,18 @@ L<PPIx::Regexp::Tokenizer|PPIx::Regexp::Tokenizer> to be dumped as the
 first argument.  Optional further arguments may be passed as name/value
 pairs.
 
-The following arguments are recognized:
+The following options are recognized:
 
 =over
 
-=item indent => number
+=item encoding name
+
+This argument is the name of the encoding of the regular expression. If
+specified, it is passed through to
+L<< PPIx::Regexp->new()|PPIx::Regexp/new >>. It also causes an
+C<Encode::encode> to be done on any parse content dumped.
+
+=item indent number
 
 This argument is the number of additional spaces to indent each level of
 the parse hierarchy. This is ignored if either the C<test> or C<tokens>
@@ -61,20 +68,20 @@ argument is true.
 
 The default is 2.
 
-=item margin => number
+=item margin number
 
 This is the number of spaces to indent the top level of the parse
 hierarchy. This is ignored if the C<test> argument is true.
 
 The default is zero.
 
-=item significant => boolean
+=item significant boolean
 
 If true, this option causes only significant elements to be dumped.
 
 The default is false.
 
-=item test => boolean
+=item test boolean
 
 If true, this option causes the output to be formatted as a regression
 test rather than as a straight dump. The output produced by asserting
@@ -84,7 +91,7 @@ kind.
 
 The default is false.
 
-=item tokens => boolean
+=item tokens boolean
 
 If true, this option causes a dump of tokenizer output rather than of a
 full parse of the regular expression. This is forced true if the dump is
@@ -92,10 +99,17 @@ of a L<PPIx::Regexp::Tokenizer|PPIx::Regexp::Tokenizer>.
 
 The default is false.
 
-=item verbose = number
+=item trace number
+
+If greater than zero, this option causes a trace of the parse. This
+option is unsupported in the sense that the author reserves the right to
+change it without notice.
+
+=item verbose number
 
 If greater than zero, this option causes additional information to be
-given about the elements found.
+given about the elements found. This option is unsupported in the sense
+that the author reserves the right to change it without notice.
 
 The default is zero.
 
