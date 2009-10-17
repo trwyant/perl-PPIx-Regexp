@@ -67,6 +67,21 @@ sub is_named {
     return $self->{is_named};
 }
 
+=head2 is_relative
+
+ $ref->is_relative()
+     and print "relative numbered reference\n";
+
+This method returns true if the reference is numbered and it is a
+relative number (i.e. if it is signed).
+
+=cut
+
+sub is_relative {
+    my ( $self ) = @_;
+    return $self->{is_relative};
+}
+
 =head2 name
 
  print "The name is ", $ref->name(), "\n";
@@ -120,7 +135,8 @@ sub __PPIX_TOKEN__post_make {
 
     my $capture;
     if ( defined $arg ) {
-	$capture = first { defined $_ } $tokenizer->capture();
+	$tokenizer
+	    and $capture = first { defined $_ } $tokenizer->capture();
 	defined $capture or $capture = $arg->{capture};
     } else {
 	my $content = $self->content();
@@ -147,11 +163,14 @@ sub __PPIX_TOKEN__post_make {
 
     if ( $arg->{is_named} ) {
 	$self->{absolute} = undef;
+	$self->{is_relative} = undef;
 	$self->{name} = $capture;
     } elsif ( $capture !~ m/ \A [-+] /smx ) {
 	$self->{absolute} = $self->{number} = $capture;
+	$self->{is_relative} = undef;
     } else {
 	$self->{number} = $capture;
+	$self->{is_relative} = 1;
     }
 
     return;
