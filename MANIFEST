@@ -1,9 +1,9 @@
 Build.PL
 Changes
-eg/nav
+eg/predump
+eg/prenav
+eg/preslurp
 eg/README
-eg/redump
-eg/slurp
 inc/PPIx/Regexp/Build.pm
 inc/PPIx/Regexp/Test.pm
 lib/PPIx/Regexp.pm

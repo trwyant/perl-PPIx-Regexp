@@ -4,24 +4,23 @@ PPIx::Regexp::Element - Base of the PPIx::Regexp hierarchy.
 
 =head1 SYNOPSIS
 
-No user-serviceable parts inside. No parts at all, to be frank about it.
+No user-serviceable parts inside.
 
 =head1 INHERITANCE
 
- none
+ PPIx::Regexp::Element
 
 =head1 DESCRIPTION
 
-This class exists to be the base of the L<PPIx::Regexp|PPIx::Regexp>
-object hierarchy.  It contributes nothing to its progeny but its name,
-to allow L<PPIx::Regexp|PPIx::Regexp> objects to be identified. All the
-functionality is either implemented in other
-L<PPIx::Regexp|PPIx::Regexp> objects, or inherited from PPI by another
-path, since to avoid confusion this class does not inherit from anyone.
+This class is the base of the L<PPIx::Regexp|PPIx::Regexp>
+object hierarchy. It provides the same kind of navigational
+functionality that is provided by L<PPI::Element|PPI::Element>.
 
 =head1 METHODS
 
-None.
+This class provides the following public methods. Methods not documented
+here are private, and unsupported in the sense that the author reserves
+the right to change or remove them without notice.
 
 =cut
 

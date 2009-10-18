@@ -22,6 +22,7 @@ errstr
 lexed
 lexes
 nav
+navigational
 PPI
 ppi
 PPI's

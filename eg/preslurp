@@ -213,15 +213,15 @@ __END__
 
 =head1 NAME
 
-slurp - Analyze the regular expressions in a bunch of files
+preslurp - Analyze the regular expressions in a bunch of files
 
 =head1 SYNOPSIS
 
- slurp -recurse .
+ preslurp -recurse .
 
 For full details on usage, use
 
- slurp -help
+ preslurp -help
 
 =head1 DETAILS
 

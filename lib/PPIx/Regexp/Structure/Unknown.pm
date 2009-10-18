@@ -5,7 +5,7 @@ PPIx::Regexp::Structure::Unknown - Represent an unknown structure.
 =head1 SYNOPSIS
 
  use PPIx::Regexp::Dumper;
- PPIx::Regexp::Dumper->new( 'qr{(?(foo)bar|baz)}smx' )
+ PPIx::Regexp::Dumper->new( 'qr{(?(foo)bar|baz|burfle)}smx' )
      ->print();
 
 =head1 INHERITANCE

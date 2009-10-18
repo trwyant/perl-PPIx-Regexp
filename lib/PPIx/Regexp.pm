@@ -33,8 +33,8 @@ provides basic navigation. Tokens are descended from
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>, which provides content. All
 containers are descended from L<PPIx::Regexp::Node|PPIx::Regexp::Node>,
 which provides for children, and all structure elements are descended
-from L<PPIx::Regexp::Structure>, which provides beginning and ending
-delimiters, and a type.
+from L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>, which provides
+beginning and ending delimiters, and a type.
 
 There are two features of L<PPI|PPI> that this package does not provide
 - mutability and operator overloading. There are no plans for serious
@@ -361,7 +361,7 @@ figure out what the programmer wanted. These heuristics are documented
 as being undocumented (!) and subject to change without notice.
 
 Given this situation, this module's chances of duplicating every Perl
-version's interpretation of every regular expression is pretty much nil.
+version's interpretation of every regular expression are pretty much nil.
 What it does now is to assume that square brackets containing B<only> an
 integer or an interpolation represent a subscript; otherwise they
 represent a character class. Similarly, curly brackets containing

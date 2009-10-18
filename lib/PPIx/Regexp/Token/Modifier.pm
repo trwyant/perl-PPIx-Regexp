@@ -15,9 +15,9 @@ PPIx::Regexp::Token::Modifier - Represent modifiers.
 
 =head1 DESCRIPTION
 
-This class represents modifier characters, both within and at the end of
-the regular expression. For example, in C<qr{foo}smx> this class would
-represent the terminal C<smx>.
+This class represents modifier characters at the end of the regular
+expression.  For example, in C<qr{foo}smx> this class would represent
+the terminal C<smx>.
 
 =head1 METHODS
 

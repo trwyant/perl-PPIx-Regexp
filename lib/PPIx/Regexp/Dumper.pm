@@ -11,6 +11,7 @@ PPIx::Regexp::Dumper - Dump the results of parsing regular expressions
 =head1 INHERITANCE
 
  PPIx::Regexp::Dumper
+ isa PPIx::Regexp::Support
 
 =head1 DESCRIPTION
 
@@ -45,7 +46,9 @@ our $VERSION = '0.000_03';
 
 =head2 new
 
- my $dumper = PPIx::Regexp::Dumper->new( '/foo/' );
+ my $dumper = PPIx::Regexp::Dumper->new(
+     '/foo/', ordinal => 1,
+ );
 
 This static method instantiates the dumper. It takes the string or
 L<PPIx::Regexp::Tokenizer|PPIx::Regexp::Tokenizer> to be dumped as the
@@ -78,6 +81,18 @@ hierarchy. This is ignored if the C<test> argument is true.
 
 The default is zero.
 
+=item ordinal boolean
+
+If true, this option causes the C<ordinal> values of
+L<PPIx::Regexp::Token::Literal|PPIx::Regexp::Token::Literal> objects to
+be dumped.
+
+=item perl_version boolean
+
+If true, this option causes the C<perl_version_introduced> and
+C<perl_version_removed> values associated with each object dumped to be
+displayed.
+
 =item significant boolean
 
 If true, this option causes only significant elements to be dumped.
@@ -107,6 +122,8 @@ The default is false.
 If greater than zero, this option causes a trace of the parse. This
 option is unsupported in the sense that the author reserves the right to
 change it without notice.
+
+The default is zero.
 
 =item verbose number
 
@@ -211,7 +228,7 @@ sub list {
 
  $dumper->print();
 
-This method simply prints the result of </string> to standard out.
+This method simply prints the result of L</string> to standard out.
 
 =cut
 

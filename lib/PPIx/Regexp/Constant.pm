@@ -48,7 +48,23 @@ Readonly::Scalar our $TOKEN_UNKNOWN	=> 'PPIx::Regexp::Token::Unknown';
 
 1;
 
+__END__
+
+=head1 NAME
+
+PPIx::Regexp::Constant - Constants for the PPIx::Regexp system
+
+=head1 SYNOPSIS
+
+ use PPIx::Regexp::Constant qw{ $TOKEN_UNKNOWN }
+ print "An unknown token's class is $TOKEN_UNKNOWN\n";
+
 =head1 DETAILS
+
+This module defines manifest constants for use by the various
+C<PPIx::Regexp> modules. These constants are to be considered B<private>
+to the C<PPIx::Regexp> system, and the author reserves the right to
+change them without notice.
 
 This module exports the following manifest constants:
 
@@ -108,6 +124,19 @@ L<PPIx::Regexp::Token::Literal|PPIx::Regexp::Token::Literal>.
 
 The name of the class that represents the unknown token. That is,
 L<PPIx::Regexp::Token::Unknown|PPIx::Regexp::Token::Unknown>.
+
+=head1 SUPPORT
+
+Support is by the author. Please file bug reports at
+L<http://rt.cpan.org>, or in electronic mail to the author.
+
+=head1 AUTHOR
+
+Thomas R. Wyant, III F<wyant at cpan dot org>
+
+=head1 COPYRIGHT
+
+Copyright 2009 by Thomas R. Wyant, III.
 
 =cut
 

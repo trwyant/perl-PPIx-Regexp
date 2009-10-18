@@ -18,25 +18,10 @@ This class represents a variable interpolation into a regular
 expression. In the L</SYNOPSIS> the C<$foo> would be represented by an
 object of this class.
 
-For reasons of expediency more than consistency, the replacement portion
-of a substitution will also be represented by this class if the /e
-modifier is present. For example, in
-
- s/ <time> / scalar time /smxe;
-
-the C< scalar time > will be represented by an object of this class.
-This choice was made because the focus of this package is on the regular
-expression portion of the substitution, so there did not seem to be a
-very strong reason to introduce a new class. But someone wanting to
-investigate the substitution could use the C<ppi> method to extract a
-L<PPI::Document|PPI::Document> representing the substitution, to be
-subjected to further analysis.
-
 =head1 METHODS
 
-This class provides the following public methods. Methods not documented
-here or in a superclass are private, and unsupported in the sense that
-the author reserves the right to change or remove them without notice.
+This class provides no public methods beyond those provided by its
+superclass.
 
 =cut
 

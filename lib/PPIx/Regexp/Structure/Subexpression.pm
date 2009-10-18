@@ -16,7 +16,7 @@ PPIx::Regexp::Structure::Subexpression - Represent an independent subexpression
 =head1 DESCRIPTION
 
 This class represents an independent subexpression which must (says
-F<perlre> match at the current location.
+F<perlre>) match at the current location.
 
 =head1 METHODS
 

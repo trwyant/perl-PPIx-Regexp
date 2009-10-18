@@ -24,10 +24,6 @@ used to give the lexer a hint about what is going on.
 This class provides no public methods beyond those provided by its
 superclass.
 
-This class provides the following public methods. Methods not documented
-here are private, and unsupported in the sense that the author reserves
-the right to change or remove them without notice.
-
 =cut
 
 package PPIx::Regexp::Token::Delimiter;
@@ -41,23 +37,6 @@ our $VERSION = '0.000_03';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
-
-=begin comment
-
-sub __PPIX_TOKENIZER__regexp {
-    my ( $class, $tokenizer, $character ) = @_;
-
-    if ( $character eq 'x' ) {
-	$tokenizer->accept_character( 1 );
-	return;
-    }
-
-    return $tokenizer->reject_character();
-}
-
-=end comment
-
-=cut
 
 1;
 

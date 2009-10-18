@@ -42,15 +42,15 @@ __END__
 
 =head1 NAME
 
-redump - Dump a regular expression
+predump - Dump a regular expression
 
 =head1 SYNOPSIS
 
- redump -ordinal 'm/foo/x'
+ predump -ordinal 'm/foo/x'
 
 You can use
 
- redump -help
+ predump -help
 
 for full documentation on usage.
 

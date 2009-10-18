@@ -57,7 +57,11 @@ sub _new {
 
 =head2 child
 
-This method returns the child at the given index.
+ my $kid = $node->child( 0 );
+
+This method returns the child at the given index. The indices start from
+zero, and negative indices are from the end of the list, so that
+C<< $node->child( -1 ) >> returns the last child of the node.
 
 =cut
 
@@ -81,7 +85,9 @@ sub children {
 
 =head2 contains
 
-This method returns true if the given element is contained in the Node,
+ print $node->contains( $elem ) ? "yes\n" : "no\n";
+
+This method returns true if the given element is contained in the node,
 or false otherwise.
 
 =cut
@@ -117,6 +123,13 @@ C<PPIx::Regexp::Node> proper, it is the same as C<children()>.
 }
 
 =head2 find
+
+ my $rslt = $node->find( 'PPIx::Regexp::Token::Literal' );
+ my $rslt = $node->find( 'Token::Literal' );
+ my $rslt = $node->find( sub {
+     return $_[1]->isa( 'PPIx::Regexp::Token::Literal' )
+	 && $_[1]->ordinal < ord(' ');
+     } );
 
 This method finds things.
 
@@ -173,9 +186,14 @@ sub find {
 
 =head2 find_parents
 
-This method takes the same arguments as C<find>, but instead of the
-found objects themselves returns their parents. No parent will appear
-more than once in the output.
+ my $rslt = $node->find_parents( sub {
+     return $_[1]->isa( 'PPIx::Regexp::Token::Operator' )
+         && $_[1]->content() eq '|';
+     } );
+
+This convenience method takes the same arguments as C<find>, but instead
+of the found objects themselves returns their parents. No parent will
+appear more than once in the output.
 
 The return is a reference to the array of parents if any were found. If
 none were found the return is false but defined. If an error occurred
@@ -202,7 +220,7 @@ sub find_parents {
 
 =head2 find_first
 
-This method has the same arguments as C<find()>, but returns either a
+This method has the same arguments as L</find>, but returns either a
 reference to the first element found, a false (but defined) value if no
 elements were found, or C<undef> if an error occurred.
 

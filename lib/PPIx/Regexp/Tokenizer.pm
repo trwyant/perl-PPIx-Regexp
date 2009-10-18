@@ -782,11 +782,6 @@ This method returns the number of tokenization failures encountered. A
 tokenization failure is represented in the output token stream by a
 L<PPIx::Regexp::Token::Unknown|PPIx::Regexp::Token::Unknown>.
 
-=head2 interpolates
-
-This method returns true if the regular expression interpolates; that
-is, if the delimiter is not a single quote.
-
 =head2 modifier
 
  $tokenizer->modifier( 'x' )
@@ -794,41 +789,6 @@ is, if the delimiter is not a single quote.
 
 This method returns true if the given modifier character was found on
 the end of the regular expression, and false otherwise.
-
-=head2 modifier_duplicate
-
- $tokenizer->modifier_duplicate();
-
-This method duplicates the modifiers on the top of the modifier stack,
-with the intent of creating a locally-scoped copy of the modifiers. This
-should only be called by an external tokenizer that is actually creating
-a modifier scope. In other words, only when creating a
-L<PPIx::Regexp::Token::Structure|PPIx::Regexp::Token::Structure> token
-whose content is '('.
-
-=head2 modifier_modify
-
- $tokenizer->modifier_modify( name => $value ... );
-
-This method sets new values for the modifiers in the local scope. Only
-the modifiers whose names are actually passed have their values changed.
-
-This method is intended to be called after manufacturing a
-L<PPIx::Regexp::Token::Modifier|PPIx::Regexp::Token::Modifier> token,
-and passed the results of its C<modifiers> method.
-
-=head2 modifier_pop
-
- $tokenizer->modifier_pop();
-
-This method removes the modifiers on the top of the modifier stack. This
-should only be called by an external tokenizer that is ending a modifier
-scope. In other words, only when creating a
-L<PPIx::Regexp::Token::Structure|PPIx::Regexp::Token::Structure> token
-whose content is ')'.
-
-Note that this method will never pop the last modifier item off the
-stack, to guard against unmatched right parentheses.
 
 =head2 next_token
 
@@ -971,6 +931,11 @@ recursion which would occur if the condition were not trapped.
 An external tokenizer B<must> return anything returned by get_token;
 otherwise tokens get lost.
 
+=head2 interpolates
+
+This method returns true if the top-level structure being tokenized
+interpolates; that is, if the delimiter is not a single quote.
+
 =head2 is_bracket
 
  $tokenizer->is_bracket()
@@ -993,7 +958,7 @@ This method is used by this class (and possibly by individual
 tokenizers) to manufacture a token. Its arguments are the number of
 characters to include in the token, and optionally the class of the
 token. If no class name is given, the caller's class is used. Class
-names may be shortened by removing the initial 'PPIx::Regexp', which
+names may be shortened by removing the initial 'PPIx::Regexp::', which
 will be restored by this method.
 
 The token will be manufactured from the given number of characters
@@ -1002,6 +967,41 @@ starting at the current cursor position, which will be adjusted.
 If the given length would include characters past the end of the string
 being tokenized, the length is reduced appropriately. If this means a
 token with no characters, nothing is returned.
+
+=head2 modifier_duplicate
+
+ $tokenizer->modifier_duplicate();
+
+This method duplicates the modifiers on the top of the modifier stack,
+with the intent of creating a locally-scoped copy of the modifiers. This
+should only be called by an external tokenizer that is actually creating
+a modifier scope. In other words, only when creating a
+L<PPIx::Regexp::Token::Structure|PPIx::Regexp::Token::Structure> token
+whose content is '('.
+
+=head2 modifier_modify
+
+ $tokenizer->modifier_modify( name => $value ... );
+
+This method sets new values for the modifiers in the local scope. Only
+the modifiers whose names are actually passed have their values changed.
+
+This method is intended to be called after manufacturing a
+L<PPIx::Regexp::Token::Modifier|PPIx::Regexp::Token::Modifier> token,
+and passed the results of its C<modifiers> method.
+
+=head2 modifier_pop
+
+ $tokenizer->modifier_pop();
+
+This method removes the modifiers on the top of the modifier stack. This
+should only be called by an external tokenizer that is ending a modifier
+scope. In other words, only when creating a
+L<PPIx::Regexp::Token::Structure|PPIx::Regexp::Token::Structure> token
+whose content is ')'.
+
+Note that this method will never pop the last modifier item off the
+stack, to guard against unmatched right parentheses.
 
 =head2 peek
 

@@ -1,6 +1,7 @@
 =head1 NAME
 
 PPIx::Regexp::Lexer - Assemble tokenizer output.
+
 =head1 SYNOPSIS
 
  use PPIx::Regexp::Lexer;

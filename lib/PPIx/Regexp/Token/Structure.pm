@@ -25,10 +25,6 @@ expression is stored here.
 This class provides no public methods beyond those provided by its
 superclass.
 
-This class provides the following public methods. Methods not documented
-here are private, and unsupported in the sense that the author reserves
-the right to change or remove them without notice.
-
 =cut
 
 package PPIx::Regexp::Token::Structure;
