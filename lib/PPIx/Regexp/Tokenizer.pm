@@ -609,9 +609,12 @@ sub __PPIX_TOKEN_FALLBACK__repl {
 
     # As a fallback in replacement mode, any escaped character is a literal.
     if ( $character eq '\\'
-	&& $tokenizer->{cursor_limit} - $tokenizer->{cursor_curr} > 1
-    ) {
-	return $tokenizer->make_token( 2, $TOKEN_LITERAL );
+	&& defined ( my $next = $tokenizer->peek( 1 ) ) ) {
+
+	if ( $tokenizer->interpolates() || $next eq q<'> || $next eq '\\' ) {
+	    return $tokenizer->make_token( 2, $TOKEN_LITERAL );
+	}
+	return $tokenizer->make_token( 1, $TOKEN_LITERAL );
     }
 
     # So is any normal character.

@@ -109,7 +109,13 @@ sub __PPIX_TOKENIZER__regexp {
     return;
 }
 
-*__PPIX_TOKENIZER__repl = \&__PPIX_TOKENIZER__regexp;
+sub __PPIX_TOKENIZER__repl {
+    my ( $class, $tokenizer, $character ) = @_;
+
+    $tokenizer->interpolates() and goto &__PPIX_TOKENIZER__regexp;
+
+    return;
+}
 
 1;
 

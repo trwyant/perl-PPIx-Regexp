@@ -265,7 +265,18 @@ sub __PPIX_TOKENIZER__regexp {
 
 }
 
-*__PPIX_TOKENIZER__repl = \&__PPIX_TOKENIZER__regexp;
+sub __PPIX_TOKENIZER__repl {
+    my ( $class, $tokenizer, $character ) = @_;
+
+    exists $sigil_alternate{$character} or return;
+
+    if ( my $accept = _interpolation( $class, $tokenizer, $character ) ) {
+	return $accept;
+    }
+
+    return $tokenizer->make_token( 1, $TOKEN_LITERAL );
+
+}
 
 1;
 
