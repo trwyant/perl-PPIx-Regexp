@@ -99,8 +99,16 @@ sub __PPIX_TOKENIZER__regexp {
     exists $cookie{$control}
 	and $tokenizer->cookie( $COOKIE_QUOTE, $cookie{$control} );
 
-    # Return our cookie.
+    # Return our token.
     return $token;
+}
+
+sub __PPIX_TOKENIZER__repl {
+    my ( $class, $tokenizer, $character ) = @_;
+
+    $tokenizer->interpolates() and goto &__PPIX_TOKENIZER__regexp;
+
+    return;
 }
 
 1;
