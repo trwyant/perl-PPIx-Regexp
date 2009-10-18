@@ -31,7 +31,7 @@ our @EXPORT_OK = qw{
     value
 };
 
-our @EXPORT = @EXPORT_OK;
+our @EXPORT = @EXPORT_OK;	## no critic (ProhibitAutomaticExportation)
 
 my ( $parse, $kind, @nav, $nav, $obj );
 
@@ -264,6 +264,7 @@ sub _pause {
     } else {					# in PPI's
 	sleep 1;				# t/08_regression.t, and
     }						# who am I to argue?
+    return;
 }
 
 1;
