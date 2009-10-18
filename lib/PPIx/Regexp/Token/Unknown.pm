@@ -15,7 +15,10 @@ PPIx::Regexp::Token::Unknown - Represent an unknown token
 
 =head1 DESCRIPTION
 
-Insert tedious prose here.
+This token represents something that could not be identified by the
+tokenizer. Sometimes the lexer can fix these up, but the presence of one
+of these in a finished parse represents something in the regular
+expression that was not understood.
 
 =head1 METHODS
 
@@ -39,9 +42,10 @@ sub can_be_quantified { return };
 
 =head2 ordinal
 
-This method returns the results of the ord built-in on the content. No
-attempt is made to interpret the content, since after all this B<is> the
-unknown token.
+This method returns the results of the ord built-in on the content
+(meaning, of course, the first character of the content). No attempt is
+made to interpret the content, since after all this B<is> the unknown
+token.
 
 =cut
 

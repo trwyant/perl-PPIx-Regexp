@@ -14,7 +14,10 @@ PPIx::Regexp::Dumper - Dump the results of parsing regular expressions
 
 =head1 DESCRIPTION
 
-Insert tedious prose here.
+This class generates a formatted dump of a
+L<PPIx::Regexp::Element|PPIx::Regexp::Element> object (or any subclass
+thereof), a L<PPIx::Regexp::Tokenizer|PPIx::Regexp::Tokenizer>
+object, or a string that can be made into one of these.
 
 =head1 METHODS
 
