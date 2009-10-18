@@ -3,7 +3,7 @@ package main;
 use strict;
 use warnings;
 
-use Test::More 0.40 tests => 134;
+use Test::More 0.40 tests => 139;
 
 require_ok( 'PPIx::Regexp' );
 isa_ok( 'PPIx::Regexp', 'PPIx::Regexp::Node' );
@@ -11,6 +11,7 @@ isa_ok( 'PPIx::Regexp', 'PPIx::Regexp::Node' );
 require_ok( 'PPIx::Regexp::Constant' );
 
 require_ok( 'PPIx::Regexp::Dumper' );
+isa_ok( 'PPIx::Regexp::Dumper', 'PPIx::Regexp::Support' );
 isa_ok( PPIx::Regexp::Dumper->new( 'xyzzy'), 'PPIx::Regexp::Dumper' );
 
 require_ok( 'PPIx::Regexp::Element' );
@@ -45,6 +46,9 @@ isa_ok( 'PPIx::Regexp::Structure::CharClass', 'PPIx::Regexp::Structure'
 require_ok( 'PPIx::Regexp::Structure::Code' );
 isa_ok( 'PPIx::Regexp::Structure::Code', 'PPIx::Regexp::Structure' );
 
+require_ok( 'PPIx::Regexp::Structure::Main' );
+isa_ok( 'PPIx::Regexp::Structure::Main', 'PPIx::Regexp::Structure' );
+
 require_ok( 'PPIx::Regexp::Structure::Modifier' );
 isa_ok( 'PPIx::Regexp::Structure::Modifier', 'PPIx::Regexp::Structure'
     );
@@ -67,6 +71,8 @@ isa_ok( 'PPIx::Regexp::Structure::Switch', 'PPIx::Regexp::Structure' );
 require_ok( 'PPIx::Regexp::Structure::Unknown' );
 isa_ok( 'PPIx::Regexp::Structure::Unknown', 'PPIx::Regexp::Structure'
     );
+
+require_ok( 'PPIx::Regexp::Support' );
 
 require_ok( 'PPIx::Regexp::Token' );
 isa_ok( 'PPIx::Regexp::Token', 'PPIx::Regexp::Element' );
@@ -243,6 +249,7 @@ isa_ok( PPIx::Regexp::Token::Whitespace->_new( 'xyzzy'),
     'PPIx::Regexp::Token::Whitespace' );
 
 require_ok( 'PPIx::Regexp::Tokenizer' );
+isa_ok( 'PPIx::Regexp::Tokenizer', 'PPIx::Regexp::Support' );
 isa_ok( PPIx::Regexp::Tokenizer->new( 'xyzzy'),
     'PPIx::Regexp::Tokenizer' );
 

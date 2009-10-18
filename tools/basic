@@ -26,7 +26,7 @@ my %special = (
     },
     'PPIx::Regexp::Dumper' => {
 	instance => [ new => [ 'xyzzy' ] ],
-	parent	=> undef,
+	parent	=> 'PPIx::Regexp::Support',
     },
     'PPIx::Regexp::Token::Backreference' => {
 	parent => 'PPIx::Regexp::Token::Reference',
@@ -56,9 +56,12 @@ my %special = (
     'PPIx::Regexp::Structure::NamedCapture' => {
 	parent => 'PPIx::Regexp::Structure::Capture',
     },
+    'PPIx::Regexp::Support' => {
+	parent	=> undef,
+    },
     'PPIx::Regexp::Tokenizer' => {
 	instance => [ new => [ 'xyzzy' ] ],
-	parent	=> undef,
+	parent	=> 'PPIx::Regexp::Support',
     },
     'PPIx::Regexp::Token' => {
 	parent	=> 'PPIx::Regexp::Element',
