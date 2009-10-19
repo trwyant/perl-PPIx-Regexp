@@ -10,8 +10,8 @@ PPIx::Regexp::Structure::Code - Represent one of the code structures.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Structure::Code
- isa PPIx::Regexp::Structure
+C<PPIx::Regexp::Structure::Code> is a
+L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
 =head1 DESCRIPTION
 

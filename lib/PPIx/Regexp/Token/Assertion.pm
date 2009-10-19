@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Assertion - Represent a simple assertion.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Assertion
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::Assertion> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 

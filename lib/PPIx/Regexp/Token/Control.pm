@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Control - Case and quote control.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Control
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::Control> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 

@@ -10,8 +10,8 @@ PPIx::Regexp::Token::CharClass - Represent a character class
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::CharClass
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::CharClass> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 

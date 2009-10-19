@@ -10,8 +10,8 @@ PPIx::Regexp::Structure::NamedCapture - Represent a named capture
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Structure::NamedCapture
- isa PPIx::Regexp::Structure::Capture
+C<PPIx::Regexp::Structure::NamedCapture> is a
+L<PPIx::Regexp::Structure::Capture|PPIx::Regexp::Structure::Capture>.
 
 =head1 DESCRIPTION
 

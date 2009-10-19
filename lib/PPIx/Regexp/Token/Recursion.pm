@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Recursion - Represent a recursion
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Recursion
- isa PPIx::Regexp::Token::Reference
+C<PPIx::Regexp::Token::Recursion> is a
+L<PPIx::Regexp::Token::Reference|PPIx::Regexp::Token::Reference>.
 
 =head1 DESCRIPTION
 

@@ -9,8 +9,8 @@ PPIx::Regexp::Structure - Represent a structure.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Structure
- isa PPIx::Regexp::Node
+C<PPIx::Regexp::Structure> is a
+L<PPIx::Regexp::Node|PPIx::Regexp::Node>.
 
 =head1 DESCRIPTION
 

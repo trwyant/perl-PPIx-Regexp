@@ -10,9 +10,9 @@ PPIx::Regexp::Token::GroupType::Modifier - Represent the modifiers in a modifier
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::GroupType::Modifier
- isa PPIx::Regexp::Token::GroupType
- isa PPIx::Regexp::Token::Modifier
+C<PPIx::Regexp::Token::GroupType::Modifier> is a
+L<PPIx::Regexp::Token::Modifier|PPIx::Regexp::Token::Modifier> and a
+L<PPIx::Regexp::Token::GroupType|PPIx::Regexp::Token::GroupType>.
 
 =head1 DESCRIPTION
 

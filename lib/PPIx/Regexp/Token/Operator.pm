@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Operator - Represent an operator.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Operator
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::Operator> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 

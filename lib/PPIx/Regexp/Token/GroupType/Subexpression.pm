@@ -10,8 +10,8 @@ PPIx::Regexp::Token::GroupType::Subexpression - Represent an independent subexpr
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::GroupType::Subexpression
- isa PPIx::Regexp::Token::GroupType
+C<PPIx::Regexp::Token::GroupType::Subexpression> is a
+L<PPIx::Regexp::Token::GroupType|PPIx::Regexp::Token::GroupType>.
 
 =head1 DESCRIPTION
 

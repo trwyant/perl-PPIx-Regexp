@@ -10,8 +10,8 @@ PPIx::Regexp::Structure::Switch - Represent a switch
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Structure::Switch
- isa PPIx::Regexp::Structure
+C<PPIx::Regexp::Structure::Switch> is a
+L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
 =head1 DESCRIPTION
 

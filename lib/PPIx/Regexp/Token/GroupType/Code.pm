@@ -10,8 +10,8 @@ PPIx::Regexp::Token::GroupType::Code - Represent one of the embedded code indica
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::GroupType::Code
- isa PPIx::Regexp::Token::GroupType
+C<PPIx::Regexp::Token::GroupType::Code> is a
+L<PPIx::Regexp::Token::GroupType|PPIx::Regexp::Token::GroupType>.
 
 =head1 DESCRIPTION
 

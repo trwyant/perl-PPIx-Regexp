@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Reference - Represent a reference to a capture
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Reference
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::Reference> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 

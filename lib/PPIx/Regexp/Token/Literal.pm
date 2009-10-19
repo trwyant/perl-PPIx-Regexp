@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Literal - Represent a literal character
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Literal
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::Literal> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 

@@ -10,8 +10,8 @@ PPIx::Regexp::Node::Range - Represent a character range in a character class
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Node::Range
- isa PPIx::Regexp::Node
+C<PPIx::Regexp::Node::Range> is a
+L<PPIx::Regexp::Node|PPIx::Regexp::Node>.
 
 =head1 DESCRIPTION
 

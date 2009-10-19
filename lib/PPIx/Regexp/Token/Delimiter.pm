@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Delimiter - Represent the delimiters of the regular express
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Delimiter
- isa PPIx::Regexp::Token::Structure
+C<PPIx::Regexp::Token::Delimiter> is a
+L<PPIx::Regexp::Token::Structure|PPIx::Regexp::Token::Structure>.
 
 =head1 DESCRIPTION
 

@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Unknown - Represent an unknown token
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Unknown
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::Unknown> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 

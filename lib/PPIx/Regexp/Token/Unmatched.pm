@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Unmatched - Represent an unmatched right bracket
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Unmatched
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::Unmatched> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 

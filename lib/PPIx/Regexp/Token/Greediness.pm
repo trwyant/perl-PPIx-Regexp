@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Greediness - Represent a greediness qualifier.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Greediness
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::Greediness> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 

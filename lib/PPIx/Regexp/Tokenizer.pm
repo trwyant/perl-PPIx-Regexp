@@ -707,8 +707,8 @@ PPIx::Regexp::Tokenizer - Tokenize a regular expression
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Tokenizer
- isa PPIx::Regexp::Support
+C<PPIx::Regexp::Tokenizer> is a
+L<PPIx::Regexp::Support|PPIx::Regexp::Support>.
 
 =head1 DESCRIPTION
 

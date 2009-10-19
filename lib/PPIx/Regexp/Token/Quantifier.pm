@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Quantifier - Represent an atomic quantifier.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Quantifier
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::Quantifier> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 

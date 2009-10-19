@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Code - Represent a chunk of Perl embedded in a regular expr
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Code
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::Code> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 

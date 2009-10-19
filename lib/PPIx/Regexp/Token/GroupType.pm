@@ -10,8 +10,8 @@ PPIx::Regexp::Token::GroupType - Represent a grouping parenthesis type.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::GroupType
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::GroupType> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 

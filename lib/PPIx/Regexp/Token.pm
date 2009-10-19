@@ -9,8 +9,8 @@ PPIx::Regexp::Token - Base class for PPIx::Regexp tokens.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token
- isa PPIx::Regexp::Element
+C<PPIx::Regexp::Token> is a
+L<PPIx::Regexp::Element|PPIx::Regexp::Element>.
 
 =head1 DESCRIPTION
 

@@ -8,7 +8,7 @@ No user-serviceable parts inside.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Element
+C<PPIx::Regexp::Element> is not descended from any other class.
 
 =head1 DESCRIPTION
 

@@ -10,8 +10,8 @@ PPIx::Regexp::Structure::Modifier - Represent modifying parentheses
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Structure::Modifier
- isa PPIx::Regexp::Structure
+C<PPIx::Regexp::Structure::Modifier> is a
+L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
 =head1 DESCRIPTION
 

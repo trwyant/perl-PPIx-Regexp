@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Comment - Represent a comment.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Comment
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::Comment> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 

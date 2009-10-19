@@ -10,8 +10,8 @@ PPIx::Regexp::Structure::Assertion - Represent a parenthesized assertion
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Structure::Assertion
- isa PPIx::Regexp::Structure
+C<PPIx::Regexp::Structure::Assertion> is a
+L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
 =head1 DESCRIPTION
 

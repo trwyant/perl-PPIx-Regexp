@@ -9,8 +9,8 @@ PPIx::Regexp::Node - Represent a container
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Node
- isa PPIx::Element
+C<PPIx::Regexp::Node> is a
+L<PPIx::Regexp::Element|PPIx::Regexp::Element>.
 
 =head1 DESCRIPTION
 

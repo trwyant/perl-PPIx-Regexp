@@ -10,8 +10,8 @@ PPIx::Regexp::Structure::Main - Represent a regular expression proper, or a subs
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Structure::Main
- isa PPIx::Regexp::Structure
+C<PPIx::Regexp::Structure::Main> is a
+L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
 =head1 DESCRIPTION
 

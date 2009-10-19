@@ -10,8 +10,8 @@ PPIx::Regexp::Token::CharClass::Simple - This class represents a simple characte
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::CharClass::Simple
- isa PPIx::Regexp::Token::CharClass
+C<PPIx::Regexp::Token::CharClass::Simple> is a
+L<PPIx::Regexp::Token::CharClass|PPIx::Regexp::Token::CharClass>.
 
 =head1 DESCRIPTION
 

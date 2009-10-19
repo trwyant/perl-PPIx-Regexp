@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Whitespace - Represent whitespace
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Whitespace
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::Whitespace> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 

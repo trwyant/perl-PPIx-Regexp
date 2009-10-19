@@ -10,8 +10,8 @@ PPIx::Regexp::Token::GroupType::BranchReset - Represent a branch reset specifier
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::GroupType::BranchReset
- isa PPIx::Regexp::Token::GroupType
+C<PPIx::Regexp::Token::GroupType::BranchReset> is a
+L<PPIx::Regexp::Token::GroupType|PPIx::Regexp::Token::GroupType>.
 
 =head1 DESCRIPTION
 

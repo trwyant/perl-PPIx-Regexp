@@ -12,7 +12,7 @@ PPIx::Regexp::Lexer - Assemble tokenizer output.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Lexer
+C<PPIx::Regexp::Lexer> is not descended from any other class.
 
 =head1 DESCRIPTION
 

@@ -10,7 +10,7 @@ PPIx::Regexp::Support - Basis for the PPIx::Regexp support classes
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Support
+C<PPIx::Regexp::Support> is not descended from any other class.
 
 =head1 DESCRIPTION
 

@@ -10,8 +10,8 @@ PPIx::Regexp::Structure::BranchReset - Represent a branch reset group
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Structure::BranchReset
- isa PPIx::Regexp::Structure
+C<PPIx::Regexp::Structure::BranchReset> is a
+L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
 =head1 DESCRIPTION
 

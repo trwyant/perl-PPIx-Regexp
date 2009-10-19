@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Structure - Represent structural elements.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Structure
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::Structure> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 

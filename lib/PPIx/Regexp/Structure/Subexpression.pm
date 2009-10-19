@@ -10,8 +10,8 @@ PPIx::Regexp::Structure::Subexpression - Represent an independent subexpression
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Structure::Subexpression
- isa PPIx::Regexp::Structure
+C<PPIx::Regexp::Structure::Subexpression> is a
+L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
 =head1 DESCRIPTION
 

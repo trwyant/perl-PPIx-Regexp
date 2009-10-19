@@ -10,8 +10,8 @@ PPIx::Regexp::Structure::Unknown - Represent an unknown structure.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Structure::Unknown
- isa PPIx::Regexp::Structure
+C<PPIx::Regexp::Structure::Unknown> is a
+L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
 =head1 DESCRIPTION
 

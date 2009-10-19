@@ -12,8 +12,7 @@ PPIx::Regexp - Represent a regular expression of some sort
 
 =head1 INHERITANCE
 
- PPIx::Regexp
- isa PPIx::Regexp::Node
+C<PPIx::Regexp> is a L<PPIx::Regexp::Node|PPIx::Regexp::Node>.
 
 =head1 DESCRIPTION
 

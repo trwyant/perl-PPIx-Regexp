@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Condition - Represent the condition of a switch
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Condition
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::Condition> is a
+L<PPIx::Regexp::Token::Reference|PPIx::Regexp::Token::Reference>.
 
 =head1 DESCRIPTION
 

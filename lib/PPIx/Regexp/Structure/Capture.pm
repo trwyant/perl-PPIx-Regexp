@@ -10,8 +10,8 @@ PPIx::Regexp::Structure::Capture - Represent capture parentheses.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Structure::Capture
- isa PPIx::Regexp::Structure
+C<PPIx::Regexp::Structure::Capture> is a
+L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
 =head1 DESCRIPTION
 

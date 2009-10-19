@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Backtrack - Represent backtrack control.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Backtrack
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::Backtrack> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 

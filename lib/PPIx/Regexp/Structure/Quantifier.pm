@@ -10,8 +10,8 @@ PPIx::Regexp::Structure::Quantifier - Represent curly bracket quantifiers
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Structure::Quantifier
- isa PPIx::Regexp::Structure
+C<PPIx::Regexp::Structure::Quantifier> is a
+L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
 =head1 DESCRIPTION
 

@@ -9,8 +9,8 @@ PPIx::Regexp::Token::Interpolation - Represent an interpolation in the PPIx::Reg
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Interpolation
- isa PPIx::Regexp::Token::Code
+C<PPIx::Regexp::Token::Interpolation> is a
+L<PPIx::Regexp::Token::Code|PPIx::Regexp::Token::Code>.
 
 =head1 DESCRIPTION
 

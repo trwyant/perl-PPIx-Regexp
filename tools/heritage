@@ -6,13 +6,71 @@ use warnings;
 use autodie;
 
 use File::Find;
+use Getopt::Long;
+use IO::File;
+use Text::Wrap;
 use YAML;
+
+my %opt;
+
+GetOptions( \%opt, qw{ text! update! } ) or die;
+
+$opt{text} ||= $opt{update};
 
 find ( \&heritage, 'lib' );
 
 my %roots;
 
-print Dump( \%roots );
+if ( $opt{text} ) {
+    local $Text::Wrap::columns = 72;
+    foreach my $module ( sort keys %roots ) {
+	my $heritage;
+	if ( my @parents = @{ $roots{$module} } ) {
+	    $heritage = "C<$module> is a " . join(' and a ',
+		map { "L<$_|$_>" } @parents ) . ".";
+	} else {
+	    $heritage = "C<$module> is not descended from any other class.";
+	}
+	$heritage = wrap( '', '', $heritage );
+	if ( $opt{update} ) {
+	    ( my $fn = $module ) =~ s{ :: }{/}smxg;
+	    $fn = 'lib/' . $fn . '.pm';
+	    -e $fn or die "$fn does not exist.";
+	    my $fh = IO::File->new( $fn, '<' )
+		or die "Unable to open $fn for input: $!\n";
+	    my @content;
+	    while (<$fh>) {
+		push @content, $_;
+		if ( m/ \A =head1 \s+ INHERITANCE \b /smx ) {
+		    push @content, "\n";
+		    push @content, $heritage . "\n";
+		    push @content, "\n";
+		    while (<$fh>) {
+			m/ \A =head1 \b /smx or next;
+			push @content, $_;
+			last;
+		    }
+		}
+	    }
+	    close $fh;
+	    $fh = IO::File->new( $fn, '>' )
+		or die "Unable to open $fn for output: $!\n";
+	    print { $fh } @content;
+	    close $fh;
+	} else {
+	    print $heritage, "\n\n";
+	}
+    }
+} else {
+    print Dump( \%roots );
+}
+
+my %brkt = (
+    '('	=> ')',
+    '{' => '}',
+    '[' => ']',
+    '<' => '>',
+);
 
 sub heritage {
     my ( $fn ) = $_;
@@ -23,10 +81,16 @@ sub heritage {
     local $_ = <$fh>;
     close $fh;
     m/ \b package \s+ ( (?: \w+ :: )* \w+ ) \s* ; /smx or return;
+    my $package = $1;
     my @parents;
-    $roots{$1} = \@parents;
+    $roots{$package} = \@parents;
     m/ \b use \s+ base \s+ ( [^;]* ) /smx or return;
     my $ancest = $1;
+    if ( $ancest =~ s/ \A qw \s* //smx ) {
+	$ancest =~ s/ \A . \s* //smx;
+	$ancest =~ s/ \s* . \z //smx;
+    }
+    warn "$package => $ancest";
     foreach my $class ( split qr{\s+}smx, $ancest ) {
 	$class =~ m/ \A (?: \w+ :: )* \w+ \z /smx or next;
 	push @parents, $class;

@@ -10,8 +10,8 @@ PPIx::Regexp::Structure::CharClass - Represent a character class
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Structure::CharClass
- isa PPIx::Regexp::Structure
+C<PPIx::Regexp::Structure::CharClass> is a
+L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
 =head1 DESCRIPTION
 

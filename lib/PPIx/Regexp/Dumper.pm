@@ -10,8 +10,8 @@ PPIx::Regexp::Dumper - Dump the results of parsing regular expressions
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Dumper
- isa PPIx::Regexp::Support
+C<PPIx::Regexp::Dumper> is a
+L<PPIx::Regexp::Support|PPIx::Regexp::Support>.
 
 =head1 DESCRIPTION
 

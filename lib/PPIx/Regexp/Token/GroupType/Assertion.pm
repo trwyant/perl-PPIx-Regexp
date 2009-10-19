@@ -10,8 +10,8 @@ PPIx::Regexp::Token::GroupType::Assertion - Represent a look ahead or look behin
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::GroupType::Assertion
- isa PPIx::Regexp::Token::GroupType
+C<PPIx::Regexp::Token::GroupType::Assertion> is a
+L<PPIx::Regexp::Token::GroupType|PPIx::Regexp::Token::GroupType>.
 
 =head1 DESCRIPTION
 

@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Backreference - Represent a back reference
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Backreference
- isa PPIx::Regexp::Token::Reference
+C<PPIx::Regexp::Token::Backreference> is a
+L<PPIx::Regexp::Token::Reference|PPIx::Regexp::Token::Reference>.
 
 =head1 DESCRIPTION
 

@@ -10,8 +10,8 @@ PPIx::Regexp::Token::Modifier - Represent modifiers.
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Token::Modifier
- isa PPIx::Regexp::Token
+C<PPIx::Regexp::Token::Modifier> is a
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
 =head1 DESCRIPTION
 
