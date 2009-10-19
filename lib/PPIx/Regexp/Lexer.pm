@@ -113,7 +113,8 @@ error will be C<undef>.
 
 This method returns the number of parse failures encountered. A
 parse failure is either a tokenization failure (see
-L<PPIx::Regexp::Tokenizer/failures>) or a structural error.
+L<< PPIx::Regexp::Tokenizer->failures()|PPIx::Regexp::Tokenizer/failures >>)
+or a structural error.
 
 =cut
 

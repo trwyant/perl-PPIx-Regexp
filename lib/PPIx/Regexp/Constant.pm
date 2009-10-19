@@ -59,6 +59,10 @@ PPIx::Regexp::Constant - Constants for the PPIx::Regexp system
  use PPIx::Regexp::Constant qw{ $TOKEN_UNKNOWN }
  print "An unknown token's class is $TOKEN_UNKNOWN\n";
 
+=head1 INHERITANCE
+
+C<PPIx::Regexp::Constant> is an L<Exporter|Exporter>.
+
 =head1 DETAILS
 
 This module defines manifest constants for use by the various

@@ -112,13 +112,14 @@ Regexp classes mentioned previously are likely to do anything useful.
 This static method wraps L</new> in a caching mechanism. Only one object
 will be generated for a given L<PPI::Element|PPI::Element>, no matter
 how many times this method is called. Calls after the first for a given
-L<PPI::Element> simply return the same C<PPIx::Regexp> object.
+L<PPI::Element|PPI::ELement> simply return the same C<PPIx::Regexp>
+object.
 
 When the C<PPIx::Regexp> object is returned from cache, the values of
 the optional arguments are ignored.
 
 Calls to this method with the regular expression in a string rather than
-a L<PPI::Element> will not be cached.
+a L<PPI::Element|PPI::Element> will not be cached.
 
 B<Caveat:> This method is provided for code like
 L<Perl::Critic|Perl::Critic> which might instantiate the same object
@@ -343,7 +344,8 @@ __END__
 =head1 RESTRICTIONS
 
 By the nature of this module, it is never going to get everything right.
-The known problem areas involve interpolations one way or another.
+Many of the known problem areas involve interpolations one way or
+another.
 
 =head2 Ambiguous Syntax
 
