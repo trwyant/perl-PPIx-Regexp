@@ -13,6 +13,8 @@ PPIx::Regexp::Token::Unknown - Represent an unknown token
 C<PPIx::Regexp::Token::Unknown> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::Unknown> has no descendants.
+
 =head1 DESCRIPTION
 
 This token represents something that could not be identified by the

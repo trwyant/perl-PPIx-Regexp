@@ -13,6 +13,8 @@ PPIx::Regexp::Node::Range - Represent a character range in a character class
 C<PPIx::Regexp::Node::Range> is a
 L<PPIx::Regexp::Node|PPIx::Regexp::Node>.
 
+C<PPIx::Regexp::Node::Range> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents a character range in a character class. It is a

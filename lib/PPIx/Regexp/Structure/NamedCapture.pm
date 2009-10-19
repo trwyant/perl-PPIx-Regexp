@@ -13,6 +13,8 @@ PPIx::Regexp::Structure::NamedCapture - Represent a named capture
 C<PPIx::Regexp::Structure::NamedCapture> is a
 L<PPIx::Regexp::Structure::Capture|PPIx::Regexp::Structure::Capture>.
 
+C<PPIx::Regexp::Structure::NamedCapture> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents a named capture.

@@ -13,6 +13,8 @@ PPIx::Regexp::Token::GroupType::Switch - Represent the introducing characters fo
 C<PPIx::Regexp::Token::GroupType::Switch> is a
 L<PPIx::Regexp::Token::GroupType|PPIx::Regexp::Token::GroupType>.
 
+C<PPIx::Regexp::Token::GroupType::Switch> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents the characters right after a left parenthesis that

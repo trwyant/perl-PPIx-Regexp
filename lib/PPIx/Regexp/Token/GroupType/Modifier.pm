@@ -11,8 +11,10 @@ PPIx::Regexp::Token::GroupType::Modifier - Represent the modifiers in a modifier
 =head1 INHERITANCE
 
 C<PPIx::Regexp::Token::GroupType::Modifier> is a
-L<PPIx::Regexp::Token::Modifier|PPIx::Regexp::Token::Modifier> and a
-L<PPIx::Regexp::Token::GroupType|PPIx::Regexp::Token::GroupType>.
+L<PPIx::Regexp::Token::GroupType|PPIx::Regexp::Token::GroupType> and a
+L<PPIx::Regexp::Token::Modifier|PPIx::Regexp::Token::Modifier>.
+
+C<PPIx::Regexp::Token::GroupType::Modifier> has no descendants.
 
 =head1 DESCRIPTION
 

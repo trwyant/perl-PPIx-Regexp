@@ -13,6 +13,8 @@ PPIx::Regexp::Dumper - Dump the results of parsing regular expressions
 C<PPIx::Regexp::Dumper> is a
 L<PPIx::Regexp::Support|PPIx::Regexp::Support>.
 
+C<PPIx::Regexp::Dumper> has no descendants.
+
 =head1 DESCRIPTION
 
 This class generates a formatted dump of a

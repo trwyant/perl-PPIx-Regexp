@@ -13,6 +13,8 @@ PPIx::Regexp::Token::CharClass::POSIX - Represent a POSIX character class
 C<PPIx::Regexp::Token::CharClass::POSIX> is a
 L<PPIx::Regexp::Token::CharClass|PPIx::Regexp::Token::CharClass>.
 
+C<PPIx::Regexp::Token::CharClass::POSIX> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents a POSIX character class. It will only be

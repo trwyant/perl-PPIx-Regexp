@@ -13,6 +13,8 @@ PPIx::Regexp::Structure::Assertion - Represent a parenthesized assertion
 C<PPIx::Regexp::Structure::Assertion> is a
 L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
+C<PPIx::Regexp::Structure::Assertion> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents one of the parenthesized assertions, either look

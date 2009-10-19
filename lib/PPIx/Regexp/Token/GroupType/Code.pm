@@ -13,6 +13,8 @@ PPIx::Regexp::Token::GroupType::Code - Represent one of the embedded code indica
 C<PPIx::Regexp::Token::GroupType::Code> is a
 L<PPIx::Regexp::Token::GroupType|PPIx::Regexp::Token::GroupType>.
 
+C<PPIx::Regexp::Token::GroupType::Code> has no descendants.
+
 =head1 DESCRIPTION
 
 This method represents one of the embedded code indicators, either '?'

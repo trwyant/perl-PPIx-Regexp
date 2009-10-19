@@ -13,6 +13,16 @@ PPIx::Regexp::Token::GroupType - Represent a grouping parenthesis type.
 C<PPIx::Regexp::Token::GroupType> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::GroupType> is the parent of
+L<PPIx::Regexp::Token::GroupType::Assertion|PPIx::Regexp::Token::GroupType::Assertion>,
+L<PPIx::Regexp::Token::GroupType::BranchReset|PPIx::Regexp::Token::GroupType::BranchReset>,
+L<PPIx::Regexp::Token::GroupType::Code|PPIx::Regexp::Token::GroupType::Code>,
+L<PPIx::Regexp::Token::GroupType::Modifier|PPIx::Regexp::Token::GroupType::Modifier>,
+L<PPIx::Regexp::Token::GroupType::NamedCapture|PPIx::Regexp::Token::GroupType::NamedCapture>,
+L<PPIx::Regexp::Token::GroupType::Subexpression|PPIx::Regexp::Token::GroupType::Subexpression>
+and
+L<PPIx::Regexp::Token::GroupType::Switch|PPIx::Regexp::Token::GroupType::Switch>.
+
 =head1 DESCRIPTION
 
 This class represents any of the magic sequences of characters that can

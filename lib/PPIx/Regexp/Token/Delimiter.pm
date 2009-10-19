@@ -13,6 +13,8 @@ PPIx::Regexp::Token::Delimiter - Represent the delimiters of the regular express
 C<PPIx::Regexp::Token::Delimiter> is a
 L<PPIx::Regexp::Token::Structure|PPIx::Regexp::Token::Structure>.
 
+C<PPIx::Regexp::Token::Delimiter> has no descendants.
+
 =head1 DESCRIPTION
 
 This token represents the delimiters of the regular expression. Since

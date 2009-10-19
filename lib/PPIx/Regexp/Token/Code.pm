@@ -13,6 +13,9 @@ PPIx::Regexp::Token::Code - Represent a chunk of Perl embedded in a regular expr
 C<PPIx::Regexp::Token::Code> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::Code> is the parent of
+L<PPIx::Regexp::Token::Interpolation|PPIx::Regexp::Token::Interpolation>.
+
 =head1 DESCRIPTION
 
 This class represents a chunk of Perl code embedded in a regular

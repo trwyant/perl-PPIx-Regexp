@@ -13,6 +13,8 @@ PPIx::Regexp::Structure::Subexpression - Represent an independent subexpression
 C<PPIx::Regexp::Structure::Subexpression> is a
 L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
+C<PPIx::Regexp::Structure::Subexpression> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents an independent subexpression which must (says

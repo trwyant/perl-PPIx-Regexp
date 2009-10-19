@@ -13,6 +13,8 @@ PPIx::Regexp::Token::Comment - Represent a comment.
 C<PPIx::Regexp::Token::Comment> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::Comment> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents a comment - both parenthesized comments (i.e.

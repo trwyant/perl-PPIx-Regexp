@@ -13,6 +13,8 @@ PPIx::Regexp::Token::Unmatched - Represent an unmatched right bracket
 C<PPIx::Regexp::Token::Unmatched> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::Unmatched> has no descendants.
+
 =head1 DESCRIPTION
 
 This class is used to represent an unmatched right bracket of any sort -

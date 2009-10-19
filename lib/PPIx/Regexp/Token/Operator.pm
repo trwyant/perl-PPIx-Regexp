@@ -13,6 +13,8 @@ PPIx::Regexp::Token::Operator - Represent an operator.
 C<PPIx::Regexp::Token::Operator> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::Operator> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents an operator. In a character class, it represents

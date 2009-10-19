@@ -13,6 +13,9 @@ PPIx::Regexp::Token::Modifier - Represent modifiers.
 C<PPIx::Regexp::Token::Modifier> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::Modifier> is the parent of
+L<PPIx::Regexp::Token::GroupType::Modifier|PPIx::Regexp::Token::GroupType::Modifier>.
+
 =head1 DESCRIPTION
 
 This class represents modifier characters at the end of the regular

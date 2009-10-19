@@ -13,6 +13,8 @@ PPIx::Regexp::Structure::Switch - Represent a switch
 C<PPIx::Regexp::Structure::Switch> is a
 L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
+C<PPIx::Regexp::Structure::Switch> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents a switch, or conditional expression. The condition

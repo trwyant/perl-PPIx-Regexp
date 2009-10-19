@@ -12,6 +12,10 @@ PPIx::Regexp::Support - Basis for the PPIx::Regexp support classes
 
 C<PPIx::Regexp::Support> is not descended from any other class.
 
+C<PPIx::Regexp::Support> is the parent of
+L<PPIx::Regexp::Dumper|PPIx::Regexp::Dumper> and
+L<PPIx::Regexp::Tokenizer|PPIx::Regexp::Tokenizer>.
+
 =head1 DESCRIPTION
 
 This abstract class provides methods for the C<PPIx::Regexp> support

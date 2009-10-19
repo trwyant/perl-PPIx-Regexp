@@ -13,6 +13,8 @@ PPIx::Regexp::Token::Backreference - Represent a back reference
 C<PPIx::Regexp::Token::Backreference> is a
 L<PPIx::Regexp::Token::Reference|PPIx::Regexp::Token::Reference>.
 
+C<PPIx::Regexp::Token::Backreference> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents back references of all sorts, both the traditional

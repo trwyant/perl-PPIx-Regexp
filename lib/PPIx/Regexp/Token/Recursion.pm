@@ -13,6 +13,8 @@ PPIx::Regexp::Token::Recursion - Represent a recursion
 C<PPIx::Regexp::Token::Recursion> is a
 L<PPIx::Regexp::Token::Reference|PPIx::Regexp::Token::Reference>.
 
+C<PPIx::Regexp::Token::Recursion> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents a recursion to a named or numbered capture.

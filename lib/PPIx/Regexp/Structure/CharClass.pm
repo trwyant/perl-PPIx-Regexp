@@ -13,6 +13,8 @@ PPIx::Regexp::Structure::CharClass - Represent a character class
 C<PPIx::Regexp::Structure::CharClass> is a
 L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
+C<PPIx::Regexp::Structure::CharClass> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents a square-bracketed character class.

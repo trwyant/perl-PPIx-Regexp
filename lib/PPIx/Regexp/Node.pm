@@ -12,6 +12,10 @@ PPIx::Regexp::Node - Represent a container
 C<PPIx::Regexp::Node> is a
 L<PPIx::Regexp::Element|PPIx::Regexp::Element>.
 
+C<PPIx::Regexp::Node> is the parent of L<PPIx::Regexp|PPIx::Regexp>,
+L<PPIx::Regexp::Node::Range|PPIx::Regexp::Node::Range> and
+L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
+
 =head1 DESCRIPTION
 
 This class represents a structural element that contains other classes.

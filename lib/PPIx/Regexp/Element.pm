@@ -10,6 +10,10 @@ No user-serviceable parts inside.
 
 C<PPIx::Regexp::Element> is not descended from any other class.
 
+C<PPIx::Regexp::Element> is the parent of
+L<PPIx::Regexp::Node|PPIx::Regexp::Node> and
+L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
+
 =head1 DESCRIPTION
 
 This class is the base of the L<PPIx::Regexp|PPIx::Regexp>

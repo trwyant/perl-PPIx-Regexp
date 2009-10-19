@@ -12,6 +12,8 @@ PPIx::Regexp::Token::Interpolation - Represent an interpolation in the PPIx::Reg
 C<PPIx::Regexp::Token::Interpolation> is a
 L<PPIx::Regexp::Token::Code|PPIx::Regexp::Token::Code>.
 
+C<PPIx::Regexp::Token::Interpolation> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents a variable interpolation into a regular

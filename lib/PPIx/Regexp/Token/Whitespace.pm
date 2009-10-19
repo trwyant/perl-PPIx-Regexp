@@ -13,6 +13,8 @@ PPIx::Regexp::Token::Whitespace - Represent whitespace
 C<PPIx::Regexp::Token::Whitespace> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::Whitespace> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents whitespace. It will appear inside the regular

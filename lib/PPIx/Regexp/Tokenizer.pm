@@ -710,6 +710,8 @@ PPIx::Regexp::Tokenizer - Tokenize a regular expression
 C<PPIx::Regexp::Tokenizer> is a
 L<PPIx::Regexp::Support|PPIx::Regexp::Support>.
 
+C<PPIx::Regexp::Tokenizer> has no descendants.
+
 =head1 DESCRIPTION
 
 This class provides tokenization of the regular expression.

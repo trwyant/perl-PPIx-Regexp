@@ -13,6 +13,8 @@ PPIx::Regexp::Token::GroupType::Assertion - Represent a look ahead or look behin
 C<PPIx::Regexp::Token::GroupType::Assertion> is a
 L<PPIx::Regexp::Token::GroupType|PPIx::Regexp::Token::GroupType>.
 
+C<PPIx::Regexp::Token::GroupType::Assertion> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents the parenthesized look ahead and look behind

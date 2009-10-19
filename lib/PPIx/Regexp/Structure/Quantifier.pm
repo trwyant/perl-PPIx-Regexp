@@ -13,6 +13,8 @@ PPIx::Regexp::Structure::Quantifier - Represent curly bracket quantifiers
 C<PPIx::Regexp::Structure::Quantifier> is a
 L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
+C<PPIx::Regexp::Structure::Quantifier> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents curly bracket quantifiers such as C<{3}>, C<{3,}>

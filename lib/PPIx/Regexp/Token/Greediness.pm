@@ -13,6 +13,8 @@ PPIx::Regexp::Token::Greediness - Represent a greediness qualifier.
 C<PPIx::Regexp::Token::Greediness> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::Greediness> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents a greediness qualifier for the preceding

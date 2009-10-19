@@ -13,6 +13,8 @@ PPIx::Regexp::Token::Condition - Represent the condition of a switch
 C<PPIx::Regexp::Token::Condition> is a
 L<PPIx::Regexp::Token::Reference|PPIx::Regexp::Token::Reference>.
 
+C<PPIx::Regexp::Token::Condition> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents the condition portion of a switch or conditional

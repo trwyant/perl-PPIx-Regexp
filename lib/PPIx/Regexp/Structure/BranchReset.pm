@@ -13,6 +13,8 @@ PPIx::Regexp::Structure::BranchReset - Represent a branch reset group
 C<PPIx::Regexp::Structure::BranchReset> is a
 L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
+C<PPIx::Regexp::Structure::BranchReset> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents a branch reset group. That is, the construction

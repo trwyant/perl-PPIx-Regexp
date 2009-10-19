@@ -13,6 +13,8 @@ PPIx::Regexp::Token::Literal - Represent a literal character
 C<PPIx::Regexp::Token::Literal> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::Literal> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents a literal character, no matter how specified.

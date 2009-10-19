@@ -13,6 +13,9 @@ PPIx::Regexp::Structure::Capture - Represent capture parentheses.
 C<PPIx::Regexp::Structure::Capture> is a
 L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
+C<PPIx::Regexp::Structure::Capture> is the parent of
+L<PPIx::Regexp::Structure::NamedCapture|PPIx::Regexp::Structure::NamedCapture>.
+
 =head1 DESCRIPTION
 
 This class represents capture parentheses.

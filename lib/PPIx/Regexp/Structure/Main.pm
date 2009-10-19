@@ -13,6 +13,8 @@ PPIx::Regexp::Structure::Main - Represent a regular expression proper, or a subs
 C<PPIx::Regexp::Structure::Main> is a
 L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
+C<PPIx::Regexp::Structure::Main> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents the regular expression portion of the parsed code.

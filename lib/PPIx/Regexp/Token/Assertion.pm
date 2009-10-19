@@ -13,6 +13,8 @@ PPIx::Regexp::Token::Assertion - Represent a simple assertion.
 C<PPIx::Regexp::Token::Assertion> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::Assertion> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents one of the simple assertions; that is, those that

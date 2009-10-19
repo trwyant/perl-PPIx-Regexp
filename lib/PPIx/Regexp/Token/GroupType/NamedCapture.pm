@@ -13,6 +13,8 @@ PPIx::Regexp::Token::GroupType::NamedCapture - Represent a named capture
 C<PPIx::Regexp::Token::GroupType::NamedCapture> is a
 L<PPIx::Regexp::Token::GroupType|PPIx::Regexp::Token::GroupType>.
 
+C<PPIx::Regexp::Token::GroupType::NamedCapture> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents a named capture specification.

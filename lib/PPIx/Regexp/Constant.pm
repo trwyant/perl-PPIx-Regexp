@@ -26,18 +26,12 @@ Readonly::Scalar our $COOKIE_QUOTE	=> '\\E';
 
 Readonly::Scalar our $MINIMUM_PERL	=> '5.006';
 
-=begin comment
-
-The perlre for Perl 5.010 says:
-
-     Currently NAME is restricted to simple identifiers only.  In
-     other words, it must match "/^[_A-Za-z][_A-Za-z0-9]*\z/" or
-     its Unicode extension (see utf8), though it isn't extended by
-     the locale (see perllocale).
-
-=end comment
-
-=cut
+# The perlre for Perl 5.010 says:
+#
+#      Currently NAME is restricted to simple identifiers only.  In
+#      other words, it must match "/^[_A-Za-z][_A-Za-z0-9]*\z/" or
+#      its Unicode extension (see utf8), though it isn't extended by
+#      the locale (see perllocale).
 
 Readonly::Scalar our $RE_CAPTURE_NAME => qr{ [_[:alpha:]] \w* }smx;
 
@@ -62,6 +56,8 @@ PPIx::Regexp::Constant - Constants for the PPIx::Regexp system
 =head1 INHERITANCE
 
 C<PPIx::Regexp::Constant> is an L<Exporter|Exporter>.
+
+C<PPIx::Regexp::Constant> has no descendants.
 
 =head1 DETAILS
 

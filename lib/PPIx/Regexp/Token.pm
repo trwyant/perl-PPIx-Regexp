@@ -12,6 +12,25 @@ PPIx::Regexp::Token - Base class for PPIx::Regexp tokens.
 C<PPIx::Regexp::Token> is a
 L<PPIx::Regexp::Element|PPIx::Regexp::Element>.
 
+C<PPIx::Regexp::Token> is the parent of
+L<PPIx::Regexp::Token::Assertion|PPIx::Regexp::Token::Assertion>,
+L<PPIx::Regexp::Token::Backtrack|PPIx::Regexp::Token::Backtrack>,
+L<PPIx::Regexp::Token::CharClass|PPIx::Regexp::Token::CharClass>,
+L<PPIx::Regexp::Token::Code|PPIx::Regexp::Token::Code>,
+L<PPIx::Regexp::Token::Comment|PPIx::Regexp::Token::Comment>,
+L<PPIx::Regexp::Token::Control|PPIx::Regexp::Token::Control>,
+L<PPIx::Regexp::Token::Greediness|PPIx::Regexp::Token::Greediness>,
+L<PPIx::Regexp::Token::GroupType|PPIx::Regexp::Token::GroupType>,
+L<PPIx::Regexp::Token::Literal|PPIx::Regexp::Token::Literal>,
+L<PPIx::Regexp::Token::Modifier|PPIx::Regexp::Token::Modifier>,
+L<PPIx::Regexp::Token::Operator|PPIx::Regexp::Token::Operator>,
+L<PPIx::Regexp::Token::Quantifier|PPIx::Regexp::Token::Quantifier>,
+L<PPIx::Regexp::Token::Reference|PPIx::Regexp::Token::Reference>,
+L<PPIx::Regexp::Token::Structure|PPIx::Regexp::Token::Structure>,
+L<PPIx::Regexp::Token::Unknown|PPIx::Regexp::Token::Unknown>,
+L<PPIx::Regexp::Token::Unmatched|PPIx::Regexp::Token::Unmatched> and
+L<PPIx::Regexp::Token::Whitespace|PPIx::Regexp::Token::Whitespace>.
+
 =head1 DESCRIPTION
 
 This class represents the base of the class hierarchy for tokens in the

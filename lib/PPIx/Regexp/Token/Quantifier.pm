@@ -13,6 +13,8 @@ PPIx::Regexp::Token::Quantifier - Represent an atomic quantifier.
 C<PPIx::Regexp::Token::Quantifier> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::Quantifier> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents an atomic quantifier; that is, one of the

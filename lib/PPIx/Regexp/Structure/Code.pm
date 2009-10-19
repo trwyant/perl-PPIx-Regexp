@@ -13,6 +13,8 @@ PPIx::Regexp::Structure::Code - Represent one of the code structures.
 C<PPIx::Regexp::Structure::Code> is a
 L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
+C<PPIx::Regexp::Structure::Code> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents one of the code structures, either

@@ -13,6 +13,11 @@ PPIx::Regexp::Token::Reference - Represent a reference to a capture
 C<PPIx::Regexp::Token::Reference> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::Reference> is the parent of
+L<PPIx::Regexp::Token::Backreference|PPIx::Regexp::Token::Backreference>,
+L<PPIx::Regexp::Token::Condition|PPIx::Regexp::Token::Condition> and
+L<PPIx::Regexp::Token::Recursion|PPIx::Regexp::Token::Recursion>.
+
 =head1 DESCRIPTION
 
 This abstract class represents a reference to a capture buffer, either

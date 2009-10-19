@@ -12,6 +12,19 @@ PPIx::Regexp::Structure - Represent a structure.
 C<PPIx::Regexp::Structure> is a
 L<PPIx::Regexp::Node|PPIx::Regexp::Node>.
 
+C<PPIx::Regexp::Structure> is the parent of
+L<PPIx::Regexp::Structure::Assertion|PPIx::Regexp::Structure::Assertion>,
+L<PPIx::Regexp::Structure::BranchReset|PPIx::Regexp::Structure::BranchReset>,
+L<PPIx::Regexp::Structure::Capture|PPIx::Regexp::Structure::Capture>,
+L<PPIx::Regexp::Structure::CharClass|PPIx::Regexp::Structure::CharClass>,
+L<PPIx::Regexp::Structure::Code|PPIx::Regexp::Structure::Code>,
+L<PPIx::Regexp::Structure::Main|PPIx::Regexp::Structure::Main>,
+L<PPIx::Regexp::Structure::Modifier|PPIx::Regexp::Structure::Modifier>,
+L<PPIx::Regexp::Structure::Quantifier|PPIx::Regexp::Structure::Quantifier>,
+L<PPIx::Regexp::Structure::Subexpression|PPIx::Regexp::Structure::Subexpression>,
+L<PPIx::Regexp::Structure::Switch|PPIx::Regexp::Structure::Switch> and
+L<PPIx::Regexp::Structure::Unknown|PPIx::Regexp::Structure::Unknown>.
+
 =head1 DESCRIPTION
 
 This class represents a bracketed construction of some sort. The

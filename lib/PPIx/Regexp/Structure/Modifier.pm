@@ -13,6 +13,8 @@ PPIx::Regexp::Structure::Modifier - Represent modifying parentheses
 C<PPIx::Regexp::Structure::Modifier> is a
 L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
+C<PPIx::Regexp::Structure::Modifier> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents parentheses that apply modifiers to their contents

@@ -13,6 +13,11 @@ PPIx::Regexp::Token::CharClass - Represent a character class
 C<PPIx::Regexp::Token::CharClass> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::CharClass> is the parent of
+L<PPIx::Regexp::Token::CharClass::POSIX|PPIx::Regexp::Token::CharClass::POSIX>
+and
+L<PPIx::Regexp::Token::CharClass::Simple|PPIx::Regexp::Token::CharClass::Simple>.
+
 =head1 DESCRIPTION
 
 This class represents a character class. It is not intended that this

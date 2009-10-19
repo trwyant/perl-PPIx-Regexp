@@ -13,6 +13,8 @@ PPIx::Regexp::Structure::Unknown - Represent an unknown structure.
 C<PPIx::Regexp::Structure::Unknown> is a
 L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
+C<PPIx::Regexp::Structure::Unknown> has no descendants.
+
 =head1 DESCRIPTION
 
 This class is used for a structure which the lexer recognizes as being

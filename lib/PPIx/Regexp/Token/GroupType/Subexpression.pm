@@ -13,6 +13,8 @@ PPIx::Regexp::Token::GroupType::Subexpression - Represent an independent subexpr
 C<PPIx::Regexp::Token::GroupType::Subexpression> is a
 L<PPIx::Regexp::Token::GroupType|PPIx::Regexp::Token::GroupType>.
 
+C<PPIx::Regexp::Token::GroupType::Subexpression> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents the '?>' after a left parenthesis that identifies

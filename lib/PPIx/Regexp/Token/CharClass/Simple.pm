@@ -13,6 +13,8 @@ PPIx::Regexp::Token::CharClass::Simple - This class represents a simple characte
 C<PPIx::Regexp::Token::CharClass::Simple> is a
 L<PPIx::Regexp::Token::CharClass|PPIx::Regexp::Token::CharClass>.
 
+C<PPIx::Regexp::Token::CharClass::Simple> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents one of the simple character classes that can occur

@@ -13,6 +13,9 @@ PPIx::Regexp::Token::Structure - Represent structural elements.
 C<PPIx::Regexp::Token::Structure> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::Structure> is the parent of
+L<PPIx::Regexp::Token::Delimiter|PPIx::Regexp::Token::Delimiter>.
+
 =head1 DESCRIPTION
 
 This class represents things that define the structure of the regular

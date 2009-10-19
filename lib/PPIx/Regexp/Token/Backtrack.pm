@@ -13,6 +13,8 @@ PPIx::Regexp::Token::Backtrack - Represent backtrack control.
 C<PPIx::Regexp::Token::Backtrack> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::Backtrack> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents one of the backtrack controls.

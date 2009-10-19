@@ -13,6 +13,8 @@ PPIx::Regexp::Token::GroupType::BranchReset - Represent a branch reset specifier
 C<PPIx::Regexp::Token::GroupType::BranchReset> is a
 L<PPIx::Regexp::Token::GroupType|PPIx::Regexp::Token::GroupType>.
 
+C<PPIx::Regexp::Token::GroupType::BranchReset> has no descendants.
+
 =head1 DESCRIPTION
 
 This token represents the specifier for a branch reset - namely the

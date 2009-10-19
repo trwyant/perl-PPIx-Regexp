@@ -13,6 +13,8 @@ PPIx::Regexp::Token::Control - Case and quote control.
 C<PPIx::Regexp::Token::Control> is a
 L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
 
+C<PPIx::Regexp::Token::Control> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents the case and quote controls. These apply when the

@@ -14,6 +14,8 @@ PPIx::Regexp - Represent a regular expression of some sort
 
 C<PPIx::Regexp> is a L<PPIx::Regexp::Node|PPIx::Regexp::Node>.
 
+C<PPIx::Regexp> has no descendants.
+
 =head1 DESCRIPTION
 
 The purpose of the F<PPIx-Regexp> package is to parse regular
