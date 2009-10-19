@@ -20,18 +20,40 @@ $opt{text} ||= $opt{update};
 find ( \&heritage, 'lib' );
 
 my %roots;
+my %progeny;
+
+foreach my $module ( keys %roots ) {
+    foreach my $parent ( @{ $roots{$module} } ) {
+	push @{ $progeny{$parent} ||= [] }, $module;
+    }
+}
 
 if ( $opt{text} ) {
     local $Text::Wrap::columns = 72;
+    local $Text::Wrap::huge = 'overflow';
     foreach my $module ( sort keys %roots ) {
 	my $heritage;
-	if ( my @parents = @{ $roots{$module} } ) {
+	if ( my @parents = sort @{ $roots{$module} } ) {
 	    $heritage = "C<$module> is a " . join(' and a ',
 		map { "L<$_|$_>" } @parents ) . ".";
 	} else {
 	    $heritage = "C<$module> is not descended from any other class.";
 	}
 	$heritage = wrap( '', '', $heritage );
+	my $progeny;
+	if ( my @offspring = sort @{ $progeny{$module} || [] } ) {
+	    @offspring = map { "L<$_|$_>" } @offspring;
+	    my $last = pop @offspring;
+	    if ( @offspring ) {
+		$progeny = "C<$module> is the parent of " .
+		    join( ', ', @offspring ) . " and $last.";
+	    } else {
+		$progeny = "C<$module> is the parent of $last.";
+	    }
+	} else {
+	    $progeny = "C<$module> has no descendants.";
+	}
+	$progeny = wrap( '', '', $progeny );
 	if ( $opt{update} ) {
 	    ( my $fn = $module ) =~ s{ :: }{/}smxg;
 	    $fn = 'lib/' . $fn . '.pm';
@@ -44,6 +66,8 @@ if ( $opt{text} ) {
 		if ( m/ \A =head1 \s+ INHERITANCE \b /smx ) {
 		    push @content, "\n";
 		    push @content, $heritage . "\n";
+		    push @content, "\n";
+		    push @content, $progeny . "\n";
 		    push @content, "\n";
 		    while (<$fh>) {
 			m/ \A =head1 \b /smx or next;
@@ -58,7 +82,7 @@ if ( $opt{text} ) {
 	    print { $fh } @content;
 	    close $fh;
 	} else {
-	    print $heritage, "\n\n";
+	    print $heritage, "\n", $progeny, "\n\n";;
 	}
     }
 } else {
@@ -90,7 +114,6 @@ sub heritage {
 	$ancest =~ s/ \A . \s* //smx;
 	$ancest =~ s/ \s* . \z //smx;
     }
-    warn "$package => $ancest";
     foreach my $class ( split qr{\s+}smx, $ancest ) {
 	$class =~ m/ \A (?: \w+ :: )* \w+ \z /smx or next;
 	push @parents, $class;
