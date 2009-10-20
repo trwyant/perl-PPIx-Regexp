@@ -18,6 +18,10 @@ my $obj = $re;
 my $tr = Term::ReadLine->new( 'Navigate a regular expression' );
 
 my %internal = (
+    capture_names => sub {
+	defined $obj or return;
+	return join( ', ', $obj->capture_names() );
+    },
     dump => sub {
 	my @args;
 	defined $_[0] and @args = split qr{ \s+ }smx, $_[0];
@@ -120,6 +124,12 @@ In addition to the navigation methods that come with the objects, the
 following commands are recognized:
 
 =over
+
+=item capture_names
+
+This command wraps the
+L<< PPIx::Regexp->capture_names()|PPIx::Regexp/capture_names >> method,
+joining the results into a comma-delimited string.
 
 =item dump
 
