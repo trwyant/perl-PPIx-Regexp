@@ -42,7 +42,7 @@ use base qw{ PPIx::Regexp::Token };
 use Carp qw{ confess };
 use List::Util qw{ first };
 
-our $VERSION = '0.000_04';
+our $VERSION = '0.000_05';
 
 =head2 absolute
 
