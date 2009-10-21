@@ -63,7 +63,7 @@ use Params::Util 0.25 qw{ _INSTANCE };
 use PPIx::Regexp::Lexer ();
 use Scalar::Util qw{ refaddr };
 
-our $VERSION = '0.000_03';
+our $VERSION = '0.000_04';
 
 =head2 new
 

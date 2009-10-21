@@ -38,7 +38,7 @@ use PPIx::Regexp::Token::Unknown		();
 use PPIx::Regexp::Token::Whitespace		();
 use Scalar::Util qw{ looks_like_number };
 
-our $VERSION = '0.000_03';
+our $VERSION = '0.000_04';
 
 {
     # Names of classes containing tokenization machinery. There are no

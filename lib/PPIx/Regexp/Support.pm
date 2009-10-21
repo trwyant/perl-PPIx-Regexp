@@ -34,7 +34,7 @@ package PPIx::Regexp::Support;
 use strict;
 use warnings;
 
-our $VERSION = '0.000_03';
+our $VERSION = '0.000_04';
 
 =head2 decode
 

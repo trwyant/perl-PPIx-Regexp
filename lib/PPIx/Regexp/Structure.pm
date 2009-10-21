@@ -51,7 +51,7 @@ use Carp qw{ confess };
 use Params::Util 0.25 qw{ _INSTANCE };
 use Scalar::Util qw{ refaddr };
 
-our $VERSION = '0.000_03';
+our $VERSION = '0.000_04';
 
 sub _new {
     my ( $class, @args ) = @_;

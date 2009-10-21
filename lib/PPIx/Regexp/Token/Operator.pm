@@ -38,7 +38,7 @@ use base qw{ PPIx::Regexp::Token };
 use Params::Util 0.25 qw{ _INSTANCE };
 use PPIx::Regexp::Constant qw{ $TOKEN_LITERAL };
 
-our $VERSION = '0.000_03';
+our $VERSION = '0.000_04';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
