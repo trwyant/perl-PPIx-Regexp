@@ -275,10 +275,7 @@ which case nothing is returned.
 
 sub modifier {
     my ( $self ) = @_;
-    my $mod = $self->child( -1 )
-	or return;
-    $mod->isa( 'PPIx::Regexp::Token::Modifier' ) or return;
-    return $mod;
+    return $self->_component( 'PPIx::Regexp::Token::Modifier' );
 }
 
 =head2 regular_expression
@@ -294,7 +291,7 @@ a regular expression.
 
 sub regular_expression {
     my ( $self ) = @_;
-    return $self->_component( 0 );
+    return $self->_component( 'PPIx::Regexp::Structure::Regexp' );
 }
 
 =head2 replacement
@@ -313,17 +310,7 @@ bracketed.
 
 sub replacement {
     my ( $self ) = @_;
-    return $self->_component( 1 );
-}
-
-sub _component {
-    my ( $self, $inx ) = @_;
-    foreach my $elem ( $self->children() ) {
-	$elem->isa( 'PPIx::Regexp::Structure' ) or next;
-	--$inx >= 0 and next;
-	return $elem;
-    }
-    return;
+    return $self->_component( 'PPIx::Regexp::Structure::Replacement' );
 }
 
 =head2 source
@@ -347,14 +334,24 @@ sub source {
  # prints 's'.
 
 This method retrieves the type of the object. This comes from the
-beginning of the initializing string or object, and will be one of 's',
+beginning of the initializing string or object, and will be a
+L<PPIx::Regexp::Token::Structure|PPIx::Regexp::Token::Structure>
+whose C<content> is one of 's',
 'm', 'qr', or ''.
 
 =cut
 
 sub type {
     my ( $self ) = @_;
-    return $self->child( 0 );
+    return $self->_component( 'PPIx::Regexp::Token::Structure' );
+}
+
+sub _component {
+    my ( $self, $class ) = @_;
+    foreach my $elem ( $self->children() ) {
+	$elem->isa( $class ) and return $elem;
+    }
+    return;
 }
 
 1;
