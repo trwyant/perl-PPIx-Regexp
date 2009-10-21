@@ -13,7 +13,9 @@ PPIx::Regexp::Structure::Main - Represent a regular expression proper, or a subs
 C<PPIx::Regexp::Structure::Main> is a
 L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
-C<PPIx::Regexp::Structure::Main> has no descendants.
+C<PPIx::Regexp::Structure::Main> is the parent of
+L<PPIx::Regexp::Structure::Regexp|PPIx::Regexp::Structure::Regexp> and
+L<PPIx::Regexp::Structure::Replacement|PPIx::Regexp::Structure::Replacement>.
 
 =head1 DESCRIPTION
 

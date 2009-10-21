@@ -10,8 +10,10 @@ PPIx::Regexp::Structure::Regexp - Represent the top-level regular expression
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Structure::Main
- isa PPIx::Regexp::Structure
+C<PPIx::Regexp::Structure::Regexp> is a
+L<PPIx::Regexp::Structure::Main|PPIx::Regexp::Structure::Main>.
+
+C<PPIx::Regexp::Structure::Regexp> has no descendants.
 
 =head1 DESCRIPTION
 

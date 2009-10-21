@@ -10,8 +10,10 @@ PPIx::Regexp::Structure::Replacement - Represent the replacement in s///
 
 =head1 INHERITANCE
 
- PPIx::Regexp::Structure::Replacement
- isa PPIx::Regexp::Structure::Main
+C<PPIx::Regexp::Structure::Replacement> is a
+L<PPIx::Regexp::Structure::Main|PPIx::Regexp::Structure::Main>.
+
+C<PPIx::Regexp::Structure::Replacement> has no descendants.
 
 =head1 DESCRIPTION
 
