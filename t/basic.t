@@ -3,7 +3,7 @@ package main;
 use strict;
 use warnings;
 
-use Test::More 0.40 tests => 144;
+use Test::More 0.40 tests => 145;
 
 require_ok( 'PPIx::Regexp' );
 isa_ok( 'PPIx::Regexp', 'PPIx::Regexp::Node' );
@@ -18,6 +18,7 @@ isa_ok( PPIx::Regexp::Dumper->new( 'xyzzy'), 'PPIx::Regexp::Dumper' );
 require_ok( 'PPIx::Regexp::Element' );
 
 require_ok( 'PPIx::Regexp::Lexer' );
+isa_ok( 'PPIx::Regexp::Lexer', 'PPIx::Regexp::Support' );
 
 require_ok( 'PPIx::Regexp::Node' );
 isa_ok( 'PPIx::Regexp::Node', 'PPIx::Regexp::Element' );

@@ -42,7 +42,7 @@ my %special = (
 	parent	=> 'PPIx::Regexp::Token::Code',
     },
     'PPIx::Regexp::Lexer' => {
-	parent	=> undef,
+	parent	=> 'PPIx::Regexp::Support',
     },
     'PPIx::Regexp::Node' => {
 	parent	=> 'PPIx::Regexp::Element',
