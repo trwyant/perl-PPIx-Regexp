@@ -23,6 +23,8 @@ lib/PPIx/Regexp/Structure/Main.pm
 lib/PPIx/Regexp/Structure/Modifier.pm
 lib/PPIx/Regexp/Structure/NamedCapture.pm
 lib/PPIx/Regexp/Structure/Quantifier.pm
+lib/PPIx/Regexp/Structure/Regexp.pm
+lib/PPIx/Regexp/Structure/Replacement.pm
 lib/PPIx/Regexp/Structure/Subexpression.pm
 lib/PPIx/Regexp/Structure/Switch.pm
 lib/PPIx/Regexp/Structure/Unknown.pm

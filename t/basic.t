@@ -3,12 +3,13 @@ package main;
 use strict;
 use warnings;
 
-use Test::More 0.40 tests => 139;
+use Test::More 0.40 tests => 144;
 
 require_ok( 'PPIx::Regexp' );
 isa_ok( 'PPIx::Regexp', 'PPIx::Regexp::Node' );
 
 require_ok( 'PPIx::Regexp::Constant' );
+isa_ok( 'PPIx::Regexp::Constant', 'Exporter' );
 
 require_ok( 'PPIx::Regexp::Dumper' );
 isa_ok( 'PPIx::Regexp::Dumper', 'PPIx::Regexp::Support' );
@@ -60,6 +61,14 @@ isa_ok( 'PPIx::Regexp::Structure::NamedCapture',
 require_ok( 'PPIx::Regexp::Structure::Quantifier' );
 isa_ok( 'PPIx::Regexp::Structure::Quantifier',
     'PPIx::Regexp::Structure' );
+
+require_ok( 'PPIx::Regexp::Structure::Regexp' );
+isa_ok( 'PPIx::Regexp::Structure::Regexp',
+    'PPIx::Regexp::Structure::Main' );
+
+require_ok( 'PPIx::Regexp::Structure::Replacement' );
+isa_ok( 'PPIx::Regexp::Structure::Replacement',
+    'PPIx::Regexp::Structure::Main' );
 
 require_ok( 'PPIx::Regexp::Structure::Subexpression' );
 isa_ok( 'PPIx::Regexp::Structure::Subexpression',

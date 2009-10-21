@@ -50,6 +50,8 @@ use PPIx::Regexp::Structure::Main			();
 use PPIx::Regexp::Structure::Modifier			();
 use PPIx::Regexp::Structure::NamedCapture		();
 use PPIx::Regexp::Structure::Quantifier			();
+use PPIx::Regexp::Structure::Regexp			();
+use PPIx::Regexp::Structure::Replacement		();
 use PPIx::Regexp::Structure::Switch			();
 use PPIx::Regexp::Structure::Unknown			();
 use PPIx::Regexp::Token::Unmatched			();
@@ -150,7 +152,8 @@ sub lex {
     }
 
     # Accept the first delimited structure.
-    push @content, ( my $regexp = $self->_get_delimited() );
+    push @content, ( my $regexp = $self->_get_delimited(
+	    'PPIx::Regexp::Structure::Regexp' ) );
 
     # If we are a substitution ...
     if ( $content[0]->content() eq 's' ) {
@@ -166,7 +169,8 @@ sub lex {
 	}
 
 	# Accept the next delimited structure.
-	push @content, $self->_get_delimited();
+	push @content, $self->_get_delimited(
+	    'PPIx::Regexp::Structure::Replacement' );
     }
 
     # Accept the modifiers, we hope.
@@ -179,10 +183,8 @@ sub lex {
     # If we found a regular expression (and we should have done so) ...
     if ( $regexp ) {
 
-	# Calculate the maximum capture group, and number all the other
-	# capture groups along the way.
-	my $max_capture = $self->{max_capture_number} =
-	    $regexp->__PPIX_LEXER__record_capture_number( 1 ) - 1;
+	# Retrieve the maximum capture group.
+	my $max_capture = $regexp->max_capture_number();
 
 	# If we have any back references
 	if ( my $backrefs = $regexp->find(
@@ -234,20 +236,6 @@ sub _finalize {
     return;
 }
 
-=head2 max_capture_number
-
- my $max = $lexer->max_capture_number();
-
-This method returns the maximum capture number found by the lexer.
-
-=cut
-
-sub max_capture_number {
-    my ( $self ) = @_;
-    return $self->{max_capture_number};
-}
-
-
 my %bracket = (
     '{' => '}',
     '(' => ')',
@@ -260,7 +248,7 @@ my %unclosed = (
 );
 
 sub _get_delimited {
-    my ( $self ) = @_;
+    my ( $self, $class ) = @_;
 
     my @rslt;
     $self->{_rslt} = \@rslt;
@@ -342,7 +330,7 @@ sub _get_delimited {
 	my @last = @{ pop @rslt };
 	shift @last;
 	push @last, $self->_get_token();
-	return PPIx::Regexp::Structure::Main->_new( @last );
+	return $class->_new( @last );
     } else {
 	confess "Missing data";
     }

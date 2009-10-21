@@ -99,7 +99,6 @@ Regexp classes mentioned previously are likely to do anything useful.
 	my $self = $class->SUPER::_new( @nodes );
 	$self->{source} = $content;
 	$self->{failures} = $lexer->failures();
-	$self->{max_capture_number} = $lexer->max_capture_number();
 	return $self;
     }
 
@@ -191,20 +190,23 @@ any objects specified are removed from the cache.
      print "Capture name '$name'\n";
  }
 
-This method returns the capture names found in the regular expression.
+This convenience method returns the capture names found in the regular
+expression.
+
+This method is equivalent to
+
+ $self->regular_expression()->capture_names();
+
+except that if C<< $self->regular_expression() >> returns C<undef>
+(meaning that something went terribly wrong with the parse) this method
+will simply return.
 
 =cut
 
 sub capture_names {
     my ( $self ) = @_;
-    my %name;
-    my $captures = $self->find(
-	'PPIx::Regexp::Structure::NamedCapture')
-	or return;
-    foreach my $grab ( @{ $captures } ) {
-	$name{$grab->name()}++;
-    }
-    return ( sort keys %name );
+    my $re = $self->regular_expression() or return;
+    return $re->capture_names();
 }
 
 =head2 errstr
@@ -237,14 +239,23 @@ sub failures {
  print "Highest used capture number ",
      $re->max_capture_number(), "\n";
 
-This method returns the highest capture number used by the regular
-expression. If there are no captures, the return will be 0.
+This convenience method returns the highest capture number used by the
+regular expression. If there are no captures, the return will be 0.
+
+This method is equivalent to
+
+ $self->regular_expression()->max_capture_number();
+
+except that if C<< $self->regular_expression() >> returns C<undef>
+(meaning that something went terribly wrong with the parse) this method
+will too.
 
 =cut
 
 sub max_capture_number {
     my ( $self ) = @_;
-    return $self->{max_capture_number};
+    my $re = $self->regular_expression() or return;
+    return $re->max_capture_number();
 }
 
 =head2 modifier
