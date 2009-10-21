@@ -265,13 +265,20 @@ sub max_capture_number {
  # prints 'smx'.
 
 This method retrieves the modifier of the object. This comes from the
-end of the initializing string or object.
+end of the initializing string or object and will be a
+L<PPIx::Regexp::Token::Modifier|PPIx::Regexp::Token::Modifier>.
+
+In the event of a parse failure, there may not be a modifier present, in
+which case nothing is returned.
 
 =cut
 
 sub modifier {
     my ( $self ) = @_;
-    return $self->child( -1 );
+    my $mod = $self->child( -1 )
+	or return;
+    $mod->isa( 'PPIx::Regexp::Token::Modifier' ) or return;
+    return $mod;
 }
 
 =head2 regular_expression

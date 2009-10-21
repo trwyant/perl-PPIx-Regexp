@@ -34,7 +34,36 @@ package PPIx::Regexp::Support;
 use strict;
 use warnings;
 
+use Params::Util 0.25 qw{ _INSTANCE };
+
 our $VERSION = '0.000_04';
+
+=head2 close_bracket
+
+This method takes as its argument a character. If this character is an
+open bracket the corresponding close bracket is returned. Otherwise
+C<undef> is returned. Only the ASCII bracket characters are considered
+brackets: (), {}, [], and <>.
+
+=cut
+
+{
+    my %bracket = (
+	'(' => ')',
+	'{' => '}',
+	'<' => '>',
+	'[' => ']',
+    );
+
+    sub close_bracket {
+	my ( $self, $char ) = @_;
+	defined $char or return;
+	_INSTANCE( $char, 'PPIx::Regexp::Element' )
+	    and $char = $char->content();
+	return $bracket{$char};
+    }
+
+}
 
 =head2 decode
 

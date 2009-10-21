@@ -35,6 +35,8 @@ package PPIx::Regexp::Lexer;
 use strict;
 use warnings;
 
+use base qw{ PPIx::Regexp::Support };
+
 use Carp qw{ confess };
 use Params::Util 0.25 qw{ _INSTANCE };
 use PPIx::Regexp::Constant qw{ $TOKEN_LITERAL $TOKEN_UNKNOWN };
@@ -168,9 +170,15 @@ sub lex {
 	    }
 	}
 
+	# Figure out if we should expect an opening bracket.
+	my $expect_open_bracket = $self->close_bracket(
+	    $regexp->start( 0 ) ) || 0;
+
 	# Accept the next delimited structure.
 	push @content, $self->_get_delimited(
-	    'PPIx::Regexp::Structure::Replacement' );
+	    'PPIx::Regexp::Structure::Replacement',
+	    $expect_open_bracket,
+	);
     }
 
     # Accept the modifiers, we hope.
@@ -248,21 +256,26 @@ my %unclosed = (
 );
 
 sub _get_delimited {
-    my ( $self, $class ) = @_;
+    my ( $self, $class, $expect_open_bracket ) = @_;
+    defined $expect_open_bracket or $expect_open_bracket = 1;
 
     my @rslt;
     $self->{_rslt} = \@rslt;
 
-    if ( my $token = $self->_get_token() ) {
-	push @rslt, [];
-	if ( $token->isa( 'PPIx::Regexp::Token::Delimiter' ) ) {
-	    push @{ $rslt[-1] }, '', $token;
+    if ( $expect_open_bracket ) {
+	if ( my $token = $self->_get_token() ) {
+	    push @rslt, [];
+	    if ( $token->isa( 'PPIx::Regexp::Token::Delimiter' ) ) {
+		push @{ $rslt[-1] }, '', $token;
+	    } else {
+		push @{ $rslt[-1] }, '', undef;
+		$self->_unget_token( $token );
+	    }
 	} else {
-	    push @{ $rslt[-1] }, '', undef;
-	    $self->_unget_token( $token );
+	    return;
 	}
     } else {
-	return;
+	push @rslt, [ '', undef ];
     }
 
     while ( my $token = $self->_get_token() ) {

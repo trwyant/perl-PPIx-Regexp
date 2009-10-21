@@ -230,51 +230,32 @@ sub failures {
     return $self->{failures};
 }
 
-{
-    my %bracket = (
-	'(' => ')',
-	'{' => '}',
-	'<' => '>',
-	'[' => ']',
-    );
+sub find_matching_delimiter {
+    my ( $self, $start ) = @_;
+    $self->{cursor_curr} ||= 0;
+    defined $start or $start = substr
+	$self->{content},
+	$self->{cursor_curr},
+	1;
 
-    sub find_matching_delimiter {
-	my ( $self, $start ) = @_;
-	$self->{cursor_curr} ||= 0;
-	defined $start or $start = substr
-	    $self->{content},
-	    $self->{cursor_curr},
-	    1;
+    my $inx = $self->{cursor_curr};
+    my $finish = (
+	my $bracketed = $self->close_bracket( $start ) ) || $start;
+    my $nest = 0;
 
-	my $inx = $self->{cursor_curr};
-	my $finish = $bracket{$start} || $start;
-	my $bracketed = $bracket{$start};
-	my $nest = 0;
-
-	while ( ++$inx < $self->{cursor_limit} ) {
-	    my $char = substr $self->{content}, $inx, 1;
-	    if ( $char eq '\\' ) {
-		++$inx;
-	    } elsif ( $bracketed && $char eq $start ) {
-		++$nest;
-	    } elsif ( $char eq $finish ) {
-		--$nest < 0
-		    and return $inx - $self->{cursor_curr};
-	    }
+    while ( ++$inx < $self->{cursor_limit} ) {
+	my $char = substr $self->{content}, $inx, 1;
+	if ( $char eq '\\' ) {
+	    ++$inx;
+	} elsif ( $bracketed && $char eq $start ) {
+	    ++$nest;
+	} elsif ( $char eq $finish ) {
+	    --$nest < 0
+		and return $inx - $self->{cursor_curr};
 	}
-
-	return;
     }
 
-    sub is_bracket {
-	my ( $self, $char ) = @_;
-	defined $char or $char = substr
-	    $self->{content},
-	    $self->{cursor_curr},
-	    1;
-	return $bracket{$char};
-    }
-
+    return;
 }
 
 sub find_regexp {
@@ -650,7 +631,7 @@ sub __PPIX_TOKENIZER__finish {
 	# If the preceding regular expression was bracketed, we need to
 	# consume possible whitespace and find another delimiter.
 
-	if ( $tokenizer->is_bracket( $tokenizer->{delimiter_start} ) ) {
+	if ( $tokenizer->close_bracket( $tokenizer->{delimiter_start} ) ) {
 	    my $accept;
 	    $accept = $tokenizer->find_regexp( qr{ \A \s+ }smx )
 		and push @tokens, $tokenizer->make_token(
@@ -937,20 +918,6 @@ otherwise tokens get lost.
 
 This method returns true if the top-level structure being tokenized
 interpolates; that is, if the delimiter is not a single quote.
-
-=head2 is_bracket
-
- $tokenizer->is_bracket()
-     and print "Current character is a bracket\n";
- $tokenizer->is_bracket( $char )
-     and print "'$char' is a bracket\n";
-
-If the argument (or the character at the current position if no argument
-was provided) is a bracket character, the corresponding close bracket is
-returned. Otherwise C<undef> is returned.
-
-The close bracket characters are not brackets within the meaning of this
-method.
 
 =head2 make_token
 
