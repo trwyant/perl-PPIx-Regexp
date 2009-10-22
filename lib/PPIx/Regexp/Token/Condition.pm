@@ -37,7 +37,7 @@ use base qw{ PPIx::Regexp::Token::Reference };
 
 use PPIx::Regexp::Constant qw{ $RE_CAPTURE_NAME };
 
-our $VERSION = '0.000_05';
+our $VERSION = '0.001';
 
 my @recognize = (
     [ qr{ \A \( (?: ( \d+ ) | R (\d+) ) \) }smx,
