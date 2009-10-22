@@ -36,6 +36,7 @@ tokenize
 tokenized
 tokenizer's
 tokenizers
+tokenizes
 tokenizing
 trigraphs
 unicode

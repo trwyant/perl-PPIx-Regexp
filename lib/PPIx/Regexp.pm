@@ -23,6 +23,15 @@ expressions in a manner similar to the way the L<PPI|PPI> package parses
 Perl. This class forms the root of the parse tree, playing a role
 similar to L<PPI::Document|PPI::Document>.
 
+This package shares with L<PPI|PPI> the property of being round-trip
+safe. That is,
+
+ my $expr = 's/ ( \d+ ) ( \D+ ) /$2$1/smxg';
+ my $re = PPIx::Regexp->new( $expr );
+ print $re->content() eq $expr ? "yes\n" : "no\n"
+
+should print 'yes' for any valid regular expression.
+
 Navigation is similar to that provided by L<PPI|PPI>. That is to say,
 things like C<children>, C<find_first>, C<snext_sibling> and so on all
 work pretty much the same way as in L<PPI|PPI>.
@@ -43,6 +52,17 @@ mutability, though something like L<PPI|PPI>'s C<prune> functionality
 might be considered. Similarly there are no plans for operator
 overloading, which appears to the author to represent a performance hit
 for little tangible gain.
+
+=head1 NOTICE
+
+This is alpha code. The author will attempt to preserve the documented
+interface, but if the interface needs to change to correct some
+egregiously bad design or implementation decision, then it will change.
+
+The goal of this package is to parse well-formed regular expressions
+correctly. A secondary goal is not to blow up on ill-formed regular
+expressions. The correct identification and characterization of
+ill-formed regular expressions is B<not> a goal of this package.
 
 =head1 METHODS
 
@@ -75,6 +95,32 @@ L<PPI::Token::Regexp::Match|PPI::Token::Regexp::Match>, or a
 L<PPI::Token::Regexp::Substitute|PPI::Token::Regexp::Substitute>.
 Honestly, any L<PPI::Element|PPI::Element> will do, but only the three
 Regexp classes mentioned previously are likely to do anything useful.
+
+Optionally you can pass one or more name/value pairs after the regular
+expression. The possible options are:
+
+=over
+
+=item encoding name
+
+This option specifies the encoding of the regular expression. This is
+passed to the tokenizer, which will C<decode> the regular expression
+string before it tokenizes it. For example:
+
+ my $re = PPIx::Regexp->new( '/foo/',
+     encoding => 'iso-8859-1',
+ );
+
+=item trace number
+
+If greater than zero, this option causes trace output from the parse.
+The author reserves the right to change or eliminate this without
+notice.
+
+=back
+
+Passing optional input other than the above is not an error, but neither
+is it supported.
 
 =cut
 

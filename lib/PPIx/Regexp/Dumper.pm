@@ -52,7 +52,9 @@ our $VERSION = '0.000_05';
      '/foo/', ordinal => 1,
  );
 
-This static method instantiates the dumper. It takes the string or
+This static method instantiates the dumper. It takes the string,
+L<PPI::Element|PPI::Element>,
+L<PPIx::Regexp::Element|PPIx::Regexp::Element>, or
 L<PPIx::Regexp::Tokenizer|PPIx::Regexp::Tokenizer> to be dumped as the
 first argument.  Optional further arguments may be passed as name/value
 pairs.
@@ -178,8 +180,6 @@ ignored.
 	if ( _INSTANCE( $re, 'PPIx::Regexp::Tokenizer' ) ) {
 	    $self->{object} = $re;
 	    $self->{tokens} = 1;
-	} elsif ( _INSTANCE( $re, 'PPIx::Regexp' ) ) {
-	    $self->{object} = $re;
 	} elsif ( _INSTANCE( $re, 'PPIx::Regexp::Element' ) ) {
 	    $self->{object} = $re;
 	} elsif ( ref $re eq 'ARRAY' ) {
