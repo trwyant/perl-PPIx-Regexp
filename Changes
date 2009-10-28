@@ -1,2 +1,10 @@
+0.002	28-Oct-2009	T. R. Wyant
+  In verbose mode, have PPIx::Regexp::Dumper dump the absolute capture
+    number referred to by a numbered reference.
+  Have eg/preslurp pass its -verbose option to PPIx::Regexp::Dumper
+  Don't use Test::More::isa_ok for the t/basic.t class heritage tests,
+    since some versions of Test::More require a reference for the first
+    argument of isa_ok().
+
 0.001	21-Oct-2009	T. R. Wyant
   Initial release.
