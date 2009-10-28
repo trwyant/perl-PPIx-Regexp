@@ -67,6 +67,7 @@ my %dumper_opt = (
     margin	=> 4,
     ordinal	=> $opt{ordinal},
     significant => $opt{significant},
+    verbose	=> $opt{verbose},
 );
 
 my $parser = $opt{tokens} ? 'PPIx::Regexp::Tokenizer' : 'PPIx::Regexp';
