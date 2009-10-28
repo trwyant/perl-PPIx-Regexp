@@ -108,14 +108,14 @@ foreach my $pkg ( sort @found ) {
     if ( defined( my $parent = determine( $pkg, 'parent' ) ) ) {
 	my @folks = ref $parent eq 'ARRAY' ? @{ $parent } : $parent;
 	foreach my $pop ( @folks ) {
-	    push @tests, "isa_ok( '$pkg', '$pop' )";
+	    push @tests, "class_isa_ok( '$pkg', '$pop' )";
 	}
     }
 
     if ( defined( my $instance = determine( $pkg, 'instance' ) ) ) {
 	my ( $method, $args ) = @{ $instance };
 	push @tests, "isa_ok( $pkg->$method( " . join(', ', map{ safe(
-		    $_ ) } @{ $args } ) . "), '$pkg' )";
+		    $_ ) } @{ $args } ) . " ), '$pkg' )";
     }
 
 }
@@ -135,7 +135,19 @@ foreach my $tst ( @tests ) {
     print wrap( '', '    ', "$tst;\n");
 }
 
-print "\n1;\n";
+print <<'EOD';
+
+sub class_isa_ok {
+    my ( $class, $isa ) = @_;
+    @_ = (
+	eval { $class->isa( $isa ) },
+	"$class isa $isa",
+    );
+    goto &ok,
+}
+
+1;
+EOD
 
 sub determine {
     my ( $pkg, $what ) = @_;
