@@ -22,6 +22,10 @@ my %internal = (
 	defined $obj or return;
 	return join( ', ', $obj->capture_names() );
     },
+    delimiters => sub {
+	defined $obj or return;
+	return join( ', ', map { "'$_'" } $obj->delimiters() );
+    },
     dump => sub {
 	my @args;
 	defined $_[0] and @args = split qr{ \s+ }smx, $_[0];
@@ -85,6 +89,7 @@ while ( defined ( my $buffer = $tr->readline( 'prenav> ' ) ) ) {
 	$obj = $temp;
     } else {
 	print $temp =~ m/ \n /smx ? $temp :
+	    $temp =~ m/ \A ' /smx ? "$temp\n" :
 	    $temp =~ m/ \D /smx ? "'$temp'\n" : "$temp\n";
     }
 }

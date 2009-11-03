@@ -255,6 +255,50 @@ sub capture_names {
     return $re->capture_names();
 }
 
+=head2 delimiters
+
+ print join("\t", PPIx::Regexp->new('s/foo/bar/')->delimiters());
+ # prints '//      //'
+
+When called in list context, this method returns either one or two
+strings, depending on whether the parsed expression has a replacement
+string. In the case of non-bracketed substitutions, the start delimiter
+of the replacement string is considered to be the same as its finish
+delimiter, as illustrated by the above example.
+
+When called in scalar context, you get the delimiters of the regular
+expression; that is, element 0 of the array that is returned in list
+context.
+
+Optionally, you can pass an index value and the corresponding delimiters
+will be returned; index 0 represents the regular expression's
+delimiters, and index 1 represents the replacement string's delimiters,
+which may be undef. For example,
+
+ print PPIx::Regexp->new('s{foo}<bar>')-delimiters(1);
+ # prints '[]'
+
+If the object was not initialized with a valid regexp of some sort, the
+results of this method are undefined.
+
+=cut
+
+sub delimiters {
+    my ( $self, $inx ) = @_;
+
+    my @rslt;
+    foreach my $method ( qw{ regular_expression replacement } ) {
+	defined ( my $obj = $self->$method() ) or next;
+	defined ( my $str = $obj->delimiters() ) or next;
+	push @rslt, $str;
+    }
+
+    defined $inx and return $rslt[$inx];
+    wantarray and return @rslt;
+    defined wantarray and return $rslt[0];
+    return;
+}
+
 =head2 errstr
 
 This static method returns the error string from the most recent attempt

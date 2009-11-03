@@ -19,10 +19,11 @@ L<PPIx::Regexp::Structure::Replacement|PPIx::Regexp::Structure::Replacement>.
 
 =head1 DESCRIPTION
 
-This class represents the regular expression portion of the parsed code.
-If a substitution was parsed, it is also used for the replacement
-string. As such it will appear as the second (and perhaps third) child
-of the top-level L<PPIx::Regexp|PPIx::Regexp> object.
+This abstract class represents one of the top-level structures in the
+expression. Both
+L<PPIx::Regexp::Structure::Regexp|PPIx::Regexp::Structure::Regexp> and
+L<PPIx::Regexp::Structure::Replacement|PPIx::Regexp::Structure::Replacement>
+are derived from it.
 
 =head1 METHODS
 
@@ -40,6 +41,31 @@ use warnings;
 use base qw{ PPIx::Regexp::Structure };
 
 our $VERSION = '0.002';
+
+=head2 delimiters
+
+This method returns a string representing the delimiters of a regular
+expression or substitution string. In the case of something like
+C<s/foo/bar/>, it will return '//' for both the regular expression and
+the replacement.
+
+=cut
+
+sub delimiters {
+    my ( $self ) = @_;
+    my @delims;
+    foreach my $method ( qw{ start finish } ) {
+	push @delims, undef;
+	defined ( my $obj = $self->$method() )
+	    or next;
+	defined ( my $str = $obj->content() )
+	    or next;
+	$delims[-1] = $str;
+    }
+    defined ( $delims[0] )
+	or $delims[0] = $delims[1];
+    return $delims[0] . $delims[1];
+}
 
 =head2 interpolates
 

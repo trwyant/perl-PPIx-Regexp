@@ -826,6 +826,37 @@ class   ( 'PPIx::Regexp::Token::GroupType::Code' );
 content ( '?p' );
 value   ( perl_version_removed => [], '5.010' );
 
+parse   ( 'qr{foo}smx' );
+value   ( failures => [], 0 );
+class   ( 'PPIx::Regexp' );
+choose  ( regular_expression => [] );
+class   ( 'PPIx::Regexp::Structure::Regexp' );
+value   ( delimiters => [], '{}' );
+choose  ( top => [] );
+class   ( 'PPIx::Regexp' );
+value   ( delimiters => [], '{}' );
+value   ( delimiters => 1, undef );
+
+parse   ( 's<foo>[bar]smx' );
+value   ( failures => [], 0 );
+class   ( 'PPIx::Regexp' );
+choose  ( regular_expression => [] );
+class   ( 'PPIx::Regexp::Structure::Regexp' );
+value   ( delimiters => [], '<>' );
+choose  ( top => [], replacement => [] );
+class   ( 'PPIx::Regexp::Structure::Replacement' );
+value   ( delimiters => [], '[]' );
+choose  ( top => [] );
+class   ( 'PPIx::Regexp' );
+value   ( delimiters => 0, '<>' );
+value   ( delimiters => 1, '[]' );
+
+parse   ( 's/foo/bar/smx' );
+value   ( failures => [], 0 );
+class   ( 'PPIx::Regexp' );
+value   ( delimiters => 0, '//' );
+value   ( delimiters => 1, '//' );
+
 finis   ();
 
 1;

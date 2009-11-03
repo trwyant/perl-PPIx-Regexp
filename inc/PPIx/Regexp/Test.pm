@@ -162,7 +162,7 @@ sub finis {		## no critic (RequireArgUnpacking)
 
 {
 
-    my %array = map { $_ => 1} qw{ start type children finish };
+    my %array = map { $_ => 1} qw{ children delimiters finish start type };
 
     sub navigate {
 	my @args = @_;
