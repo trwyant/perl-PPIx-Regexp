@@ -9,12 +9,45 @@ use PPIx::Regexp::Test;
 
 plan 'no_plan';
 
+tokenize( {}, '-notest' ); # We don't know how to tokenize a hash reference.
+equals  ( undef, 'We did not get an object' );
+value   ( errstr => [], 'HASH not supported' );
+
+parse   ( {}, '-notest' ); # If we can't tokenize it, we surely can't parse it.
+equals  ( undef, 'We did not get an object' );
+value   ( errstr => [], 'HASH not supported' );
+
+parse   ( 'fubar' );	# We can't make anything of this.
+value   ( failures => [], 1 );
+class   ( 'PPIx::Regexp' );
+value   ( capture_names => [], undef );
+value   ( max_capture_number => [], undef );
+value   ( source => [], 'fubar' );
+
 {
 
     # The navigation tests get done in their own local scope so that all
     # the object references we have held go away when we are done.
 
     parse   ( '/ ( 1 2(?#comment)) /x' );
+    value   ( failures => [], 0 );
+    value   ( errstr => [], undef );
+    class   ( 'PPIx::Regexp' );
+    value   ( elements => [], 3 );
+
+    choose  ( first_element => [] );
+    class   ( 'PPIx::Regexp::Token::Structure' );
+    content ( '' );
+
+    choose  ( last_element => [] );
+    class   ( 'PPIx::Regexp::Token::Modifier' );
+    content ( 'x' );
+
+    choose  ( tokens => [] );
+    count   ( 13 );
+    navigate( 7 );
+    class   ( 'PPIx::Regexp::Token::Literal' );
+    content ( '2' );
 
     my $lit1 = choose( find_first => 'Token::Literal' );
     class   ( 'PPIx::Regexp::Token::Literal' );
@@ -70,14 +103,41 @@ plan 'no_plan';
     my $top = navigate( top => [] );
     class   ( 'PPIx::Regexp' );
     true    ( ancestor_of => $lit1 );
+    true    ( contains    => $lit1 );
+    false   ( ancestor_of => undef );
 
     navigate( $lit1 );
     true    ( descendant_of => $top );
+    false   ( descendant_of => $lit2 );
+    false   ( ancestor_of   => $lit2 );
+    false   ( descendant_of => undef );
 
     choose  ( find => 'Token::Literal' );
     count   ( 2 );
     navigate( -1 );
     equals  ( $lit2, 'The last literal is the second one' );
+
+    choose  ( find_parents => 'Token::Literal' );
+    count   ( 1 );
+
+    my $capt = navigate( 0 );
+    class   ( 'PPIx::Regexp::Structure::Capture' );
+    value   ( elements => [], 7 );
+    value   ( name => [], undef );
+
+    navigate( $capt, first_element => [] );
+    class   ( 'PPIx::Regexp::Token::Structure' );
+    content ( '(' );
+
+    navigate( $capt, last_element => [] );
+    class   ( 'PPIx::Regexp::Token::Structure' );
+    content ( ')' );
+
+    navigate( $capt, schildren => [] );
+    count   ( 2 );
+    navigate( 1 );
+    class   ( 'PPIx::Regexp::Token::Literal' );
+    content ( '2' );
 
     choose  ( find => sub {
 	    ref $_[1] eq 'PPIx::Regexp::Token::Literal'
@@ -95,6 +155,24 @@ plan 'no_plan';
 
     navigate( parent => [], schild => -2 );
     equals  ( $lit1, 'The -2nd significant child is the first literal' );
+
+    choose  ( previous_sibling => [] );
+    equals  ( undef, 'The top-level object has no previous sibling' );
+
+    choose  ( sprevious_sibling => [] );
+    equals  ( undef, 'The top-level object has no significant previous sib' );
+
+    choose  ( next_sibling => [] );
+    equals  ( undef, 'The top-level object has no next sibling' );
+
+    choose  ( snext_sibling => [] );
+    equals  ( undef, 'The top-level object has no significant next sibling' );
+
+    choose  ( find => [ {} ] );
+    equals  ( undef, 'Can not find a hash reference' );
+
+    navigate( $lit2 );
+    value   ( nav => [], [ child => [1], child => [0], child => [2] ] );
 
 }
 
@@ -122,6 +200,14 @@ SKIP:
     cache_count( 1 );
 
     PPIx::Regexp->flush_cache();
+
+    cache_count();
+
+    $o1 = PPIx::Regexp->new_from_cache( $m );
+
+    cache_count( 1 );
+
+    $o1->flush_cache();
 
     cache_count();
 
@@ -272,6 +358,26 @@ choose  ( 3 );
 class   ( 'PPIx::Regexp::Token::GroupType::BranchReset' );
 content ( '?|' );
 value   ( perl_version_introduced => [], '5.010' );
+
+parse   ( '/[a-z]/' );
+value   ( failures => [], 0 );
+class   ( 'PPIx::Regexp' );
+count   ( 3 );
+choose  ( regular_expression => [] );
+true    ( interpolates => [] );
+choose  ( find_first => 'PPIx::Regexp::Structure::CharClass' );
+class   ( 'PPIx::Regexp::Structure::CharClass' );
+false   ( negated => [] );
+
+parse   ( 'm\'[^a-z]\'' );
+value   ( failures => [], 0 );
+class   ( 'PPIx::Regexp' );
+count   ( 3 );
+choose  ( regular_expression => [] );
+false   ( interpolates => [] );
+choose  ( find_first => 'PPIx::Regexp::Structure::CharClass' );
+class   ( 'PPIx::Regexp::Structure::CharClass' );
+true    ( negated => [] );
 
 parse   ( '/(?|(?<baz>foo(wah))|(bar))(hoo)/' );
 value   ( failures => [], 0 );
@@ -691,6 +797,7 @@ count   ( 1 );
 choose  ( child => 1, child => 0 );
 class   ( 'PPIx::Regexp::Structure::Switch' );
 count   ( 4 );
+value   ( perl_version_introduced => [], '5.006' );
 choose  ( child => 1, child => 0, child => 0 );
 class   ( 'PPIx::Regexp::Token::Condition' );
 content ( '(1)' );
@@ -709,6 +816,7 @@ count   ( 1 );
 choose  ( child => 1, child => 0 );
 class   ( 'PPIx::Regexp::Structure::Switch' );
 count   ( 4 );
+value   ( perl_version_introduced => [], '5.010' );
 choose  ( child => 1, child => 0, child => 0 );
 class   ( 'PPIx::Regexp::Token::Condition' );
 content ( '(R1)' );
@@ -727,6 +835,7 @@ count   ( 1 );
 choose  ( child => 1, child => 0 );
 class   ( 'PPIx::Regexp::Structure::Switch' );
 count   ( 4 );
+value   ( perl_version_introduced => [], '5.010' );
 choose  ( child => 1, child => 0, child => 0 );
 class   ( 'PPIx::Regexp::Token::Condition' );
 content ( '(<bar>)' );
@@ -745,6 +854,7 @@ count   ( 1 );
 choose  ( child => 1, child => 0 );
 class   ( 'PPIx::Regexp::Structure::Switch' );
 count   ( 4 );
+value   ( perl_version_introduced => [], '5.010' );
 choose  ( child => 1, child => 0, child => 0 );
 class   ( 'PPIx::Regexp::Token::Condition' );
 content ( '(\'bar\')' );
@@ -763,6 +873,7 @@ count   ( 1 );
 choose  ( child => 1, child => 0 );
 class   ( 'PPIx::Regexp::Structure::Switch' );
 count   ( 4 );
+value   ( perl_version_introduced => [], '5.010' );
 choose  ( child => 1, child => 0, child => 0 );
 class   ( 'PPIx::Regexp::Token::Condition' );
 content ( '(R&bar)' );
@@ -780,6 +891,7 @@ count   ( 1 );
 choose  ( child => 1, child => 0 );
 class   ( 'PPIx::Regexp::Structure::Switch' );
 count   ( 4 );
+value   ( perl_version_introduced => [], '5.010' );
 choose  ( child => 1, child => 0, child => 0 );
 class   ( 'PPIx::Regexp::Token::Condition' );
 content ( '(DEFINE)' );
@@ -856,6 +968,10 @@ value   ( failures => [], 0 );
 class   ( 'PPIx::Regexp' );
 value   ( delimiters => 0, '//' );
 value   ( delimiters => 1, '//' );
+
+tokenize( '/foo/', encoding => 'utf8' );
+value   ( failures => [], 0 );
+class   ( 'PPIx::Regexp' );
 
 finis   ();
 

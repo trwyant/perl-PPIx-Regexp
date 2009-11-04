@@ -20,7 +20,7 @@ my $tr = Term::ReadLine->new( 'Navigate a regular expression' );
 my %internal = (
     capture_names => sub {
 	defined $obj or return;
-	return join( ', ', $obj->capture_names() );
+	return join( ', ', map { "'$_'" } $obj->capture_names() );
     },
     delimiters => sub {
 	defined $obj or return;
@@ -84,14 +84,31 @@ while ( defined ( my $buffer = $tr->readline( 'prenav> ' ) ) ) {
 	}
 	next;
     };
-    if ( _INSTANCE( $temp, 'PPIx::Regexp::Element' ) ) {
-	print $temp->class(), "\t", $temp->content(), "\n";
-	$obj = $temp;
-    } else {
-	print $temp =~ m/ \n /smx ? $temp :
-	    $temp =~ m/ \A ' /smx ? "$temp\n" :
-	    $temp =~ m/ \D /smx ? "'$temp'\n" : "$temp\n";
+
+    print _format( $temp );
+
+    _INSTANCE( $temp, 'PPIx::Regexp::Element' )
+	and $obj = $temp;
+}
+
+sub _format {
+    my ( @args ) = @_;
+    my $rslt;
+
+    foreach my $thing ( @args ) {
+	if ( _INSTANCE( $thing, 'PPIx::Regexp::Element' ) ) {
+	    $rslt .= $thing->class() . "\t" . $thing->content() . "\n";
+	} elsif ( ref $thing eq 'ARRAY' ) {
+	    $rslt .= _format( @{ $thing } );
+	} else {
+	    $rslt .= $thing =~ m/ \n /smx ? $thing :
+		$thing =~ m/ \A ' /smx ? "$thing\n" :
+		$thing =~ m/ \D /smx ? "'$thing'\n" :
+					"$thing\n";
+	}
     }
+
+    return $rslt;
 }
 
 __END__

@@ -282,13 +282,6 @@ sub nav {
     return ( $parent->nav(), $parent->_nav( $self ) );
 }
 
-# Make sure we are an instance of PPI::Element.
-
-sub _instance {
-    my ( $self, $element ) = @_;
-    return _INSTANCE( $element, __PACKAGE__ );
-}
-
 # Find our location and index among the parent's children. If not found,
 # just returns.
 

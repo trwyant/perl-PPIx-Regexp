@@ -216,7 +216,8 @@ any objects specified are removed from the cache.
 
 	if ( @args ) {
 	    foreach my $obj ( @args ) {
-		if ( _INSTANCE( ( my $parent = $obj->parent() ),
+		if ( _INSTANCE( $obj, __PACKAGE__ ) &&
+		    _INSTANCE( ( my $parent = $obj->source() ),
 			'PPI::Element' ) ) {
 		    delete $cache{ refaddr( $parent ) };
 		}
@@ -289,8 +290,7 @@ sub delimiters {
     my @rslt;
     foreach my $method ( qw{ regular_expression replacement } ) {
 	defined ( my $obj = $self->$method() ) or next;
-	defined ( my $str = $obj->delimiters() ) or next;
-	push @rslt, $str;
+	push @rslt, $obj->delimiters();
     }
 
     defined $inx and return $rslt[$inx];

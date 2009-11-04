@@ -75,12 +75,6 @@ sub max_capture_number {
     return $self->{max_capture_number};
 }
 
-# Returns the names of attributes to be populated out of the optional
-# leading hash passed to _new().
-sub __PPIX_ATTRIBUTE__names {
-    return ( qw{ max_capture_number } );
-}
-
 # Called by the lexer once it has done its worst to all the tokens.
 # Called as a method with no arguments. The return is the number of
 # parse failures discovered when finalizing.
