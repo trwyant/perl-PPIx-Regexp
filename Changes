@@ -1,3 +1,14 @@
+0.003	T. R. Wyant	05-Nov-2009
+  Have PPIx::Regexp::Token::Literal recognize \N{U+hhhh} (where hhhh
+    represents hex digits), and provide its ordinal (hhhh). Remove
+    recognition of \N. (. = any character), which Perl does not do.
+  Fix $re->flush_cache() so that it actually removes $re and only
+    $re from the cache.
+  Add delimiters() method to PPIx::Regexp::Main and PPIx::Regexp.
+    Support this in eg/prenav.
+  Increase test coverage and remove dead code.
+  Count tests in t/parse.t and t/unit.t
+
 0.002	28-Oct-2009	T. R. Wyant
   In verbose mode, have PPIx::Regexp::Dumper dump the absolute capture
     number referred to by a numbered reference.
