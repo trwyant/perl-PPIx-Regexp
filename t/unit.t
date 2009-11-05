@@ -7,7 +7,7 @@ use lib qw{ inc };
 
 use PPIx::Regexp::Test;
 
-plan 'no_plan';
+plan( tests => 684 );
 
 my $is_ascii = ord( "\t" ) == 9;	# per perlebcdic
 
