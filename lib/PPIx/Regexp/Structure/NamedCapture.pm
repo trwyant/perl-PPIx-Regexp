@@ -32,6 +32,7 @@ package PPIx::Regexp::Structure::NamedCapture;
 use strict;
 use warnings;
 
+use Carp;
 use Params::Util 0.25 qw{ _INSTANCE };
 
 use base qw{ PPIx::Regexp::Structure::Capture };
@@ -48,7 +49,8 @@ This method returns the name of the capture.
 
 sub name {
     my ( $self ) = @_;
-    my $type = $self->type() or return;
+    my $type = $self->type()
+	or croak 'Programming error - ', __PACKAGE__, ' without type object';
     return $type->name();
 }
 

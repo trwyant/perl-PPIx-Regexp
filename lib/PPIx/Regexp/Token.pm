@@ -99,12 +99,6 @@ sub is_quantifier { return };
 # $token->__PPIX_TOKEN__post_make( $tokenizer );
 sub __PPIX_TOKEN__post_make { return };
 
-# Return true to be included in the token scan. This determination
-# should be good for the life of the tokenizer. It is called as a static
-# method with two arguments: the tokenizer object and the mode name. Use
-# of the latter is pre-deprecated.
-sub __PPIX_TOKEN__scan_me { return 1; };
-
 # Called by the lexer once it has done its worst to all the tokens.
 # Called as a method with no arguments. The return is the number of
 # parse failures discovered when finalizing.

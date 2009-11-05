@@ -7,6 +7,7 @@ use base qw{ Exporter };
 
 use Params::Util 0.25 qw{ _INSTANCE };
 use PPIx::Regexp;
+use PPIx::Regexp::Dumper;
 use PPIx::Regexp::Element;
 use PPIx::Regexp::Tokenizer;
 use Scalar::Util qw{ looks_like_number refaddr };
@@ -27,6 +28,7 @@ our @EXPORT_OK = qw{
     navigate
     parse
     plan
+    skip
     tokenize
     true
     value
@@ -115,7 +117,16 @@ sub count {		## no critic (RequireArgUnpacking)
 }
 
 sub dump_result {
-    if ( eval { require YAML; 1; } ) {
+    my ( $opt, @args ) = _parse_constructor_args( { test => 1 }, @_ );
+    if ( $opt->{test} ) {
+	my ( $expect, $name ) = splice @args, -2;
+	my $got = PPIx::Regexp::Dumper->new( $obj, @args )->string();
+	@_ = ( $got, $expect, $name );
+	goto &is;
+    } elsif ( _INSTANCE( $result, 'PPIx::Regexp::Tokenizer' ) ||
+	_INSTANCE( $result, 'PPIx::Regexp::Element' ) ) {
+	diag( PPIx::Regexp::Dumper->new( $obj, @args )->string() );
+    } elsif ( eval { require YAML; 1; } ) {
 	diag( "Result dump:\n", YAML::Dump( $result ) );
     } elsif ( eval { require Data::Dumper; 1 } ) {
 	diag( "Result dump:\n", Data::Dumper::Dumper( $result ) );
@@ -160,8 +171,7 @@ sub false {		## no critic (RequireArgUnpacking)
 }
 
 sub finis {		## no critic (RequireArgUnpacking)
-    $obj = undef;
-    $parse = undef;
+    $obj = $parse = $result = undef;
     _pause();
     $result = PPIx::Regexp::Element->_parent_keys();
     @_ = ( $result, 0, 'Should be no leftover objects' );
@@ -213,7 +223,8 @@ sub finis {		## no critic (RequireArgUnpacking)
 }
 
 sub parse {		## no critic (RequireArgUnpacking)
-    my ( $regexp, $opt, @args ) = _parse_constructor_args( @_ );
+    my ( $opt, $regexp, @args ) = _parse_constructor_args(
+	{ test => 1 }, @_ );
     $initial_class = 'PPIx::Regexp';
     $kind = 'element';
     $result = $obj = $parse = PPIx::Regexp->new( $regexp, @args );
@@ -223,33 +234,13 @@ sub parse {		## no critic (RequireArgUnpacking)
     goto &isa_ok;
 }
 
-{
-    my %opt_names = map { $_ => 1 } qw{ test };
-
-    sub _parse_constructor_args {
-	my ( $regexp, @args ) = @_;
-	my %opt = (
-	    test => 1,
-	);
-	my @rslt = ( $regexp, \%opt );
-	foreach my $arg ( @args ) {
-	    if ( $arg =~ m/ \A - -? (no)? (\w+) \z /smx &&
-		$opt_names{$2} ) {
-		$opt{$2} = !$1;
-	    } else {
-		push @rslt, $arg;
-	    }
-	}
-	return @rslt;
-    }
-}
-
 sub tokenize {		## no critic (RequireArgUnpacking)
-    my ( $regexp, $opt, @args ) = _parse_constructor_args( @_ );
+    my ( $opt, $regexp, @args ) = _parse_constructor_args(
+	{ test => 1, tokens => 1 }, @_ );
     $initial_class = 'PPIx::Regexp::Tokenizer';
     $kind = 'token';
-    my $obj = PPIx::Regexp::Tokenizer->new( $regexp, @args );
-    if ( $obj ) {
+    $obj = PPIx::Regexp::Tokenizer->new( $regexp, @args );
+    if ( $obj && $opt->{tokens} ) {
 	$parse = [ $obj->tokens() ];
     } else {
 	$parse = [];
@@ -296,6 +287,20 @@ sub value {		## no critic (RequireArgUnpacking)
     } else {
 	goto &is;
     }
+}
+
+sub _parse_constructor_args {
+    my ( $opt, @args ) = @_;
+    my @rslt = ( $opt );
+    foreach my $arg ( @args ) {
+	if ( $arg =~ m/ \A - -? (no)? (\w+) \z /smx &&
+	    exists $opt->{$2} ) {
+	    $opt->{$2} = !$1;
+	} else {
+	    push @rslt, $arg;
+	}
+    }
+    return @rslt;
 }
 
 sub _pause {
@@ -419,13 +424,24 @@ whose argument list ends in one of
 
 =head2 dump_result
 
-This subroutine dumps the result of the last operation. It is not
-intended to be in published tests, but is a troubleshooting tool for
-when I can not figure out what the operation is doing. The dump is done
-by the first of L<YAML|YAML> or L<Data::Dumper|Data::Dumper> that can be
-loaded, and is displayed as a L<Test::More|Test::More> diagnostic
-message. If no dumper module can be loaded, a diagnostic to this effect
-is displayed.
+ dump_result( tokens => 1, <<'EOD', 'Test tokenization dump' );
+ ... expected dump here ...
+ EOD
+
+This test performs the specified dump on the current object and succeeds
+if the result matches the expectation. The name of the test is the last
+argument, and the expected result is the next-to-last argument. All
+other arguments are passed to
+L<PPIx::Regexp::Dumper|PPIx::Regexp::Dumper>.
+
+Well, almost all other arguments are passed to the dumper. You can
+specify C<--notest> to skip the test. In this case the result of the
+last operation is dumped. L<PPIx::Regexp::Dumper|PPIx::Regexp::Dumper>
+is used if appropriate; otherwise you get a L<YAML|YAML> dump if that is
+available, or a L<Data::Dumper|Data::Dumper> dump if not. If no dumper
+class can be found, a diagnostic is produced. You can also specify
+C<--test>, but this is the default. This option is removed from the
+argument list before the test name (etc) is determined.
 
 =head2 false
 
@@ -466,6 +482,14 @@ of the parse tree.
 This test parses the given regular expression into a C<PPIx::Regexp>
 object, and succeeds if a C<PPIx::Regexp> object was in fact generated.
 
+If you specify argument C<--notest>, the parse is done but no test is
+performed. You would do this if you expected the parse to fail (e.g. you
+are testing error handling). You can also explicitly specify C<--test>,
+but this is the default.
+
+All other arguments are passed to the L<PPIx::Regexp|PPIx::Regexp>
+constructor.
+
 =head2 plan
 
 This subroutine is exported from R<Test::More|Test::More>.
@@ -477,6 +501,19 @@ This subroutine is exported from R<Test::More|Test::More>.
 This test tokenizes the given regular expression into a
 C<PPIx::Regexp::Tokenizer> object, and succeeds if a
 C<PPIx::Regexp::Tokenizer> object was in fact generated.
+
+If you specify argument C<--notest>, the parse is done but no test is
+performed. You would do this if you expected the parse to fail (e.g. you
+are testing error handling). You can also explicitly specify C<--test>,
+but this is the default.
+
+If you specify argument C<--notokens>, the tokenizer is built, but the
+tokens are not extracted. You would do this when you want a subsequent
+operation to call C<tokens()>. You can also explicitly specify
+C<--tokens>, but this is the default.
+
+All other arguments are passed to the
+L<PPIx::Regexp::Tokenizer|PPIx::Regexp::Tokenizer> constructor.
 
 =head2 true
 

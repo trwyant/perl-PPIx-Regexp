@@ -196,9 +196,6 @@ ignored.
 		    or Carp::croak( PPIx::Regexp->errstr() );
 	}
 
-	$self->{lister} = ( $self->{test} ? '_test' : '_list' ) . (
-	    $self->{tokens} ? '_tokens' : '_node' );
-
 	bless $self, $class;
 
 	return $self;

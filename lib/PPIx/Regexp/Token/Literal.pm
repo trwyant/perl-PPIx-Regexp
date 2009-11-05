@@ -128,7 +128,8 @@ The following is from perlop:
 		    0 [01234567]* |	# octal
 		    c [][[:alpha:]\@\\^_?] |	# control characters
 		    x (?: \{ [[:xdigit:]]* \} | [[:xdigit:]]{0,2} ) | # hex
-		    N (?: \{ [\w\s:]+ \} | . ) |	# unicode
+		    N (?: \{ (?: [\w\s:]+ |
+			U [+] [[:xdigit:]]+ ) \} ) |	# unicode
 		    C (?: \d+ | \{ [^\}] \} )		# octets
 		) }smx ) ) {
 	    return $accept;
@@ -260,8 +261,8 @@ because I don't understand the syntax.
 	    defined $charnames::VERSION or return;
 	    $content =~ m/ \A \\ N \{ ( [\w\s:]+ ) \} \z /smx
 		and return charnames::vianame( $1 );
-	    $content =~ m/ \A \\ N ( . ) \z /smx
-		and return charnames::vianame( $1 );
+	    $content =~ m/ \A \\ N \{ U [+] ( [[:xdigit:]]+ ) \} \z /smx
+		and return hex $1;
 	}
 
 	if ( $indicator eq 'C' ) {

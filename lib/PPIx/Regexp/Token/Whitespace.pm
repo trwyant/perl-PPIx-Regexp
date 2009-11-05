@@ -50,15 +50,6 @@ sub whitespace {
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 
-# Return true to be included in the token scan. This determination
-# should be good for the life of the tokenizer. It is called as a static
-# method with two arguments: the tokenizer object and the mode name. Use
-# of the latter is pre-deprecated.
-sub __PPIX_TOKEN__scan_me {
-    my ( $class, $tokenizer, $mode ) = @_;
-    return $tokenizer->modifier( 'x' );
-};
-
 # Objects of this class are generated either by the tokenizer itself
 # (when scanning for delimiters) or by PPIx::Regexp::Token::Literal (if
 # it hits a match for \s and finds the regular expression has the /x

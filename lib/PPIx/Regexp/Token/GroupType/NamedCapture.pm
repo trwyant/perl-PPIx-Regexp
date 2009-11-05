@@ -69,15 +69,6 @@ sub __PPIX_TOKEN__post_make {
     confess "Programming error - can not figure out capture name";
 }
 
-# Return true to be included in the token scan. This determination
-# should be good for the life of the tokenizer. It is called as a static
-# method with two arguments: the tokenizer object and the mode name. Use
-# of the latter is pre-deprecated.
-# sub __PPIX_TOKEN__scan_me {
-#     my ( $class, $tokenizer, $mode ) = @_;
-#     return $tokenizer->interpolates();
-# };
-
 sub __PPIX_TOKENIZER__regexp {
     my ( $class, $tokenizer, $character ) = @_;
 
