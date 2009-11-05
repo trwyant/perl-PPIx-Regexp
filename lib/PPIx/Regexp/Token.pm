@@ -51,7 +51,7 @@ use warnings;
 
 use base qw{PPIx::Regexp::Element};
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 sub _new {
     my ( $class, $content ) = @_;
