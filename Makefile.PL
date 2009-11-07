@@ -22,7 +22,7 @@ my %args = (
     ABSTRACT => 'Parse regular expressions',
 );
 
-$mmv >= 6.31 and $args{LICENSE} => 'perl';
+$mmv >= 6.31 and $args{LICENSE} = 'perl';
 
 $mmv >= 6.4501 and $args{META_MERGE} = {
     build_requires => {
