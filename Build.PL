@@ -21,6 +21,7 @@ my %args = (
 	'Params::Util'	=> 0.250,
 	'Readonly'	=> 0,
 	'Scalar::Util'	=> 0,
+	'Task::Weaken'	=> 0,
     },
     license => 'perl',
 );

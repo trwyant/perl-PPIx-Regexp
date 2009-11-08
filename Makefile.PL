@@ -15,6 +15,7 @@ my %args = (
 	'Params::Util'	=> 0.250,
 	'Readonly'	=> 0,
 	'Scalar::Util'	=> 0,
+	'Task::Weaken'	=> 0,
     },
     PL_FILES => {},	# Prevent old MakeMaker from running Build.PL
     'dist' => {COMPRESS => 'gzip', SUFFIX => 'gz'},
