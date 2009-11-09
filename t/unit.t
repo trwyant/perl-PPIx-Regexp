@@ -17,7 +17,7 @@ BEGIN {
     eval {
 	require charnames;
 	charnames->import( qw{ :full } );
-	$have_charnames = 1;
+	$have_charnames = charnames->can( 'vianame' );
     };
 }
 
@@ -197,11 +197,11 @@ value   ( source => [], 'fubar' );
     eval {
 	require PPI::Document;
 	1;
-    } or skip( $num_tests, 'Failed to load PPI::Document' );
+    } or skip( 'Failed to load PPI::Document', $num_tests );
     my $doc = PPI::Document->new( \'m/foo/smx' )
-	or skip( $num_tests, 'Failed to create PPI::Document' );
+	or skip( 'Failed to create PPI::Document', $num_tests );
     my $m = $doc->find_first( 'PPI::Token::Regexp::Match' )
-	or skip( $num_tests, 'Failed to find PPI::Token::Regexp::Match' );
+	or skip( 'Failed to find PPI::Token::Regexp::Match', $num_tests );
 
     my $o1 = PPIx::Regexp->new_from_cache( $m );
     my $o2 = PPIx::Regexp->new_from_cache( $m );
@@ -248,7 +248,7 @@ choose  ( 5 );
 value   ( ordinal => [], ord "\x{0c}" );
 SKIP: {
     $have_charnames
-	or skip( 1, "unable to load the charnames pragma" );
+	or skip( "unable to load charnames::vianame", 1 );
     choose  ( 6 );
     value   ( ordinal => [], ord 'e' );
 }

@@ -151,8 +151,12 @@ This method returns the ordinal of the literal if it can figure it out.
 It is analogous to the C<ord> built-in.
 
 It will not attempt to determine the ordinal of a unicode name
-(C<\N{...}>) unless C<charnames> has been loaded. Instead, it will
-return C<undef>.
+(C<\N{...}>) unless L<charnames|charnames> has been loaded, and supports
+the L<vianame()|charnames/vianame> function. Instead, it will return
+C<undef>. Users of Perl 5.6.2 and older may be out of luck here.
+
+Unicode code points (e.g. C<\N{U+abcd}>) should work independently of
+L<charnames|charnames>, and just return the value of C<abcd>.
 
 It will never attempt to return the ordinal of an octet (C<\C{...}>)
 because I don't understand the syntax.
@@ -258,9 +262,12 @@ because I don't understand the syntax.
 	}
 
 	if ( $indicator eq 'N' ) {
-	    defined $charnames::VERSION or return;
 	    $content =~ m/ \A \\ N \{ ( [\w\s:]+ ) \} \z /smx
-		and return charnames::vianame( $1 );
+		and return (
+		    _have_charnames_vianame() ?
+			charnames::vianame( $1 ) :
+			undef
+		);
 	    $content =~ m/ \A \\ N \{ U [+] ( [[:xdigit:]]+ ) \} \z /smx
 		and return hex $1;
 	}
@@ -274,6 +281,21 @@ because I don't understand the syntax.
     }
 
 }
+
+{
+    my $have_charnames_vianame;
+
+    sub _have_charnames_vianame {
+	defined $have_charnames_vianame
+	    and return $have_charnames_vianame;
+	return (
+	    $have_charnames_vianame =
+		charnames->can( 'vianame' ) ? 1 : 0
+	);
+
+    }
+}
+
 
 *__PPIX_TOKENIZER__repl = \&__PPIX_TOKENIZER__regexp;
 
