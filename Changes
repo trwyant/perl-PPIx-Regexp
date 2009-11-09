@@ -1,3 +1,11 @@
+0.004	T. R. Wyant	09-Nov-2009
+  Have PPIx::Regexp::Token::Literal correctly recognize when
+    charnames::vianame() is unavailable, and decouple this from the
+    handling of \N{U+hhhh}.
+  Add dependency on Task::Weaken, since depending on Scalar::Util
+    appears not to cut it.
+  Correct the assignment of the license type in Makefile.PL.
+
 0.003	T. R. Wyant	05-Nov-2009
   Have PPIx::Regexp::Token::Literal recognize \N{U+hhhh} (where hhhh
     represents hex digits), and provide its ordinal (hhhh). Remove
