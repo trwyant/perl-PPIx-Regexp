@@ -28,7 +28,7 @@ my %args = (
 
 $mbv >= 0.28 and $args{meta_merge} = {
     no_index => {
-	directory => [qw{inc t}],
+	directory => [qw{ inc t xt }],
     },
 };
 
