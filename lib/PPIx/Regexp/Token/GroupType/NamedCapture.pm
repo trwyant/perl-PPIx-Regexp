@@ -17,7 +17,12 @@ C<PPIx::Regexp::Token::GroupType::NamedCapture> has no descendants.
 
 =head1 DESCRIPTION
 
-This class represents a named capture specification.
+This class represents a named capture specification. Its content will be
+something like one of the following:
+
+ ?<NAME>
+ ?'NAME'
+ ?P<NAME>
 
 =head1 METHODS
 
