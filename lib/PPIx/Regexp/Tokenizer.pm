@@ -51,14 +51,14 @@ our $VERSION = '0.004';
 	'PPIx::Regexp::Token::Literal',
 	'PPIx::Regexp::Token::Interpolation',
 	'PPIx::Regexp::Token::Control',			# Note 1
-	'PPIx::Regexp::Token::CharClass::Simple',
+	'PPIx::Regexp::Token::CharClass::Simple',	# Note 2
         'PPIx::Regexp::Token::Quantifier',
 	'PPIx::Regexp::Token::Greediness',
 	'PPIx::Regexp::Token::CharClass::POSIX',	# Note 3
 	'PPIx::Regexp::Token::Structure',
 	'PPIx::Regexp::Token::Assertion',
 	'PPIx::Regexp::Token::Backreference',
-	'PPIx::Regexp::Token::Operator',		# Note 2
+	'PPIx::Regexp::Token::Operator',		# Note 4
     );
 
     # Note 1: If we are in quote mode ( \Q ... \E ), Control makes a
@@ -68,13 +68,21 @@ our $VERSION = '0.004';
     #		Interpolation, which is legal in quote mode, but
     #		everything else.
 
-    # Note 2: This guy relies on Literal making the characters literal
+    # Note 2: CharClass::Simple must come after Literal, because it
+    #		relies on Literal to recognize a Unicode named character
+    #		( \N{something} ), so any \N that comes through to it
+    #		must be the \N simple character class (which represents
+    #		anything but a newline, and was introduced in Perl
+    #		5.11.0.
+
+    # Note 3: CharClass::POSIX has to come before Structure, since both
+    #		look for square brackets, and CharClass::POSIX is the
+    #		more particular.
+
+    # Note 4: Operator relies on Literal making the characters literal
     #		if they appear in a context where they can not be
     #		operators, and Control making them literals if quoting,
     #		so it must come after both.
-
-    # Note 3: This guy has to come before Structure, since both look for
-    #		square brackets, and this guy is the more particular.
 
     sub _known_tokenizers {
 	my ( $self ) = @_;

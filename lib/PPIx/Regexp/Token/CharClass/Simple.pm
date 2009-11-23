@@ -38,12 +38,25 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token::CharClass };
 
-use PPIx::Regexp::Constant qw{ $COOKIE_CLASS $TOKEN_LITERAL };
+use PPIx::Regexp::Constant qw{ $COOKIE_CLASS $MINIMUM_PERL $TOKEN_LITERAL };
 
 our $VERSION = '0.004';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
+
+{
+
+    my %introduced = (
+	'\N'	=> 5.011,
+    );
+
+    sub perl_version_introduced {
+	my ( $self ) = @_;
+	return $introduced{$self->content()} || $MINIMUM_PERL;
+    }
+
+}
 
 sub __PPIX_TOKENIZER__regexp {
     my ( $class, $tokenizer, $character ) = @_;
@@ -58,7 +71,7 @@ sub __PPIX_TOKENIZER__regexp {
 
     if ( my $accept = $tokenizer->find_regexp(
 	    qr{ \A \\ (?:
-		[wWsSdDvVhHX] |
+		[wWsSdDvVhHXN] |
 		[Pp] \{ \^? [\w:]+ \}
 	    ) }smx
 	) ) {
