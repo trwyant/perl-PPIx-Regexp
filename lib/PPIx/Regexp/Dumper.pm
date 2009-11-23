@@ -276,6 +276,11 @@ sub _safe {
     return $rslt
 }
 
+sub _safe_version {
+    my ( $self, $version ) = @_;
+    return defined $version ? "'$version'" : 'undef';
+}
+
 sub _nav {
     my ( $self, @args ) = @_;
     my $rslt = $self->_safe( @args );
@@ -394,6 +399,15 @@ sub PPIx::Regexp::Node::__PPIX_DUMPER__test {
 	'class   ( ' . $dumper->_safe( ref $self ) . ' );',
 	'count   ( ' . scalar $self->children() . ' );',
     );
+    if ( $dumper->{perl_version} ) {
+	foreach my $method ( qw{
+	    perl_version_introduced
+	    perl_version_removed
+	} ) {
+	    push @rslt, "value   ( $method => " .
+		$dumper->_safe_version( $self->$method() ) . ' );';
+	}
+    }
     foreach my $elem ( $self->children() ) {
 	push @rslt, $elem->__PPIX_DUMPER__test( $dumper );
     }
@@ -528,6 +542,15 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__test {
 	'class   ( ' . $dumper->_safe( ref $self ) . ' );',
 	'content ( ' . $dumper->_safe( $self ) . ' );',
     );
+    if ( $dumper->{perl_version} ) {
+	foreach my $method ( qw{
+	    perl_version_introduced
+	    perl_version_removed
+	} ) {
+	    push @rslt, "value   ( $method => [], " .
+		$dumper->_safe_version( $self->$method() ) . ' );';
+	}
+    }
     if ( $dumper->{verbose} ) {
 	foreach my $method (
 	    qw{significant can_be_quantified is_quantifier } ) {
