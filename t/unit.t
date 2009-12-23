@@ -7,7 +7,7 @@ use lib qw{ inc };
 
 use PPIx::Regexp::Test;
 
-plan( tests => 694 );
+plan( tests => 700 );
 
 my $is_ascii = ord( "\t" ) == 9;	# per perlebcdic
 
@@ -1035,6 +1035,14 @@ choose  ( 3 );
 class   ( 'PPIx::Regexp::Token::Literal' );
 content ( '\\n' );
 value   ( perl_version_introduced => [], '5.006' );
+value   ( perl_version_removed => [], undef );
+
+tokenize( '/\\p{ Match = lo-ose }/' );
+count   ( 5 );
+choose  ( 2 );
+class   ( 'PPIx::Regexp::Token::CharClass::Simple' );
+content ( '\\p{ Match = lo-ose }' );
+value   ( perl_version_introduced => [], '5.011003' );
 value   ( perl_version_removed => [], undef );
 
 SKIP: {

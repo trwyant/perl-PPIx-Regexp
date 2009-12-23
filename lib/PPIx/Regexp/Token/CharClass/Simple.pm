@@ -18,7 +18,8 @@ C<PPIx::Regexp::Token::CharClass::Simple> has no descendants.
 =head1 DESCRIPTION
 
 This class represents one of the simple character classes that can occur
-anywhere in a regular expression.
+anywhere in a regular expression. This includes not only the truly
+simple things like \w, but also Unicode properties.
 
 =head1 METHODS
 
@@ -42,9 +43,6 @@ use PPIx::Regexp::Constant qw{ $COOKIE_CLASS $MINIMUM_PERL $TOKEN_LITERAL };
 
 our $VERSION = '0.004';
 
-# Return true if the token can be quantified, and false otherwise
-# sub can_be_quantified { return };
-
 {
 
     my %introduced = (
@@ -53,7 +51,13 @@ our $VERSION = '0.004';
 
     sub perl_version_introduced {
 	my ( $self ) = @_;
-	return $introduced{$self->content()} || $MINIMUM_PERL;
+	my $content = $self->content();
+	if ( defined( my $minver = $introduced{$content} ) ) {
+	    return $minver;
+	}
+	$content =~ m/ \A \\ [Pp] .*? [\s=-] /smx
+	    and return 5.011003;
+	return $MINIMUM_PERL;
     }
 
 }
@@ -72,7 +76,7 @@ sub __PPIX_TOKENIZER__regexp {
     if ( my $accept = $tokenizer->find_regexp(
 	    qr{ \A \\ (?:
 		[wWsSdDvVhHXN] |
-		[Pp] \{ \^? [\w:]+ \}
+		[Pp] \{ \s* \^? [\w:=\s-]+ \}
 	    ) }smx
 	) ) {
 	return $accept;
