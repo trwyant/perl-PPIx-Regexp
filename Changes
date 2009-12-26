@@ -1,3 +1,17 @@
+0.005	T. R. Wyant	26-Dec-2009
+  Recognize \N (without curlys), back-ported from Perl 6 into 5.11.
+  Recognize unicode characters as \N{[[:alpha:]] ... rather than
+    \N{[\w\s:] ... This is per the 5.11 documentation, but I think Perl
+    always worked this way.
+  Recognize loose matching of Unicode character classes, and allow '='
+    in lieu of a single ':' in a Unicode character class (this from Perl
+    5.11.3).
+  PPIx::Regexp::Dumper now produces the proper output when called with
+    perl_version => 1, test => 1.
+  Describe the typical content of the object in the documentation for
+    PPIx::Regexp::Structure::NamedCapture and
+    PPIx::Regexp::Token::GroupType::NamedCapture.
+
 0.004	T. R. Wyant	09-Nov-2009
   Have PPIx::Regexp::Token::Literal correctly recognize when
     charnames::vianame() is unavailable, and decouple this from the

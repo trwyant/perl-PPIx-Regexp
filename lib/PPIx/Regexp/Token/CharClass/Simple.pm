@@ -41,7 +41,7 @@ use base qw{ PPIx::Regexp::Token::CharClass };
 
 use PPIx::Regexp::Constant qw{ $COOKIE_CLASS $MINIMUM_PERL $TOKEN_LITERAL };
 
-our $VERSION = '0.004';
+our $VERSION = '0.005';
 
 {
 

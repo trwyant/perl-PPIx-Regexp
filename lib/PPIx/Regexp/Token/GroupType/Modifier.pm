@@ -36,7 +36,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token::Modifier PPIx::Regexp::Token::GroupType };
 
-our $VERSION = '0.004';
+our $VERSION = '0.005';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
