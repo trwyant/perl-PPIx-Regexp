@@ -1,3 +1,15 @@
+0.006	T. R. Wyant	26-Feb-2010
+  Update copyright from 2009 to 2009-2010.
+  Parse \N{...} in accordance with perl5115delta. The curlys must
+    contain an alpha followed by alphanumerics, spaces, parens, colons,
+    or dashes. \N{ without a matching } is a character class (if legal)
+    followed by a literal '{'.
+  Parse \N inside a character class as PPI::Regexp::Token::Unknown,
+    since Perl 5.11.5 considers this a compile error. A \N{...} inside a
+    character class is still OK.
+  Add method match() to PPIx::Regexp::Tokenizer. This is analogous to
+    capture(), but returns the entire matched string.
+
 0.005	T. R. Wyant	26-Dec-2009
   Recognize \N (without curlys), back-ported from Perl 6 into 5.11.
   Recognize unicode characters as \N{[[:alpha:]] ... rather than
