@@ -128,7 +128,7 @@ The following is from perlop:
 		    0 [01234567]* |	# octal
 		    c [][[:alpha:]\@\\^_?] |	# control characters
 		    x (?: \{ [[:xdigit:]]* \} | [[:xdigit:]]{0,2} ) | # hex
-		    N (?: \{ (?: [[:alpha:]] [\w\s:]* |	# must begin w/ alpha
+		    N (?: \{ (?: [[:alpha:]] [\w\s:()-]* | # must begin w/ alpha
 			U [+] [[:xdigit:]]+ ) \} ) |	# unicode
 		    C (?: \d+ | \{ [^\}] \} )		# octets
 		) }smx ) ) {
