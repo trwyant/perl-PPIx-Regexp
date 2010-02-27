@@ -39,7 +39,9 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token::CharClass };
 
-use PPIx::Regexp::Constant qw{ $COOKIE_CLASS $MINIMUM_PERL $TOKEN_LITERAL };
+use PPIx::Regexp::Constant qw{
+    $COOKIE_CLASS $MINIMUM_PERL $TOKEN_LITERAL $TOKEN_UNKNOWN
+};
 
 our $VERSION = '0.005';
 
@@ -75,16 +77,20 @@ sub __PPIX_TOKENIZER__regexp {
 
     if ( my $accept = $tokenizer->find_regexp(
 	    qr{ \A \\ (?:
-		[wWsSdDvVhHXN] |
+		[wWsSdDvVhHXRN] |
 		[Pp] \{ \s* \^? [\w:=\s-]+ \}
 	    ) }smx
 	) ) {
-	return $accept;
-    }
-
-    # \R is not legal in a character class.
-    if ( not $in_class and my $accept = $tokenizer->find_regexp(
-	    qr{ \A \\ R }smx ) ) {
+	if ( $in_class ) {
+	    my $match = $tokenizer->match();
+	    # As of Perl 5.11.5, [\N] is a fatal error.
+	    '\\N' eq $match
+		and return $tokenizer->make_token(
+		    $accept, $TOKEN_UNKNOWN );
+	    # \R is not recognized inside a character class. It
+	    # eventually ends up as a literal.
+	    '\\R' eq $match and return;
+	}
 	return $accept;
     }
 
