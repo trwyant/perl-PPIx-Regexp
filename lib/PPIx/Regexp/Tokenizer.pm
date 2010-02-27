@@ -364,6 +364,11 @@ sub make_token {
     return $token;
 }
 
+sub match {
+    my ( $self ) = @_;
+    return $self->{match};
+}
+
 sub modifier {
     my ( $self, $modifier ) = @_;
     return $self->{modifiers}[-1]{$modifier};
@@ -943,6 +948,18 @@ starting at the current cursor position, which will be adjusted.
 If the given length would include characters past the end of the string
 being tokenized, the length is reduced appropriately. If this means a
 token with no characters, nothing is returned.
+
+=head2 match
+
+ if ( $tokenizer->find_regexp( qr{ \A \w+ }smx ) ) {
+     print $tokenizer->match(), "\n";
+ }
+
+This method returns the string matched by the previous call to
+L</find_regexp>.
+
+The match is set to C<undef> by L</make_token>, as well as by another
+call to L</find_regexp>.
 
 =head2 modifier_duplicate
 
