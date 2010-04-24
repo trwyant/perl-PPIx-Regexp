@@ -422,6 +422,7 @@ sub _curly {
     }
 }
 
+# Recover from an unclosed left curly.
 sub _recover_curly {
     my ( $self, $token ) = @_;
 
@@ -440,6 +441,15 @@ sub _recover_curly {
 
     # Shove the curly and its putative contents into whatever structure
     # we have going.
+    # The checks are to try to trap things like RT 56864.
+    'ARRAY' eq ref $self->{_rslt}
+	or confess 'Programming error - $self->{_rslt} not array ref, ',
+	    "parsing '", $self->{tokenizer}->content(), "' at ",
+	    $token->content();
+    @{ $self->{_rslt} }
+	or confess 'Programming error - $self->{_rslt} empty, ',
+	    "parsing '", $self->{tokenizer}->content(), "' at ",
+	    $token->content();
     push @{ $self->{_rslt}[-1] }, @content;
 
     # Shove the mismatched delimiter back into the input so we can have

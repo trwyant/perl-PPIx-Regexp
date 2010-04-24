@@ -119,6 +119,18 @@ loaded.
 
 }
 
+# This method is to be used only by the PPIx::Regexp package. It returns
+# the first of its arguments which is defined. It will go away when
+# (or if!) these modules get 'use 5.010;' at the top.
+
+sub _defined_or {
+    my ( $self, @args ) = @_;
+    foreach my $arg ( @args ) {
+	defined $arg and return $arg;
+    }
+    return;
+}
+
 1;
 
 __END__

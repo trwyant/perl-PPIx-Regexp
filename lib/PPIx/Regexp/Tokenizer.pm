@@ -1,4 +1,3 @@
-
 package PPIx::Regexp::Tokenizer;
 
 use strict;
@@ -163,7 +162,8 @@ our $VERSION = '0.006';
 	    pending => [],	# Tokens made but not returned.
 	    prior => $TOKEN_UNKNOWN,	# Prior significant token.
 	    source => $re,	# The object we were initialized with.
-	    trace => $args{trace} || 0,
+	    trace => __PACKAGE__->_defined_or(
+		$args{trace}, $ENV{PPIX_REGEXP_TOKENIZER_TRACE}, 0 ),
 	};
 
 	if ( _INSTANCE( $re, 'PPI::Element' ) ) {
@@ -291,7 +291,14 @@ sub find_regexp {
     $self->{match} = shift @capture;
     $self->{capture} = \@capture;
 
-    return wantarray ? ( $-[0], $+[0] ) : $+[0];
+    # The following circumlocution seems to be needed under Perl 5.13.0
+    # for reasons I do not fathom -- at least in the case where
+    # wantarray is false. RT 56864 details the symptoms, which I was
+    # never able to reproduce outside Perl::Critic. But returning $+[0]
+    # directly, the value could transmogrify between here and the
+    # calling module.
+    my @data = ( $-[0], $+[0] );
+    return wantarray ? @data : $data[1];
 }
 
 sub get_token {
@@ -740,6 +747,10 @@ Specifying a positive value for this option causes a trace of the
 tokenization. This option is unsupported in the sense that the author
 reserves the right to alter it without notice.
 
+If this option is unspecified, the value comes from environment variable
+C<PPIX_REGEXP_TOKENIZER_TRACE> (see L</ENVIRONMENT VARIABLES>). If this
+environment variable does not exist, the default is 0.
+
 =back
 
 Undocumented options are unsupported.
@@ -1023,6 +1034,17 @@ the method name will be passed to the method.
 
 Because this method is designed to be used within the tokenizing system,
 it will die horribly if the named method does not exist.
+
+=head1 ENVIRONMENT VARIABLES
+
+A tokenizer trace can be requested by setting environment variable
+PPIX_REGEXP_TOKENIZER_TRACE to a numeric value other than 0. Use of this
+environment variable is unsupported in the same sense that the C<trace>
+option of L</new> is unsupported. Explicitly specifying the C<trace>
+option to L</new> overrides the environment variable.
+
+The real reason this is documented is to give the user a way to
+troubleshoot funny output from the tokenizer.
 
 =head1 SUPPORT
 
