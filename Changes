@@ -1,3 +1,12 @@
+0.006_01	T. R. Wyant	23-Apr-2010
+  Fixed RT 56864 - PPIx::Regexp::Lexer fails in Perl::Critic under Perl
+    5.13.0. This was due to the value of a returned $+[0] getting
+    transmogrified before the caller saw it. I never did isolate what
+    triggered the bug.
+  You can now get a tokenizer trace by setting environment value
+    PPIX_REGEXP_TOKENIZER_TRACE to a non-zero numeric value. This is
+    unsupported, though.
+
 0.006	T. R. Wyant	26-Feb-2010
   Update copyright from 2009 to 2009-2010.
   Parse \N{...} in accordance with perl5115delta. The curlys must

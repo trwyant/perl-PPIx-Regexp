@@ -34,7 +34,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Structure };
 
-our $VERSION = '0.006';
+our $VERSION = '0.006_01';
 
 1;
 

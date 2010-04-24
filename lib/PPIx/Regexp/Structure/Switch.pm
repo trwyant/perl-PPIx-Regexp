@@ -44,7 +44,7 @@ use PPIx::Regexp::Constant qw{
     $TOKEN_UNKNOWN
 };
 
-our $VERSION = '0.006';
+our $VERSION = '0.006_01';
 
 sub perl_version_introduced {
     my ( $self ) = @_;
