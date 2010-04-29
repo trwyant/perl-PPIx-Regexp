@@ -304,8 +304,8 @@ sub _get_delimited {
 		push @{ $rslt[-1] }, $token;
 
 	    } elsif ( $content eq ')'
+		    and @rslt > 1	# Ignore enclosing delimiter
 		    and my $recover = $unclosed{$rslt[-1][1]->content()} ) {
-
 		# If the close bracket is a parenthesis and there is a
 		# recovery procedure, we use it.
 		$self->$recover( $token );
@@ -441,7 +441,11 @@ sub _recover_curly {
 
     # Shove the curly and its putative contents into whatever structure
     # we have going.
-    # The checks are to try to trap things like RT 56864.
+    # The checks are to try to trap things like RT 56864, though on
+    # further reflection it turned out that you could get here with an
+    # empty $self->{_rslt} on things like 'm{)}'. This one did not get
+    # made into an RT ticket, but was fixed by not calling the recovery
+    # code if $self->{_rslt} contained only the enclosing delimiters.
     'ARRAY' eq ref $self->{_rslt}
 	or confess 'Programming error - $self->{_rslt} not array ref, ',
 	    "parsing '", $self->{tokenizer}->content(), "' at ",
