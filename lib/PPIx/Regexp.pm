@@ -57,7 +57,7 @@ for little tangible gain.
 
 The author will attempt to preserve the documented interface, but if the
 interface needs to change to correct some egregiously bad design or
-implementation decision, then it will change.  Any incompatable changes
+implementation decision, then it will change.  Any incompatible changes
 will go through a deprecation cycle.
 
 The goal of this package is to parse well-formed regular expressions
