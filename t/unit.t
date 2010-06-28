@@ -7,7 +7,7 @@ use lib qw{ inc };
 
 use PPIx::Regexp::Test;
 
-plan( tests => 704 );
+plan( tests => 706 );
 
 my $is_ascii = ord( "\t" ) == 9;	# per perlebcdic
 
@@ -188,12 +188,12 @@ value   ( source => [], 'fubar' );
 
 }
 
-{
+SKIP: {
 
     # The cache tests get done in their own scope to ensure the objects
     # are destroyed.
 
-    my $num_tests = 3;
+    my $num_tests = 8;
     eval {
 	require PPI::Document;
 	1;
@@ -233,6 +233,32 @@ value   ( source => [], 'fubar' );
     $o1->flush_cache();
 
     cache_count();
+
+}
+
+SKIP: {
+
+    # More cache tests, in their own scope not only to ensure object
+    # destruction, but so $DISABLE_CACHE can be localized.
+
+    local $PPIx::Regexp::DISABLE_CACHE = 1;
+
+    my $num_tests = 2;
+    eval {
+	require PPI::Document;
+	1;
+    } or skip( 'Failed to load PPI::Document', $num_tests );
+    my $doc = PPI::Document->new( \'m/foo/smx' )
+	or skip( 'Failed to create PPI::Document', $num_tests );
+    my $m = $doc->find_first( 'PPI::Token::Regexp::Match' )
+	or skip( 'Failed to find PPI::Token::Regexp::Match', $num_tests );
+
+    my $o1 = PPIx::Regexp->new_from_cache( $m );
+    my $o2 = PPIx::Regexp->new_from_cache( $m );
+
+    different( $o1, $o2, 'new_from_cache() same object, cache disabled' );
+
+    cache_count();	# Should still be nothing in cache.
 
 }
 

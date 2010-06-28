@@ -21,6 +21,7 @@ our @EXPORT_OK = qw{
     class
     content
     count
+    different
     dump_result
     false
     finis
@@ -114,6 +115,26 @@ sub count {		## no critic (RequireArgUnpacking)
 	goto &ok;
     }
     goto &is;
+}
+
+sub different {		## no critic (RequireArgUnpacking)
+    my @args = @_;
+    @args < 3 and unshift @args, $obj;
+    my ( $left, $right, $name ) = @args;
+    if ( ! defined $left && ! defined $right ) {
+	@_ = ( undef, $name );
+    } elsif ( ! defined $left || ! defined $right ) {
+	@_ = ( 1, $name );
+    } elsif ( ref $left && ref $right ) {
+	@_ = ( refaddr( $left ) != refaddr( $right ), $name );
+    } elsif ( ref $left || ref $right ) {
+	@_ = ( 1, $name );
+    } elsif ( looks_like_number( $left ) && looks_like_number( $right ) ) {
+	@_ = ( $left != $right, $name );
+    } else {
+	@_ = ( $left ne $right, $name );
+    }
+    goto &ok;
 }
 
 sub dump_result {
@@ -422,6 +443,15 @@ whose argument list ends in one of
  start => []
  type => []
 
+=head2 different
+
+ different( $o1, $o2, 'Test name' );
+
+This test compares two things, succeeding if they are different.
+References are compared by reference address and scalars by value
+(numeric or string comparison as appropriate). If the first argument is
+omitted it defaults to the current object.
+
 =head2 dump_result
 
  dump_result( tokens => 1, <<'EOD', 'Test tokenization dump' );
@@ -443,6 +473,15 @@ class can be found, a diagnostic is produced. You can also specify
 C<--test>, but this is the default. This option is removed from the
 argument list before the test name (etc) is determined.
 
+=head2 equals
+
+ equals( $o1, $o2, 'Test name' );
+
+This test compares two things, succeeding if they are equal. References
+are compared by reference address and scalars by value (numeric or string
+comparison as appropriate). If the first argument is omitted it defaults
+to the current object.
+
 =head2 false
 
  false( significant => [] );
@@ -457,15 +496,6 @@ on the current object, returns a false value.
 This test should be last in a series, and no references to parse objects
 should be held when it is run. It checks the number of objects in the
 internal C<%parent> hash, and succeeds if it is zero.
-
-=head2 equals
-
- equals( $o1, $o2, 'Test name' );
-
-This test compares two things, succeeding if they are equal. References
-are compared by reference address and scalars by value (numeric or string
-comparison as appropriate). If the first argument is omitted it defaults
-to the current object.
 
 =head2 navigate
 

@@ -55,9 +55,10 @@ for little tangible gain.
 
 =head1 NOTICE
 
-This is alpha code. The author will attempt to preserve the documented
-interface, but if the interface needs to change to correct some
-egregiously bad design or implementation decision, then it will change.
+The author will attempt to preserve the documented interface, but if the
+interface needs to change to correct some egregiously bad design or
+implementation decision, then it will change.  Any incompatable changes
+will go through a deprecation cycle.
 
 The goal of this package is to parse well-formed regular expressions
 correctly. A secondary goal is not to blow up on ill-formed regular
@@ -187,6 +188,9 @@ any objects specified are removed from the cache.
 
     my %cache;
 
+    our $DISABLE_CACHE;		# Leave this undocumented, at least for
+				# now.
+
     sub _cache_size {
 	return scalar keys %cache;
     }
@@ -196,6 +200,8 @@ any objects specified are removed from the cache.
 
 	_INSTANCE( $content, 'PPI::Element' )
 	    or return $class->new( $content, %args );
+
+	$DISABLE_CACHE and return $class->new( $content, %args );
 
 	my $addr = refaddr( $content );
 	exists $cache{$addr} and return $cache{$addr};
