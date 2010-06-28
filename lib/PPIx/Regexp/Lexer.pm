@@ -60,7 +60,7 @@ use PPIx::Regexp::Structure::Unknown			();
 use PPIx::Regexp::Token::Unmatched			();
 use PPIx::Regexp::Tokenizer				();
 
-our $VERSION = '0.007';
+our $VERSION = '0.007_01';
 
 =head2 new
 

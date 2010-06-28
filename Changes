@@ -1,3 +1,10 @@
+0.007_01	T. R. Wyant	28-Jun-2010
+  Explicitly require a minimum Perl of 5.006.
+  Centralized dependencies in inc/PPIx/Regexp/Meta.pm.
+  Removed claim that PPIx::Regexp is alpha code. Docs still say that the
+    interface can be changed, but now it will go through a deprecation
+    cycle.
+
 0.007		T. R. Wyant	28-Apr-2010
   PPIx::Regexp::Lexer no longer fails when encountering expressions like
     m{)}. Instead, it marks the right parenthesis as an unmatched
