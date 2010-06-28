@@ -5,6 +5,7 @@ eg/prenav
 eg/preslurp
 eg/README
 inc/PPIx/Regexp/Build.pm
+inc/PPIx/Regexp/Meta.pm
 inc/PPIx/Regexp/Test.pm
 lib/PPIx/Regexp.pm
 lib/PPIx/Regexp/Constant.pm
