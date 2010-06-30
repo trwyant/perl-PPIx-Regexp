@@ -52,6 +52,8 @@ use PPIx::Regexp::Token::Backreference	();
 use PPIx::Regexp::Token::Backtrack	();
 use PPIx::Regexp::Token::Recursion	();
 
+use Readonly;
+
 our $VERSION = '0.007_01';
 
 # Return true if the token can be quantified, and false otherwise
@@ -69,13 +71,14 @@ sub is_quantifier {
     return $self->{is_quantifier};
 }
 
-## my %delim = map { $_ => 1 } qw/ ( ) { } [ ] < > /;
-my %delim = map { $_ => 1 } qw/ ( ) { } [ ] /;
+Readonly::Hash my %delim => map { $_ => 1 } qw/ ( ) { } [ ] /;
 
 # Regular expressions to match various parenthesized tokens, and the
 # classes to make them into.
 
-my @paren_token = map { [ $_ => $_->__PPIX_TOKEN__recognize() ] }
+Readonly::Array my @paren_token => map {
+    [ $_ => $_->__PPIX_TOKEN__recognize() ]
+}
     'PPIx::Regexp::Token::Comment',
     'PPIx::Regexp::Token::Modifier',
     'PPIx::Regexp::Token::Backreference',

@@ -26,10 +26,6 @@ simple things like \w, but also Unicode properties.
 This class provides no public methods beyond those provided by its
 superclass.
 
-This class provides the following public methods. Methods not documented
-here are private, and unsupported in the sense that the author reserves
-the right to change or remove them without notice.
-
 =cut
 
 package PPIx::Regexp::Token::CharClass::Simple;
@@ -42,12 +38,13 @@ use base qw{ PPIx::Regexp::Token::CharClass };
 use PPIx::Regexp::Constant qw{
     $COOKIE_CLASS $MINIMUM_PERL $TOKEN_LITERAL $TOKEN_UNKNOWN
 };
+use Readonly;
 
 our $VERSION = '0.007_01';
 
 {
 
-    my %introduced = (
+    Readonly::Hash my %introduced => (
 	'\N'	=> 5.011,
     );
 

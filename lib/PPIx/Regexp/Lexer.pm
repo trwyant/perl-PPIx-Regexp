@@ -59,6 +59,7 @@ use PPIx::Regexp::Structure::Switch			();
 use PPIx::Regexp::Structure::Unknown			();
 use PPIx::Regexp::Token::Unmatched			();
 use PPIx::Regexp::Tokenizer				();
+use Readonly;
 
 our $VERSION = '0.007_01';
 
@@ -245,14 +246,14 @@ sub _finalize {
     return;
 }
 
-my %bracket = (
+Readonly::Hash my %bracket => (
     '{' => '}',
     '(' => ')',
     '[' => ']',
 ##  '<' => '>',
 );
 
-my %unclosed = (
+Readonly::Hash my %unclosed => (
     '{' => '_recover_curly',
 );
 
@@ -369,7 +370,7 @@ sub _get_token {
 
 {
 
-    my %handler = (
+    Readonly::Hash my %handler => (
 	'(' => '_round',
 	'[' => '_square',
 	'{' => '_curly',

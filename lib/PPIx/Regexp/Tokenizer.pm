@@ -35,6 +35,7 @@ use PPIx::Regexp::Token::Recursion		();
 use PPIx::Regexp::Token::Structure		();
 use PPIx::Regexp::Token::Unknown		();
 use PPIx::Regexp::Token::Whitespace		();
+use Readonly;
 use Scalar::Util qw{ looks_like_number };
 
 our $VERSION = '0.007_01';
@@ -46,7 +47,7 @@ our $VERSION = '0.007_01';
     # order is in percieved frequency of acceptance, to keep the search
     # as short as possible. If I were conscientious I would gather
     # statistics on this.
-    my @classes = (
+    Readonly::Array my @classes => (
 	'PPIx::Regexp::Token::Literal',
 	'PPIx::Regexp::Token::Interpolation',
 	'PPIx::Regexp::Token::Control',			# Note 1
