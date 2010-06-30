@@ -236,6 +236,8 @@ any objects specified are removed from the cache.
 
 }
 
+sub can_be_quantified { return; }
+
 
 =head2 capture_names
 

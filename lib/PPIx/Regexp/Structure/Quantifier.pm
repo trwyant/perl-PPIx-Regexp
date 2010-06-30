@@ -38,6 +38,14 @@ use base qw{ PPIx::Regexp::Structure };
 
 our $VERSION = '0.007_01';
 
+sub can_be_quantified {
+    return;
+}
+
+sub is_quantifier {
+    return 1;
+}
+
 # Called by the lexer to record the capture number.
 sub __PPIX_LEXER__record_capture_number {
     my ( $self, $number ) = @_;

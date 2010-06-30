@@ -40,6 +40,8 @@ use base qw{ PPIx::Regexp::Structure::Main };
 
 our $VERSION = '0.007_01';
 
+sub can_be_quantified { return; }
+
 1;
 
 __END__

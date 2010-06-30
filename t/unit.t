@@ -1101,11 +1101,11 @@ EOD
 PPIx::Regexp	failures=0
   PPIx::Regexp::Token::Structure	''	significant
   PPIx::Regexp::Structure::Regexp	/ ... /
-    PPIx::Regexp::Structure::Capture	( ... )	number=1	name undef
+    PPIx::Regexp::Structure::Capture	( ... )	number=1	name undef	can_be_quantified
       PPIx::Regexp::Token::Literal	'f'	0x66	significant	can_be_quantified
       PPIx::Regexp::Token::Literal	'o'	0x6f	significant	can_be_quantified
       PPIx::Regexp::Token::Literal	'o'	0x6f	significant	can_be_quantified
-      PPIx::Regexp::Structure::CharClass	[ ... ]
+      PPIx::Regexp::Structure::CharClass	[ ... ]	can_be_quantified
         PPIx::Regexp::Node::Range
           PPIx::Regexp::Token::Literal	'a'	0x61	significant	can_be_quantified
           PPIx::Regexp::Token::Operator	'-'	significant	can_be_quantified

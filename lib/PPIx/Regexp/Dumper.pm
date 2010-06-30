@@ -444,6 +444,10 @@ sub PPIx::Regexp::Node::__PPIX_DUMPER__test {
 		    "$method=$val" :
 		    "$method undef";
 	    }
+	    foreach my $method ( qw{ can_be_quantified is_quantifier } ) {
+		$self->can( $method ) or next;
+		$self->$method() and push @rslt, $method;
+	    }
 	}
 	@rslt = ( join( "\t", @rslt ) );
 	my $indent = ' ' x $dumper->{indent};

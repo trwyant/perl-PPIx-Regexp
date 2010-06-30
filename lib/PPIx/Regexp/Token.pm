@@ -70,30 +70,6 @@ sub content {
     return $self->{content};
 }
 
-=head2 can_be_quantified
-
- $token->can_be_quantified()
-     and print "This token can be quantified.\n";
-
-This method returns true if the token can be quantified.
-
-=cut
-
-sub can_be_quantified { return 1 };
-
-=head2 is_quantifier
-
- $token->is_quantifier()
-     and print "This token is a quantifier.\n";
-
-This method returns true if the token is a quantifier. You can not tell
-this from the token's class, because a right curly bracket may represent
-a quantifier for the purposes of figuring out whether a greediness token
-is possible.
-
-=cut
-
-sub is_quantifier { return };
 
 # Called after the token is manufactured. The calling sequence is
 # $token->__PPIX_TOKEN__post_make( $tokenizer );

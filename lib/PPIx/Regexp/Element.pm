@@ -61,6 +61,18 @@ sub ancestor_of {
     return 1;
 }
 
+=head2 can_be_quantified
+
+ $token->can_be_quantified()
+     and print "This element can be quantified.\n";
+
+This method returns true if the element can be quantified.
+
+=cut
+
+sub can_be_quantified { return 1; }
+
+
 =head2 class
 
 This method returns the class name of the element. It is the same as
@@ -107,6 +119,21 @@ sub descendant_of {
     _INSTANCE( $node, __PACKAGE__ ) or return;
     return $node->ancestor_of( $self );
 }
+
+
+=head2 is_quantifier
+
+ $token->is_quantifier()
+     and print "This element is a quantifier.\n";
+
+This method returns true if the element is a quantifier. You can not
+tell this from the element's class, because a right curly bracket may
+represent a quantifier for the purposes of figuring out whether a
+greediness token is possible.
+
+=cut
+
+sub is_quantifier { return; }
 
 =head2 next_sibling
 

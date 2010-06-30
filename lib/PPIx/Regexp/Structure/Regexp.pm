@@ -38,6 +38,8 @@ use base qw{ PPIx::Regexp::Structure::Main };
 
 our $VERSION = '0.007_01';
 
+sub can_be_quantified { return; }
+
 =head2 capture_names
 
  foreach my $name ( $re->capture_names() ) {
