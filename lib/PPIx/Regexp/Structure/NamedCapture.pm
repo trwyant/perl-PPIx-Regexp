@@ -42,7 +42,7 @@ use Params::Util 0.25 qw{ _INSTANCE };
 
 use base qw{ PPIx::Regexp::Structure::Capture };
 
-our $VERSION = '0.007_01';
+our $VERSION = '0.008';
 
 =head2 name
 

@@ -37,7 +37,7 @@ use warnings;
 
 use Params::Util 0.25 qw{ _INSTANCE };
 
-our $VERSION = '0.007_01';
+our $VERSION = '0.008';
 
 =head2 close_bracket
 

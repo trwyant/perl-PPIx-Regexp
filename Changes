@@ -1,3 +1,21 @@
+0.008		T. R. Wyant	01-Jul-2010
+  Promote methods can_be_quantified() and is_quantifier() from
+    PPIx::Regexp::Token to PPIx::Regexp::Element, so all classes inherit
+    them. They still return true and false respectively.
+  Override can_be_quantified() to return false on PPIx::Regexp,
+    PPIx::Regexp::Structure::Quantifier,
+    PPIx::Regexp::Structure::Regexp, and
+    PPIx::Regexp::Structure::Replacement.
+  Override is_quantifier() to return true on
+    PPIx::Regexp::Structure::Quantifier.
+  Modify PPIx::Regexp::Dumper to be able to display can_be_quantified
+    and is_quantifier for PPIx::Regexp::Node objects when dumping
+    verbosely.
+  Convert internal data to Readonly in PPIx::Regexp::Lexer,
+    PPIx::Regexp::Token::CharClass::Simple,
+    PPIx::Regexp::Token::Structure, and PPIx::Regexp::Tokenizer.
+  Remove leftover boilerplate in PPIx::Regexp::Token::CharClass::Simple.
+
 0.007_01	T. R. Wyant	28-Jun-2010
   Explicitly require a minimum Perl of 5.006.
   Centralized dependencies in inc/PPIx/Regexp/Meta.pm.

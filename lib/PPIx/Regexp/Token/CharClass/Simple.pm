@@ -40,7 +40,7 @@ use PPIx::Regexp::Constant qw{
 };
 use Readonly;
 
-our $VERSION = '0.007_01';
+our $VERSION = '0.008';
 
 {
 
