@@ -138,12 +138,15 @@ sub __PPIX_TOKEN__post_make {
     local $_ = $self->content();
     s/ [^-[:lower:]] //smxg;
     my $kind = 'asserts';
-    foreach ( split qr{}smx, $_ ) {
-	if ( $_ eq '-' ) {
+    # Have to do the global match rather than a split, because the
+    # expression modifiers come through here too, and we need to
+    # distinguish between s/.../.../e and s/.../.../ee.
+    while ( m/ ( ( . ) \2* ) /smxg ) {
+	if ( $1 eq '-' ) {
 	    $kind eq 'negates' and return;
 	    $kind = 'negates';
 	} else {
-	    $self->{$kind}{$_} = 1;
+	    $self->{$kind}{$1} = 1;
 	}
     }
     defined $tokenizer

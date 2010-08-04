@@ -534,12 +534,15 @@ sub __PPIX_TOKENIZER__init {
 	and push @tokens, $tokenizer->make_token( length $white,
 	'PPIx::Regexp::Token::Whitespace' );
 
+    $tokenizer->{modifiers} = [ {} ];
     if ( $tokenizer->{content} =~ m/ ( [[:lower:]]* ) \s* \z /smx ) {
-	$tokenizer->{cursor_limit} -= length( $1 );
-	$tokenizer->{modifiers} =
-	    [ { map { $_ => 1 } split qr{}smx, $1 } ];
-    } else {
-	$tokenizer->{modifiers} = [ {} ];
+	local $_ = $1;
+	$tokenizer->{cursor_limit} -= length $_;
+	# Can't use a split() here, because we need to distinguish
+	# between s/.../.../e and s/.../.../ee.
+	while ( m/ ( ( . ) \2* ) /smxg ) {
+	    $tokenizer->{modifiers}[0]{$1} = 1;
+	}
     }
     $tokenizer->{cursor_modifiers} = $tokenizer->{cursor_limit};
 
