@@ -1,3 +1,9 @@
+0.009		T. R. Wyant	03-Aug-2010
+  Recognize s/.../.../ee as being different from s/.../.../e. In
+    particular, the replacement portion of the former is _not_ a Perl
+    expression: it's an interpolatble string, which later gets
+    eval{}'ed.
+
 0.008		T. R. Wyant	01-Jul-2010
   Promote methods can_be_quantified() and is_quantifier() from
     PPIx::Regexp::Token to PPIx::Regexp::Element, so all classes inherit
