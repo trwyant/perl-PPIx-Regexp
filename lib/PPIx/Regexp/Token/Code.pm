@@ -87,7 +87,8 @@ sub ppi {
     if ( exists $self->{ppi} ) {
 	return $self->{ppi};
     } elsif ( exists $self->{content} ) {
-	return ( $self->{ppi} = PPI::Document->new( \($self->{content})) );
+	return ( $self->{ppi} = PPI::Document->new(
+		\($self->{content}), readonly => 1 ) );
     } else {
 	return;
     }
