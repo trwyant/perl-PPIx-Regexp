@@ -5,9 +5,10 @@ use warnings;
 
 use lib qw{ inc };
 
+use PPI::Document;
 use PPIx::Regexp::Test;
 
-plan( tests => 706 );
+plan( tests => 710 );
 
 my $is_ascii = ord( "\t" ) == 9;	# per perlebcdic
 
@@ -1075,6 +1076,12 @@ parse   ( 'm{)}smx' );
 value   ( failures => [], 1 );
 class   ( 'PPIx::Regexp' );
 value   ( delimiters => 0, '{}' );
+
+parse   ( 's/x/$1/e' );
+choose  ( child => 2, child => 0 );
+class   ( 'PPIx::Regexp::Token::Code' );
+content ( '$1' );
+value   ( ppi => [], PPI::Document->new( \'$1' ) );
 
 SKIP: {
     $is_ascii
