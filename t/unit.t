@@ -7,8 +7,9 @@ use lib qw{ inc };
 
 use PPI::Document;
 use PPIx::Regexp::Test;
+use Scalar::Util qw{ refaddr };
 
-plan( tests => 710 );
+plan( tests => 712 );
 
 my $is_ascii = ord( "\t" ) == 9;	# per perlebcdic
 
@@ -195,10 +196,6 @@ SKIP: {
     # are destroyed.
 
     my $num_tests = 8;
-    eval {
-	require PPI::Document;
-	1;
-    } or skip( 'Failed to load PPI::Document', $num_tests );
     my $doc = PPI::Document->new( \'m/foo/smx' )
 	or skip( 'Failed to create PPI::Document', $num_tests );
     my $m = $doc->find_first( 'PPI::Token::Regexp::Match' )
@@ -245,10 +242,6 @@ SKIP: {
     local $PPIx::Regexp::DISABLE_CACHE = 1;
 
     my $num_tests = 2;
-    eval {
-	require PPI::Document;
-	1;
-    } or skip( 'Failed to load PPI::Document', $num_tests );
     my $doc = PPI::Document->new( \'m/foo/smx' )
 	or skip( 'Failed to create PPI::Document', $num_tests );
     my $m = $doc->find_first( 'PPI::Token::Regexp::Match' )
@@ -1077,11 +1070,18 @@ value   ( failures => [], 1 );
 class   ( 'PPIx::Regexp' );
 value   ( delimiters => 0, '{}' );
 
-parse   ( 's/x/$1/e' );
-choose  ( child => 2, child => 0 );
-class   ( 'PPIx::Regexp::Token::Code' );
-content ( '$1' );
-value   ( ppi => [], PPI::Document->new( \'$1' ) );
+{
+    parse   ( 's/x/$1/e' );
+    choose  ( child => 2, child => 0 );
+    class   ( 'PPIx::Regexp::Token::Code' );
+    content ( '$1' );
+    value   ( ppi => [], PPI::Document->new( \'$1' ) );
+    my $doc1 = result();
+    value   ( ppi => [], PPI::Document->new( \'$1' ) );
+    my $doc2 = result();
+    cmp_ok( refaddr( $doc1 ), '==', refaddr( $doc2 ),
+	'Ensure we get back the same object from both calls to ppi()' );
+}
 
 SKIP: {
     $is_ascii

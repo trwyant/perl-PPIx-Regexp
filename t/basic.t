@@ -5,6 +5,10 @@ use warnings;
 
 use Test::More 0.40 tests => 145;
 
+require_ok( 'PPI::Document' )
+    or BAIL_OUT(
+    q{PPI::Document is a prerequisite. Without it, we're hosed.} );
+
 require_ok( 'PPIx::Regexp' );
 class_isa_ok( 'PPIx::Regexp', 'PPIx::Regexp::Node' );
 
@@ -287,3 +291,7 @@ sub class_isa_ok {
 }
 
 1;
+
+__END__
+
+# ex: set textwidth=72 :

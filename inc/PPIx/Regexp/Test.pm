@@ -19,6 +19,7 @@ our @EXPORT_OK = qw{
     cache_count
     choose
     class
+    cmp_ok
     content
     count
     different
@@ -29,6 +30,7 @@ our @EXPORT_OK = qw{
     navigate
     parse
     plan
+    result
     skip
     tokenize
     true
@@ -255,6 +257,10 @@ sub parse {		## no critic (RequireArgUnpacking)
     goto &isa_ok;
 }
 
+sub result {
+    return $result;
+}
+
 sub tokenize {		## no critic (RequireArgUnpacking)
     my ( $opt, $regexp, @args ) = _parse_constructor_args(
 	{ test => 1, tokens => 1 }, @_ );
@@ -427,6 +433,10 @@ This test checks to see if the C<content> method of the current object
 is equal to the given string. If the current object is C<undef>, the
 test fails.
 
+=head2 cmp_ok
+
+This subroutine is exported from L<Test::More|Test::More>.
+
 =head2 count
 
  count( 42 );
@@ -522,7 +532,16 @@ constructor.
 
 =head2 plan
 
-This subroutine is exported from R<Test::More|Test::More>.
+This subroutine is exported from L<Test::More|Test::More>.
+
+=head2 result
+
+ my $val = result();
+
+This subroutine returns the result of the most recent operation that
+actually produces one. It should be called immediately after the
+operation, mostly because I have not documented all the subroutines that
+produce a result.
 
 =head2 tokenize
 
@@ -562,6 +581,9 @@ on the current object, returns the given value.
 If the current object is undefined, the given method is called on the
 intended initial class, otherwise there would be no way to test the
 errstr() method.
+
+The result of the method call is accessable via the L<result()|/result>
+subroutine.
 
 =head1 SUPPORT
 
