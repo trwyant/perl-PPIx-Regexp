@@ -3,7 +3,7 @@ package main;
 use strict;
 use warnings;
 
-use Test::More 0.40 tests => 145;
+use Test::More 0.40 tests => 146;
 
 require_ok( 'PPI::Document' )
     or BAIL_OUT(
