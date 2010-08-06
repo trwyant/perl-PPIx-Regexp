@@ -61,7 +61,7 @@ use PPIx::Regexp::Token::Unmatched			();
 use PPIx::Regexp::Tokenizer				();
 use Readonly;
 
-our $VERSION = '0.009';
+our $VERSION = '0.010';
 
 =head2 new
 

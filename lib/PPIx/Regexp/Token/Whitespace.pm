@@ -37,7 +37,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
-our $VERSION = '0.009';
+our $VERSION = '0.010';
 
 sub significant {
     return;

@@ -41,7 +41,7 @@ use Params::Util 0.25 qw{ _INSTANCE };
 
 use base qw{ PPIx::Regexp::Structure };
 
-our $VERSION = '0.009';
+our $VERSION = '0.010';
 
 1;
 

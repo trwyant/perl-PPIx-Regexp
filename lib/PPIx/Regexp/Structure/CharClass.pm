@@ -36,7 +36,7 @@ use base qw{ PPIx::Regexp::Structure };
 
 use Params::Util 0.25 qw{ _INSTANCE };
 
-our $VERSION = '0.009';
+our $VERSION = '0.010';
 
 sub _new {
     my ( $class, @args ) = @_;

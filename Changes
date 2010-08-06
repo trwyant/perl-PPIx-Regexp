@@ -1,3 +1,7 @@
+0.010		T. R. Wyant	06-Aug-2010
+  Fix fatal error in PPIx::Regexp::Token::Code->ppi().
+  Move author tests from xt/ to xt/author/.
+
 0.009		T. R. Wyant	03-Aug-2010
   Recognize s/.../.../ee as being different from s/.../.../e. In
     particular, the replacement portion of the former is _not_ a Perl
