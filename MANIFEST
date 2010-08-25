@@ -36,6 +36,7 @@ lib/PPIx/Regexp/Token/Backreference.pm
 lib/PPIx/Regexp/Token/Backtrack.pm
 lib/PPIx/Regexp/Token/CharClass.pm
 lib/PPIx/Regexp/Token/CharClass/POSIX.pm
+lib/PPIx/Regexp/Token/CharClass/POSIX/Unknown.pm
 lib/PPIx/Regexp/Token/CharClass/Simple.pm
 lib/PPIx/Regexp/Token/Code.pm
 lib/PPIx/Regexp/Token/Comment.pm

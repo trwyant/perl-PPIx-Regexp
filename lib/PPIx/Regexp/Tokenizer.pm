@@ -12,6 +12,7 @@ use PPIx::Regexp::Token::Assertion		();
 use PPIx::Regexp::Token::Backreference		();
 use PPIx::Regexp::Token::Backtrack		();
 use PPIx::Regexp::Token::CharClass::POSIX	();
+use PPIx::Regexp::Token::CharClass::POSIX::Unknown	();
 use PPIx::Regexp::Token::CharClass::Simple	();
 use PPIx::Regexp::Token::Code			();
 use PPIx::Regexp::Token::Comment		();
