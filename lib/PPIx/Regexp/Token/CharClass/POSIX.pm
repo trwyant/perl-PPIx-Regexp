@@ -20,6 +20,12 @@ C<PPIx::Regexp::Token::CharClass::POSIX> has no descendants.
 This class represents a POSIX character class. It will only be
 recognized within a character class.
 
+Note that collating symbols (e.g. C<[.ch.]>) and equivalence classes
+(e.g. C<[=a=]>) are valid in the POSIX standard, but are not valid in
+Perl regular expressions. These end up being represented by
+L<PPIx::Regexp::Token::CharClass::Posix::Unknown|PPIx::Regexp::Token::CharClass::Posix::Unknown>,
+and are considered a parse failure.
+
 =head1 METHODS
 
 This class provides no public methods beyond those provided by its
@@ -65,7 +71,7 @@ sub perl_version_removed {
 	$tokenizer->cookie( $COOKIE_CLASS ) or return;
 
 	if ( my $accept = $tokenizer->find_regexp(
-		qr{ \A [[] ( [[:punct:]] ) \^? .*? \1 []] }smx ) ) {
+		qr{ \A [[] ( [.=:] ) \^? .*? \1 []] }smx ) ) {
 	    my ( $punc ) = $tokenizer->capture();
 	    if ( my $args = $info{$punc} ) {
 		my $class = $args->{class} || __PACKAGE__;

@@ -41,9 +41,8 @@ L<PPIx::Regexp::Token::CharClass::POSIX|PPIx::Regexp::Token::CharClass::POSIX>.
 =head1 DESCRIPTION
 
 This class represents POSIX character classes which are recognized but
-not supported. At the moment this means things like C<[=a=]> (equivalent
-characters), and C<[.a.]> (collating classes, I think), or anything else
-that looks like it might be a POSIX class (e.g. [;a;]).
+not supported by Perl. At the moment this means C<[=a=]> (equivalence
+classes), and C<[.ch.]> (collating symbols).
 
 B<Caveat:> If any of these becomes supported by Perl in the future, they
 will become represented as
