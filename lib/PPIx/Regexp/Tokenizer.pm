@@ -6,7 +6,6 @@ use warnings;
 use base qw{ PPIx::Regexp::Support };
 
 use Carp qw{ confess };
-use Params::Util 0.25 qw{ _INSTANCE };
 use PPIx::Regexp::Constant qw{ $TOKEN_LITERAL $TOKEN_UNKNOWN };
 use PPIx::Regexp::Token::Assertion		();
 use PPIx::Regexp::Token::Backreference		();
@@ -36,6 +35,7 @@ use PPIx::Regexp::Token::Recursion		();
 use PPIx::Regexp::Token::Structure		();
 use PPIx::Regexp::Token::Unknown		();
 use PPIx::Regexp::Token::Whitespace		();
+use PPIx::Regexp::Util qw{ __instance };
 use Readonly;
 use Scalar::Util qw{ looks_like_number };
 
@@ -168,7 +168,7 @@ our $VERSION = '0.010';
 		$args{trace}, $ENV{PPIX_REGEXP_TOKENIZER_TRACE}, 0 ),
 	};
 
-	if ( _INSTANCE( $re, 'PPI::Element' ) ) {
+	if ( __instance( $re, 'PPI::Element' ) ) {
 	    $self->{content} = $re->content();
 	} elsif ( ref $re ) {
 	    $errstr = ref( $re ) . ' not supported';

@@ -48,7 +48,7 @@ use warnings;
 use base qw{ PPIx::Regexp::Node };
 
 use Carp qw{ confess };
-use Params::Util 0.25 qw{ _INSTANCE };
+use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };
 
 our $VERSION = '0.010';
@@ -68,7 +68,7 @@ sub _new {
 	    push @{ $brkt{start} }, shift @args;
 	}
 	$brkt{type} = [];
-	if ( _INSTANCE( $args[0], 'PPIx::Regexp::Token::GroupType' ) ) {
+	if ( __instance( $args[0], 'PPIx::Regexp::Token::GroupType' ) ) {
 	    push @{ $brkt{type} }, shift @args;
 	    while ( @args && ! $args[0]->significant() ) {
 		push @{ $brkt{type} }, shift @args;
@@ -81,7 +81,7 @@ sub _new {
     my $self = $class->SUPER::_new( @args )
 	or return;
 
-    if ( _INSTANCE( $brkt{type}[0], 'PPIx::Regexp::Token::GroupType' ) ) {
+    if ( __instance( $brkt{type}[0], 'PPIx::Regexp::Token::GroupType' ) ) {
 	( my $reclass = ref $brkt{type}[0] ) =~
 	    s/ Token::GroupType /Structure/smx;
 	$reclass->can( 'start' )
@@ -95,7 +95,7 @@ sub _new {
 	    or confess "Programming error - '$brkt{$key}' not an ARRAY";
 	foreach my $val ( @{ $brkt{$key} } ) {
 	    defined $val or next;
-	    _INSTANCE( $val, 'PPIx::Regexp::Element' )
+	    __instance( $val, 'PPIx::Regexp::Element' )
 		or confess "Programming error - '$val' not a ",
 		    "PPIx::Regexp::Element";
 	    push @{ $self->{$key} }, $val;
@@ -239,9 +239,9 @@ sub _check_for_interpolated_match {
 
     # Everything we are interested in begins with a literal '?' followed
     # by an interpolation.
-    _INSTANCE( $args->[0], 'PPIx::Regexp::Token::Unknown' )
+    __instance( $args->[0], 'PPIx::Regexp::Token::Unknown' )
 	and $args->[0]->content() eq '?'
-	and _INSTANCE( $args->[1], 'PPIx::Regexp::Token::Interpolation' )
+	and __instance( $args->[1], 'PPIx::Regexp::Token::Interpolation' )
 	or return;
 
     my $hiwater = 2;	# Record how far we got into the arguments for
@@ -251,7 +251,7 @@ sub _check_for_interpolated_match {
     # If we have a literal ':' as the third argument:
     # GroupType::Modifier, rebless the ':' so we know not to match
     # against it, and splice all three tokens into the type.
-    if ( _INSTANCE( $args->[2], 'PPIx::Regexp::Token::Literal' )
+    if ( __instance( $args->[2], 'PPIx::Regexp::Token::Literal' )
 	&& $args->[2]->content() eq ':' ) {
 
 	# Rebless the '?' as a GroupType::Modifier.
@@ -278,13 +278,13 @@ sub _check_for_interpolated_match {
 
     # If we have a literal '-' as the third argument, we might have
     # something like (?$on-$off:$foo).
-    if ( _INSTANCE( $args->[2], 'PPIx::Regexp::Token::Literal' )
+    if ( __instance( $args->[2], 'PPIx::Regexp::Token::Literal' )
 	&& $args->[2]->content() eq '-'
-	&& _INSTANCE( $args->[3], 'PPIx::Regexp::Token::Interpolation' )
+	&& __instance( $args->[3], 'PPIx::Regexp::Token::Interpolation' )
     ) {
 	$hiwater = 4;
 
-	if ( _INSTANCE( $args->[4], 'PPIx::Regexp::Token::Literal' )
+	if ( __instance( $args->[4], 'PPIx::Regexp::Token::Literal' )
 	    && $args->[4]->content() eq ':' ) {
 
 	    # Rebless the '?' as a GroupType::Modifier.

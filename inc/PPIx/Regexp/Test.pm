@@ -5,11 +5,11 @@ use warnings;
 
 use base qw{ Exporter };
 
-use Params::Util 0.25 qw{ _INSTANCE };
 use PPIx::Regexp;
 use PPIx::Regexp::Dumper;
 use PPIx::Regexp::Element;
 use PPIx::Regexp::Tokenizer;
+use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ looks_like_number refaddr };
 use Test::More 0.40;
 
@@ -146,8 +146,8 @@ sub dump_result {
 	my $got = PPIx::Regexp::Dumper->new( $obj, @args )->string();
 	@_ = ( $got, $expect, $name );
 	goto &is;
-    } elsif ( _INSTANCE( $result, 'PPIx::Regexp::Tokenizer' ) ||
-	_INSTANCE( $result, 'PPIx::Regexp::Element' ) ) {
+    } elsif ( __instance( $result, 'PPIx::Regexp::Tokenizer' ) ||
+	__instance( $result, 'PPIx::Regexp::Element' ) ) {
 	diag( PPIx::Regexp::Dumper->new( $obj, @args )->string() );
     } elsif ( eval { require YAML; 1; } ) {
 	diag( "Result dump:\n", YAML::Dump( $result ) );
@@ -217,7 +217,7 @@ sub finis {		## no critic (RequireArgUnpacking)
 	    and $scalar = 0;
 	my @nav = ();
 	while ( @args ) {
-	    if ( _INSTANCE( $args[0], 'PPIx::Regexp::Element' ) ) {
+	    if ( __instance( $args[0], 'PPIx::Regexp::Element' ) ) {
 		$obj = shift @args;
 	    } elsif ( ref $obj eq 'ARRAY' ) {
 		my $inx = shift @args;
@@ -344,7 +344,7 @@ sub _safe {
     my @args = @_;
     my @rslt;
     foreach my $item ( @args ) {
-	if ( _INSTANCE( $item, 'PPIx::Regexp::Element' ) ) {
+	if ( __instance( $item, 'PPIx::Regexp::Element' ) ) {
 	    $item = $item->content();
 	}
 	if ( ! defined $item ) {

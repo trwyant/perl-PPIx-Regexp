@@ -32,8 +32,6 @@ package PPIx::Regexp::Structure::Assertion;
 use strict;
 use warnings;
 
-use Params::Util 0.25 qw{ _INSTANCE };
-
 use base qw{ PPIx::Regexp::Structure };
 
 our $VERSION = '0.010';

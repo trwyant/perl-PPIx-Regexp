@@ -36,7 +36,7 @@ use warnings;
 use 5.006;
 
 use List::MoreUtils qw{ firstidx };
-use Params::Util 0.25 qw{ _INSTANCE };
+use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr weaken };
 
 use PPIx::Regexp::Constant qw{ $MINIMUM_PERL };
@@ -53,7 +53,7 @@ own ancestor.
 
 sub ancestor_of {
     my ( $self, $elem ) = @_;
-    _INSTANCE( $elem, __PACKAGE__ ) or return;
+    __instance( $elem, __PACKAGE__ ) or return;
     my $addr = refaddr( $self );
     while ( $addr != refaddr( $elem ) ) {
 	$elem = $elem->_parent() or return;
@@ -116,7 +116,7 @@ own descendant.
 
 sub descendant_of {
     my ( $self, $node ) = @_;
-    _INSTANCE( $node, __PACKAGE__ ) or return;
+    __instance( $node, __PACKAGE__ ) or return;
     return $node->ancestor_of( $self );
 }
 
@@ -300,7 +300,7 @@ under C<$top>,
 
 sub nav {
     my ( $self ) = @_;
-    _INSTANCE( $self, __PACKAGE__ ) or return;
+    __instance( $self, __PACKAGE__ ) or return;
 
     # We do not use $self->parent() here because PPIx::Regexp overrides
     # this to return the (possibly) PPI object that initiated us.
@@ -340,7 +340,7 @@ sub nav {
 	if ( @arg ) {
 	    my $parent = shift @arg;
 	    if ( defined $parent ) {
-		_INSTANCE( $parent, __PACKAGE__ ) or return;
+		__instance( $parent, __PACKAGE__ ) or return;
 		weaken(
 		    $parent{$addr} = $parent );
 	    } else {

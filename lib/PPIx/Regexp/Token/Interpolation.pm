@@ -34,7 +34,6 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token::Code };
 
-use Params::Util 0.025 ();
 use PPI::Document;
 use PPIx::Regexp::Constant qw{ $COOKIE_CLASS $TOKEN_LITERAL };
 

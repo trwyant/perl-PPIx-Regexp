@@ -64,6 +64,7 @@ lib/PPIx/Regexp/Token/Unknown.pm
 lib/PPIx/Regexp/Token/Unmatched.pm
 lib/PPIx/Regexp/Token/Whitespace.pm
 lib/PPIx/Regexp/Tokenizer.pm
+lib/PPIx/Regexp/Util.pm
 LICENSES/Artistic
 LICENSES/Copying
 Makefile.PL

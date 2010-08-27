@@ -35,8 +35,8 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
-use Params::Util 0.25 qw{ _INSTANCE };
 use PPIx::Regexp::Constant qw{ $TOKEN_LITERAL };
+use PPIx::Regexp::Util qw{ __instance };
 
 our $VERSION = '0.010';
 
@@ -53,8 +53,8 @@ my %operator = map { $_ => 1 } qw{ | - };
 
 sub _treat_as_literal {
     my ( $token ) = @_;
-    return _INSTANCE( $token, 'PPIx::Regexp::Token::Literal' ) ||
-	_INSTANCE( $token, 'PPIx::Regexp::Token::Interpolation' );
+    return __instance( $token, 'PPIx::Regexp::Token::Literal' ) ||
+	__instance( $token, 'PPIx::Regexp::Token::Interpolation' );
 }
 
 sub __PPIX_TOKENIZER__regexp {

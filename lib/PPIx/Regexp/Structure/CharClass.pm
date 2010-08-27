@@ -34,7 +34,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Structure };
 
-use Params::Util 0.25 qw{ _INSTANCE };
+use PPIx::Regexp::Util qw{ __instance };
 
 our $VERSION = '0.010';
 
@@ -44,7 +44,7 @@ sub _new {
     my %brkt;
     $brkt{finish} = pop @args;
     $brkt{start} = shift @args;
-    _INSTANCE( $args[0], 'PPIx::Regexp::Token::Operator' )
+    __instance( $args[0], 'PPIx::Regexp::Token::Operator' )
 	and $args[0]->content() eq '^'
 	and $brkt{type} = shift @args;
     return $class->SUPER::_new( \%brkt, @args );

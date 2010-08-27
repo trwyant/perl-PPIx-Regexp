@@ -3,10 +3,10 @@
 use strict;
 use warnings;
 
-use Params::Util 0.25 qw{ _INSTANCE };
 use Pod::Usage;
 use PPIx::Regexp;
 use PPIx::Regexp::Dumper;
+use PPIx::Regexp::Util qw{ __instance };
 use Term::ReadLine;
 
 @ARGV or die "Need an argument.\n";
@@ -87,7 +87,7 @@ while ( defined ( my $buffer = $tr->readline( 'prenav> ' ) ) ) {
 
     print _format( $temp );
 
-    _INSTANCE( $temp, 'PPIx::Regexp::Element' )
+    __instance( $temp, 'PPIx::Regexp::Element' )
 	and $obj = $temp;
 }
 
@@ -96,7 +96,7 @@ sub _format {
     my $rslt;
 
     foreach my $thing ( @args ) {
-	if ( _INSTANCE( $thing, 'PPIx::Regexp::Element' ) ) {
+	if ( __instance( $thing, 'PPIx::Regexp::Element' ) ) {
 	    $rslt .= $thing->class() . "\t" . $thing->content() . "\n";
 	} elsif ( ref $thing eq 'ARRAY' ) {
 	    $rslt .= _format( @{ $thing } );

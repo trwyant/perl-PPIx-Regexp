@@ -43,3 +43,4 @@ trigraphs
 unicode
 version's
 wyant
+XS

@@ -37,8 +37,8 @@ use warnings;
 use base qw{ PPIx::Regexp::Element };
 
 use List::Util qw{ max };
-use Params::Util 0.25 qw{ _INSTANCE };
 use PPIx::Regexp::Constant qw{ $MINIMUM_PERL };
+use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };
 
 our $VERSION = '0.010';
@@ -47,7 +47,7 @@ sub _new {
     my ( $class, @children ) = @_;
     ref $class and $class = ref $class;
     foreach my $elem ( @children ) {
-	_INSTANCE( $elem, 'PPIx::Regexp::Element' ) or return;
+	__instance( $elem, 'PPIx::Regexp::Element' ) or return;
     }
     my $self = {
 	children => \@children,
@@ -98,7 +98,7 @@ or false otherwise.
 
 sub contains {
     my ( $self, $elem ) = @_;
-    _INSTANCE( $elem, 'PPIx::Regexp::Element' ) or return;
+    __instance( $elem, 'PPIx::Regexp::Element' ) or return;
 
     my $addr = refaddr( $self );
 
@@ -160,7 +160,7 @@ sub _find_routine {
     $want =~ m/ \A PPIx::Regexp:: /smx
 	or $want = 'PPIx::Regexp::' . $want;
     return sub {
-	return _INSTANCE( $_[1], $want ) ? 1 : 0;
+	return __instance( $_[1], $want ) ? 1 : 0;
     };
 }
 
@@ -178,7 +178,7 @@ sub find {
 	    and push @found, $elem;
 	$@ and return;
 
-	_INSTANCE( $elem, 'PPIx::Regexp::Node' ) or next;
+	__instance( $elem, 'PPIx::Regexp::Node' ) or next;
 	defined $rslt or next;
 	$rslt = $elem->find( $want )
 	    and push @found, @{ $rslt };
@@ -242,7 +242,7 @@ sub find_first {
 	    and return $elem;
 	$@ and return;
 
-	_INSTANCE( $elem, 'PPIx::Regexp::Node' ) or next;
+	__instance( $elem, 'PPIx::Regexp::Node' ) or next;
 	defined $rslt or next;
 
 	defined( $rslt = $elem->find_first( $want ) )

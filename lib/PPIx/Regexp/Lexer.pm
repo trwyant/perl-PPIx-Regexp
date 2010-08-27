@@ -39,7 +39,6 @@ use warnings;
 use base qw{ PPIx::Regexp::Support };
 
 use Carp qw{ confess };
-use Params::Util 0.25 qw{ _INSTANCE };
 use PPIx::Regexp::Constant qw{ $TOKEN_LITERAL $TOKEN_UNKNOWN };
 use PPIx::Regexp::Node::Range				();
 use PPIx::Regexp::Structure				();
@@ -59,6 +58,7 @@ use PPIx::Regexp::Structure::Switch			();
 use PPIx::Regexp::Structure::Unknown			();
 use PPIx::Regexp::Token::Unmatched			();
 use PPIx::Regexp::Tokenizer				();
+use PPIx::Regexp::Util qw{ __instance };
 use Readonly;
 
 our $VERSION = '0.010';
@@ -82,7 +82,7 @@ tokenizer, which interprets them or not as the case may be.
 	my ( $class, $tokenizer, %args ) = @_;
 	ref $class and $class = ref $class;
 
-	_INSTANCE( $tokenizer, 'PPIx::Regexp::Tokenizer' )
+	__instance( $tokenizer, 'PPIx::Regexp::Tokenizer' )
 	    or $tokenizer = PPIx::Regexp::Tokenizer->new( $tokenizer, %args )
 	    or do {
 		$errstr = PPIx::Regexp::Tokenizer->errstr();
@@ -324,7 +324,7 @@ sub _get_delimited {
 	}
 
 	# We have to hand-roll the Range object.
-	if ( _INSTANCE( $rslt[-1][-2], 'PPIx::Regexp::Token::Operator' )
+	if ( __instance( $rslt[-1][-2], 'PPIx::Regexp::Token::Operator' )
 	    && $rslt[-1][-2]->content() eq '-' ) {
 	    my @tokens = splice @{ $rslt[-1] }, -3;
 	    push @{ $rslt[-1] },
@@ -468,14 +468,14 @@ sub _recover_curly {
 sub _recover_curly_quantifiers {
     my ( $self, $args ) = @_;
 
-    if ( _INSTANCE( $args->[0], $TOKEN_LITERAL )
-	&& _INSTANCE( $args->[1], $TOKEN_UNKNOWN )
+    if ( __instance( $args->[0], $TOKEN_LITERAL )
+	&& __instance( $args->[1], $TOKEN_UNKNOWN )
 	&& PPIx::Regexp::Token::Quantifier->could_be_quantifier(
 	$args->[1]->content() )
     ) {
 	bless $args->[1], 'PPIx::Regexp::Token::Quantifier';
 
-	if ( _INSTANCE( $args->[2], $TOKEN_UNKNOWN )
+	if ( __instance( $args->[2], $TOKEN_UNKNOWN )
 	    && PPIx::Regexp::Token::Greediness->could_be_greediness(
 		$args->[2]->content() )
 	) {

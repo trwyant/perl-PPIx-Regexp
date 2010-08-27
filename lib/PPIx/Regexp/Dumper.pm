@@ -38,11 +38,11 @@ use warnings;
 use base qw{ PPIx::Regexp::Support };
 
 use Carp;
-use Params::Util 0.25 qw{ _INSTANCE };
 use Scalar::Util qw{ blessed looks_like_number };
 
 use PPIx::Regexp;
 use PPIx::Regexp::Tokenizer;
+use PPIx::Regexp::Util qw{ __instance };
 
 our $VERSION = '0.010';
 
@@ -177,14 +177,14 @@ ignored.
 
 	$self->{ordinal} ||= $self->{verbose};
 
-	if ( _INSTANCE( $re, 'PPIx::Regexp::Tokenizer' ) ) {
+	if ( __instance( $re, 'PPIx::Regexp::Tokenizer' ) ) {
 	    $self->{object} = $re;
 	    $self->{tokens} = 1;
-	} elsif ( _INSTANCE( $re, 'PPIx::Regexp::Element' ) ) {
+	} elsif ( __instance( $re, 'PPIx::Regexp::Element' ) ) {
 	    $self->{object} = $re;
 	} elsif ( ref $re eq 'ARRAY' ) {
 	    $self->{object} = $re;
-	} elsif ( ref $re && ! _INSTANCE( $re, 'PPI::Element' ) ) {
+	} elsif ( ref $re && ! __instance( $re, 'PPI::Element' ) ) {
 	    croak "Do not know how to dump ", ref $re;
 	} elsif ( $self->{tokens} ) {
 	    $self->{object} =

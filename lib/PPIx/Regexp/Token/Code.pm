@@ -43,8 +43,8 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
-use Params::Util 0.25 qw{ _INSTANCE };
 use PPI::Document;
+use PPIx::Regexp::Util qw{ __instance };
 
 our $VERSION = '0.010';
 
@@ -53,7 +53,7 @@ sub _new {
     ref $class and $class = ref $class;
 
     my $self = {};
-    if ( _INSTANCE( $content, 'PPI::Document' ) ) {
+    if ( __instance( $content, 'PPI::Document' ) ) {
 	$self->{ppi} = $content;
     } elsif ( ref $content ) {
 	return;

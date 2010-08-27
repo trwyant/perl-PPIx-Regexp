@@ -35,7 +35,7 @@ package PPIx::Regexp::Support;
 use strict;
 use warnings;
 
-use Params::Util 0.25 qw{ _INSTANCE };
+use PPIx::Regexp::Util qw{ __instance };
 
 our $VERSION = '0.010';
 
@@ -59,7 +59,7 @@ brackets: (), {}, [], and <>.
     sub close_bracket {
 	my ( $self, $char ) = @_;
 	defined $char or return;
-	_INSTANCE( $char, 'PPIx::Regexp::Element' )
+	__instance( $char, 'PPIx::Regexp::Element' )
 	    and $char = $char->content();
 	return $bracket{$char};
     }

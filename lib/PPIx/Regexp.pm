@@ -80,8 +80,8 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Node };
 
-use Params::Util 0.25 qw{ _INSTANCE };
 use PPIx::Regexp::Lexer ();
+use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };
 
 our $VERSION = '0.010';
@@ -198,7 +198,7 @@ any objects specified are removed from the cache.
     sub new_from_cache {
 	my ( $class, $content, %args ) = @_;
 
-	_INSTANCE( $content, 'PPI::Element' )
+	__instance( $content, 'PPI::Element' )
 	    or return $class->new( $content, %args );
 
 	$DISABLE_CACHE and return $class->new( $content, %args );
@@ -222,8 +222,8 @@ any objects specified are removed from the cache.
 
 	if ( @args ) {
 	    foreach my $obj ( @args ) {
-		if ( _INSTANCE( $obj, __PACKAGE__ ) &&
-		    _INSTANCE( ( my $parent = $obj->source() ),
+		if ( __instance( $obj, __PACKAGE__ ) &&
+		    __instance( ( my $parent = $obj->source() ),
 			'PPI::Element' ) ) {
 		    delete $cache{ refaddr( $parent ) };
 		}
