@@ -1,3 +1,14 @@
+0.010_01	T. R. Wyant	11-Sep-2010
+  Remove dependencies on Params::Util and Readonly. The latter involved
+    changing the symbols exported from PPIx::Regexp::Constant, but these
+    were documented as private, so ...
+  Parse POSIX character classes [=a=] and [.a.] as
+    PPIx::Regexp::Token::CharClass::POSIX::Unknown, which counts as a
+    parse failure since these are not supported by Perl.
+  Make the PPI::Document created by PPIx::Regexp::Token::Code->ppi() be
+    read only. This means we need PPI 1.116. Cache the document, and
+    ensure the cached result is returned on subsequent calls.
+
 0.010		T. R. Wyant	06-Aug-2010
   Fix fatal error in PPIx::Regexp::Token::Code->ppi().
   Move author tests from xt/ to xt/author/.
