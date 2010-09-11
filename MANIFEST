@@ -1,5 +1,6 @@
 Build.PL
 Changes
+eg/interpolated
 eg/predump
 eg/prenav
 eg/preslurp
