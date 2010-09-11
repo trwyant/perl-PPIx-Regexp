@@ -41,7 +41,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
-use PPIx::Regexp::Constant qw{ $COOKIE_QUOTE $TOKEN_LITERAL $TOKEN_UNKNOWN };
+use PPIx::Regexp::Constant qw{ COOKIE_QUOTE TOKEN_LITERAL TOKEN_UNKNOWN };
 
 our $VERSION = '0.010';
 
@@ -60,11 +60,11 @@ sub __PPIX_TOKENIZER__regexp {
     # If we are inside a quote sequence, we want to make literals out of
     # all the characters we reject; otherwise we just want to return
     # nothing.
-    my $in_quote = $tokenizer->cookie( $COOKIE_QUOTE );
+    my $in_quote = $tokenizer->cookie( COOKIE_QUOTE );
     my $reject = $in_quote ?
 	sub {
 	    my ( $size, $class ) = @_;
-	    return $tokenizer->make_token( $size, $class || $TOKEN_LITERAL );
+	    return $tokenizer->make_token( $size, $class || TOKEN_LITERAL );
 	} : sub {
 	    return;
 	};
@@ -76,7 +76,7 @@ sub __PPIX_TOKENIZER__regexp {
     # do. If there is no next character, we do not know what to call the
     # back slash.
     my $control = $tokenizer->peek( 1 )
-	or return $reject->( 1, $TOKEN_UNKNOWN );
+	or return $reject->( 1, TOKEN_UNKNOWN );
 
     # We reject any escapes that do not represent controls.
     $is_control{$control} or return $reject->( 2 );
@@ -90,7 +90,7 @@ sub __PPIX_TOKENIZER__regexp {
 
     # \Q and \E make and destroy cookies respectively; do those things.
     exists $cookie{$control}
-	and $tokenizer->cookie( $COOKIE_QUOTE, $cookie{$control} );
+	and $tokenizer->cookie( COOKIE_QUOTE, $cookie{$control} );
 
     # Return our token.
     return $token;

@@ -7,24 +7,22 @@ our $VERSION = '0.010';
 
 use base qw{ Exporter };
 
-use Readonly;
-
 our @EXPORT_OK = qw{
-    $COOKIE_CLASS
-    $COOKIE_QUANT
-    $COOKIE_QUOTE
-    $MINIMUM_PERL
-    $RE_CAPTURE_NAME
-    $STRUCTURE_UNKNOWN
-    $TOKEN_LITERAL
-    $TOKEN_UNKNOWN
+    COOKIE_CLASS
+    COOKIE_QUANT
+    COOKIE_QUOTE
+    MINIMUM_PERL
+    RE_CAPTURE_NAME
+    STRUCTURE_UNKNOWN
+    TOKEN_LITERAL
+    TOKEN_UNKNOWN
 };
 
-Readonly::Scalar our $COOKIE_CLASS	=> ']';
-Readonly::Scalar our $COOKIE_QUANT	=> '}';
-Readonly::Scalar our $COOKIE_QUOTE	=> '\\E';
+use constant COOKIE_CLASS	=> ']';
+use constant COOKIE_QUANT	=> '}';
+use constant COOKIE_QUOTE	=> '\\E';
 
-Readonly::Scalar our $MINIMUM_PERL	=> '5.006';
+use constant MINIMUM_PERL	=> '5.006';
 
 # The perlre for Perl 5.010 says:
 #
@@ -33,12 +31,12 @@ Readonly::Scalar our $MINIMUM_PERL	=> '5.006';
 #      its Unicode extension (see utf8), though it isn't extended by
 #      the locale (see perllocale).
 
-Readonly::Scalar our $RE_CAPTURE_NAME => qr{ [_[:alpha:]] \w* }smx;
+use constant RE_CAPTURE_NAME => ' [_[:alpha:]] \w* ';
 
-Readonly::Scalar our $STRUCTURE_UNKNOWN	=> 'PPIx::Regexp::Structure::Unknown';
+use constant STRUCTURE_UNKNOWN	=> 'PPIx::Regexp::Structure::Unknown';
 
-Readonly::Scalar our $TOKEN_LITERAL	=> 'PPIx::Regexp::Token::Literal';
-Readonly::Scalar our $TOKEN_UNKNOWN	=> 'PPIx::Regexp::Token::Unknown';
+use constant TOKEN_LITERAL	=> 'PPIx::Regexp::Token::Literal';
+use constant TOKEN_UNKNOWN	=> 'PPIx::Regexp::Token::Unknown';
 
 1;
 
@@ -50,8 +48,8 @@ PPIx::Regexp::Constant - Constants for the PPIx::Regexp system
 
 =head1 SYNOPSIS
 
- use PPIx::Regexp::Constant qw{ $TOKEN_UNKNOWN }
- print "An unknown token's class is $TOKEN_UNKNOWN\n";
+ use PPIx::Regexp::Constant qw{ TOKEN_UNKNOWN }
+ print "An unknown token's class is TOKEN_UNKNOWN\n";
 
 =head1 INHERITANCE
 
@@ -68,7 +66,7 @@ change them without notice.
 
 This module exports the following manifest constants:
 
-=head2 $COOKIE_CLASS
+=head2 COOKIE_CLASS
 
 The name of the cookie used to control the construction of character
 classes.
@@ -78,7 +76,7 @@ L<PPIx::Regexp::Token::Structure|PPIx::Regexp::Token::Structure> when
 the left square bracket is encountered, and cleared in the same module
 when a right square bracket is encountered.
 
-=head2 $COOKIE_QUANT
+=head2 COOKIE_QUANT
 
 The name of the cookie used to control the construction of curly
 bracketed quantifiers.
@@ -91,7 +89,7 @@ interpolation, or if more than one comma is encountered. If it survives
 until L<PPIx::Regexp::Token::Structure|PPIx::Regexp::Token::Structure>
 processes the right curly bracket, it is cleared there.
 
-=head2 $COOKIE_QUOTE
+=head2 COOKIE_QUOTE
 
 The name of the cookie used to control the parsing of C<\Q ... \E>
 quoted literals.
@@ -100,7 +98,7 @@ This cookie is set in
 L<PPIx::Regexp::Token::Control|PPIx::Regexp::Token::Control> when a
 C<\Q> is encountered, and it persists until the next C<\E>.
 
-=head2 $MINIMUM_PERL
+=head2 MINIMUM_PERL
 
 The minimum version of Perl understood by this parser, as a float. It is
 currently set to 5.006, since that is the minimum version of Perl
@@ -110,17 +108,17 @@ accessible to the author.
 
 A regular expression that matches the name of a named capture buffer.
 
-=head2 $STRUCTURE_UNKNOWN
+=head2 STRUCTURE_UNKNOWN
 
 The name of the class that represents the unknown structure. That is,
 L<PPIx::Regexp::Structure::Unknown|PPIx::Regexp::Structure::Unknown>.
 
-=head2 $TOKEN_LITERAL
+=head2 TOKEN_LITERAL
 
 The name of the class that represents a literal token. That is,
 L<PPIx::Regexp::Token::Literal|PPIx::Regexp::Token::Literal>.
 
-=head2 $TOKEN_UNKNOWN
+=head2 TOKEN_UNKNOWN
 
 The name of the class that represents the unknown token. That is,
 L<PPIx::Regexp::Token::Unknown|PPIx::Regexp::Token::Unknown>.

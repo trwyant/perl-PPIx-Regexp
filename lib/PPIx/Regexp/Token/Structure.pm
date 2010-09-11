@@ -38,10 +38,9 @@ use warnings;
 use base qw{ PPIx::Regexp::Token };
 
 use PPIx::Regexp::Constant qw{
-    $COOKIE_CLASS
-    $COOKIE_QUANT
-    $RE_CAPTURE_NAME
-    $TOKEN_LITERAL
+    COOKIE_CLASS
+    COOKIE_QUANT
+    TOKEN_LITERAL
 };
 
 # Tokens we are responsible for making, under at least some
@@ -51,8 +50,6 @@ use PPIx::Regexp::Token::Modifier	();
 use PPIx::Regexp::Token::Backreference	();
 use PPIx::Regexp::Token::Backtrack	();
 use PPIx::Regexp::Token::Recursion	();
-
-use Readonly;
 
 our $VERSION = '0.010';
 
@@ -71,180 +68,184 @@ sub is_quantifier {
     return $self->{is_quantifier};
 }
 
-Readonly::Hash my %delim => map { $_ => 1 } qw/ ( ) { } [ ] /;
+{
 
-# Regular expressions to match various parenthesized tokens, and the
-# classes to make them into.
+    my %delim = map { $_ => 1 } qw/ ( ) { } [ ] /;
 
-Readonly::Array my @paren_token => map {
-    [ $_ => $_->__PPIX_TOKEN__recognize() ]
-}
-    'PPIx::Regexp::Token::Comment',
-    'PPIx::Regexp::Token::Modifier',
-    'PPIx::Regexp::Token::Backreference',
-    'PPIx::Regexp::Token::Backtrack',
-    'PPIx::Regexp::Token::Recursion',
-;
+    # Regular expressions to match various parenthesized tokens, and the
+    # classes to make them into.
 
-sub __PPIX_TOKENIZER__regexp {
-    my ( $class, $tokenizer, $character ) = @_;
-
-    # We are not interested in anything but delimiters.
-    $delim{$character} or return;
-
-    # Inside a character class, all the delimiters are normal characters
-    # except for the close square bracket.
-    if ( $tokenizer->cookie( $COOKIE_CLASS ) ) {
-	$character eq ']'
-	    or return $tokenizer->make_token( 1, $TOKEN_LITERAL );
+    my @paren_token = map {
+	[ $_ => $_->__PPIX_TOKEN__recognize() ]
     }
+	'PPIx::Regexp::Token::Comment',
+	'PPIx::Regexp::Token::Modifier',
+	'PPIx::Regexp::Token::Backreference',
+	'PPIx::Regexp::Token::Backtrack',
+	'PPIx::Regexp::Token::Recursion',
+    ;
 
-    # Open parentheses have various interesting possibilities ...
-    if ( $character eq '(' ) {
-	my $accept;
+    sub __PPIX_TOKENIZER__regexp {
+	my ( $class, $tokenizer, $character ) = @_;
 
-	# Sometimes the whole bunch of parenthesized characters seems
-	# naturally to be a token.
-	foreach ( @paren_token ) {
-	    my ( $class, @recognize ) = @{ $_ };
-	    foreach ( @recognize ) {
-		my ( $regexp, $arg ) = @{ $_ };
-		my $accept = $tokenizer->find_regexp( $regexp ) or next;
-		return $tokenizer->make_token( $accept, $class, $arg );
-	    }
+	# We are not interested in anything but delimiters.
+	$delim{$character} or return;
+
+	# Inside a character class, all the delimiters are normal characters
+	# except for the close square bracket.
+	if ( $tokenizer->cookie( COOKIE_CLASS ) ) {
+	    $character eq ']'
+		or return $tokenizer->make_token( 1, TOKEN_LITERAL );
 	}
 
-	# We expect certain tokens only after a left paren.
-	$tokenizer->expect(
-	    'PPIx::Regexp::Token::GroupType::Modifier',
-	    'PPIx::Regexp::Token::GroupType::NamedCapture',
-	    'PPIx::Regexp::Token::GroupType::Assertion',
-	    'PPIx::Regexp::Token::GroupType::Code',
-	    'PPIx::Regexp::Token::GroupType::BranchReset',
-	    'PPIx::Regexp::Token::GroupType::Subexpression',
-	    'PPIx::Regexp::Token::GroupType::Switch',
-	);
+	# Open parentheses have various interesting possibilities ...
+	if ( $character eq '(' ) {
+	    my $accept;
 
-	# Modifier changes are local to this parenthesis group
-	$tokenizer->modifier_duplicate();
+	    # Sometimes the whole bunch of parenthesized characters seems
+	    # naturally to be a token.
+	    foreach ( @paren_token ) {
+		my ( $class, @recognize ) = @{ $_ };
+		foreach ( @recognize ) {
+		    my ( $regexp, $arg ) = @{ $_ };
+		    my $accept = $tokenizer->find_regexp( $regexp ) or next;
+		    return $tokenizer->make_token( $accept, $class, $arg );
+		}
+	    }
 
-	# Accept the parenthesis.
-	return 1;
-    }
+	    # We expect certain tokens only after a left paren.
+	    $tokenizer->expect(
+		'PPIx::Regexp::Token::GroupType::Modifier',
+		'PPIx::Regexp::Token::GroupType::NamedCapture',
+		'PPIx::Regexp::Token::GroupType::Assertion',
+		'PPIx::Regexp::Token::GroupType::Code',
+		'PPIx::Regexp::Token::GroupType::BranchReset',
+		'PPIx::Regexp::Token::GroupType::Subexpression',
+		'PPIx::Regexp::Token::GroupType::Switch',
+	    );
 
-    # Close parentheses end modifier localization
-    if ( $character eq ')' ) {
-	$tokenizer->modifier_pop();
-	return 1;
-    }
+	    # Modifier changes are local to this parenthesis group
+	    $tokenizer->modifier_duplicate();
 
-    # Open curlys are complicated because they may or may not represent
-    # the beginning of a quantifier, depending on what comes before the
-    # close curly. So we set a cookie to monitor the token stream for
-    # interlopers. If all goes well, the right curly will find the
-    # cookie and know it is supposed to be a quantifier.
-    if ( $character eq '{' ) {
+	    # Accept the parenthesis.
+	    return 1;
+	}
 
-	# If the prior token can not be quantified, all this is
-	# unnecessary.
-	$tokenizer->prior( 'can_be_quantified' )
-	    or return 1;
+	# Close parentheses end modifier localization
+	if ( $character eq ')' ) {
+	    $tokenizer->modifier_pop();
+	    return 1;
+	}
 
-	# We make our token now, before setting the cookie. Otherwise
-	# the cookie has to deal with this token.
-	my $token = $tokenizer->make_token( 1 );
+	# Open curlys are complicated because they may or may not represent
+	# the beginning of a quantifier, depending on what comes before the
+	# close curly. So we set a cookie to monitor the token stream for
+	# interlopers. If all goes well, the right curly will find the
+	# cookie and know it is supposed to be a quantifier.
+	if ( $character eq '{' ) {
 
-	# A cookie for the next '}'.
-	my $commas = 0;
-	$tokenizer->cookie( $COOKIE_QUANT, sub {
-		my ( $tokenizer, $token ) = @_;
-		$token or return 1;
+	    # If the prior token can not be quantified, all this is
+	    # unnecessary.
+	    $tokenizer->prior( 'can_be_quantified' )
+		or return 1;
 
-		# Of literals, we accept exactly one comma provided it
-		# is not immediately after a '{'. We also accept
-		# anything that matches '\d';
-		if ( $token->isa( $TOKEN_LITERAL ) ) {
-		    my $character = $token->content();
-		    if ( $character eq ',' ) {
-			$commas++ and return;
-			my $prev = $tokenizer->prior( 'content' );
-			return $tokenizer->prior( 'content' ) ne '{';
+	    # We make our token now, before setting the cookie. Otherwise
+	    # the cookie has to deal with this token.
+	    my $token = $tokenizer->make_token( 1 );
+
+	    # A cookie for the next '}'.
+	    my $commas = 0;
+	    $tokenizer->cookie( COOKIE_QUANT, sub {
+		    my ( $tokenizer, $token ) = @_;
+		    $token or return 1;
+
+		    # Of literals, we accept exactly one comma provided it
+		    # is not immediately after a '{'. We also accept
+		    # anything that matches '\d';
+		    if ( $token->isa( TOKEN_LITERAL ) ) {
+			my $character = $token->content();
+			if ( $character eq ',' ) {
+			    $commas++ and return;
+			    my $prev = $tokenizer->prior( 'content' );
+			    return $tokenizer->prior( 'content' ) ne '{';
+			}
+			return $character =~ m/ \A \d \z /smx;
 		    }
-		    return $character =~ m/ \A \d \z /smx;
-		}
 
-		# Since we do not know what is in an interpolation, we
-		# trustingly accept it.
-		if ( $token->isa( 'PPIx::Regexp::Token::Interpolation' )
-		) {
-		    return 1;
-		}
+		    # Since we do not know what is in an interpolation, we
+		    # trustingly accept it.
+		    if ( $token->isa( 'PPIx::Regexp::Token::Interpolation' )
+		    ) {
+			return 1;
+		    }
 
-		return;
-	    },
-	);
+		    return;
+		},
+	    );
 
-	return $token;
-    }
+	    return $token;
+	}
 
-    # The close curly bracket is a little complicated because if the
-    # cookie posted by the left curly bracket is still around, we are a
-    # quantifier, otherwise not.
-    if ( $character eq '}' ) {
-	$tokenizer->cookie( $COOKIE_QUANT, undef )
-	    or return 1;
-	$tokenizer->prior( 'class' )->isa( __PACKAGE__ )
-	    and return 1;
-	my $token = $tokenizer->make_token( 1 );
-	$token->{is_quantifier} = 1;
-	return $token;
-    }
+	# The close curly bracket is a little complicated because if the
+	# cookie posted by the left curly bracket is still around, we are a
+	# quantifier, otherwise not.
+	if ( $character eq '}' ) {
+	    $tokenizer->cookie( COOKIE_QUANT, undef )
+		or return 1;
+	    $tokenizer->prior( 'class' )->isa( __PACKAGE__ )
+		and return 1;
+	    my $token = $tokenizer->make_token( 1 );
+	    $token->{is_quantifier} = 1;
+	    return $token;
+	}
 
-    # The parse rules are different inside a character class, so we set
-    # another cookie. Sigh. If your tool is a hammer ...
-    if ( $character eq '[' ) {
+	# The parse rules are different inside a character class, so we set
+	# another cookie. Sigh. If your tool is a hammer ...
+	if ( $character eq '[' ) {
 
-	# Set our cookie. Since it always returns 1, it does not matter
-	# where in the following mess we set it.
-	$tokenizer->cookie( $COOKIE_CLASS, sub { return 1 } );
+	    # Set our cookie. Since it always returns 1, it does not matter
+	    # where in the following mess we set it.
+	    $tokenizer->cookie( COOKIE_CLASS, sub { return 1 } );
 
-	# Make our token now, since the easiest place to deal with the
-	# beginning-of-character-class strangeness seems to be right
-	# here.
-	my @tokens = $tokenizer->make_token( 1 );
+	    # Make our token now, since the easiest place to deal with the
+	    # beginning-of-character-class strangeness seems to be right
+	    # here.
+	    my @tokens = $tokenizer->make_token( 1 );
 
-	# Get the next character, returning tokens if there is none.
-	defined ( $character = $tokenizer->peek() )
-	    or return @tokens;
-
-	# If we have a caret, it is a negation operator. Make its token
-	# and fetch the next character, returning if none.
-	if ( $character eq '^' ) {
-	    push @tokens, $tokenizer->make_token(
-		1, 'PPIx::Regexp::Token::Operator' );
+	    # Get the next character, returning tokens if there is none.
 	    defined ( $character = $tokenizer->peek() )
 		or return @tokens;
+
+	    # If we have a caret, it is a negation operator. Make its token
+	    # and fetch the next character, returning if none.
+	    if ( $character eq '^' ) {
+		push @tokens, $tokenizer->make_token(
+		    1, 'PPIx::Regexp::Token::Operator' );
+		defined ( $character = $tokenizer->peek() )
+		    or return @tokens;
+	    }
+
+	    # If we have a close square at this point, it is not the end of
+	    # the class, but just a literal. Make its token.
+	    $character eq ']'
+		and push @tokens, $tokenizer->make_token( 1, TOKEN_LITERAL );
+
+	    # Return all tokens made.
+	    return @tokens;
+	}
+	# per perlop, the metas inside a [] are -]\^$.
+	# per perlop, the metas outside a [] are {}[]()^$.|*+?\
+	# The difference is that {}[().|*+? are not metas in [], but - is.
+
+	# On encountering our close bracket, we need to delete the cookie.
+	if ( $character eq ']' ) {
+	    $tokenizer->cookie( COOKIE_CLASS, undef );
+	    return 1;
 	}
 
-	# If we have a close square at this point, it is not the end of
-	# the class, but just a literal. Make its token.
-	$character eq ']'
-	    and push @tokens, $tokenizer->make_token( 1, $TOKEN_LITERAL );
-
-	# Return all tokens made.
-	return @tokens;
-    }
-    # per perlop, the metas inside a [] are -]\^$.
-    # per perlop, the metas outside a [] are {}[]()^$.|*+?\
-    # The difference is that {}[().|*+? are not metas in [], but - is.
-
-    # On encountering our close bracket, we need to delete the cookie.
-    if ( $character eq ']' ) {
-	$tokenizer->cookie( $COOKIE_CLASS, undef );
 	return 1;
     }
 
-    return 1;
 }
 
 # Called by the lexer once it has done its worst to all the tokens.

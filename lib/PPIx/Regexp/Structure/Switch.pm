@@ -39,9 +39,9 @@ use warnings;
 use base qw{ PPIx::Regexp::Structure };
 
 use PPIx::Regexp::Constant qw{
-    $MINIMUM_PERL
-    $STRUCTURE_UNKNOWN
-    $TOKEN_UNKNOWN
+    MINIMUM_PERL
+    STRUCTURE_UNKNOWN
+    TOKEN_UNKNOWN
 };
 
 our $VERSION = '0.010';
@@ -50,9 +50,9 @@ sub perl_version_introduced {
     my ( $self ) = @_;
     my $condition = $self->child( 0 ) or return;
     $condition->isa( 'PPIx::Regexp::Structure' )
-	and return $MINIMUM_PERL;
+	and return MINIMUM_PERL;
     my $content = $condition->content();
-    $content =~ m/ \( \d+ \) /smx and return $MINIMUM_PERL;
+    $content =~ m/ \( \d+ \) /smx and return MINIMUM_PERL;
     return '5.010';
 }
 
@@ -87,14 +87,14 @@ sub __PPIX_LEXER__finalize {
 	    $kid->isa( 'PPIx::Regexp::Token::Operator' ) or next;
 	    $kid->content() eq '|' or next;
 	    --$alternations >= 0 and next;
-	    bless $kid, $TOKEN_UNKNOWN;
+	    bless $kid, TOKEN_UNKNOWN;
 	    $rslt++;
 	}
     } else {
 	# If we could not figure out how many alternations were allowed,
 	# it means we did not understand our condition. Rebless
 	# ourselves to the unknown structure and count a parse failure.
-	bless $self, $STRUCTURE_UNKNOWN;
+	bless $self, STRUCTURE_UNKNOWN;
 	$rslt++;
     }
 

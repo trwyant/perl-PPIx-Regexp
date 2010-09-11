@@ -39,7 +39,7 @@ use warnings;
 use base qw{ PPIx::Regexp::Support };
 
 use Carp qw{ confess };
-use PPIx::Regexp::Constant qw{ $TOKEN_LITERAL $TOKEN_UNKNOWN };
+use PPIx::Regexp::Constant qw{ TOKEN_LITERAL TOKEN_UNKNOWN };
 use PPIx::Regexp::Node::Range				();
 use PPIx::Regexp::Structure				();
 use PPIx::Regexp::Structure::Assertion			();
@@ -59,7 +59,6 @@ use PPIx::Regexp::Structure::Unknown			();
 use PPIx::Regexp::Token::Unmatched			();
 use PPIx::Regexp::Tokenizer				();
 use PPIx::Regexp::Util qw{ __instance };
-use Readonly;
 
 our $VERSION = '0.010';
 
@@ -219,12 +218,12 @@ sub lex {
 		# make an unknown instead if it contains non-octal
 		# digits.
 		if ( $elem->content() =~ m/ [89] /smx ) {
-		    bless $elem, $TOKEN_UNKNOWN;
+		    bless $elem, TOKEN_UNKNOWN;
 		    # We must hand-increment the failures since we
 		    # already finalized.
 		    $self->{failures}++;
 		} else {
-		    bless $elem, $TOKEN_LITERAL;
+		    bless $elem, TOKEN_LITERAL;
 		}
 
 	    }
@@ -246,108 +245,112 @@ sub _finalize {
     return;
 }
 
-Readonly::Hash my %bracket => (
-    '{' => '}',
-    '(' => ')',
-    '[' => ']',
-##  '<' => '>',
-);
+{
 
-Readonly::Hash my %unclosed => (
-    '{' => '_recover_curly',
-);
+    my %bracket = (
+	'{' => '}',
+	'(' => ')',
+	'[' => ']',
+    ##  '<' => '>',
+    );
 
-sub _get_delimited {
-    my ( $self, $class, $expect_open_bracket ) = @_;
-    defined $expect_open_bracket or $expect_open_bracket = 1;
+    my %unclosed = (
+	'{' => '_recover_curly',
+    );
 
-    my @rslt;
-    $self->{_rslt} = \@rslt;
+    sub _get_delimited {
+	my ( $self, $class, $expect_open_bracket ) = @_;
+	defined $expect_open_bracket or $expect_open_bracket = 1;
 
-    if ( $expect_open_bracket ) {
-	if ( my $token = $self->_get_token() ) {
-	    push @rslt, [];
+	my @rslt;
+	$self->{_rslt} = \@rslt;
+
+	if ( $expect_open_bracket ) {
+	    if ( my $token = $self->_get_token() ) {
+		push @rslt, [];
+		if ( $token->isa( 'PPIx::Regexp::Token::Delimiter' ) ) {
+		    push @{ $rslt[-1] }, '', $token;
+		} else {
+		    push @{ $rslt[-1] }, '', undef;
+		    $self->_unget_token( $token );
+		}
+	    } else {
+		return;
+	    }
+	} else {
+	    push @rslt, [ '', undef ];
+	}
+
+	while ( my $token = $self->_get_token() ) {
 	    if ( $token->isa( 'PPIx::Regexp::Token::Delimiter' ) ) {
-		push @{ $rslt[-1] }, '', $token;
-	    } else {
-		push @{ $rslt[-1] }, '', undef;
 		$self->_unget_token( $token );
+		last;
 	    }
-	} else {
-	    return;
-	}
-    } else {
-	push @rslt, [ '', undef ];
-    }
+	    if ( $token->isa( 'PPIx::Regexp::Token::Structure' ) ) {
+		my $content = $token->content();
 
-    while ( my $token = $self->_get_token() ) {
-	if ( $token->isa( 'PPIx::Regexp::Token::Delimiter' ) ) {
-	    $self->_unget_token( $token );
-	    last;
-	}
-	if ( $token->isa( 'PPIx::Regexp::Token::Structure' ) ) {
-	    my $content = $token->content();
+		if ( my $finish = $bracket{$content} ) {
+		    # Open bracket
+		    push @rslt, [ $finish, $token ];
 
-	    if ( my $finish = $bracket{$content} ) {
-		# Open bracket
-		push @rslt, [ $finish, $token ];
+		} elsif ( $content eq $rslt[-1][0] ) {
 
-	    } elsif ( $content eq $rslt[-1][0] ) {
+		    # Matched close bracket
+		    $self->_make_node( $token );
 
-		# Matched close bracket
-		$self->_make_node( $token );
+		} elsif ( $content ne ')' ) {
 
-	    } elsif ( $content ne ')' ) {
+		    # If the close bracket is not a parenthesis, it becomes
+		    # a literal.
+		    bless $token, TOKEN_LITERAL;
+		    push @{ $rslt[-1] }, $token;
 
-		# If the close bracket is not a parenthesis, it becomes
-		# a literal.
-		bless $token, $TOKEN_LITERAL;
-		push @{ $rslt[-1] }, $token;
+		} elsif ( $content eq ')'
+			and @rslt > 1	# Ignore enclosing delimiter
+			and my $recover = $unclosed{$rslt[-1][1]->content()} ) {
+		    # If the close bracket is a parenthesis and there is a
+		    # recovery procedure, we use it.
+		    $self->$recover( $token );
 
-	    } elsif ( $content eq ')'
-		    and @rslt > 1	# Ignore enclosing delimiter
-		    and my $recover = $unclosed{$rslt[-1][1]->content()} ) {
-		# If the close bracket is a parenthesis and there is a
-		# recovery procedure, we use it.
-		$self->$recover( $token );
+		} else {
+
+		    # Unmatched close with no recovery.
+		    $self->{failures}++;
+		    bless $token, 'PPIx::Regexp::Token::Unmatched';
+		    push @{ $rslt[-1] }, $token;
+		}
 
 	    } else {
-
-		# Unmatched close with no recovery.
-		$self->{failures}++;
-		bless $token, 'PPIx::Regexp::Token::Unmatched';
 		push @{ $rslt[-1] }, $token;
 	    }
 
+	    # We have to hand-roll the Range object.
+	    if ( __instance( $rslt[-1][-2], 'PPIx::Regexp::Token::Operator' )
+		&& $rslt[-1][-2]->content() eq '-' ) {
+		my @tokens = splice @{ $rslt[-1] }, -3;
+		push @{ $rslt[-1] },
+		    PPIx::Regexp::Node::Range->_new( @tokens );
+	    }
+	}
+
+	while ( @rslt > 1 ) {
+	    if ( my $recover = $unclosed{$rslt[-1][1]->content()} ) {
+		$self->$recover();
+	    } else {
+		$self->{failures}++;
+		$self->_make_node( undef );
+	    }
+	}
+
+	if ( @rslt == 1 ) {
+	    my @last = @{ pop @rslt };
+	    shift @last;
+	    push @last, $self->_get_token();
+	    return $class->_new( @last );
 	} else {
-	    push @{ $rslt[-1] }, $token;
+	    confess "Missing data";
 	}
 
-	# We have to hand-roll the Range object.
-	if ( __instance( $rslt[-1][-2], 'PPIx::Regexp::Token::Operator' )
-	    && $rslt[-1][-2]->content() eq '-' ) {
-	    my @tokens = splice @{ $rslt[-1] }, -3;
-	    push @{ $rslt[-1] },
-		PPIx::Regexp::Node::Range->_new( @tokens );
-	}
-    }
-
-    while ( @rslt > 1 ) {
-	if ( my $recover = $unclosed{$rslt[-1][1]->content()} ) {
-	    $self->$recover();
-	} else {
-	    $self->{failures}++;
-	    $self->_make_node( undef );
-	}
-    }
-
-    if ( @rslt == 1 ) {
-	my @last = @{ pop @rslt };
-	shift @last;
-	push @last, $self->_get_token();
-	return $class->_new( @last );
-    } else {
-	confess "Missing data";
     }
 
 }
@@ -370,7 +373,7 @@ sub _get_token {
 
 {
 
-    Readonly::Hash my %handler => (
+    my %handler = (
 	'(' => '_round',
 	'[' => '_square',
 	'{' => '_curly',
@@ -406,7 +409,7 @@ sub _curly {
 	# If there is a right curly but it is not a quantifier,
 	# make both curlys into literals.
 	foreach my $inx ( 0, -1 ) {
-	    bless $args->[$inx], $TOKEN_LITERAL;
+	    bless $args->[$inx], TOKEN_LITERAL;
 	}
 
 	# Try to recover possible quantifiers not recognized because we
@@ -434,7 +437,7 @@ sub _recover_curly {
     shift @content;
 
     # Rebless the left curly to a literal.
-    bless $content[0], $TOKEN_LITERAL;
+    bless $content[0], TOKEN_LITERAL;
 
     # Try to recover possible quantifiers not recognized because we
     # thought this was a structure.
@@ -468,14 +471,14 @@ sub _recover_curly {
 sub _recover_curly_quantifiers {
     my ( $self, $args ) = @_;
 
-    if ( __instance( $args->[0], $TOKEN_LITERAL )
-	&& __instance( $args->[1], $TOKEN_UNKNOWN )
+    if ( __instance( $args->[0], TOKEN_LITERAL )
+	&& __instance( $args->[1], TOKEN_UNKNOWN )
 	&& PPIx::Regexp::Token::Quantifier->could_be_quantifier(
 	$args->[1]->content() )
     ) {
 	bless $args->[1], 'PPIx::Regexp::Token::Quantifier';
 
-	if ( __instance( $args->[2], $TOKEN_UNKNOWN )
+	if ( __instance( $args->[2], TOKEN_UNKNOWN )
 	    && PPIx::Regexp::Token::Greediness->could_be_greediness(
 		$args->[2]->content() )
 	) {

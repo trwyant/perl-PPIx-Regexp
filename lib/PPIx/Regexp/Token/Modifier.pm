@@ -37,7 +37,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
-use PPIx::Regexp::Constant qw{ $MINIMUM_PERL };
+use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 
 our $VERSION = '0.010';
 
@@ -115,7 +115,7 @@ sub negates {
 
 sub perl_version_introduced {
     my ( $self ) = @_;
-    return $self->asserts( 'p' ) ? '5.010' : $MINIMUM_PERL;
+    return $self->asserts( 'p' ) ? '5.010' : MINIMUM_PERL;
 }
 
 # Return true if the token can be quantified, and false otherwise

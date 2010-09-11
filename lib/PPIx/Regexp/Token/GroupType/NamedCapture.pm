@@ -41,7 +41,7 @@ use base qw{ PPIx::Regexp::Token::GroupType };
 
 use Carp qw{ confess };
 
-use PPIx::Regexp::Constant qw{ $RE_CAPTURE_NAME };
+use PPIx::Regexp::Constant qw{ RE_CAPTURE_NAME };
 
 our $VERSION = '0.010';
 
@@ -80,8 +80,8 @@ sub __PPIX_TOKENIZER__regexp {
     # The optional escapes are because any of the non-open-bracket
     # punctuation characters may be the expression delimiter.
     if ( my $accept = $tokenizer->find_regexp(
-	    qr{ \A \\? \? (?: P? < ( $RE_CAPTURE_NAME ) \\? > |
-			\\? ' ( $RE_CAPTURE_NAME ) \\? ' ) }smx ) ) {
+	    qr{ \A \\? \? (?: P? < ( @{[ RE_CAPTURE_NAME ]} ) \\? > |
+			\\? ' ( @{[ RE_CAPTURE_NAME ]} ) \\? ' ) }smxo ) ) {
 	return $accept;
     }
 

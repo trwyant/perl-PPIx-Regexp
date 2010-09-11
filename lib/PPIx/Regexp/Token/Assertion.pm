@@ -36,7 +36,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
-use PPIx::Regexp::Constant qw{ $COOKIE_CLASS $MINIMUM_PERL $TOKEN_LITERAL };
+use PPIx::Regexp::Constant qw{ COOKIE_CLASS MINIMUM_PERL TOKEN_LITERAL };
 
 our $VERSION = '0.010';
 
@@ -51,7 +51,7 @@ our $VERSION = '0.010';
 
     sub perl_version_introduced {
 	my ( $self ) = @_;
-	return $perl_version_introduced{$self->content()} || $MINIMUM_PERL;
+	return $perl_version_introduced{$self->content()} || MINIMUM_PERL;
     }
 
 }
@@ -72,8 +72,8 @@ sub __PPIX_TOKENIZER__regexp {
     my ( $class, $tokenizer, $character ) = @_;
 
     # Inside a character class, these are all literals.
-    my $make = $tokenizer->cookie( $COOKIE_CLASS ) ?
-	$TOKEN_LITERAL :
+    my $make = $tokenizer->cookie( COOKIE_CLASS ) ?
+	TOKEN_LITERAL :
 	__PACKAGE__;
 
     # '^' and '$'. Or at least '^'. See note above for '$'.

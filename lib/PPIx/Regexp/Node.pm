@@ -37,7 +37,7 @@ use warnings;
 use base qw{ PPIx::Regexp::Element };
 
 use List::Util qw{ max };
-use PPIx::Regexp::Constant qw{ $MINIMUM_PERL };
+use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };
 
@@ -288,7 +288,7 @@ supported by this package.
 
 sub perl_version_introduced {
     my ( $self ) = @_;
-    return max( $MINIMUM_PERL,
+    return max( MINIMUM_PERL,
 	map { $_->perl_version_introduced() } $self->elements() );
 }
 

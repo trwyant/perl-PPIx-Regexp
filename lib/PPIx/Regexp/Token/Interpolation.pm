@@ -35,7 +35,7 @@ use warnings;
 use base qw{ PPIx::Regexp::Token::Code };
 
 use PPI::Document;
-use PPIx::Regexp::Constant qw{ $COOKIE_CLASS $TOKEN_LITERAL };
+use PPIx::Regexp::Constant qw{ COOKIE_CLASS TOKEN_LITERAL };
 
 our $VERSION = '0.010';
 
@@ -232,8 +232,8 @@ sub _square {
 # Alternate classes for the sigils, depending on whether we are in a
 # character class (index 1) or not (index 0).
 my %sigil_alternate = (
-    '$' => [ 'PPIx::Regexp::Token::Assertion', $TOKEN_LITERAL ],
-    '@' => [ $TOKEN_LITERAL, $TOKEN_LITERAL ],
+    '$' => [ 'PPIx::Regexp::Token::Assertion', TOKEN_LITERAL ],
+    '@' => [ TOKEN_LITERAL, TOKEN_LITERAL ],
 );
 
 sub __PPIX_TOKENIZER__regexp {
@@ -247,7 +247,7 @@ sub __PPIX_TOKENIZER__regexp {
 
     my $alternate = $sigil_alternate{$character} or return;
     return $tokenizer->make_token(
-	1, $alternate->[$tokenizer->cookie( $COOKIE_CLASS ) ? 1 : 0 ] );
+	1, $alternate->[$tokenizer->cookie( COOKIE_CLASS ) ? 1 : 0 ] );
 
 }
 
@@ -260,7 +260,7 @@ sub __PPIX_TOKENIZER__repl {
 	return $accept;
     }
 
-    return $tokenizer->make_token( 1, $TOKEN_LITERAL );
+    return $tokenizer->make_token( 1, TOKEN_LITERAL );
 
 }
 

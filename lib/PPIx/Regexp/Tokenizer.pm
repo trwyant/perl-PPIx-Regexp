@@ -6,7 +6,7 @@ use warnings;
 use base qw{ PPIx::Regexp::Support };
 
 use Carp qw{ confess };
-use PPIx::Regexp::Constant qw{ $TOKEN_LITERAL $TOKEN_UNKNOWN };
+use PPIx::Regexp::Constant qw{ TOKEN_LITERAL TOKEN_UNKNOWN };
 use PPIx::Regexp::Token::Assertion		();
 use PPIx::Regexp::Token::Backreference		();
 use PPIx::Regexp::Token::Backtrack		();
@@ -36,7 +36,6 @@ use PPIx::Regexp::Token::Structure		();
 use PPIx::Regexp::Token::Unknown		();
 use PPIx::Regexp::Token::Whitespace		();
 use PPIx::Regexp::Util qw{ __instance };
-use Readonly;
 use Scalar::Util qw{ looks_like_number };
 
 our $VERSION = '0.010';
@@ -48,7 +47,7 @@ our $VERSION = '0.010';
     # order is in percieved frequency of acceptance, to keep the search
     # as short as possible. If I were conscientious I would gather
     # statistics on this.
-    Readonly::Array my @classes => (
+    my @classes = (	# TODO make readonly when acceptable way appears
 	'PPIx::Regexp::Token::Literal',
 	'PPIx::Regexp::Token::Interpolation',
 	'PPIx::Regexp::Token::Control',			# Note 1
@@ -162,7 +161,7 @@ our $VERSION = '0.010';
 	    mode => 'init',	# Initialize
 	    modifiers => [{}],	# Modifier hash.
 	    pending => [],	# Tokens made but not returned.
-	    prior => $TOKEN_UNKNOWN,	# Prior significant token.
+	    prior => TOKEN_UNKNOWN,	# Prior significant token.
 	    source => $re,	# The object we were initialized with.
 	    trace => __PACKAGE__->_defined_or(
 		$args{trace}, $ENV{PPIX_REGEXP_TOKENIZER_TRACE}, 0 ),
@@ -353,7 +352,7 @@ sub make_token {
     "cursor_limit = $self->{cursor_limit}\n";
     my $token = $class->_new( $content ) or return;
     $token->significant() and $self->{expect} = undef;
-    $class eq $TOKEN_UNKNOWN and $self->{failures}++;
+    $class eq TOKEN_UNKNOWN and $self->{failures}++;
 
     $token->__PPIX_TOKEN__post_make( $self, $arg );
 
@@ -523,7 +522,7 @@ sub __PPIX_TOKENIZER__init {
     $tokenizer->{mode} = 'kaput';
     $tokenizer->{content} =~ m/ ( qr | m | s )? ( \s* ) ( [^\w\s] ) /smx
 	or return $tokenizer->make_token(
-	    length( $tokenizer->{content} ), $TOKEN_UNKNOWN );
+	    length( $tokenizer->{content} ), TOKEN_UNKNOWN );
     my ( $type, $white, $delim ) = ( $1, $2, $3 );
     defined $type or $type = '';
     $tokenizer->{type} = $type;
@@ -606,11 +605,11 @@ sub __PPIX_TOKEN_FALLBACK__regexp {
     if ( $character eq '\\'
 	&& $tokenizer->{cursor_limit} - $tokenizer->{cursor_curr} > 1
     ) {
-	return $tokenizer->make_token( 2, $TOKEN_LITERAL );
+	return $tokenizer->make_token( 2, TOKEN_LITERAL );
     }
 
     # Any normal character is unknown.
-    return $tokenizer->make_token( 1, $TOKEN_UNKNOWN );
+    return $tokenizer->make_token( 1, TOKEN_UNKNOWN );
 }
 
 sub __PPIX_TOKEN_FALLBACK__repl {
@@ -621,13 +620,13 @@ sub __PPIX_TOKEN_FALLBACK__repl {
 	&& defined ( my $next = $tokenizer->peek( 1 ) ) ) {
 
 	if ( $tokenizer->interpolates() || $next eq q<'> || $next eq '\\' ) {
-	    return $tokenizer->make_token( 2, $TOKEN_LITERAL );
+	    return $tokenizer->make_token( 2, TOKEN_LITERAL );
 	}
-	return $tokenizer->make_token( 1, $TOKEN_LITERAL );
+	return $tokenizer->make_token( 1, TOKEN_LITERAL );
     }
 
     # So is any normal character.
-    return $tokenizer->make_token( 1, $TOKEN_LITERAL );
+    return $tokenizer->make_token( 1, TOKEN_LITERAL );
 }
 
 sub __PPIX_TOKENIZER__finish {

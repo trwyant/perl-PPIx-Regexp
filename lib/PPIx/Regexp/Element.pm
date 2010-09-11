@@ -39,7 +39,7 @@ use List::MoreUtils qw{ firstidx };
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr weaken };
 
-use PPIx::Regexp::Constant qw{ $MINIMUM_PERL };
+use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 
 our $VERSION = '0.010';
 
@@ -170,7 +170,7 @@ introduced. But in practice it will never return a number less than
 =cut
 
 sub perl_version_introduced {
-    return $MINIMUM_PERL;
+    return MINIMUM_PERL;
 }
 
 =head2 perl_version_removed

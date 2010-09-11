@@ -34,7 +34,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
-use PPIx::Regexp::Constant qw{ $COOKIE_CLASS };
+use PPIx::Regexp::Constant qw{ COOKIE_CLASS };
 
 our $VERSION = '0.010';
 
@@ -77,7 +77,7 @@ sub __PPIX_TOKENIZER__regexp {
     # Handle the characters that may or may not be literals depending on
     # whether or not we are in a character class.
     if ( my $class = $double_agent{$character} ) {
-	my $inx = $tokenizer->cookie( $COOKIE_CLASS ) ? 1 : 0;
+	my $inx = $tokenizer->cookie( COOKIE_CLASS ) ? 1 : 0;
 	return $class->[$inx];
     }
 
@@ -85,7 +85,7 @@ sub __PPIX_TOKENIZER__regexp {
     # is whitespace, and '#' introduces a comment. Otherwise they are
     # both literals.
     if ( $tokenizer->modifier( 'x' ) &&
-	! $tokenizer->cookie( $COOKIE_CLASS ) ) {
+	! $tokenizer->cookie( COOKIE_CLASS ) ) {
 	my $accept;
 	$accept = $tokenizer->find_regexp( qr{ \A \s+ }smx )
 	    and return $tokenizer->make_token(

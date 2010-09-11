@@ -35,7 +35,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
-use PPIx::Regexp::Constant qw{ $MINIMUM_PERL };
+use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 
 our $VERSION = '0.010';
 
@@ -43,7 +43,7 @@ our $VERSION = '0.010';
 sub can_be_quantified { return };
 
 my %greediness = (
-    '?' => $MINIMUM_PERL,
+    '?' => MINIMUM_PERL,
     '+' => '5.010',
 );
 
@@ -63,7 +63,7 @@ sub could_be_greediness {
 
 sub perl_version_introduced {
     my ( $self ) = @_;
-    return $greediness{ $self->content() } || $MINIMUM_PERL;
+    return $greediness{ $self->content() } || MINIMUM_PERL;
 }
 
 sub __PPIX_TOKENIZER__regexp {

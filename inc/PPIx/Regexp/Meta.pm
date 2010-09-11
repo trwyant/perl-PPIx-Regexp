@@ -30,7 +30,6 @@ sub requires {
 	'List::MoreUtils'	=> 0,
 	'List::Util'	=> 0,
 	'PPI::Document'	=> 1.117,	# for new( readonly => 1 )
-	'Readonly'	=> 0,
 	'Scalar::Util'	=> 0,
 	'Task::Weaken'	=> 0,
 	@extra,

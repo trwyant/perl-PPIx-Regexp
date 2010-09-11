@@ -36,15 +36,14 @@ use warnings;
 use base qw{ PPIx::Regexp::Token::CharClass };
 
 use PPIx::Regexp::Constant qw{
-    $COOKIE_CLASS $MINIMUM_PERL $TOKEN_LITERAL $TOKEN_UNKNOWN
+    COOKIE_CLASS MINIMUM_PERL TOKEN_LITERAL TOKEN_UNKNOWN
 };
-use Readonly;
 
 our $VERSION = '0.010';
 
 {
 
-    Readonly::Hash my %introduced => (
+    my %introduced = (
 	'\N'	=> 5.011,
     );
 
@@ -56,7 +55,7 @@ our $VERSION = '0.010';
 	}
 	$content =~ m/ \A \\ [Pp] .*? [\s=-] /smx
 	    and return 5.011003;
-	return $MINIMUM_PERL;
+	return MINIMUM_PERL;
     }
 
 }
@@ -64,11 +63,11 @@ our $VERSION = '0.010';
 sub __PPIX_TOKENIZER__regexp {
     my ( $class, $tokenizer, $character ) = @_;
 
-    my $in_class = $tokenizer->cookie( $COOKIE_CLASS );
+    my $in_class = $tokenizer->cookie( COOKIE_CLASS );
 
     if ( $character eq '.' ) {
 	$in_class
-	    and return $tokenizer->make_token( 1, $TOKEN_LITERAL );
+	    and return $tokenizer->make_token( 1, TOKEN_LITERAL );
 	return 1;
     }
 
@@ -83,7 +82,7 @@ sub __PPIX_TOKENIZER__regexp {
 	    # As of Perl 5.11.5, [\N] is a fatal error.
 	    '\\N' eq $match
 		and return $tokenizer->make_token(
-		    $accept, $TOKEN_UNKNOWN );
+		    $accept, TOKEN_UNKNOWN );
 	    # \R is not recognized inside a character class. It
 	    # eventually ends up as a literal.
 	    '\\R' eq $match and return;
