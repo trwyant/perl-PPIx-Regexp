@@ -7,7 +7,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token::CharClass::POSIX };
 
-our $VERSION = '0.010_01';
+our $VERSION = '0.011';
 
 # Note that these guys are recognized by PPIx::Regexp::CharClass::POSIX,
 # and if one of them becomes supported that is where the change needs to
