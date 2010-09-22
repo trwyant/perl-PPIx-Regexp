@@ -115,7 +115,9 @@ sub negates {
 
 sub perl_version_introduced {
     my ( $self ) = @_;
-    return $self->asserts( 'p' ) ? '5.010' : MINIMUM_PERL;
+    $self->asserts( 'r' ) and return '5.013002';
+    $self->asserts( 'p' ) and return '5.010';
+    return MINIMUM_PERL;
 }
 
 # Return true if the token can be quantified, and false otherwise

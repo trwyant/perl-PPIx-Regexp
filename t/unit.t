@@ -9,7 +9,7 @@ use PPI::Document;
 use PPIx::Regexp::Test;
 use Scalar::Util qw{ refaddr };
 
-plan( tests => 712 );
+plan( tests => 717 );
 
 my $is_ascii = ord( "\t" ) == 9;	# per perlebcdic
 
@@ -284,6 +284,13 @@ true    ( asserts => 's' );
 true    ( asserts => 'm' );
 true    ( asserts => 'x' );
 false   ( negates => 'i' );
+
+tokenize( '//r' );
+count   ( 4 );
+choose  ( 3 );
+content ( 'r' );
+true    ( asserts => 'r' );
+value   ( perl_version_introduced => [], 5.013002 );
 
 tokenize( 'qr/foo{3}/' );
 count   ( 10 );
