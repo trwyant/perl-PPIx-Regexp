@@ -44,7 +44,7 @@ sub can_be_quantified { return };
 
 my %greediness = (
     '?' => MINIMUM_PERL,
-    '+' => '5.010',
+    '+' => '5.009005',
 );
 
 =head2 could_be_greediness

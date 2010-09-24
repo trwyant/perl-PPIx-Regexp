@@ -60,7 +60,7 @@ sub name {
 }
 
 sub perl_version_introduced {
-    return '5.010';
+    return '5.009005';
 }
 
 sub __PPIX_TOKEN__post_make {

@@ -45,9 +45,10 @@ our $VERSION = '0.011';
 {
 
     my %perl_version_introduced = (
-	g => '5.010',	# \g1 \g-1 \g{1} \g{-1}
-	k => '5.010',	# \k<name> \k'name'
-	'?' => '5.010',	# (?P=name)	(PCRE/Python)
+	g => '5.009005',	# \g1 \g-1 \g{1} \g{-1}
+	k => '5.009005',	# \k<name> \k'name'
+	'?' => '5.010',	# (?P=name)	(PCRE/Python)	# TODO confirm
+							# 5.10 vs 5.9.5.
     );
 
     sub perl_version_introduced {

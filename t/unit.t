@@ -360,20 +360,20 @@ class   ( 'PPIx::Regexp::Token::Backreference' );
 content ( '\\g{-1}' );
 true    ( can_be_quantified => [] );
 false   ( is_quantifier => [] );
-value   ( perl_version_introduced => [], '5.010' );
+value   ( perl_version_introduced => [], '5.009005' );
 choose  ( 6 );
 class   ( 'PPIx::Regexp::Token::Backreference' );
 content ( '\\k<foo>' );
 true    ( can_be_quantified => [] );
 false   ( is_quantifier => [] );
-value   ( perl_version_introduced => [], '5.010' );
+value   ( perl_version_introduced => [], '5.009005' );
 
 tokenize( '/\\\\d{3,5}+.*?/' );
 count   ( 15 );
 choose  ( 9 );
 class   ( 'PPIx::Regexp::Token::Greediness' );
 content ( '+' );
-value   ( perl_version_introduced => [], '5.010' );
+value   ( perl_version_introduced => [], '5.009005' );
 choose  ( 12 );
 class   ( 'PPIx::Regexp::Token::Greediness' );
 content ( '?' );
@@ -385,26 +385,26 @@ choose  ( 3 );
 class   ( 'PPIx::Regexp::Token::GroupType::NamedCapture' );
 content ( '?<foo>' );
 value   ( name => [], 'foo' );
-value   ( perl_version_introduced => [], '5.010' );
+value   ( perl_version_introduced => [], '5.009005' );
 
 tokenize( '/(?\'for\'bar)/' );
 count   ( 10 );
 choose  ( 3 );
 value   ( name => [], 'for' );
-value   ( perl_version_introduced => [], '5.010' );
+value   ( perl_version_introduced => [], '5.009005' );
 
 tokenize( '/(?P<fur>bar)/' );
 count   ( 10 );
 choose  ( 3 );
 value   ( name => [], 'fur' );
-value   ( perl_version_introduced => [], '5.010' );
+value   ( perl_version_introduced => [], '5.009005' );
 
 tokenize( '/(*PRUNE:foo)x/' );
 count   ( 6 );
 choose  ( 2 );
 class   ( 'PPIx::Regexp::Token::Backtrack' );
 content ( '(*PRUNE:foo)' );
-value   ( perl_version_introduced => [], '5.010' );
+value   ( perl_version_introduced => [], '5.009005' );
 
 tokenize( 's/\\bfoo\\Kbar/baz/' );
 count   ( 16 );
@@ -415,14 +415,14 @@ value   ( perl_version_introduced => [], '5.006' );
 choose  ( 6 );
 class   ( 'PPIx::Regexp::Token::Assertion' );
 content ( '\\K' );
-value   ( perl_version_introduced => [], '5.010' );
+value   ( perl_version_introduced => [], '5.009005' );
 
 tokenize( '/(*PRUNE:foo)x/' );
 count   ( 6 );
 choose  ( 2 );
 class   ( 'PPIx::Regexp::Token::Backtrack' );
 content ( '(*PRUNE:foo)' );
-value   ( perl_version_introduced => [], '5.010' );
+value   ( perl_version_introduced => [], '5.009005' );
 
 tokenize( '/(?|(foo))/' );
 count   ( 12 );
@@ -981,12 +981,12 @@ value   ( perl_version_removed => [], undef );
 choose  ( 3 );
 class   ( 'PPIx::Regexp::Token::GroupType::Code' );
 content ( '?p' );
-value   ( perl_version_removed => [], '5.010' );
+value   ( perl_version_removed => [], '5.009005' );
 
 parse   ( '/(?p{ code })/' );
 value   ( failures => [], 0);
 class   ( 'PPIx::Regexp' );
-value   ( perl_version_removed => [], '5.010' );
+value   ( perl_version_removed => [], '5.009005' );
 count   ( 3 );
 choose  ( child => 0 );
 class   ( 'PPIx::Regexp::Token::Structure' );
@@ -995,11 +995,11 @@ value   ( perl_version_removed => [], undef );
 choose  ( child => 1 );
 class   ( 'PPIx::Regexp::Structure::Regexp' );
 count   ( 1 );
-value   ( perl_version_removed => [], '5.010' );
+value   ( perl_version_removed => [], '5.009005' );
 choose  ( child => 1, child => 0 );
 class   ( 'PPIx::Regexp::Structure::Code' );
 count   ( 1 );
-value   ( perl_version_removed => [], '5.010' );
+value   ( perl_version_removed => [], '5.009005' );
 choose  ( child => 1, child => 0, start => [] );
 count   ( 1 );
 choose  ( child => 1, child => 0, start => 0 );
@@ -1011,7 +1011,7 @@ count   ( 1 );
 choose  ( child => 1, child => 0, type => 0 );
 class   ( 'PPIx::Regexp::Token::GroupType::Code' );
 content ( '?p' );
-value   ( perl_version_removed => [], '5.010' );
+value   ( perl_version_removed => [], '5.009005' );
 
 parse   ( 'qr{foo}smx' );
 value   ( failures => [], 0 );
@@ -1131,10 +1131,10 @@ EOD
     parse   ( '/(?<foo>\\d+)/' );
     dump_result( perl_version => 1,
 	<<'EOD', q<Perl versions in '/(?<foo>\\d+)/'> );
-PPIx::Regexp	failures=0	5.010 <= $]
+PPIx::Regexp	failures=0	5.009005 <= $]
   PPIx::Regexp::Token::Structure	''	5.006 <= $]
-  PPIx::Regexp::Structure::Regexp	/ ... /	5.010 <= $]
-    PPIx::Regexp::Structure::NamedCapture	(?<foo> ... )	5.010 <= $]
+  PPIx::Regexp::Structure::Regexp	/ ... /	5.009005 <= $]
+    PPIx::Regexp::Structure::NamedCapture	(?<foo> ... )	5.009005 <= $]
       PPIx::Regexp::Token::CharClass::Simple	'\\d'	5.006 <= $]
       PPIx::Regexp::Token::Quantifier	'+'	5.006 <= $]
   PPIx::Regexp::Token::Modifier	''	5.006 <= $]

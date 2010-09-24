@@ -52,7 +52,7 @@ our $VERSION = '0.011';
 	exists $self->{perl_version_removed}
 	    and return $self->{perl_version_removed};
 	return ( $self->{perl_version_removed} =
-	    $self->content() =~ m/ \A \\? \? p \z /smx ? '5.010' : undef
+	    $self->content() =~ m/ \A \\? \? p \z /smx ? '5.009005' : undef
 	);
     }
 }
