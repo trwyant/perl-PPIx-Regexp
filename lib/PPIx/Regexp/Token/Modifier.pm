@@ -116,7 +116,7 @@ sub negates {
 sub perl_version_introduced {
     my ( $self ) = @_;
     $self->asserts( 'r' ) and return '5.013002';
-    $self->asserts( 'p' ) and return '5.010';
+    $self->asserts( 'p' ) and return '5.009005';
     return MINIMUM_PERL;
 }
 

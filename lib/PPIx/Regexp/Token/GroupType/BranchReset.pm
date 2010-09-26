@@ -40,7 +40,7 @@ our $VERSION = '0.011';
 # sub can_be_quantified { return };
 
 sub perl_version_introduced {
-    return '5.010';
+    return '5.009005';
 }
 
 sub __PPIX_TOKENIZER__regexp {

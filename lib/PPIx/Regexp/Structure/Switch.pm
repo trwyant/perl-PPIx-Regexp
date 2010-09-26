@@ -53,7 +53,7 @@ sub perl_version_introduced {
 	and return MINIMUM_PERL;
     my $content = $condition->content();
     $content =~ m/ \( \d+ \) /smx and return MINIMUM_PERL;
-    return '5.010';
+    return '5.009005';
 }
 
 sub __PPIX_LEXER__finalize {
