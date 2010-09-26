@@ -165,7 +165,8 @@ sub parent {
 
 This method returns the version of Perl in which the element was
 introduced. But in practice it will never return a number less than
-5.006, since that is the minimum version supported by this package.
+5.006, since so far I have not dug any deeper into the history of
+regular expression features.
 
 =cut
 
