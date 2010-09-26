@@ -1,3 +1,9 @@
+0.012		T. R. Wyant	26-Sep-2010
+  Track all the features reported as introduced (or removed) in Perl
+    5.010 back to Perl 5.009005, and report them as such.
+  Report modifier /r as having been introduced in Perl 5.013002, rather
+    than the default of 5.006.
+
 0.011		T. R. Wyant	16-Sep-2010
   No changes from 0.010_01.
 
