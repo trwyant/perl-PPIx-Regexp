@@ -41,19 +41,36 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token::GroupType };
 
+use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
+
 our $VERSION = '0.012';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 
 {
+    my %perl_version_introduced = (
+	'?'	=> '5.005',
+	'?p'	=> '5.005',	# Presumed. I can find no documentation.
+	'??'	=> '5.006',
+    );
+
+    sub perl_version_introduced {
+	my ( $self ) = @_;
+	return $perl_version_introduced{ $self->content() } || '5.005';
+    }
+
+}
+
+{
+
+    my %perl_version_removed = (
+	'?p'	=> '5.009005',
+    );
+
     sub perl_version_removed {
 	my ( $self ) = @_;
-	exists $self->{perl_version_removed}
-	    and return $self->{perl_version_removed};
-	return ( $self->{perl_version_removed} =
-	    $self->content() =~ m/ \A \\? \? p \z /smx ? '5.009005' : undef
-	);
+	return $perl_version_removed{ $self->content() };
     }
 }
 

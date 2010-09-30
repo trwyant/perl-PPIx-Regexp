@@ -35,7 +35,7 @@ use warnings;
 use base qw{ PPIx::Regexp::Token::Code };
 
 use PPI::Document;
-use PPIx::Regexp::Constant qw{ COOKIE_CLASS TOKEN_LITERAL };
+use PPIx::Regexp::Constant qw{ COOKIE_CLASS TOKEN_LITERAL MINIMUM_PERL };
 
 our $VERSION = '0.012';
 
@@ -44,6 +44,13 @@ our $VERSION = '0.012';
 # token. Of course, it might not, but we need to be permissive here.
 # sub can_be_quantified { return };
 
+# We overrode this in PPIx::Regexp::Token::Code, since (?{...}) did not
+# appear until Perl 5.5. But interpolation has been there since the
+# beginning, so we have to override again. Sigh.
+sub perl_version_introduced {
+#   my ( $self ) = @_;
+    return MINIMUM_PERL;
+}
 
 # Match the beginning of an interpolation.
 

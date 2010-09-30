@@ -75,6 +75,11 @@ sub content {
     }
 }
 
+sub perl_version_introduced {
+#   my ( $self ) = @_;
+    return '5.005';	# When (?{...}) introduced.
+}
+
 =head2 ppi
 
 This convenience method returns the L<PPI::Document|PPI::Document>

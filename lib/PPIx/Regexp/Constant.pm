@@ -22,7 +22,7 @@ use constant COOKIE_CLASS	=> ']';
 use constant COOKIE_QUANT	=> '}';
 use constant COOKIE_QUOTE	=> '\\E';
 
-use constant MINIMUM_PERL	=> '5.006';
+use constant MINIMUM_PERL	=> '5.000';
 
 # The perlre for Perl 5.010 says:
 #

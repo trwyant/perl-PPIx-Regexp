@@ -7,7 +7,14 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token::CharClass::POSIX };
 
+use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
+
 our $VERSION = '0.012';
+
+sub perl_version_introduced {
+#   my ( $self ) = @_;
+    return MINIMUM_PERL;
+}
 
 # Note that these guys are recognized by PPIx::Regexp::CharClass::POSIX,
 # and if one of them becomes supported that is where the change needs to

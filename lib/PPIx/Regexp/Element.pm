@@ -164,9 +164,9 @@ sub parent {
 =head2 perl_version_introduced
 
 This method returns the version of Perl in which the element was
-introduced. But in practice it will never return a number less than
-5.006, since so far I have not dug any deeper into the history of
-regular expression features.
+introduced. This will be at least 5.000. Before 5.006 I am relying on
+the F<perldelta> and F<perlre> documentation, since I have been unable
+to build earlier Perls.
 
 =cut
 

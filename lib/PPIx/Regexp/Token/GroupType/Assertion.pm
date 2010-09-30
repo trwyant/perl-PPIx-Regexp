@@ -34,7 +34,21 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token::GroupType };
 
+use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
+
 our $VERSION = '0.012';
+
+{
+    my %perl_version_introduced = (
+	'?<='	=> '5.005',
+	'?<!'	=> '5.005',
+    );
+
+    sub perl_version_introduced {
+	my ( $self ) = @_;
+	return $perl_version_introduced{ $self->content() } || MINIMUM_PERL;
+    }
+}
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };

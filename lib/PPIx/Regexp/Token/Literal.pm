@@ -34,12 +34,19 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
-use PPIx::Regexp::Constant qw{ COOKIE_CLASS };
+use PPIx::Regexp::Constant qw{ COOKIE_CLASS MINIMUM_PERL };
 
 our $VERSION = '0.012';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
+
+sub perl_version_introduced {
+    my ( $self ) = @_;
+    $self->content() =~ m/ \\ N /smx
+	and return '5.006';
+    return MINIMUM_PERL;
+}
 
 # Some characters may or may not be literals depending on whether we are
 # inside a character class. The following hash identifies those

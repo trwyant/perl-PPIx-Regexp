@@ -44,11 +44,11 @@ our $VERSION = '0.012';
 {
 
     my %introduced = (
-	'\h'	=> 5.009005,	# Before this, parsed as 'h'
-	'\v'	=> 5.009005,	# Before this, parsed as 'v'
-	'\H'	=> 5.009005,	# Before this, parsed as 'H'
-	'\N'	=> 5.011,	# Before this, an error.
-	'\V'	=> 5.009005,	# Before this, parsed as 'V'
+	'\h'	=> '5.009005',	# Before this, parsed as 'h'
+	'\v'	=> '5.009005',	# Before this, parsed as 'v'
+	'\H'	=> '5.009005',	# Before this, parsed as 'H'
+	'\N'	=> '5.011',	# Before this, an error.
+	'\V'	=> '5.009005',	# Before this, parsed as 'V'
     );
 
     sub perl_version_introduced {
@@ -57,8 +57,14 @@ our $VERSION = '0.012';
 	if ( defined( my $minver = $introduced{$content} ) ) {
 	    return $minver;
 	}
-	$content =~ m/ \A \\ [Pp] .*? [\s=-] /smx
-	    and return 5.011003;
+	if ( $content =~ m/ \A \\ [Pp] /smxg ) {
+	    # I must have read perl5113delta and thought this
+	    # represented the change they were talking about, but I sure
+	    # don't see it now. So, until things become clearer ...
+#	    $content =~ m/ \G .*? [\s=-] /smxgc
+#		and return '5.011003';
+	    return '5.006001';
+	}
 	return MINIMUM_PERL;
     }
 

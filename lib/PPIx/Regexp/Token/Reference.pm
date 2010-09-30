@@ -149,17 +149,22 @@ sub __PPIX_TOKEN__post_make {
 	    my ( $re, $a ) = @{ $_ };
 	    $content =~ $re or next;
 	    $arg = $a;
-	    foreach my $inx ( 1 .. $#- ) {
-		defined $-[$inx] or next;
-		$capture = substr $content, $-[$inx], $+[$inx] - $-[$inx];
-		last;
+	    if ( exists $arg->{capture} ) {
+		$capture = $arg->{capture};
+	    } else {
+		foreach my $inx ( 1 .. $#- ) {
+		    defined $-[$inx] or next;
+		    $capture = substr $content, $-[$inx], $+[$inx] - $-[$inx];
+		    last;
+		}
 	    }
 	    last;
 	}
     }
 
     defined $capture
-	or confess "Programming error - reference '$_' of unknown form";
+	or confess q{Programming error - reference '},
+	    $self->content(), q{' of unknown form};
 
     foreach my $key ( keys %{ $arg } ) {
 	$key eq 'capture' and next;

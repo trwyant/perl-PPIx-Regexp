@@ -40,6 +40,7 @@ use base qw{ PPIx::Regexp::Token };
 use PPIx::Regexp::Constant qw{
     COOKIE_CLASS
     COOKIE_QUANT
+    MINIMUM_PERL
     TOKEN_LITERAL
 };
 
@@ -66,6 +67,27 @@ sub is_quantifier {
     my ( $self ) = @_;
     ref $self or return;
     return $self->{is_quantifier};
+}
+
+{
+
+    # Note that the implementation equivocates on the ::Token::Structure
+    # class, using it both for the initial token that determines the
+    # type of the regex and things like parentheses internal to the
+    # regex. Rather than sort out this equivocation, I have relied on
+    # the currently-true assumption that 'qr' will not satisfy the
+    # ::Token::Structure recognition logic, and the only way this class
+    # can acquire this content is by the brute-force approach used to
+    # generate the initial token object.
+
+    my %perl_version_introduced = (
+	qr	=> '5.005',
+    );
+
+    sub perl_version_introduced {
+	my ( $self ) = @_;
+	return $perl_version_introduced{ $self->content() } || MINIMUM_PERL;
+    }
 }
 
 {

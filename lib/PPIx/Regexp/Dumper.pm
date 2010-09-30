@@ -523,9 +523,11 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__dump {
 	push @rslt, sprintf '0x%02x', $ord;
     }
     if ( $dumper->{verbose} ) {
-	if ( $self->isa( 'PPIx::Regexp::Token::Reference' )
-	    && defined( my $abs = $self->absolute() ) ) {
-	    push @rslt, "absolute=$abs";
+	if ( $self->isa( 'PPIx::Regexp::Token::Reference' ) ) {
+	    foreach my $method ( qw{ absolute name number } ) {
+		defined( my $val = $self->$method() ) or next;
+		push @rslt, "$method=$val";
+	    }
 	}
 	foreach my $method (
 	    qw{significant can_be_quantified is_quantifier } ) {

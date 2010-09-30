@@ -41,7 +41,7 @@ use Scalar::Util qw{ looks_like_number };
 our $VERSION = '0.012';
 
 {
-    # Names of classes containing tokenization machinery. There are no
+    # Names of classes containing tokenization machinery. There are few
     # known ordering requirements, since each class recognizes its own,
     # and I have tried to prevent overlap. Absent such constraints, the
     # order is in percieved frequency of acceptance, to keep the search
@@ -520,7 +520,7 @@ sub __PPIX_TOKENIZER__init {
     my ( $class, $tokenizer, $character ) = @_;
 
     $tokenizer->{mode} = 'kaput';
-    $tokenizer->{content} =~ m/ ( qr | m | s )? ( \s* ) ( [^\w\s] ) /smx
+    $tokenizer->{content} =~ m/ \A ( qr | m | s )? ( \s* ) ( [^\w\s] ) /smx
 	or return $tokenizer->make_token(
 	    length( $tokenizer->{content} ), TOKEN_UNKNOWN );
     my ( $type, $white, $delim ) = ( $1, $2, $3 );

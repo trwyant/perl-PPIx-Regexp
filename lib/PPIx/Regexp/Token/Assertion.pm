@@ -47,6 +47,7 @@ our $VERSION = '0.012';
 
     my %perl_version_introduced = (
 	'\\K' => '5.009005',
+	'\\z' => '5.005',
     );
 
     sub perl_version_introduced {

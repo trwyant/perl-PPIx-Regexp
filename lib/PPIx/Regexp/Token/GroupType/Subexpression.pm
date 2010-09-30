@@ -39,6 +39,11 @@ our $VERSION = '0.012';
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 
+sub perl_version_introduced {
+    my ( $self ) = @_;
+    return '5.005';
+}
+
 sub __PPIX_TOKENIZER__regexp {
     my ( $class, $tokenizer, $character ) = @_;
 

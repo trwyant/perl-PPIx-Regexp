@@ -39,6 +39,13 @@ use PPIx::Regexp::Constant qw{ RE_CAPTURE_NAME };
 
 our $VERSION = '0.012';
 
+sub perl_version_introduced {
+    my ( $self ) = @_;
+    ( my $content = $self->content() ) =~ m/ \A [(] \d+ [)] \z /smx
+	and return '5.005';
+    return '5.009005';
+}
+
 my @recognize = (
     [ qr{ \A \( (?: ( \d+ ) | R (\d+) ) \) }smx,
 	{ is_named => 0 } ],
@@ -51,6 +58,17 @@ my @recognize = (
     [ qr{ \A \( DEFINE \) }smx,
 	{ is_named => 0, capture => '0' } ],
 );
+
+# This must be implemented by tokens which do not recognize themselves.
+# The return is a list of list references. Each list reference must
+# contain a regular expression that recognizes the token, and optionally
+# a reference to a hash to pass to make_token as the class-specific
+# arguments. The regular expression MUST be anchored to the beginning of
+# the string.
+sub __PPIX_TOKEN__recognize {
+    return @recognize;
+}
+
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };

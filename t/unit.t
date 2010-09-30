@@ -7,6 +7,7 @@ use lib qw{ inc };
 
 use PPI::Document;
 use PPIx::Regexp::Test;
+use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 use Scalar::Util qw{ refaddr };
 
 plan( tests => 717 );
@@ -354,7 +355,7 @@ class   ( 'PPIx::Regexp::Token::Backreference' );
 content ( '\\1' );
 true    ( can_be_quantified => [] );
 false   ( is_quantifier => [] );
-value   ( perl_version_introduced => [], '5.006' );
+value   ( perl_version_introduced => [], MINIMUM_PERL );
 choose  ( 4 );
 class   ( 'PPIx::Regexp::Token::Backreference' );
 content ( '\\g{-1}' );
@@ -377,7 +378,7 @@ value   ( perl_version_introduced => [], '5.009005' );
 choose  ( 12 );
 class   ( 'PPIx::Regexp::Token::Greediness' );
 content ( '?' );
-value   ( perl_version_introduced => [], '5.006' );
+value   ( perl_version_introduced => [], MINIMUM_PERL );
 
 tokenize( '/(?<foo>bar)/' );
 count   ( 10 );
@@ -411,7 +412,7 @@ count   ( 16 );
 choose  ( 2 );
 class   ( 'PPIx::Regexp::Token::Assertion' );
 content ( '\\b' );
-value   ( perl_version_introduced => [], '5.006' );
+value   ( perl_version_introduced => [], MINIMUM_PERL );
 choose  ( 6 );
 class   ( 'PPIx::Regexp::Token::Assertion' );
 content ( '\\K' );
@@ -535,7 +536,7 @@ class   ( 'PPIx::Regexp' );
 value   ( failures => [], 0 );
 value   ( max_capture_number => [], 1 );
 value   ( capture_names => [], [] );
-value   ( perl_version_introduced => [], '5.006' );
+value   ( perl_version_introduced => [], MINIMUM_PERL );
 count   ( 4 );
 choose  ( type => 0 );
 content ( 's' );
@@ -869,7 +870,7 @@ count   ( 1 );
 choose  ( child => 1, child => 0 );
 class   ( 'PPIx::Regexp::Structure::Switch' );
 count   ( 4 );
-value   ( perl_version_introduced => [], '5.006' );
+value   ( perl_version_introduced => [], '5.005' );
 choose  ( child => 1, child => 0, child => 0 );
 class   ( 'PPIx::Regexp::Token::Condition' );
 content ( '(1)' );
@@ -1061,7 +1062,7 @@ value   ( perl_version_removed => [], undef );
 choose  ( 3 );
 class   ( 'PPIx::Regexp::Token::Literal' );
 content ( '\\n' );
-value   ( perl_version_introduced => [], '5.006' );
+value   ( perl_version_introduced => [], MINIMUM_PERL );
 value   ( perl_version_removed => [], undef );
 
 tokenize( '/\\p{ Match = lo-ose }/' );
@@ -1069,7 +1070,7 @@ count   ( 5 );
 choose  ( 2 );
 class   ( 'PPIx::Regexp::Token::CharClass::Simple' );
 content ( '\\p{ Match = lo-ose }' );
-value   ( perl_version_introduced => [], '5.011003' );
+value   ( perl_version_introduced => [], '5.006001' );
 value   ( perl_version_removed => [], undef );
 
 parse   ( 'm{)}smx' );
@@ -1132,12 +1133,12 @@ EOD
     dump_result( perl_version => 1,
 	<<'EOD', q<Perl versions in '/(?<foo>\\d+)/'> );
 PPIx::Regexp	failures=0	5.009005 <= $]
-  PPIx::Regexp::Token::Structure	''	5.006 <= $]
+  PPIx::Regexp::Token::Structure	''	5.000 <= $]
   PPIx::Regexp::Structure::Regexp	/ ... /	5.009005 <= $]
     PPIx::Regexp::Structure::NamedCapture	(?<foo> ... )	5.009005 <= $]
-      PPIx::Regexp::Token::CharClass::Simple	'\\d'	5.006 <= $]
-      PPIx::Regexp::Token::Quantifier	'+'	5.006 <= $]
-  PPIx::Regexp::Token::Modifier	''	5.006 <= $]
+      PPIx::Regexp::Token::CharClass::Simple	'\\d'	5.000 <= $]
+      PPIx::Regexp::Token::Quantifier	'+'	5.000 <= $]
+  PPIx::Regexp::Token::Modifier	''	5.000 <= $]
 EOD
 
     tokenize( '/[a-z]/', '--notokens' );

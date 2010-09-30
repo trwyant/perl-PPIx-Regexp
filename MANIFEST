@@ -76,6 +76,7 @@ README
 t/basic.t
 t/parse.t
 t/unit.t
+t/version.t
 xt/author/critic.t
 xt/author/executable.t
 xt/author/manifest.t

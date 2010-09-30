@@ -48,21 +48,14 @@ our $VERSION = '0.012';
 # sub can_be_quantified { return };
 
 sub perl_version_introduced {
-    my ( $self ) = @_;
-    return $self->{perl_version_introduced};
-}
-
-sub perl_version_removed {
-    my ( $self ) = @_;
-    return $self->{perl_version_removed};
+#   my ( $self ) = @_;
+    return '5.006';
 }
 
 {
 
-    my %info = (
-	':' => {
-	    introduced => MINIMUM_PERL,
-	},
+    my %class = (
+	':' => __PACKAGE__,
     );
 
     sub __PPIX_TOKENIZER__regexp {
@@ -73,30 +66,14 @@ sub perl_version_removed {
 	if ( my $accept = $tokenizer->find_regexp(
 		qr{ \A [[] ( [.=:] ) \^? .*? \1 []] }smx ) ) {
 	    my ( $punc ) = $tokenizer->capture();
-	    if ( my $args = $info{$punc} ) {
-		my $class = $args->{class} || __PACKAGE__;
-		return $tokenizer->make_token( $accept, $class, $args );
-	    } else {
-		return $tokenizer->make_token( $accept,
-		    __PACKAGE__ . '::Unknown', {
-			introduced => MINIMUM_PERL,
-		    },
-		);
-	    }
+	    return $tokenizer->make_token( $accept,
+		$class{$punc} || __PACKAGE__ . '::Unknown' );
 	}
 
 	return;
 
     }
 
-}
-
-sub __PPIX_TOKEN__post_make {
-    my ( $self, $tokenizer, $arg ) = @_;
-    defined $arg or $arg = {};
-    $self->{perl_version_introduced} = $arg->{introduced};
-    $self->{perl_version_removed} = $arg->{removed};
-    return;
 }
 
 1;

@@ -117,6 +117,9 @@ sub perl_version_introduced {
     my ( $self ) = @_;
     $self->asserts( 'r' ) and return '5.013002';
     $self->asserts( 'p' ) and return '5.009005';
+    $self->content() =~ m/ \A [(] [?] .* - /smx
+			and return '5.005';
+    $self->asserts( 'c' ) and return '5.004';
     return MINIMUM_PERL;
 }
 
