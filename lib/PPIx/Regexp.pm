@@ -484,6 +484,18 @@ represent a character class. Similarly, curly brackets containing
 B<only> a bareword or an interpolation are a subscript; otherwise they
 represent a quantifier.
 
+=head2 Changes in Syntax
+
+Sometimes the introduction of new syntax changes the way a regular
+expression is parsed. For example, the C<\v> character class was
+introduced in Perl 5.9.5. But it did not represent a syntax error prior
+to that version of Perl, it was simply parsed as C<v>. So
+
+ $ perl -le 'print "v" =~ m/\v/ ? "yes" : "no"'
+
+prints "yes" under Perl 5.8.9, but "no" under 5.10.0. C<PPIx::Regexp>
+generally assumes the more modern parse in cases like this.
+
 =head2 Static Parsing
 
 It is well known that Perl can not be statically parsed. That is, you
