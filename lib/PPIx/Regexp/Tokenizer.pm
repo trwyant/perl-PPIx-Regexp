@@ -242,9 +242,9 @@ sub failures {
 }
 
 sub find_matching_delimiter {
-    my ( $self, $start ) = @_;
+    my ( $self ) = @_;
     $self->{cursor_curr} ||= 0;
-    defined $start or $start = substr
+    my $start = substr
 	$self->{content},
 	$self->{cursor_curr},
 	1;
@@ -922,6 +922,16 @@ This method is used by tokenizers to find the delimiter matching the
 character at the current position in the content string. If the
 delimiter is an opening bracket of some sort, bracket nesting will be
 taken into account.
+
+When searching for the matching delimiter, the back slash character is
+considered to escape the following character, so back-slashed delimiters
+will be ignored. No other quoting mechanisms are recognized, though, so
+delimiters inside quotes still count. This is actually the way Perl
+works, as
+
+ $ perl -e 'qr<(?{ print "}" })>'
+
+demonstrates.
 
 This method returns the offset from the current position in the content
 string to the matching delimiter (which will always be positive), or
