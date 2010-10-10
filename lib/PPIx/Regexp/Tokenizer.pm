@@ -352,9 +352,9 @@ sub make_token {
     "cursor_limit = $self->{cursor_limit}\n";
     my $token = $class->_new( $content ) or return;
     $token->significant() and $self->{expect} = undef;
-    $class eq TOKEN_UNKNOWN and $self->{failures}++;
-
     $token->__PPIX_TOKEN__post_make( $self, $arg );
+
+    $token->isa( TOKEN_UNKNOWN ) and $self->{failures}++;
 
     $self->{cursor_curr} += $length;
     $self->{find} = undef;
