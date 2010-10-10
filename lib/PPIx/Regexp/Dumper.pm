@@ -356,7 +356,7 @@ sub PPIx::Regexp::__PPIX_DUMPER__test {
     not $dumper->{significant} or $self->significant() or return;
 
     my $parse = 'parse   ( ' . $dumper->_safe( $self ) . ' );';
-    my $fail =  'value   ( failures => [], ' . $self->failures() . ');';
+    my $fail =  'value   ( failures => [], ' . $self->failures() . ' );';
 
     # Note that we can not use SUPER in the following because SUPER goes
     # by the current package, not by the class of the object.
