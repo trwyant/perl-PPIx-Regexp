@@ -1206,7 +1206,7 @@ EOD
     dump_result( test => 1, verbose => 1,
 	<<'EOD', q<Test of '/[a-z]/'> );
 parse   ( '/[a-z]/' );
-value   ( failures => [], 0);
+value   ( failures => [], 0 );
 class   ( 'PPIx::Regexp' );
 count   ( 3 );
 choose  ( child => 0 );
