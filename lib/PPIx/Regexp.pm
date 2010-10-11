@@ -84,7 +84,7 @@ use PPIx::Regexp::Lexer ();
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };
 
-our $VERSION = '0.012';
+our $VERSION = '0.013';
 
 =head2 new
 

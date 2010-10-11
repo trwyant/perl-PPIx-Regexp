@@ -1,3 +1,19 @@
+0.013		T. R. Wyant	10-Sep-2010
+  Declare a parse failure if characters are found between the '}' and
+    the ')' of (?{...}) and (??{...}), and rebless the tokens to
+    ::Unknown. Perl does not accept anything here, so I think I should
+    not either.
+  Whitespace tweak in the PPIx::Regexp::Dumper test output for the
+    failures test.
+  Replace the PPI logic in PPIx::Regexp::Token::Code with a call to
+    $tokenizer->find_matching_delimiter(). This is actually the way Perl
+    works, as a look at toke.c and regcomp.c makes clear.
+  Push the perl_version_introduced() back to 5.0 at the request of
+    Alexandr Ciornii, for the potential benefit of Perl::MinimumVersion.
+    This was done mostly by reading the various perlre, perldelta, and
+    perlop documents, so these should be taken with a HUGE grain of
+    salt.
+
 0.012		T. R. Wyant	26-Sep-2010
   Track all the features reported as introduced (or removed) in Perl
     5.010 back to Perl 5.009005, and report them as such.
@@ -8,9 +24,10 @@
   No changes from 0.010_01.
 
 0.010_01	T. R. Wyant	11-Sep-2010
-  Remove dependencies on Params::Util and Readonly. The latter involved
-    changing the symbols exported from PPIx::Regexp::Constant, but these
-    were documented as private, so ...
+  Remove dependencies on Params::Util and Readonly. The latter was
+    requested by ADAMK for the benefit of Padre. It involved changing
+    the symbols exported from PPIx::Regexp::Constant, but these were
+    documented as private, so ...
   Parse POSIX character classes [=a=] and [.a.] as
     PPIx::Regexp::Token::CharClass::POSIX::Unknown, which counts as a
     parse failure since these are not supported by Perl.
