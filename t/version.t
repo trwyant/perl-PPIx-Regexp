@@ -32,7 +32,7 @@ sub class ($);
 sub method (@);
 sub token (@);
 
-plan	tests => 364;
+plan	tests => 367;
 
 class	'PPIx::Regexp::Token::Assertion';
 token	'^';
@@ -302,6 +302,9 @@ method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
 method	perl_version_removed	=> undef;
 token	'\033';
 method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+method	perl_version_removed	=> undef;
+token	'\o{61}';
+method	perl_version_introduced	=> '5.013003';
 method	perl_version_removed	=> undef;
 token	'\x1B';
 method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre

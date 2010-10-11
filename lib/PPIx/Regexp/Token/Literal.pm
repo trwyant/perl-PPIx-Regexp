@@ -43,9 +43,13 @@ our $VERSION = '0.013';
 
 sub perl_version_introduced {
     my ( $self ) = @_;
-    $self->content() =~ m/ \\ N /smx
-	and return '5.006';
-    return MINIMUM_PERL;
+    exists $self->{perl_version_introduced}
+	and return $self->{perl_version_introduced};
+    ( my $content = $self->content() ) =~ m/ \A \\ o /smx
+	and return ( $self->{perl_version_introduced} = '5.013003' );
+    $content =~ m/ \A \\ N /smx
+	and return ( $self->{perl_version_introduced} = '5.006' );
+    return ( $self->{perl_version_introduced} = MINIMUM_PERL );
 }
 
 # Some characters may or may not be literals depending on whether we are
@@ -129,16 +133,17 @@ The following is from perlop:
     # gets another dirty job.
     if ( $character eq '\\' ) {
 	if ( my $accept = $tokenizer->find_regexp(
-		qr{ \A \\ (?:
+		qr< \A \\ (?:
 		    [^\w\s] |		# delimiters/metas
 		    [tnrfae] |		# C-style escapes
-		    0 [01234567]* |	# octal
+		    0 [01234567]{0,2} |	# octal
 		    c [][[:alpha:]\@\\^_?] |	# control characters
 		    x (?: \{ [[:xdigit:]]* \} | [[:xdigit:]]{0,2} ) | # hex
+		    o [{] [01234567]+ [}] |	# octal as of 5.13.4
 		    N (?: \{ (?: [[:alpha:]] [\w\s:()-]* | # must begin w/ alpha
 			U [+] [[:xdigit:]]+ ) \} ) |	# unicode
 		    C (?: \d+ | \{ [^\}] \} )		# octets
-		) }smx ) ) {
+		) >smx ) ) {
 	    return $accept;
 	}
     }
@@ -234,7 +239,7 @@ because I don't understand the syntax.
 	'\\cZ' => ord "\cZ",
 	'\\cz' => ord "\cZ",
 	'\\c[' => ord "\c[",
-	'\\c\\\\' => ord "\c\\",
+	'\\c\\\\' => ord "\c\\",	# " # Get Vim's head straight.
 	'\\c]' => ord "\c]",
 	'\\c^' => ord "\c^",
 	'\\c_' => ord "\c_",
@@ -265,6 +270,12 @@ because I don't understand the syntax.
 		and return hex $1;
 	    $content =~ m/ \A \\ x ( [[:xdigit:]]{0,2} ) \z /smx
 		and return hex $1;
+	    return;
+	}
+
+	if ( $indicator eq 'o' ) {
+	    $content =~ m/ \A \\ o [{] ( [01234567]+ ) [}] \z /smx
+		and return oct $1;
 	    return;
 	}
 
