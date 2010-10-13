@@ -10,7 +10,7 @@ use PPIx::Regexp::Test;
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 use Scalar::Util qw{ refaddr };
 
-plan( tests => 717 );
+plan( tests => 720 );
 
 my $is_ascii = ord( "\t" ) == 9;	# per perlebcdic
 
@@ -275,6 +275,11 @@ SKIP: {
 }
 choose  ( 7 );
 value   ( ordinal => [], ord 'a' );
+
+tokenize( 's/\\b/\\b/' );
+count   ( 7 );
+choose  ( 4 );
+value   ( ordinal => [], ord "\b" );
 
 tokenize( '//smx' );
 count   ( 4 );
