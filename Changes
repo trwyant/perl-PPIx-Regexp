@@ -1,4 +1,14 @@
-0.013		T. R. Wyant	10-Sep-2010
+0.014		T. R. Wyant	14-Oct-2010
+  Recognize \o{...} as a PPIx::Regexp::Token::Literal, with
+    perl_version_introduced() of 5.0013003.
+  Terminate \0.. through \7.. after three characters, as Perl does.
+    These two were brought to my attention by Brian D.  Foy's "The
+    Effective Perler" for October 11 2010,
+    http://www.effectiveperlprogramming.com/blog/697
+  Correct the PPIx::Regexp::Token::Literal ordinal() method for '\b'. As
+    a literal, this is a back space.
+
+0.013		T. R. Wyant	10-Oct-2010
   Declare a parse failure if characters are found between the '}' and
     the ')' of (?{...}) and (??{...}), and rebless the tokens to
     ::Unknown. Perl does not accept anything here, so I think I should

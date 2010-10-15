@@ -41,7 +41,7 @@ use Carp;
 
 use base qw{ PPIx::Regexp::Structure::Capture };
 
-our $VERSION = '0.013';
+our $VERSION = '0.014';
 
 =head2 name
 
