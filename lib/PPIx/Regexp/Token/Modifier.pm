@@ -86,6 +86,18 @@ use PPIx::Regexp::Constant qw{
 
 our $VERSION = '0.014';
 
+# Define modifiers that are to be aggregated internally for ease of
+# computation.
+my %aggregate = (
+    d	=> MODIFIER_GROUP_MATCH_SEMANTICS,
+    l	=> MODIFIER_GROUP_MATCH_SEMANTICS,
+    u	=> MODIFIER_GROUP_MATCH_SEMANTICS,
+);
+my %de_aggregate;
+foreach my $value ( values %aggregate ) {
+    $de_aggregate{$value}++;
+}
+
 =head2 asserts
 
  $token->asserts( 'i' ) and print "token asserts i";
@@ -103,10 +115,15 @@ explicitly asserted by this token are returned.
 sub asserts {
     my ( $self, $modifier ) = @_;
     $self->{modifiers} ||= $self->_decode();
-    defined $modifier
-	or return ( sort grep { $self->{modifiers}{$_} }
+    if ( defined $modifier ) {
+	my $bin = $aggregate{$modifier}
+	    or return $self->{modifiers}{$modifier};
+	return $self->{modifiers}{$bin} eq $modifier;
+    } else {
+	return ( sort grep { defined $_ && $self->{modifiers}{$_} }
+	    map { $de_aggregate{$_} ? $self->{modifiers}{$_} : $_ }
 	    keys %{ $self->{modifiers} } );
-    return $self->{modifiers}{$modifier};
+    }
 }
 
 sub can_be_quantified { return };
@@ -119,16 +136,14 @@ sub can_be_quantified { return };
 
 This method returns the match semantics asserted by the token, as one of
 the letters C<d>, C<l>, or C<u>. If no explicit match semantics are
-asserted, this method returns nothing (i.e. C<undef> in scalar context).
+asserted, this method returns C<undef>.
 
 =cut
 
 sub match_semantics {
     my ( $self ) = @_;
-    foreach my $letter ( qw{ d l u } ) {
-	$self->asserts( $letter ) and return $letter;
-    }
-    return;
+    $self->{modifiers} ||= $self->_decode();
+    return $self->{modifiers}{ MODIFIER_GROUP_MATCH_SEMANTICS() };
 }
 
 =head2 modifiers
@@ -145,6 +160,11 @@ sub modifiers {
     my ( $self ) = @_;
     $self->{modifiers} ||= $self->_decode();
     my %mods = %{ $self->{modifiers} };
+    foreach my $bin ( keys %de_aggregate ) {
+	defined ( my $val = delete $mods{$bin} )
+	    or next;
+	$mods{$bin} = $val;
+    }
     return wantarray ? %mods : \%mods;
 }
 
@@ -165,6 +185,9 @@ explicitly negated by this token are returned.
 sub negates {
     my ( $self, $modifier ) = @_;
     $self->{modifiers} ||= $self->_decode();
+    # Note that since the values of hash entries that represent
+    # aggregated modifiers will never be false (at least, not unless '0'
+    # becomes a modifier) we need no special logic to handle them.
     defined $modifier
 	or return ( sort grep { ! $self->{modifiers}{$_} }
 	    keys %{ $self->{modifiers} } );
@@ -180,9 +203,8 @@ sub perl_version_introduced {
     if ( $content =~ m/ \A [(]? [?] /smx ) {
 	# These were introduced in 5.13.6, but only inside (?...), not
 	# as modifiers of the entire regular expression.
-	$self->asserts( 'd' ) and return '5.013006';
-	$self->asserts( 'l' ) and return '5.013006';
-	$self->asserts( 'u' ) and return '5.013006';
+	$self->match_semantics()
+	    and return '5.013006';
     }
     $self->asserts( 'r' ) and return '5.013002';
     $self->asserts( 'p' ) and return '5.009005';
@@ -218,11 +240,6 @@ sub __PPIX_TOKEN__post_make {
 }
 
 {
-    my %aggregate = (
-	d	=> MODIFIER_GROUP_MATCH_SEMANTICS,
-	l	=> MODIFIER_GROUP_MATCH_SEMANTICS,
-	u	=> MODIFIER_GROUP_MATCH_SEMANTICS,
-    );
 
     # Called by the tokenizer to modify the current modifiers with a new
     # set. Both are passed as hash references, and a reference to the
@@ -230,24 +247,15 @@ sub __PPIX_TOKEN__post_make {
     sub __PPIX_TOKENIZER__modifier_modify {
 	my ( @args ) = @_;
 
-	my ( %merged, %multi_state );
+	my %merged;
 	foreach my $hash ( @args ) {
 	    while ( my ( $key, $val ) = each %{ $hash } ) {
-		if ( my $bin = $aggregate{$key} ) {
-		    $merged{$bin} = $key;
-		    $multi_state{$key}++;
-		} elsif ( $val ) {
+		if ( $val ) {
 		    $merged{$key} = $val;
 		} else {
 		    delete $merged{$key};
 		}
 	    }
-	}
-
-	foreach my $key ( keys %multi_state ) {
-	    my $name = delete $merged{$key}
-		or next;
-	    $merged{$name} = 1;
 	}
 
 	return \%merged;
@@ -259,7 +267,6 @@ sub __PPIX_TOKEN__post_make {
 	my ( $self ) = @_;
 	my $value = 1;
 	my %present;
-	my %group_present;
 	my $content = $self->content();
 	if ( $content =~ m/ \^ /smx ) {
 	    %present = (
@@ -269,7 +276,6 @@ sub __PPIX_TOKEN__post_make {
 		m	=> 0,
 		x	=> 0,
 	    );
-	    $group_present{ MODIFIER_GROUP_MATCH_SEMANTICS() } = 1;
 	}
 	# Have to do the global match rather than a split, because the
 	# expression modifiers come through here too, and we need to
@@ -279,16 +285,9 @@ sub __PPIX_TOKEN__post_make {
 		$value = 0;
 	    } elsif ( my $bin = $aggregate{$1} ) {
 		$present{$bin} = $1;
-		$group_present{$bin}++;
 	    } else {
 		$present{$1} = $value;
 	    }
-	}
-
-	foreach my $group ( keys %group_present ) {
-	    my $modifier = delete $present{$group}
-		or next;
-	    $present{$modifier} = 1;
 	}
 
 	return \%present;
