@@ -104,9 +104,10 @@ The minimum version of Perl understood by this parser, as a float. It is
 currently set to 5.006, since that is the minimum version of Perl
 accessible to the author.
 
-=head2 $RE_CAPTURE_NAME
+=head2 RE_CAPTURE_NAME
 
-A regular expression that matches the name of a named capture buffer.
+A string representation of a regular expression that matches the name of
+a named capture buffer.
 
 =head2 STRUCTURE_UNKNOWN
 
