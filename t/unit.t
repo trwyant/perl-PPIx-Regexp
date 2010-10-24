@@ -10,7 +10,7 @@ use PPIx::Regexp::Test;
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 use Scalar::Util qw{ refaddr };
 
-plan( tests => 720 );
+plan( tests => 743 );
 
 my $is_ascii = ord( "\t" ) == 9;	# per perlebcdic
 
@@ -296,7 +296,34 @@ count   ( 4 );
 choose  ( 3 );
 content ( 'r' );
 true    ( asserts => 'r' );
+value   ( match_semantics => [], undef );
 value   ( perl_version_introduced => [], 5.013002 );
+
+tokenize( '/(?^:foo)/' );
+count   ( 10 );
+choose  ( 3 );
+class   ( 'PPIx::Regexp::Token::GroupType::Modifier' );
+content ( '?^:' );
+true    ( asserts => 'd' );
+false   ( asserts => 'l' );
+false   ( asserts => 'u' );
+true    ( negates => 'i' );
+true    ( negates => 's' );
+true    ( negates => 'm' );
+true    ( negates => 'x' );
+value	( match_semantics => [], 'd' );
+value   ( perl_version_introduced => [], 5.013006 );
+
+tokenize( '/(?^l:foo)/' );
+count   ( 10 );
+choose  ( 3 );
+class   ( 'PPIx::Regexp::Token::GroupType::Modifier' );
+content ( '?^l:' );
+false   ( asserts => 'd' );
+true    ( asserts => 'l' );
+false   ( asserts => 'u' );
+value   ( match_semantics => [], 'l' );
+value   ( perl_version_introduced => [], 5.013006 );
 
 tokenize( 'qr/foo{3}/' );
 count   ( 10 );

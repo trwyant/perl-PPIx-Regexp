@@ -41,6 +41,7 @@ tokenizes
 tokenizing
 trigraphs
 unicode
+UTF
 version's
 wyant
 XS

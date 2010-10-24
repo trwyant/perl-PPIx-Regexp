@@ -185,7 +185,8 @@ sub false {		## no critic (RequireArgUnpacking)
     my $class = ref $obj;
     if ( $obj->can( $method ) ) {
 	$result = $obj->$method( @{ $args } );
-	@_ = ( ! $result, "$class->$method() is false" );
+	my $fmtd = _format_args( $args );
+	@_ = ( ! $result, "$class->$method$fmtd is false" );
     } else {
 	$result = undef;
 	@_ = ( undef, "$class->$method() exists" );
@@ -285,7 +286,8 @@ sub true {		## no critic (RequireArgUnpacking)
     my $class = ref $obj;
     if ( $obj->can( $method ) ) {
 	$result = $obj->$method( @{ $args } );
-	@_ = ( $result, "$class->$method() is true" );
+	my $fmtd = _format_args( $args );
+	@_ = ( $result, "$class->$method$fmtd is true" );
     } else {
 	$result = undef;
 	@_ = ( undef, "$class->$method() exists" );
@@ -298,8 +300,8 @@ sub value {		## no critic (RequireArgUnpacking)
     ref $args eq 'ARRAY' or $args = [ $args ];
 
     my $invocant = $obj || $initial_class;
+    my $class = ref $obj || $obj || $initial_class;
     if ( ! $invocant->can( $method ) ) {
-	my $class = ref $obj || $obj || $initial_class;
 	@_ = ( undef, "$class->$method() exists" );
 	goto &ok;
     }
@@ -308,12 +310,34 @@ sub value {		## no critic (RequireArgUnpacking)
 	[ $invocant->$method( @{ $args } ) ] :
 	$invocant->$method( @{ $args } );
 
-    @_ = ( $result, $expect, $method );
+    my $fmtd = _format_args( $args );
+    my $answer = _format_args( [ $expect ], bare => 1 );
+    @_ = ( $result, $expect, "${class}->$method$fmtd is $answer" );
     if ( ref $result ) {
 	goto &is_deeply;
     } else {
 	goto &is;
     }
+}
+
+sub _format_args {
+    my ( $args, %opt ) = @_;
+    my @rslt;
+    foreach my $arg ( @{ $args } ) {
+	if ( ! defined $arg ) {
+	    push @rslt, 'undef';
+	} elsif ( looks_like_number( $arg ) ) {
+	    push @rslt, $arg;
+	} else {
+	    push @rslt, $arg;
+	    $rslt[-1] =~ s/ ' /\\'/smxg;
+	    $rslt[-1] = "'$rslt[-1]'";
+	}
+    }
+    my $string = join ', ', @rslt;
+    $opt{bare} and return $string;
+    @rslt or return '()';
+    return "( $string )";
 }
 
 sub _parse_constructor_args {

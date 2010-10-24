@@ -8,6 +8,12 @@ PPIx::Regexp::Token::Modifier - Represent modifiers.
  PPIx::Regexp::Dumper->new( 'qr{foo}smx' )
      ->print();
 
+The trailing C<smx> will be represented by this class.
+
+This class also represents the whole of things like C<(?ismx)>. But the
+modifiers in something like C<(?i:foo)> are represented by a
+L<PPIx::Regexp::Token::GroupType::Modifier|PPIx::Regexp::Token::GroupType::Modifier>.
+
 =head1 INHERITANCE
 
 C<PPIx::Regexp::Token::Modifier> is a
@@ -21,6 +27,42 @@ L<PPIx::Regexp::Token::GroupType::Modifier|PPIx::Regexp::Token::GroupType::Modif
 This class represents modifier characters at the end of the regular
 expression.  For example, in C<qr{foo}smx> this class would represent
 the terminal C<smx>.
+
+=head2 The C<d>, C<l>, and C<u> modifiers
+
+The C<d>, C<l>, and C<u> modifiers, introduced into the C<(?...)>
+construction in Perl 5.13.6 are used to force either Unicode pattern
+semantics (C<u>), locale semantics (C<l>) or default semantics (C<d> the
+traditional Perl semantics, which can also mean 'dual' since it means
+Unicode if the string's UTF-8 bit is on, and locale if the UTF-8 bit is
+off). These are mutually exclusive. In Perl, only one can be asserted at
+a time, asserting any of these overrides the inherited value of any of
+the others. This method reports as asserted the last one it sees, or
+none of them if it has seen none.
+
+For example, given C<PPIx::Regexp::Token::Modifier> C<$elem>
+representing the invalid regular expression fragment C<(?dul)>,
+C<< $elem->asserted( 'l' ) >> would return true, but
+C<< $elem->asserted( 'u' ) >> would return false. Note that
+C<< $elem->negated( 'u' ) >> would also return false, since C<u> is not
+explicitly negated.
+
+If C<$elem> represented regular expression fragment C<(?i)>,
+C<< $elem->asserted( 'd' ) >> would return false, since even though C<d>
+represents the default behavior it is not explicitly asserted.
+
+=head2 The caret (C<^>) modifier
+
+Calling C<^> a modifier is a bit of a misnomer. The C<(?^...)>
+construction was introduced in Perl 5.13.6, to prevent the inheritance
+of modifiers. The documentation calls the caret a shorthand equivalent
+for C<d-imsx>, and that it the way this class handles it.
+
+For example, given C<PPIx::Regexp::Token::Modifier> C<$elem>
+representing regular expression fragment C<(?^i)>,
+C<< $elem->asserted( 'd' ) >> would return true, since in the absence of
+an explicit C<l> or C<u> this class considers the C<*> to explicitly
+assert C<d>.
 
 =head1 METHODS
 
@@ -37,17 +79,12 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
-use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
+use PPIx::Regexp::Constant qw{
+    MINIMUM_PERL
+    MODIFIER_GROUP_MATCH_SEMANTICS
+};
 
 our $VERSION = '0.014';
-
-sub _new {
-    my ( $class, @args ) = @_;
-    my $self = $class->SUPER::_new( @args );
-    $self->{asserts} = {};	# We set these because the lexer may
-    $self->{negates} = {};	# do an ad-hoc bless into this class.
-    return $self;
-}
 
 =head2 asserts
 
@@ -65,11 +102,34 @@ explicitly asserted by this token are returned.
 
 sub asserts {
     my ( $self, $modifier ) = @_;
-    defined $modifier or return ( sort keys %{ $self->{asserts} } );
-    return $self->{asserts}{$modifier};
+    $self->{modifiers} ||= $self->_decode();
+    defined $modifier
+	or return ( sort grep { $self->{modifiers}{$_} }
+	    keys %{ $self->{modifiers} } );
+    return $self->{modifiers}{$modifier};
 }
 
 sub can_be_quantified { return };
+
+=head2 match_semantics
+
+ my $sem = $token->match_semantics();
+ defined $sem or $sem = 'undefined';
+ print "This token has $sem match semantics\n";
+
+This method returns the match semantics asserted by the token, as one of
+the letters C<d>, C<l>, or C<u>. If no explicit match semantics are
+asserted, this method returns nothing (i.e. C<undef> in scalar context).
+
+=cut
+
+sub match_semantics {
+    my ( $self ) = @_;
+    foreach my $letter ( qw{ d l u } ) {
+	$self->asserts( $letter ) and return $letter;
+    }
+    return;
+}
 
 =head2 modifiers
 
@@ -83,13 +143,8 @@ returns a reference to a hash containing the values.
 
 sub modifiers {
     my ( $self ) = @_;
-    my %mods;
-    foreach my $key ( %{ $self->{asserts} } ) {
-	$mods{$key} = 1;
-    }
-    foreach my $key ( %{ $self->{negates} } ) {
-	$mods{$key} = 0;
-    }
+    $self->{modifiers} ||= $self->_decode();
+    my %mods = %{ $self->{modifiers} };
     return wantarray ? %mods : \%mods;
 }
 
@@ -109,15 +164,29 @@ explicitly negated by this token are returned.
 
 sub negates {
     my ( $self, $modifier ) = @_;
-    defined $modifier or return ( sort keys %{ $self->{negates} } );
-    return $self->{negates}{$modifier};
+    $self->{modifiers} ||= $self->_decode();
+    defined $modifier
+	or return ( sort grep { ! $self->{modifiers}{$_} }
+	    keys %{ $self->{modifiers} } );
+    return exists $self->{modifiers}{$modifier}
+	&& ! $self->{modifiers}{$modifier};
 }
 
 sub perl_version_introduced {
     my ( $self ) = @_;
+    my $content = $self->content();
+    $content =~ m/ \A [(]? [?] \^ /smx
+			and return '5.013006';
+    if ( $content =~ m/ \A [(]? [?] /smx ) {
+	# These were introduced in 5.13.6, but only inside (?...), not
+	# as modifiers of the entire regular expression.
+	$self->asserts( 'd' ) and return '5.013006';
+	$self->asserts( 'l' ) and return '5.013006';
+	$self->asserts( 'u' ) and return '5.013006';
+    }
     $self->asserts( 'r' ) and return '5.013002';
     $self->asserts( 'p' ) and return '5.009005';
-    $self->content() =~ m/ \A [(] [?] .* - /smx
+    $self->content() =~ m/ \A [(]? [?] .* - /smx
 			and return '5.005';
     $self->asserts( 'c' ) and return '5.004';
     return MINIMUM_PERL;
@@ -133,30 +202,97 @@ sub perl_version_introduced {
 # arguments. The regular expression MUST be anchored to the beginning of
 # the string.
 sub __PPIX_TOKEN__recognize {
-    return ( [ qr{ \A \( \? [[:lower:]]* -? [[:lower:]]* \) }smx ] );
+    return (
+	[ qr{ \A [(] [?] [[:lower:]]* -? [[:lower:]]* [)] }smx ],
+	[ qr{ \A [(] [?] \^ [[:lower:]]* [)] }smx ],
+    );
 }
 
 # After the token is made, figure out what it asserts or negates.
 
 sub __PPIX_TOKEN__post_make {
     my ( $self, $tokenizer ) = @_;
-    local $_ = $self->content();
-    s/ [^-[:lower:]] //smxg;
-    my $kind = 'asserts';
-    # Have to do the global match rather than a split, because the
-    # expression modifiers come through here too, and we need to
-    # distinguish between s/.../.../e and s/.../.../ee.
-    while ( m/ ( ( . ) \2* ) /smxg ) {
-	if ( $1 eq '-' ) {
-	    $kind eq 'negates' and return;
-	    $kind = 'negates';
-	} else {
-	    $self->{$kind}{$1} = 1;
-	}
-    }
     defined $tokenizer
 	and $tokenizer->modifier_modify( $self->modifiers() );
     return;
+}
+
+{
+    my %aggregate = (
+	d	=> MODIFIER_GROUP_MATCH_SEMANTICS,
+	l	=> MODIFIER_GROUP_MATCH_SEMANTICS,
+	u	=> MODIFIER_GROUP_MATCH_SEMANTICS,
+    );
+
+    # Called by the tokenizer to modify the current modifiers with a new
+    # set. Both are passed as hash references, and a reference to the
+    # new hash is returned.
+    sub __PPIX_TOKENIZER__modifier_modify {
+	my ( @args ) = @_;
+
+	my ( %merged, %multi_state );
+	foreach my $hash ( @args ) {
+	    while ( my ( $key, $val ) = each %{ $hash } ) {
+		if ( my $bin = $aggregate{$key} ) {
+		    $merged{$bin} = $key;
+		    $multi_state{$key}++;
+		} elsif ( $val ) {
+		    $merged{$key} = $val;
+		} else {
+		    delete $merged{$key};
+		}
+	    }
+	}
+
+	foreach my $key ( keys %multi_state ) {
+	    my $name = delete $merged{$key}
+		or next;
+	    $merged{$name} = 1;
+	}
+
+	return \%merged;
+
+    }
+
+    # Decode modifiers from the content of the token.
+    sub _decode {
+	my ( $self ) = @_;
+	my $value = 1;
+	my %present;
+	my %group_present;
+	my $content = $self->content();
+	if ( $content =~ m/ \^ /smx ) {
+	    %present = (
+		MODIFIER_GROUP_MATCH_SEMANTICS()	=> 'd',
+		i	=> 0,
+		s	=> 0,
+		m	=> 0,
+		x	=> 0,
+	    );
+	    $group_present{ MODIFIER_GROUP_MATCH_SEMANTICS() } = 1;
+	}
+	# Have to do the global match rather than a split, because the
+	# expression modifiers come through here too, and we need to
+	# distinguish between s/.../.../e and s/.../.../ee.
+	while ( $content =~ m/ ( ( [[:alpha:]-] ) \2* ) /smxg ) {
+	    if ( $1 eq '-' ) {
+		$value = 0;
+	    } elsif ( my $bin = $aggregate{$1} ) {
+		$present{$bin} = $1;
+		$group_present{$bin}++;
+	    } else {
+		$present{$1} = $value;
+	    }
+	}
+
+	foreach my $group ( keys %group_present ) {
+	    my $modifier = delete $present{$group}
+		or next;
+	    $present{$modifier} = 1;
+	}
+
+	return \%present;
+    }
 }
 
 1;

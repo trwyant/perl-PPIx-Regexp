@@ -6,7 +6,10 @@ use warnings;
 use base qw{ PPIx::Regexp::Support };
 
 use Carp qw{ confess };
-use PPIx::Regexp::Constant qw{ TOKEN_LITERAL TOKEN_UNKNOWN };
+use PPIx::Regexp::Constant qw{
+    TOKEN_LITERAL
+    TOKEN_UNKNOWN
+};
 use PPIx::Regexp::Token::Assertion		();
 use PPIx::Regexp::Token::Backreference		();
 use PPIx::Regexp::Token::Backtrack		();
@@ -396,24 +399,13 @@ sub modifier_duplicate {
 sub modifier_modify {
     my ( $self, %args ) = @_;
 
-    # Get the current modifiers
-    my %mods = %{ $self->{modifiers}[-1] };
+    # Modifier code is centralized in PPIx::Regexp::Token::Modifier
+    $self->{modifiers}[-1] =
+	PPIx::Regexp::Token::Modifier::__PPIX_TOKENIZER__modifier_modify(
+	$self->{modifiers}[-1], \%args );
 
-    # Update the values
-    while ( my ( $key, $val ) = each %args ) {
-	if ( $val ) {
-	    $mods{$key} = $val;
-	} else {
-	    delete $mods{$key};
-	}
-    }
-
-    # Replace the modifiers (rather than simply changing them). We do it
-    # this way because of the possibility we may want to carry the
-    # current modifier value with the token so that the old object (now
-    # abandoned) keeps its value.
-    $self->{modifiers}[-1] = \%mods;
     return;
+
 }
 
 sub modifier_pop {

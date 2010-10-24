@@ -32,7 +32,7 @@ sub class ($);
 sub method (@);
 sub token (@);
 
-plan	tests => 367;
+plan	tests => 391;
 
 class	'PPIx::Regexp::Token::Assertion';
 token	'^';
@@ -254,6 +254,18 @@ method	perl_version_removed	=> undef;
 token	'?i-x:';
 method	perl_version_introduced	=> '5.005';	# 5.5.4 perldelta, perlre
 method	perl_version_removed	=> undef;
+token	'?^i';
+method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
+method	perl_version_removed	=> undef;
+token	'?d';
+method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
+method	perl_version_removed	=> undef;
+token	'?l';
+method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
+method	perl_version_removed	=> undef;
+token	'?u';
+method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
+method	perl_version_removed	=> undef;
 
 class	'PPIx::Regexp::Token::GroupType::NamedCapture';
 token	'?<foo>';
@@ -358,6 +370,18 @@ method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
 token	'pir';
 method	perl_version_introduced => '5.013002';
+method	perl_version_removed	=> undef;
+token	'(?^i)';
+method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
+method	perl_version_removed	=> undef;
+token	'(?d)';
+method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
+method	perl_version_removed	=> undef;
+token	'(?l)';
+method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
+method	perl_version_removed	=> undef;
+token	'(?u)';
+method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
 method	perl_version_removed	=> undef;
 
 class	'PPIx::Regexp::Token::Operator';
