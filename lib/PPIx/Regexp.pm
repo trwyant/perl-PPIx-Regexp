@@ -65,6 +65,13 @@ correctly. A secondary goal is not to blow up on ill-formed regular
 expressions. The correct identification and characterization of
 ill-formed regular expressions is B<not> a goal of this package.
 
+This policy attempts to track features in development releases as well
+as public releases. However, features added in a development release and
+then removed before the next production release B<will not> be tracked,
+and any functionality relating to such features B<will be removed>. The
+issue here is the potential re-use (with different semantics) of syntax
+that did not make it into the production release.
+
 =head1 METHODS
 
 This class provides the following public methods. Methods not documented
