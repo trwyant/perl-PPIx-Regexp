@@ -1,3 +1,16 @@
+0.015		T. R. Wyant	25-Oct-2010
+  Documented intent to revoke support for features introduced in a
+    development Perl which do not make it to a production release. This
+    is necessary because in this case the syntax could be reused with
+    different semantics.
+  Added support for Perl 5.13.6 (?^...) construction.
+  Added support for Perl 5.13.6 d, l, and u modifiers.
+  Fixed inconsistency in perl_version_introduced() results between
+    PPIx::Regexp::Token::Modifier and
+    PPIx::Regexp::Token::GroupType::Modifier.
+  Corrected PPIx::Regexp::Constant RE_CAPTURE_NAME docs, somehow missed
+    back at 0.010_01.
+
 0.014		T. R. Wyant	14-Oct-2010
   Recognize \o{...} as a PPIx::Regexp::Token::Literal, with
     perl_version_introduced() of 5.0013003.

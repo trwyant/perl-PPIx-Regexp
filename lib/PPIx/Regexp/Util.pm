@@ -12,7 +12,7 @@ use base qw{ Exporter };
 
 our @EXPORT_OK = qw{ __instance };
 
-our $VERSION = '0.014';
+our $VERSION = '0.015';
 
 sub __instance {
     my ( $object, $class ) = @_;

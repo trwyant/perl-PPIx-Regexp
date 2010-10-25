@@ -9,7 +9,7 @@ use base qw{ PPIx::Regexp::Token::CharClass::POSIX };
 
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 
-our $VERSION = '0.014';
+our $VERSION = '0.015';
 
 sub perl_version_introduced {
 #   my ( $self ) = @_;
