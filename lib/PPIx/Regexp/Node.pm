@@ -41,7 +41,7 @@ use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };
 
-our $VERSION = '0.015';
+our $VERSION = '0.016';
 
 sub _new {
     my ( $class, @children ) = @_;

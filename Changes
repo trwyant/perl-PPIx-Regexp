@@ -1,3 +1,9 @@
+0.016		T. R. Wyant	05-Jan-2011
+  The PPIx::Regexp::Token::Code perl_version_introduced() method now
+    returns the minimum Perl version (currently set to 5.000) if it is
+    used to represent the substitution portion of s///e.
+  Update copyright to 2011.
+
 0.015		T. R. Wyant	25-Oct-2010
   Documented intent to revoke support for features introduced in a
     development Perl which do not make it to a production release. This
