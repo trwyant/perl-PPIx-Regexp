@@ -7,6 +7,7 @@ use base qw{ PPIx::Regexp::Support };
 
 use Carp qw{ confess };
 use PPIx::Regexp::Constant qw{
+    MINIMUM_PERL
     TOKEN_LITERAL
     TOKEN_UNKNOWN
 };
@@ -672,7 +673,9 @@ sub __PPIX_TOKENIZER__finish {
 	    # trailing delimiter and modifiers, and return it all.
 	    push @tokens, $tokenizer->make_token(
 		$tokenizer->{cursor_limit} - $tokenizer->{cursor_curr},
-		'PPIx::Regexp::Token::Code' );
+		'PPIx::Regexp::Token::Code',
+		{ perl_version_introduced => MINIMUM_PERL },
+	    );
 	    $tokenizer->{cursor_limit} = length $tokenizer->{content};
 	    push @tokens, $tokenizer->make_token( 1,
 		'PPIx::Regexp::Token::Delimiter' );

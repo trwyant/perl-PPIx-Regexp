@@ -10,7 +10,7 @@ use PPIx::Regexp::Test;
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 use Scalar::Util qw{ refaddr };
 
-plan( tests => 743 );
+plan( tests => 753 );
 
 my $is_ascii = ord( "\t" ) == 9;	# per perlebcdic
 
@@ -1109,6 +1109,18 @@ parse   ( 'm{)}smx' );
 value   ( failures => [], 1 );
 class   ( 'PPIx::Regexp' );
 value   ( delimiters => 0, '{}' );
+
+parse   ( 's/(\\d+)/roman($1)/ge' );
+value   ( failures => [], 0 );
+class   ( 'PPIx::Regexp' );
+count   ( 4 );
+value   ( perl_version_introduced => [], '5.000' );
+value   ( perl_version_removed => [], undef );
+choose  ( child => 2, child => 0 );
+class   ( 'PPIx::Regexp::Token::Code' );
+content ( 'roman($1)' );
+value   ( perl_version_introduced => [], '5.000' );
+value   ( perl_version_removed => [], undef );
 
 {
     parse   ( 's/x/$1/e' );
