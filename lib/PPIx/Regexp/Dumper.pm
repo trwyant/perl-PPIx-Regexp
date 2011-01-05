@@ -404,7 +404,7 @@ sub PPIx::Regexp::Node::__PPIX_DUMPER__test {
 	    perl_version_introduced
 	    perl_version_removed
 	} ) {
-	    push @rslt, "value   ( $method => " .
+	    push @rslt, "value   ( $method => [], " .
 		$dumper->_safe_version( $self->$method() ) . ' );';
 	}
     }
