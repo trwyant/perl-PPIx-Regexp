@@ -32,7 +32,7 @@ sub class ($);
 sub method (@);
 sub token (@);
 
-plan	tests => 391;
+plan	tests => 394;
 
 class	'PPIx::Regexp::Token::Assertion';
 token	'^';
@@ -373,6 +373,9 @@ method	perl_version_introduced => '5.013002';
 method	perl_version_removed	=> undef;
 token	'(?^i)';
 method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
+method	perl_version_removed	=> undef;
+token	'(?a)';
+method	perl_version_introduced	=> '5.013009';	# 5.13.9 perldelta, perlre
 method	perl_version_removed	=> undef;
 token	'(?d)';
 method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre

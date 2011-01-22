@@ -28,17 +28,18 @@ This class represents modifier characters at the end of the regular
 expression.  For example, in C<qr{foo}smx> this class would represent
 the terminal C<smx>.
 
-=head2 The C<d>, C<l>, and C<u> modifiers
+=head2 The C<a>, C<d>, C<l>, and C<u> modifiers
 
-The C<d>, C<l>, and C<u> modifiers, introduced into the C<(?...)>
-construction in Perl 5.13.6 are used to force either Unicode pattern
-semantics (C<u>), locale semantics (C<l>) or default semantics (C<d> the
-traditional Perl semantics, which can also mean 'dual' since it means
-Unicode if the string's UTF-8 bit is on, and locale if the UTF-8 bit is
-off). These are mutually exclusive. In Perl, only one can be asserted at
-a time, asserting any of these overrides the inherited value of any of
-the others. This method reports as asserted the last one it sees, or
-none of them if it has seen none.
+The C<a>, C<d>, C<l>, and C<u> modifiers, introduced into the C<(?...)>
+construction in Perl 5.13.6 (or 5.13.9 in the case of /a) are used to
+force either Unicode pattern semantics (C<u>), locale semantics (C<l>)
+default semantics (C<d> the traditional Perl semantics, which can also
+mean 'dual' since it means Unicode if the string's UTF-8 bit is on, and
+locale if the UTF-8 bit is off), or restricted default semantics (C<a>).
+These are mutually exclusive, and only one can be asserted at a time.
+Asserting any of these overrides the inherited value of any of the
+others. The C<asserted()> method reports as asserted the last one it
+sees, or none of them if it has seen none.
 
 For example, given C<PPIx::Regexp::Token::Modifier> C<$elem>
 representing the invalid regular expression fragment C<(?dul)>,
@@ -51,8 +52,9 @@ If C<$elem> represented regular expression fragment C<(?i)>,
 C<< $elem->asserted( 'd' ) >> would return false, since even though C<d>
 represents the default behavior it is not explicitly asserted.
 
-B<Note> that if this is retracted before Perl 5.14 is released, this
-support will disappear. See L<PPIx::Regexp/NOTICE> for some explanation.
+B<Note> that if this functionality is retracted before Perl 5.14 is
+released, support for it will disappear. See L<PPIx::Regexp/NOTICE> for
+some explanation.
 
 =head2 The caret (C<^>) modifier
 
@@ -64,7 +66,7 @@ for C<d-imsx>, and that it the way this class handles it.
 For example, given C<PPIx::Regexp::Token::Modifier> C<$elem>
 representing regular expression fragment C<(?^i)>,
 C<< $elem->asserted( 'd' ) >> would return true, since in the absence of
-an explicit C<l> or C<u> this class considers the C<*> to explicitly
+an explicit C<l> or C<u> this class considers the C<^> to explicitly
 assert C<d>.
 
 B<Note> that if this is retracted before Perl 5.14 is released, this
@@ -95,6 +97,7 @@ our $VERSION = '0.016';
 # Define modifiers that are to be aggregated internally for ease of
 # computation.
 my %aggregate = (
+    a	=> MODIFIER_GROUP_MATCH_SEMANTICS,
     d	=> MODIFIER_GROUP_MATCH_SEMANTICS,
     l	=> MODIFIER_GROUP_MATCH_SEMANTICS,
     u	=> MODIFIER_GROUP_MATCH_SEMANTICS,
@@ -141,8 +144,8 @@ sub can_be_quantified { return };
  print "This token has $sem match semantics\n";
 
 This method returns the match semantics asserted by the token, as one of
-the letters C<d>, C<l>, or C<u>. If no explicit match semantics are
-asserted, this method returns C<undef>.
+the letters C<a>, C<d>, C<l>, or C<u>. If no explicit match semantics
+are asserted, this method returns C<undef>.
 
 =cut
 
@@ -204,14 +207,28 @@ sub negates {
 sub perl_version_introduced {
     my ( $self ) = @_;
     my $content = $self->content();
-    $content =~ m/ \A [(]? [?] \^ /smx
-			and return '5.013006';
-    if ( $content =~ m/ \A [(]? [?] /smx ) {
-	# These were introduced in 5.13.6, but only inside (?...), not
-	# as modifiers of the entire regular expression.
-	$self->match_semantics()
-	    and return '5.013006';
-    }
+    my $is_statement_modifier = ( $content !~ m/ \A [(]? [?] /smx );
+    my $match_semantics = $self->match_semantics();
+
+    # perl5139delta expresses the intent to make the match semantics
+    # modifiers available as regular expression modifiers in 5.16.
+#   defined $match_semantics
+#	and $is_statement_modifier
+#	and return '5.016';
+
+    # /a was introduced in 5.13.9, but only in (?...), not as modifier
+    # of the entire regular expression.
+    defined $match_semantics
+	and not $is_statement_modifier
+	and 'a' eq $match_semantics
+	and return '5.013009';
+
+    # /d, /l, and /u were introduced in 5.13.6, but only in (?...), not
+    # as modifiers of the entire regular expression.
+    defined $match_semantics
+	and not $is_statement_modifier
+	and return '5.013006';
+
     $self->asserts( 'r' ) and return '5.013002';
     $self->asserts( 'p' ) and return '5.009005';
     $self->content() =~ m/ \A [(]? [?] .* - /smx
