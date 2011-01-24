@@ -41,7 +41,7 @@ our $VERSION = '0.016';
 
 sub perl_version_introduced {
     my ( $self ) = @_;
-    ( my $content = $self->content() ) =~ m/ \A [(] \d+ [)] \z /smx
+    $self->content() =~ m/ \A [(] \d+ [)] \z /smx
 	and return '5.005';
     return '5.009005';
 }

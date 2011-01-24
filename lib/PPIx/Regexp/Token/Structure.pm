@@ -122,7 +122,6 @@ sub is_quantifier {
 
 	# Open parentheses have various interesting possibilities ...
 	if ( $character eq '(' ) {
-	    my $accept;
 
 	    # Sometimes the whole bunch of parenthesized characters seems
 	    # naturally to be a token.
@@ -188,7 +187,6 @@ sub is_quantifier {
 			my $character = $token->content();
 			if ( $character eq ',' ) {
 			    $commas++ and return;
-			    my $prev = $tokenizer->prior( 'content' );
 			    return $tokenizer->prior( 'content' ) ne '{';
 			}
 			return $character =~ m/ \A \d \z /smx;

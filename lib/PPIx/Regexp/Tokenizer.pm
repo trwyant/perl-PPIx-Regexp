@@ -433,14 +433,6 @@ sub next_token {
 	    $self->{cursor_limit}++;
 	}
 
-	my $handler = '__PPIX_TOKENIZER__' . $self->{mode};
-
-	my $character = substr(
-	    $self->{content},
-	    $self->{cursor_curr},
-	    1
-	);
-
 	if ( my @tokens = $self->get_token() ) {
 	    push @{ $self->{pending} }, @tokens;
 	    redo;
@@ -516,7 +508,8 @@ sub __PPIX_TOKENIZER__init {
     $tokenizer->{content} =~ m/ \A ( qr | m | s )? ( \s* ) ( [^\w\s] ) /smx
 	or return $tokenizer->make_token(
 	    length( $tokenizer->{content} ), TOKEN_UNKNOWN );
-    my ( $type, $white, $delim ) = ( $1, $2, $3 );
+#   my ( $type, $white, $delim ) = ( $1, $2, $3 );
+    my ( $type, $white ) = ( $1, $2 );
     defined $type or $type = '';
     $tokenizer->{type} = $type;
 

@@ -89,13 +89,6 @@ if ( $opt{text} ) {
     print Dump( \%roots );
 }
 
-my %brkt = (
-    '('	=> ')',
-    '{' => '}',
-    '[' => ']',
-    '<' => '>',
-);
-
 sub heritage {
     my ( $fn ) = $_;
     -T $fn or return;
