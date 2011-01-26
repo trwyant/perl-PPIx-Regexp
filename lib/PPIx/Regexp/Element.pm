@@ -41,7 +41,7 @@ use Scalar::Util qw{ refaddr weaken };
 
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 
-our $VERSION = '0.016';
+our $VERSION = '0.017';
 
 =head2 ancestor_of
 

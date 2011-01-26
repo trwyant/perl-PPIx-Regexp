@@ -1,3 +1,11 @@
+0.017		T. R. Wyant	26-Jan-2011
+  Add the /a modifier to PPI::Regexp::Token::Modifiers, legal only in
+    the (?:...) construction. This was introduced in Perl 5.13.9.
+  When parsing an interpolation from a replacement string (rather than a
+    regular expression), take subscripts at face value rather than
+    trying to disambiguate them from quantifiers and character classes,
+    which they can't be in this context.
+
 0.016		T. R. Wyant	05-Jan-2011
   The PPIx::Regexp::Token::Code perl_version_introduced() method now
     returns the minimum Perl version (currently set to 5.000) if it is
