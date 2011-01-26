@@ -63,7 +63,7 @@ my $interp_re =
 # into a separate subroutine because if we fail to find an interpolation
 # we want to do something with the sigils.
 sub _interpolation {
-    my ( $class, $tokenizer, $character ) = @_;
+    my ( $class, $tokenizer, $character, $in_regexp ) = @_;
 
     # If the regexp does not interpolate, bail now.
     $tokenizer->interpolates() or return;
@@ -84,7 +84,7 @@ sub _interpolation {
     my $allow_subscript;	# Assume no subscripts allowed
 
     # Find the beginning of the interpolation
-    my $next = $stmt->child( 0 ) or return;
+    my $next = $stmt->schild( 0 ) or return;
 
     # The interpolation should start with
     if ( $next->isa( 'PPI::Token::Symbol' ) ) {
@@ -130,7 +130,7 @@ sub _interpolation {
     {
 
 	# Only accept a subscript if wanted and available
-	$allow_subscript and $next = $next->next_sibling() or last;
+	$allow_subscript and $next = $next->snext_sibling() or last;
 
 	# Accept an optional dereference operator.
 	my @subscr;
@@ -146,12 +146,13 @@ sub _interpolation {
 	# The subscript must have a closing delimiter.
 	$next->finish() or last;
 
-	# Screen the subscript for content, since [] could be a
+	# If we are in a regular expression rather than a replacement
+	# string, screen the subscript for content, since [] could be a
 	# character class, and {} could be a quantifier. The perlop docs
 	# say that Perl applies undocumented heuristics subject to
 	# change without notice to figure this out. So we do our poor
 	# best to be heuristical and undocumented.
-	$class->_subscript( $next ) or last;
+	not $in_regexp or $class->_subscript( $next ) or last;
 
 	# If we got this far, accept the subscript and try for another
 	# one.
@@ -248,7 +249,7 @@ sub __PPIX_TOKENIZER__regexp {
 
     exists $sigil_alternate{$character} or return;
 
-    if ( my $accept = _interpolation( $class, $tokenizer, $character ) ) {
+    if ( my $accept = _interpolation( $class, $tokenizer, $character, 1 ) ) {
 	return $accept;
     }
 
@@ -263,7 +264,7 @@ sub __PPIX_TOKENIZER__repl {
 
     exists $sigil_alternate{$character} or return;
 
-    if ( my $accept = _interpolation( $class, $tokenizer, $character ) ) {
+    if ( my $accept = _interpolation( $class, $tokenizer, $character, 0 ) ) {
 	return $accept;
     }
 
