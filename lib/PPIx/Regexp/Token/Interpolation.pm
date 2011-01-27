@@ -55,13 +55,20 @@ sub perl_version_introduced {
 # Match the beginning of an interpolation.
 
 my $interp_re =
-	qr{ \A (?: \$ [-\w&`'+^./\\";%=~:?!\@\$<>\[\]\{\},#] |
+	qr{ \A (?: [\@\$]? \$ [-\w&`'+^./\\";%=~:?!\@\$<>\[\]\{\},#] |
 		   \@ [\w\{] )
 	}smx;
 
 # We pull out the logic of finding and dealing with the interpolation
 # into a separate subroutine because if we fail to find an interpolation
 # we want to do something with the sigils.
+
+my %allow_subscript_based_on_cast_symbol = (
+    q<$#>	=> 0,
+    q<$>	=> 1,
+    q<@>	=> 1,
+);
+
 sub _interpolation {
     my ( $class, $tokenizer, $character, $in_regexp ) = @_;
 
@@ -99,8 +106,12 @@ sub _interpolation {
 	push @accum, $next;
 	$next = $next->next_sibling() or return;
 	if ( $next->isa( 'PPI::Token::Symbol' ) ) {
-	    $accum[-1]->content() eq '$#'
-		or return;
+	    defined (
+		$allow_subscript =
+		    $allow_subscript_based_on_cast_symbol{
+			$accum[-1]->content()
+		    }
+	    ) or return;
 	    push @accum, $next;
 	} elsif ( $next->isa( 'PPI::Structure::Block' ) ) {
 	    local $_ = $next->content();
