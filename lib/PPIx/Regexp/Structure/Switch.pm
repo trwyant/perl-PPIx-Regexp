@@ -44,7 +44,7 @@ use PPIx::Regexp::Constant qw{
     TOKEN_UNKNOWN
 };
 
-our $VERSION = '0.017';
+our $VERSION = '0.017_01';
 
 =begin comment
 

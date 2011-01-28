@@ -1,3 +1,7 @@
+0.017_01	T. R. Wyant	28-Jan-2011
+  Take account of possible '$' or '@' casts before a symbol in an
+    interpolation (e.g. $$foo{bar}, which is equivalent to $foo->{bar}).
+
 0.017		T. R. Wyant	26-Jan-2011
   Add the /a modifier to PPI::Regexp::Token::Modifiers, legal only in
     the (?:...) construction. This was introduced in Perl 5.13.9.
