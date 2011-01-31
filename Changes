@@ -1,3 +1,9 @@
+0.017_02	T. R. Wyant	31-Jan-2011
+  Override ppi() in PPIx::Regexp::Token::Interpolation to provide the
+    proper PPI when variable names are bracketed.
+  Properly parse bracketed variable names (I hope!), which may not be
+    subscripted.
+
 0.017_01	T. R. Wyant	28-Jan-2011
   Take account of possible '$' or '@' casts before a symbol in an
     interpolation (e.g. $$foo{bar}, which is equivalent to $foo->{bar}).
