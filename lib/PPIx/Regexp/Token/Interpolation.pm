@@ -52,12 +52,51 @@ sub perl_version_introduced {
     return MINIMUM_PERL;
 }
 
+
+=head2 ppi
+
+This convenience method returns the L<PPI::Document|PPI::Document>
+representing the content. This document should be considered read only.
+
+Note that the content of the returned L<PPI::Document|PPI::Document> may
+not be the same as the content of the original
+C<PPIx::Regexp::Token::Interpolation>. This can happen because
+interpolated variable names may be enclosed in curly brackets, but this
+does not happen in normal code. For example, in C</${foo}bar/>, the
+content of the C<PPIx> object will be C<'${foo}'>, but the content of
+the C<PPI::Document> will be C<'$foo'>.
+
+=cut
+
+sub ppi {
+    my ( $self ) = @_;
+    if ( exists $self->{ppi} ) {
+	return $self->{ppi};
+    } elsif ( exists $self->{content} ) {
+	( my $code = $self->{content} ) =~
+	    s/ \A ( [\@\$] ) [{] ( .* ) [}] \z /$1$2/smx;
+	return ( $self->{ppi} = PPI::Document->new(
+		\$code, readonly => 1 ) );
+    } else {
+	return;
+    }
+}
+
+
 # Match the beginning of an interpolation.
 
 my $interp_re =
 	qr{ \A (?: [\@\$]? \$ [-\w&`'+^./\\";%=~:?!\@\$<>\[\]\{\},#] |
 		   \@ [\w\{] )
 	}smx;
+
+# Match bracketed interpolation
+
+my $brkt_interp_re =
+    qr{ \A (?: [\@\$]? \$ [\{] (?: [][\-&`'+,^./\\";%=:?\@\$<>,#] |
+		^? \w+ (?: :: \w+ )* ) [\}] |
+	    \@ [\{] \w+ (?: :: \w+ )* [\}] )
+    }smx;
 
 # We pull out the logic of finding and dealing with the interpolation
 # into a separate subroutine because if we fail to find an interpolation
@@ -74,6 +113,11 @@ sub _interpolation {
 
     # If the regexp does not interpolate, bail now.
     $tokenizer->interpolates() or return;
+
+    # If we're a bracketed interpolation, just accept it
+    if ( my $len = $tokenizer->find_regexp( $brkt_interp_re ) ) {
+	return $len;
+    }
 
     # Make sure we start off plausably
     $tokenizer->find_regexp( $interp_re )
@@ -114,13 +158,22 @@ sub _interpolation {
 	    ) or return;
 	    push @accum, $next;
 	} elsif ( $next->isa( 'PPI::Structure::Block' ) ) {
+
+=begin comment
+
 	    local $_ = $next->content();
 	    if ( m< \A { / } >smx ) {
 		push @accum, 3;	# Number of characters to accept.
 	    } else {
-		$allow_subscript = $accum[-1]->content() ne '$#';
+##		$allow_subscript = $accum[-1]->content() ne '$#';
 		push @accum, $next;
 	    }
+
+=end comment
+
+=cut
+
+	    push @accum, $next;
 	} else {
 	    return;
 	}

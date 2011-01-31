@@ -10,7 +10,7 @@ use PPIx::Regexp::Test;
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 use Scalar::Util qw{ refaddr };
 
-plan( tests => 753 );
+plan( tests => 758 );
 
 my $is_ascii = ord( "\t" ) == 9;	# per perlebcdic
 
@@ -1121,6 +1121,13 @@ class   ( 'PPIx::Regexp::Token::Code' );
 content ( 'roman($1)' );
 value   ( perl_version_introduced => [], '5.000' );
 value   ( perl_version_removed => [], undef );
+
+tokenize( '/${foo}bar/' );
+count   ( 8 );
+choose  ( 2 );
+class   ( 'PPIx::Regexp::Token::Interpolation' );
+content ( '${foo}' );
+ppi     ( '$foo' );
 
 {
     parse   ( 's/x/$1/e' );
