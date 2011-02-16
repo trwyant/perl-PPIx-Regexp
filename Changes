@@ -1,3 +1,6 @@
+0.018		T. R. Wyant	16-Feb-2011
+  No changes (other than version) since 0.017_02.
+
 0.017_02	T. R. Wyant	31-Jan-2011
   Override ppi() in PPIx::Regexp::Token::Interpolation to provide the
     proper PPI when variable names are bracketed.
