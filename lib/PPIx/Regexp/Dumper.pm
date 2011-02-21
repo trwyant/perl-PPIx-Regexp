@@ -329,6 +329,21 @@ sub _tokens_dump {
     return @rslt;
 }
 
+sub _format_modifiers_dump {
+    my ( $self, $elem ) = @_;
+    my %mods = $elem->modifiers();
+    my @accum;
+    $mods{match_semantics}
+	and push @accum, 'match_semantics=' . delete
+	    $mods{match_semantics};
+    foreach my $modifier ( sort keys %mods ) {
+	push @accum, $mods{$modifier} ? $modifier :
+	"-$modifier";
+    }
+    @accum and return join ' ', @accum;
+    return;
+}
+
 sub _tokens_test {
     my ( $self, $elem ) = @_;
 
@@ -448,6 +463,9 @@ sub PPIx::Regexp::Node::__PPIX_DUMPER__test {
 		$self->can( $method ) or next;
 		$self->$method() and push @rslt, $method;
 	    }
+	    $self->isa( 'PPIx::Regexp::Structure::Modifier' )
+		and push @rslt, $dumper->_format_modifiers_dump(
+		$self->type( 0 ) );
 	}
 	@rslt = ( join( "\t", @rslt ) );
 	my $indent = ' ' x $dumper->{indent};
@@ -532,6 +550,11 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__dump {
 	foreach my $method (
 	    qw{significant can_be_quantified is_quantifier } ) {
 	    $self->$method() and push @rslt, $method;
+	}
+	if ( $self->isa( 'PPIx::Regexp::Token::Modifier' ) ||
+	    $self->isa( 'PPIx::Regexp::Token::GroupType::Modifier' )
+	) {
+	    push @rslt, $dumper->_format_modifiers_dump( $self );
 	}
     }
     return join( "\t", @rslt );

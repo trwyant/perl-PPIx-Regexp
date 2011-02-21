@@ -1177,7 +1177,7 @@ PPIx::Regexp	failures=0
           PPIx::Regexp::Token::Operator	'-'	significant	can_be_quantified
           PPIx::Regexp::Token::Literal	'z'	0x7a	significant	can_be_quantified
         PPIx::Regexp::Token::CharClass::Simple	'\\d'	significant	can_be_quantified
-  PPIx::Regexp::Token::Modifier	'x'	significant
+  PPIx::Regexp::Token::Modifier	'x'	significant	x
 EOD
 
     parse   ( '/(?<foo>\\d+)/' );

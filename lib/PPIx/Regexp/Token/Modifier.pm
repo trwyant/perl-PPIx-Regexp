@@ -98,6 +98,7 @@ our $VERSION = '0.018';
 # computation.
 my %aggregate = (
     a	=> MODIFIER_GROUP_MATCH_SEMANTICS,
+    aa	=> MODIFIER_GROUP_MATCH_SEMANTICS,
     d	=> MODIFIER_GROUP_MATCH_SEMANTICS,
     l	=> MODIFIER_GROUP_MATCH_SEMANTICS,
     u	=> MODIFIER_GROUP_MATCH_SEMANTICS,
@@ -210,11 +211,16 @@ sub perl_version_introduced {
     my $is_statement_modifier = ( $content !~ m/ \A [(]? [?] /smx );
     my $match_semantics = $self->match_semantics();
 
-    # perl5139delta expresses the intent to make the match semantics
-    # modifiers available as regular expression modifiers in 5.16.
-#   defined $match_semantics
-#	and $is_statement_modifier
-#	and return '5.016';
+    # Match semantics modifiers became available as regular expression
+    # modifiers in 5.13.10.
+    defined $match_semantics
+	and $is_statement_modifier
+	and return '5.013010';
+
+    # /aa was introduced in 5.13.10.
+    defined $match_semantics
+	and 'aa' eq $match_semantics
+	and return '5.013010';
 
     # /a was introduced in 5.13.9, but only in (?...), not as modifier
     # of the entire regular expression.
