@@ -141,8 +141,9 @@ The following is from perlop:
 		    c [][[:alpha:]\@\\^_?] |	# control characters
 		    x (?: \{ [[:xdigit:]]* \} | [[:xdigit:]]{0,2} ) | # hex
 		    o [{] [01234567]+ [}] |	# octal as of 5.13.4
-		    N (?: \{ (?: [[:alpha:]] [\w\s:()-]* | # must begin w/ alpha
-			U [+] [[:xdigit:]]+ ) \} ) |	# unicode
+##		    N (?: \{ (?: [[:alpha:]] [\w\s:()-]* | # must begin w/ alpha
+##			U [+] [[:xdigit:]]+ ) \} ) |	# unicode
+		    N (?: [{] (?= \D ) [^\}]+ [}] ) |	# unicode
 		    C (?: \d+ | \{ [^\}] \} )		# octets
 		) >smx ) ) {
 	    return $accept;
@@ -278,18 +279,19 @@ because I don't understand the syntax.
 	if ( $indicator eq 'o' ) {
 	    $content =~ m/ \A \\ o [{] ( [01234567]+ ) [}] \z /smx
 		and return oct $1;
-	    return;
+	    return;	# Shouldn't happen, but ...
 	}
 
 	if ( $indicator eq 'N' ) {
-	    $content =~ m/ \A \\ N \{ ( [\w\s:]+ ) \} \z /smx
+	    $content =~ m/ \A \\ N \{ U [+] ( [[:xdigit:]]+ ) \} \z /smx
+		and return hex $1;
+	    $content =~ m/ \A \\ N [{] ( .+ ) [}] \z /smx
 		and return (
 		    _have_charnames_vianame() ?
 			charnames::vianame( $1 ) :
 			undef
 		);
-	    $content =~ m/ \A \\ N \{ U [+] ( [[:xdigit:]]+ ) \} \z /smx
-		and return hex $1;
+	    return;	# Shouldn't happen, but ...
 	}
 
 	if ( $indicator eq 'C' ) {
