@@ -50,6 +50,7 @@ our $VERSION = '0.018';
 	'\N'	=> '5.011',	# Before this, an error.
 	'\V'	=> '5.009005',	# Before this, parsed as 'V'
 	'\C'	=> '5.006',
+	'\X'	=> '5.006',
     );
 
     sub perl_version_introduced {
