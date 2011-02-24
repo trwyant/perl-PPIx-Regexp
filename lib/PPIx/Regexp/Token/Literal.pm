@@ -140,7 +140,7 @@ The following is from perlop:
 #		    [01234567]{1,3} |	# made from backref by lexer
 		    c [][[:alpha:]\@\\^_?] |	# control characters
 		    x (?: \{ [[:xdigit:]]* \} | [[:xdigit:]]{0,2} ) | # hex
-		    o [{] [01234567]+ [}] |	# octal as of 5.13.4
+		    o [{] [01234567]+ [}] |	# octal as of 5.13.3
 ##		    N (?: \{ (?: [[:alpha:]] [\w\s:()-]* | # must begin w/ alpha
 ##			U [+] [[:xdigit:]]+ ) \} ) |	# unicode
 		    N (?: [{] (?= \D ) [^\}]+ [}] )	# unicode
