@@ -47,8 +47,10 @@ sub perl_version_introduced {
 	and return $self->{perl_version_introduced};
     ( my $content = $self->content() ) =~ m/ \A \\ o /smx
 	and return ( $self->{perl_version_introduced} = '5.013003' );
+    $content =~ m/ \A \\ N [{] U [+] /smx
+	and return ( $self->{perl_version_introduced} = '5.008' );
     $content =~ m/ \A \\ N /smx
-	and return ( $self->{perl_version_introduced} = '5.006' );
+	and return ( $self->{perl_version_introduced} = '5.006001' );
     return ( $self->{perl_version_introduced} = MINIMUM_PERL );
 }
 

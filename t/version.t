@@ -32,7 +32,7 @@ sub class ($);
 sub method (@);
 sub token (@);
 
-plan	tests => 418;
+plan	tests => 421;
 
 class	'PPIx::Regexp::Token::Assertion';
 token	'^';
@@ -331,7 +331,10 @@ token	'\c[';
 method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
 method	perl_version_removed	=> undef;
 token	'\N{LATIN SMALL LETTER P}';
-method	perl_version_introduced => '5.006';
+method	perl_version_introduced => '5.006001';		# 5.6.1 perldelta
+method	perl_version_removed	=> undef;
+token   '\N{U+32}';
+method  perl_version_introduced => '5.008';		# 5.8.0 charnames
 method	perl_version_removed	=> undef;
 
 class	'PPIx::Regexp::Token::Modifier';
