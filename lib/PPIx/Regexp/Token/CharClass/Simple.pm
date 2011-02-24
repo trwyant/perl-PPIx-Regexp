@@ -49,6 +49,7 @@ our $VERSION = '0.018';
 	'\H'	=> '5.009005',	# Before this, parsed as 'H'
 	'\N'	=> '5.011',	# Before this, an error.
 	'\V'	=> '5.009005',	# Before this, parsed as 'V'
+	'\C'	=> '5.006',
     );
 
     sub perl_version_introduced {
@@ -83,7 +84,7 @@ sub __PPIX_TOKENIZER__regexp {
 
     if ( my $accept = $tokenizer->find_regexp(
 	    qr{ \A \\ (?:
-		[wWsSdDvVhHXRN] |
+		[wWsSdDvVhHXRNC] |
 		[Pp] \{ \s* \^? [\w:=\s-]+ \}
 	    ) }smx
 	) ) {

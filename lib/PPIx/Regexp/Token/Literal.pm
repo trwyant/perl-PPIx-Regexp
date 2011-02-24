@@ -143,8 +143,7 @@ The following is from perlop:
 		    o [{] [01234567]+ [}] |	# octal as of 5.13.4
 ##		    N (?: \{ (?: [[:alpha:]] [\w\s:()-]* | # must begin w/ alpha
 ##			U [+] [[:xdigit:]]+ ) \} ) |	# unicode
-		    N (?: [{] (?= \D ) [^\}]+ [}] ) |	# unicode
-		    C (?: \d+ | \{ [^\}] \} )		# octets
+		    N (?: [{] (?= \D ) [^\}]+ [}] )	# unicode
 		) >smx ) ) {
 	    return $accept;
 	}
@@ -292,11 +291,6 @@ because I don't understand the syntax.
 			undef
 		);
 	    return;	# Shouldn't happen, but ...
-	}
-
-	if ( $indicator eq 'C' ) {
-	    # TODO octets
-	    return;
 	}
 
 	return ord $indicator;
