@@ -1,3 +1,18 @@
+0.019		T. R. Wyant	01-Mar-2011
+  Various corrections to perl_version_introduced():
+    \X is now 5.006 (was 5.000);
+    \N{name} is now 5.006001 (was 5.006);
+    \N{U+xxxx} is now 5.008 (was 5.006).
+  The \C is now parsed as a PPIx::Regexp::Token::CharClass::Simple. It
+    was previously considered a PPIx::Regexp::Token::Literal.
+  Ensure that \N{$foo} parses as a Unicode literal, not a quantified \N.
+    The ordinal() method returns undef for this.
+  Understand the /aa modifier, introduced with 5.13.10.
+  Report perl_version_introduced() of 5.013010 for the new semantic
+    modifiers when modifying the entire expression.
+  Correct handling of interpolations like ${^foo} and $#{foo}.
+
+------------------------------------------------------------------------
 0.018		T. R. Wyant	16-Feb-2011
   No changes (other than version) since 0.017_02.
 
