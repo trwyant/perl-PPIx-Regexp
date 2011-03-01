@@ -125,7 +125,7 @@ token   '\C';
 method  perl_version_introduced => '5.006';
 method  perl_version_removed    => undef;
 token   '\X';
-method  perl_version_introduced => '5.006';
+method  perl_version_introduced => '5.006';		# 5.6.0 perlre
 method  perl_version_removed    => undef;
 token	'\p{Latin}';
 method	perl_version_introduced	=> '5.006001';		# perl561delta
