@@ -49,6 +49,7 @@ our $VERSION = '0.019';
 	'\H'	=> '5.009005',	# Before this, parsed as 'H'
 	'\N'	=> '5.011',	# Before this, an error.
 	'\V'	=> '5.009005',	# Before this, parsed as 'V'
+	'\R'	=> '5.009005',
 	'\C'	=> '5.006',
 	'\X'	=> '5.006',
     );

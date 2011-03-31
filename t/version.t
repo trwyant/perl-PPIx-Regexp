@@ -32,7 +32,7 @@ sub class ($);
 sub method (@);
 sub token (@);
 
-plan	tests => 421;
+plan	tests => 424;
 
 class	'PPIx::Regexp::Token::Assertion';
 token	'^';
@@ -140,6 +140,9 @@ token	'\v';
 method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
 token	'\V';
+method	perl_version_introduced => '5.009005';
+method	perl_version_removed	=> undef;
+token	'\R';
 method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
 token	'\N';
