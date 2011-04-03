@@ -36,7 +36,7 @@ use base qw{ PPIx::Regexp::Structure };
 
 use Carp qw{ confess };
 
-our $VERSION = '0.019';
+our $VERSION = '0.020';
 
 # Called by the lexer to record the capture number.
 sub __PPIX_LEXER__record_capture_number {

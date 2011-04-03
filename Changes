@@ -1,3 +1,7 @@
+0.020		T. R. Wyant	02-Apr-2011
+  Corrected perl_version_introduced():
+    \R is now 5.009005 (was 5.000).
+
 0.019		T. R. Wyant	01-Mar-2011
   Various corrections to perl_version_introduced():
     \X is now 5.006 (was 5.000);
@@ -12,7 +16,6 @@
     modifiers when modifying the entire expression.
   Correct handling of interpolations like ${^foo} and $#{foo}.
 
-------------------------------------------------------------------------
 0.018		T. R. Wyant	16-Feb-2011
   No changes (other than version) since 0.017_02.
 

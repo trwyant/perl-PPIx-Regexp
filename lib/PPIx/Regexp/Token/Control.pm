@@ -43,7 +43,7 @@ use base qw{ PPIx::Regexp::Token };
 
 use PPIx::Regexp::Constant qw{ COOKIE_QUOTE TOKEN_LITERAL TOKEN_UNKNOWN };
 
-our $VERSION = '0.019';
+our $VERSION = '0.020';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
