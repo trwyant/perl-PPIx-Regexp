@@ -534,28 +534,38 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__dump {
     not $dumper->{significant} or $self->significant() or return;
 
     my @rslt = ( ref $self, $dumper->_safe( $self ) );
+
     $dumper->{perl_version}
 	and push @rslt, $dumper->_perl_version( $self );
+
     if ( $dumper->{ordinal} && $self->can( 'ordinal' )
 	&& defined ( my $ord = $self->ordinal() ) ) {
 	push @rslt, sprintf '0x%02x', $ord;
     }
+
     if ( $dumper->{verbose} ) {
+
 	if ( $self->isa( 'PPIx::Regexp::Token::Reference' ) ) {
 	    foreach my $method ( qw{ absolute name number } ) {
 		defined( my $val = $self->$method() ) or next;
 		push @rslt, "$method=$val";
 	    }
 	}
+
 	foreach my $method (
 	    qw{significant can_be_quantified is_quantifier } ) {
 	    $self->$method() and push @rslt, $method;
 	}
+
+	$self->can( 'ppi' )
+	    and push @rslt, $self->ppi()->content();
+
 	if ( $self->isa( 'PPIx::Regexp::Token::Modifier' ) ||
 	    $self->isa( 'PPIx::Regexp::Token::GroupType::Modifier' )
 	) {
 	    push @rslt, $dumper->_format_modifiers_dump( $self );
 	}
+
     }
     return join( "\t", @rslt );
 }
@@ -571,6 +581,7 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__test {
 	'class   ( ' . $dumper->_safe( ref $self ) . ' );',
 	'content ( ' . $dumper->_safe( $self ) . ' );',
     );
+
     if ( $dumper->{perl_version} ) {
 	foreach my $method ( qw{
 	    perl_version_introduced
@@ -580,14 +591,22 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__test {
 		$dumper->_safe_version( $self->$method() ) . ' );';
 	}
     }
+
     if ( $dumper->{verbose} ) {
+
 	foreach my $method (
 	    qw{significant can_be_quantified is_quantifier } ) {
 	    push @rslt, $self->$method() ?
 	        "true    ( $method => [] );" :
 	        "false   ( $method => [] );";
 	}
+
+	$self->can( 'ppi' )
+	    and push @rslt, "value   ( ppi => [], " .
+		$dumper->_safe( $self->ppi() ) . ' );';
+
     }
+
     return @rslt;
 }
 
