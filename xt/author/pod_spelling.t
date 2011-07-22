@@ -20,10 +20,14 @@ all_pod_files_spelling_ok ();
 __DATA__
 charnames
 errstr
+indices
+instantiation
 lexed
 lexes
+merchantability
 nav
 navigational
+POSIX
 PPI
 ppi
 PPI's
@@ -31,6 +35,7 @@ reblesses
 repl
 schild
 schildren
+subclasses
 TODO
 tokenization
 tokenize
@@ -41,6 +46,7 @@ tokenizes
 tokenizing
 trigraphs
 unicode
+unterminated
 UTF
 version's
 wyant

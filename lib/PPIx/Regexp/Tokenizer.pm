@@ -260,7 +260,7 @@ sub find_matching_delimiter {
 
     while ( ++$inx < $self->{cursor_limit} ) {
 	my $char = substr $self->{content}, $inx, 1;
-	if ( $char eq '\\' ) {
+	if ( $char eq '\\' && $finish ne '\\' ) {
 	    ++$inx;
 	} elsif ( $bracketed && $char eq $start ) {
 	    ++$nest;
