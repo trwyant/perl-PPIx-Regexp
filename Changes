@@ -1,3 +1,9 @@
+0.021		T. R. Wyant	22-Jul-2011
+  Modified tokenizer to correctly handle a back slash used as a
+    delimiter. I believe.
+  PPIx::Regexp::Dumper now dumps the results of ppi() if that method is
+    present and -verbose is asserted.
+
 0.020		T. R. Wyant	02-Apr-2011
   Corrected perl_version_introduced():
     \R is now 5.009005 (was 5.000).
