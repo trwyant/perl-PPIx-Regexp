@@ -27,8 +27,8 @@ useful.
 
 =head1 METHODS
 
-This class provides no public methods beyond those provided by its
-superclass.
+This class provides the following public methods beyond those provided
+by its superclass.
 
 =cut
 
@@ -43,6 +43,20 @@ our $VERSION = '0.021';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
+
+=head2 is_case_sensitive
+
+This method returns true if the character class is case-sensitive (that
+is, if it may match or not based on the case of the string being
+matched), false (but defined) if it is not, and simply returns (giving
+C<undef> in scalar context and an empty list in list context) if the
+case-sensitivity can not be determined.
+
+=cut
+
+sub is_case_sensitive {
+    return;
+}
 
 1;
 
