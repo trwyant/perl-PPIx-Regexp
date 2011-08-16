@@ -85,7 +85,7 @@ sub is_case_sensitive {
 	$content =~ m/ \A \\ p { ( .* ) } /smxi
 	    or return 0;
 	$content = lc $1;
-	$content =~ s/ \A [^] //smx;
+	$content =~ s/ \A ^ //smx;
 	$content =~ s/ [\s_-] //smxg;
 	$content =~ s/ \A is //smx;
 	$content =~ s/ : /=/smxg;

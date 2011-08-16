@@ -27,6 +27,7 @@ lexes
 merchantability
 nav
 navigational
+perluniprops
 POSIX
 PPI
 ppi
