@@ -46,22 +46,6 @@ use PPIx::Regexp::Constant qw{
 
 our $VERSION = '0.021';
 
-=begin comment
-
-sub perl_version_introduced {
-    my ( $self ) = @_;
-    my $condition = $self->child( 0 ) or return;
-    $condition->isa( 'PPIx::Regexp::Structure' )
-	and return MINIMUM_PERL;
-    my $content = $condition->content();
-    $content =~ m/ \( \d+ \) /smx and return MINIMUM_PERL;
-    return '5.009005';
-}
-
-=end comment
-
-=cut
-
 sub __PPIX_LEXER__finalize {
     my ( $self ) = @_;
 
