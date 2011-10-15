@@ -29,9 +29,6 @@ $mmv >= 6.4501 and $args{META_ADD} = {
 };
 
 $mmv >= 6.4501 and $args{META_MERGE} = {
-    build_requires => {
-	'Test::More' => 0.40,
-    },
     dynamic_config => 1,
     resources => {
 	bugtracker => 'https://rt.cpan.org/Public/Dist/Display.html?Name=PPIx-Regexp',
@@ -40,6 +37,11 @@ $mmv >= 6.4501 and $args{META_MERGE} = {
 };
 
 $mmv >= 6.4701 and $args{MIN_PERL_VERSION} = $meta->requires_perl();
+
+$mmv >= 6.5501
+    and $args{BUILD_REQUIRES} = $meta->build_requires()
+    or $mmv >= 6.4501
+    and $args{META_MERGE}{build_requires} = $meta->build_requires();
 
 WriteMakefile (%args);
 

@@ -17,9 +17,7 @@ my %args = (
     dist_author => 'Tom Wyant (wyant at cpan dot org)',
     dist_abstract => 'Parse regular expressions',
     module_name => 'PPIx::Regexp',
-    build_requires => {
-	'Test::More' => 0.40,
-    },
+    build_requires => $meta->build_requires(),
     requires => $meta->requires(
 	perl => $meta->requires_perl(),
     ),
