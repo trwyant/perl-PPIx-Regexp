@@ -49,6 +49,20 @@ sub perl_version_introduced {
 	and return ( $self->{perl_version_introduced} = '5.013003' );
     $content =~ m/ \A \\ N [{] U [+] /smx
 	and return ( $self->{perl_version_introduced} = '5.008' );
+
+=begin comment
+
+TODO The following is per
+http://blogs.perl.org/users/brian_d_foy/2011/11/perl-regex-escapes-by-version.html
+but needs to be verified.
+
+    $content =~ m/ \A \\ x [{] /smx	# }
+	and return ( $self->{perl_version_introduced} = '5.006' );
+
+=end comment
+
+=cut
+
     $content =~ m/ \A \\ N /smx
 	and return ( $self->{perl_version_introduced} = '5.006001' );
     return ( $self->{perl_version_introduced} = MINIMUM_PERL );

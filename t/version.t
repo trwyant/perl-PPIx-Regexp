@@ -32,7 +32,7 @@ sub class ($);
 sub method (@);
 sub token (@);
 
-plan	tests => 424;
+plan	tests => 427;
 
 class	'PPIx::Regexp::Token::Assertion';
 token	'^';
@@ -329,6 +329,11 @@ method	perl_version_introduced	=> '5.013003';
 method	perl_version_removed	=> undef;
 token	'\x1B';
 method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+method	perl_version_removed	=> undef;
+token	'\x{1b}';	# TODO Tom Christian's table says 5.6, as
+# reported at
+# http://blogs.perl.org/users/brian_d_foy/2011/11/perl-regex-escapes-by-version.html
+method	perl_version_introduced	=> MINIMUM_PERL;
 method	perl_version_removed	=> undef;
 token	'\c[';
 method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
