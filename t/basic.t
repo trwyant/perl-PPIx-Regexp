@@ -3,7 +3,7 @@ package main;
 use strict;
 use warnings;
 
-use Test::More 0.40 tests => 146;
+use Test::More 0.88;
 
 require_ok( 'PPI::Document' )
     or BAIL_OUT(
@@ -280,6 +280,8 @@ require_ok( 'PPIx::Regexp::Tokenizer' );
 class_isa_ok( 'PPIx::Regexp::Tokenizer', 'PPIx::Regexp::Support' );
 isa_ok( PPIx::Regexp::Tokenizer->new( 'xyzzy' ),
     'PPIx::Regexp::Tokenizer' );
+
+done_testing;
 
 sub class_isa_ok {
     my ( $class, $isa ) = @_;

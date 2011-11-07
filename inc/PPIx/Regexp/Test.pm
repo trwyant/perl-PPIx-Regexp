@@ -11,7 +11,7 @@ use PPIx::Regexp::Element;
 use PPIx::Regexp::Tokenizer;
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ looks_like_number refaddr };
-use Test::More 0.40;
+use Test::More 0.88;
 
 our $VERSION = '0.021';
 
@@ -23,6 +23,7 @@ our @EXPORT_OK = qw{
     content
     count
     different
+    done_testing
     dump_result
     false
     finis

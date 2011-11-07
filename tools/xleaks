@@ -21,17 +21,9 @@ package main;
 use strict;
 use warnings;
 
-BEGIN {
+use Test::More 0.88;
 
-    eval {
-	require Test::More;
-	Test::More->VERSION( 0.40 );
-	Test::More->import();
-	1;
-    } or do {
-	print "1..0 # skip Test::More 0.40 required for test.\n";
-	exit;
-    };
+BEGIN {
 
     eval {
 	require Test::Memory::Cycle;
@@ -62,13 +54,13 @@ BEGIN {
 
 EOD
 
-print "plan( tests => ", scalar @parses, " );\n";
-
 foreach ( @parses ) {
     print;
 }
 
 print <<'EOD';
+
+done_testing;
 
 sub parse {
     my ( $text ) = @_;

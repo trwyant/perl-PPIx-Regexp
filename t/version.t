@@ -14,25 +14,13 @@ use 5.006002;
 use strict;
 use warnings;
 
-BEGIN {
-    eval {
-	require Test::More;
-	Test::More->VERSION( 0.40 );
-	Test::More->import();
-	1;
-    } or do {
-	print "1..0 # skip Test::More 0.40 required\\n";
-	exit;
-    }
-}
+use Test::More 0.88;
 
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 
 sub class ($);
 sub method (@);
 sub token (@);
-
-plan	tests => 427;
 
 class	'PPIx::Regexp::Token::Assertion';
 token	'^';
@@ -504,6 +492,8 @@ class	'PPIx::Regexp::Token::Whitespace';
 token	' ';
 method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
 method	perl_version_removed	=> undef;
+
+done_testing;
 
 my $context;
 

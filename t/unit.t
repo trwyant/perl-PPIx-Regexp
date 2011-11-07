@@ -10,8 +10,6 @@ use PPIx::Regexp::Test;
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 use Scalar::Util qw{ refaddr };
 
-plan( tests => 843 );
-
 my $is_ascii = ord( "\t" ) == 9;	# per perlebcdic
 
 my $have_charnames;
@@ -1436,6 +1434,8 @@ EOD
 }
 
 finis   ();
+
+done_testing;
 
 1;
 

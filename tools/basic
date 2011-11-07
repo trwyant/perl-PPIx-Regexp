@@ -126,7 +126,7 @@ package main;
 use strict;
 use warnings;
 
-use Test::More 0.40 tests => @{[ scalar @tests ]};
+use Test::More 0.88;
 EOD
 
 foreach my $tst ( @tests ) {
@@ -136,6 +136,8 @@ foreach my $tst ( @tests ) {
 }
 
 print <<'EOD';
+
+done_testing;
 
 sub class_isa_ok {
     my ( $class, $isa ) = @_;
