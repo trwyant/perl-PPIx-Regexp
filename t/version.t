@@ -48,7 +48,7 @@ token	'\z';
 method	perl_version_introduced => '5.005';	# 5.5.4 perldelta, perlre
 method	perl_version_removed	=> undef;
 token	'\K';
-method	perl_version_introduced => '5.009005';
+method	perl_version_introduced => '5.009005';	# perl595delta
 method	perl_version_removed	=> undef;
 
 class	'PPIx::Regexp::Token::Backreference';
@@ -56,19 +56,19 @@ token	'\1';
 method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
 method	perl_version_removed	=> undef;
 token	'\g1';
-method	perl_version_introduced => '5.009005';
+method	perl_version_introduced => '5.009005';	# perl595delta
 method	perl_version_removed	=> undef;
 token	'\g{1}';
-method	perl_version_introduced => '5.009005';
+method	perl_version_introduced => '5.009005';	# perl595delta
 method	perl_version_removed	=> undef;
 token	'\g-1';
 method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
 token	'\g{-1}';
-method	perl_version_introduced => '5.009005';
+method	perl_version_introduced => '5.009005';	# perl595delta
 method	perl_version_removed	=> undef;
 token	'\k<foo>';
-method	perl_version_introduced => '5.009005';
+method	perl_version_introduced => '5.009005';	# perl595delta
 method	perl_version_removed	=> undef;
 token	q{\k'foo'};
 method	perl_version_introduced => '5.009005';
@@ -78,8 +78,26 @@ method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
 
 class	'PPIx::Regexp::Token::Backtrack';
+token	'(*THEN)';
+method	perl_version_introduced => '5.009005';	# perl595delta
+method	perl_version_removed	=> undef;
+token	'(*PRUNE)';
+method	perl_version_introduced => '5.009005';	# perl595delta
+method	perl_version_removed	=> undef;
+token	'(*MARK)';
+method	perl_version_introduced => '5.009005';	# perl595delta
+method	perl_version_removed	=> undef;
+token	'(*SKIP)';
+method	perl_version_introduced => '5.009005';	# perl595delta
+method	perl_version_removed	=> undef;
+token	'(*COMMIT)';
+method	perl_version_introduced => '5.009005';	# perl595delta
+method	perl_version_removed	=> undef;
+token	'(*FAIL)';
+method	perl_version_introduced => '5.009005';	# perl595delta
+method	perl_version_removed	=> undef;
 token	'(*ACCEPT)';
-method	perl_version_introduced => '5.009005';
+method	perl_version_introduced => '5.009005';	# perl595delta
 method	perl_version_removed	=> undef;
 
 class	'PPIx::Regexp::Token::CharClass::POSIX';
@@ -119,22 +137,22 @@ token	'\p{Latin}';
 method	perl_version_introduced	=> '5.006001';		# perl561delta
 method	perl_version_removed	=> undef;
 token	'\h';
-method	perl_version_introduced => '5.009005';
+method	perl_version_introduced => '5.009005';	# perl595delta
 method	perl_version_removed	=> undef;
 token	'\H';
-method	perl_version_introduced => '5.009005';
+method	perl_version_introduced => '5.009005';	# perl595delta
 method	perl_version_removed	=> undef;
 token	'\v';
-method	perl_version_introduced => '5.009005';
+method	perl_version_introduced => '5.009005';	# perl595delta
 method	perl_version_removed	=> undef;
 token	'\V';
-method	perl_version_introduced => '5.009005';
+method	perl_version_introduced => '5.009005';	# perl595delta
 method	perl_version_removed	=> undef;
 token	'\R';
-method	perl_version_introduced => '5.009005';
+method	perl_version_introduced => '5.009005';	# perl595delta
 method	perl_version_removed	=> undef;
 token	'\N';
-method	perl_version_introduced => '5.011';
+method	perl_version_introduced => '5.011';	# perl5110delta
 method	perl_version_removed	=> undef;
 
 class	'PPIx::Regexp::Token::Code';
@@ -266,7 +284,7 @@ method	perl_version_removed	=> undef;
 
 class	'PPIx::Regexp::Token::GroupType::NamedCapture';
 token	'?<foo>';
-method	perl_version_introduced	=> '5.009005';
+method	perl_version_introduced	=> '5.009005';	# perl595delta
 method	perl_version_removed	=> undef;
 token	q{?'foo'};
 method	perl_version_introduced	=> '5.009005';
@@ -313,7 +331,7 @@ token	'\033';
 method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
 method	perl_version_removed	=> undef;
 token	'\o{61}';
-method	perl_version_introduced	=> '5.013003';
+method	perl_version_introduced	=> '5.013003';	# perl5133delta
 method	perl_version_removed	=> undef;
 token	'\x1B';
 method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
@@ -436,7 +454,7 @@ method	perl_version_removed	=> undef;
 
 class	'PPIx::Regexp::Token::Recursion';
 token	'(?1)';
-method	perl_version_introduced => '5.009005';
+method	perl_version_introduced => '5.009005';	# perl595delta
 method	perl_version_removed	=> undef;
 token	'(?+1)';
 method	perl_version_introduced => '5.009005';
