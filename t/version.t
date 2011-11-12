@@ -16,459 +16,537 @@ use warnings;
 
 use Test::More 0.88;
 
+our $REPORT;	# True to report rather than test.
+
+# If $REPORT is true, you get instead of a test a CSV-formatted report
+# of the syntax elements and the versions they were introduced and
+# retracted. Named arguments to the routines have been added to support
+# the report -- perhaps too many of them. All are optional. They are:
+#     note => Text describing the thing being reported on. This is
+#         described further in the details of the report.
+#     text => The text of the thing reported on. If applied to the class
+#         it is a sprintf template. The default is the content of the
+#         token.
+#     report => false to suppress the report. If applied to the class it
+#         is a default for all tokens in that class.
+# The columns of the report are:
+#     Kind => The kind of syntax element. This is the 'note' argument to
+#         the class() subroutine, and defaults to the class name.
+#     Token => The syntax element itself. This is the 'text' argument of
+#         the token() or class() subroutines (the latter suitably
+#         processed), defaulting to the actual content of the syntax
+#         element.
+#     Descr => The description of the syntax element. This is the 'note'
+#         argument of the token() subroutine, defaulting to the empty
+#         string.
+#     Introduced => The version of Perl in which the element was
+#         introduced, from the perl_version_introduced() method of the
+#         token. Since I have not researched Perl 4, and I have no
+#         access to Perls earlier than 5.3, anything in 5.3 is assumed
+#         willy-nilly to be in Perl 5.0.
+#     Ref => The source of the version introduced, if known. Typically a
+#         Perl documentation reference. If a reference other than
+#         perl?*delta, the Perl version of the documentation is
+#         prefaced, and the version is inferred from the fact that the
+#         previous version of the document did not refer to the feature.
+#         The default is the empty string.
+#     Removed => The version of Perl in which the element was removed.
+#         The default is '', indicating that the element is still in
+#         Perl.
+#     Ref => The source of the version removed, if known, and if the
+#         element has in fact been removed.
+
+# Trailing empty fields are removed.
+
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 
-sub class ($);
+sub class (@);
+sub finis ();
 sub method (@);
 sub token (@);
 
-class	'PPIx::Regexp::Token::Assertion';
-token	'^';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+class	'PPIx::Regexp::Token::Assertion', note => 'Assertion';
+token	'^', note => 'Matches beginning of string or after newline';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'$';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'$', note => 'Matches end of string or newline';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\b';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'\b', note => 'Matches word/nonword boundary';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\B';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'\B', note => 'Opposite of \b';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\A';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'\A', note => 'Matches beginning of string';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\Z';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'\Z', note => 'Matches end of string, or newline before end';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\G';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'\G', note => 'Matches at pos()';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\z';
-method	perl_version_introduced => '5.005';	# 5.5.4 perldelta, perlre
+token	'\z', note => 'Matches end of string';
+method	perl_version_introduced => '5.005', note => 'perl5005delta';
 method	perl_version_removed	=> undef;
-token	'\K';
-method	perl_version_introduced => '5.009005';	# perl595delta
+token	'\K', note => 'In s///, keep everything before the \K';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
 
-class	'PPIx::Regexp::Token::Backreference';
-token	'\1';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+class	'PPIx::Regexp::Token::Backreference', note => 'Back reference';
+token	'\1', note => 'Back reference to first capture group';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\g1';
-method	perl_version_introduced => '5.009005';	# perl595delta
+token	'\g1', note => 'Back reference to first capture group';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
-token	'\g{1}';
-method	perl_version_introduced => '5.009005';	# perl595delta
+token	'\g{1}', note => 'Back reference to first capture group';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
-token	'\g-1';
+token	'\g-1', note => 'Back reference to previous capture group';
 method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
-token	'\g{-1}';
-method	perl_version_introduced => '5.009005';	# perl595delta
+token	'\g{-1}', note => 'Back reference to previous capture group';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
-token	'\k<foo>';
-method	perl_version_introduced => '5.009005';	# perl595delta
+token	'\k<foo>', note => 'Back reference to named capture group';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
-token	q{\k'foo'};
+token	q{\k'foo'}, note => 'Back reference to named capture group';
 method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
-token	'(?P=foo)';
+token	'(?P=foo)', note => 'Back reference to named capture group';
 method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
 
-class	'PPIx::Regexp::Token::Backtrack';
-token	'(*THEN)';
-method	perl_version_introduced => '5.009005';	# perl595delta
+class	'PPIx::Regexp::Token::Backtrack', note => 'Back tracking control';
+token	'(*THEN)', note => 'Forces next alternation on failure';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
-token	'(*PRUNE)';
-method	perl_version_introduced => '5.009005';	# perl595delta
+token	'(*PRUNE)', note => 'Prevent backtracking past here on failure';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
-token	'(*MARK)';
-method	perl_version_introduced => '5.009005';	# perl595delta
+token	'(*MARK)',
+    note => 'Name branches of alternation, target for (*SKIP)';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
-token	'(*SKIP)';
-method	perl_version_introduced => '5.009005';	# perl595delta
+token	'(*SKIP)',
+    note => 'Like (*PRUNE) but also discards match to this point';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
-token	'(*COMMIT)';
-method	perl_version_introduced => '5.009005';	# perl595delta
+token	'(*COMMIT)',
+    note => 'Causes match failure when backtracked into on failure';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
-token	'(*FAIL)';
-method	perl_version_introduced => '5.009005';	# perl595delta
+token	'(*FAIL)', note => 'Always fails, forcing backtrack';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
-token	'(*ACCEPT)';
-method	perl_version_introduced => '5.009005';	# perl595delta
+token	'(*ACCEPT)',
+    note => 'Causes match to succeed at the point of the (*ACCEPT)';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
 
-class	'PPIx::Regexp::Token::CharClass::POSIX';
-token	'[:alpha:]';
-method	perl_version_introduced	=> '5.006';		# perl56delta
+class	'PPIx::Regexp::Token::CharClass::POSIX',
+    note => 'POSIX character class';
+token	'[:alpha:]', note => 'Match alphabetic';
+method	perl_version_introduced	=> '5.006', note => 'perl56delta';
 method	perl_version_removed	=> undef;
 
-class	'PPIx::Regexp::Token::CharClass::Simple';
-token	'.';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+class	'PPIx::Regexp::Token::CharClass::Simple',
+    note => 'Character class';
+token	'.', note => 'Match any character';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\w';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+token	'\w', note => 'Match word character';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\W';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+token	'\W', note => 'Match non-word character';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\s';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+token	'\s', note => 'Match white-space character';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\S';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+token	'\S', note => 'Match non-white-space character';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\d';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+token	'\d', note => 'Match decimal digit';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\D';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+token	'\D', note => 'Match any character but a decimal digit';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token   '\C';
+token   '\C', note => 'Match a single octet';
 method  perl_version_introduced => '5.006';
 method  perl_version_removed    => undef;
-token   '\X';
-method  perl_version_introduced => '5.006';		# 5.6.0 perlre
+token   '\X', note => 'Match a Unicode extended grapheme cluster';
+method  perl_version_introduced => '5.006', note => '5.6.0 perlre';
 method  perl_version_removed    => undef;
-token	'\p{Latin}';
-method	perl_version_introduced	=> '5.006001';		# perl561delta
+token	'\p{Latin}',
+    note => 'Match a character with the given Unicode property';
+method	perl_version_introduced	=> '5.006001', note => 'perl561delta';
 method	perl_version_removed	=> undef;
-token	'\h';
-method	perl_version_introduced => '5.009005';	# perl595delta
+token	'\h', note => 'Match a horizontal-white-space character';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
-token	'\H';
-method	perl_version_introduced => '5.009005';	# perl595delta
+token	'\H', note => 'Match a non-horizontal-white-space character';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
-token	'\v';
-method	perl_version_introduced => '5.009005';	# perl595delta
+token	'\v', note => 'Match a vertical-white-space character';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
-token	'\V';
-method	perl_version_introduced => '5.009005';	# perl595delta
+token	'\V', note => 'Match a non-vertical-white-space character';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
-token	'\R';
-method	perl_version_introduced => '5.009005';	# perl595delta
+token	'\R', note => 'Match a generic new-line character';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
-token	'\N';
-method	perl_version_introduced => '5.011';	# perl5110delta
+token	'\N', note => 'Match any character but a new-line character';
+method	perl_version_introduced => '5.011', note => 'perl5110delta';
 method	perl_version_removed	=> undef;
 
-class	'PPIx::Regexp::Token::Code';
+class	'PPIx::Regexp::Token::Code', note => 'Code', report => 0;
 token	'{foo}';
 method	perl_version_introduced	=> '5.005';	# see ::GroupType::Code
 method	perl_version_removed	=> undef;
 # The interesting version functionality is on
 # PPIx::Regexp::Token::GroupType::Code.
 
-class	'PPIx::Regexp::Token::Comment';
-token	'(?#foo)';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+class	'PPIx::Regexp::Token::Comment', note => 'Comment';
+token	'(?#foo)', note => 'Embedded comment';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'# foo';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
-method	perl_version_removed	=> undef;
-
-class	'PPIx::Regexp::Token::Condition';
-token	'(1)';
-method	perl_version_introduced => '5.005';	# 5.5.4 perldelta, perlre
-method	perl_version_removed	=> undef;
-token	'(R1)';
-method	perl_version_introduced => '5.009005';
-method	perl_version_removed	=> undef;
-token	'(R)';
-method	perl_version_introduced => '5.009005';
-method	perl_version_removed	=> undef;
-token	'(<foo>)';
-method	perl_version_introduced => '5.009005';
-method	perl_version_removed	=> undef;
-token	q{('foo')};
-method	perl_version_introduced => '5.009005';
-method	perl_version_removed	=> undef;
-token	'(R&foo)';
-method	perl_version_introduced => '5.009005';
-method	perl_version_removed	=> undef;
-token	'(DEFINE)';
-method	perl_version_introduced => '5.009005';
+token	'# foo', note => 'Extended comment, with /x';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
 
-class	'PPIx::Regexp::Token::Control';
-token	'\l';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+class	'PPIx::Regexp::Token::Condition', note => 'Condition';
+token	'(1)', note => 'True if the first capture group matched';
+method	perl_version_introduced => '5.005', note => 'perl5005delta';
 method	perl_version_removed	=> undef;
-token	'\u';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+token	'(R1)',
+    note => 'True if recursing directly inside first capture group';
+method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
-token	'\L';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+token	'(R)', note => 'True if recursing';
+method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
-token	'\U';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+token	'(<foo>)', note => 'True if capture group <foo> matched';
+method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
-token	'\E';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+token	q{('foo')}, note => 'True if capture group <foo> matched';
+method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
-token	'\Q';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+token	'(R&foo)',
+    note => 'True if recursing directly inside capture group <foo>';
+method	perl_version_introduced => '5.009005';
+method	perl_version_removed	=> undef;
+token	'(DEFINE)', note => 'Define a group to be recursed into';
+method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
 
-class	'PPIx::Regexp::Token::Delimiter';
+class	'PPIx::Regexp::Token::Control', note => 'Interpolation control';
+token	'\l', note => 'Lowercase next character';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
+method	perl_version_removed	=> undef;
+token	'\u', note => 'Uppercase next character';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
+method	perl_version_removed	=> undef;
+token	'\L', note => 'Lowercase until \E';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
+method	perl_version_removed	=> undef;
+token	'\U', note => 'Uppercase until \E';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
+method	perl_version_removed	=> undef;
+token	'\E', note => 'End of interpolation control';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
+method	perl_version_removed	=> undef;
+token	'\Q', note => 'Quote interpolated metacharacters until \E';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
+method	perl_version_removed	=> undef;
+
+class	'PPIx::Regexp::Token::Delimiter', note => 'Delimiter', report => 0;
 token	'/';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlsyn
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 
-class	'PPIx::Regexp::Token::Greediness';
-token	'?';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+class	'PPIx::Regexp::Token::Greediness', note => 'Greediness';
+token	'?', note => 'Match shortest string first';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'+';
-method	perl_version_introduced => '5.009005';
+token	'+', note => 'Match longest string and give nothing back';
+method	perl_version_introduced => '5.009005', note => 'perl595delta';
 method	perl_version_removed	=> undef;
 
 # PPIx::Regexp::Token::GroupType: see the individual subclasses, below.
 
-class	'PPIx::Regexp::Token::GroupType::Assertion';
-token	'?=';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+class	'PPIx::Regexp::Token::GroupType::Assertion', note => 'Assertion',
+    text => '(%sregexp)';
+token	'?=', note => 'Positive lookahead';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'?!';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+token	'?!', note => 'Negative lookahead';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'?<=';
-method	perl_version_introduced	=> '5.005';	# 5.5.4 perldelta, perlre
+token	'?<=', note => 'Positive lookbehind';
+method	perl_version_introduced	=> '5.005', note => 'perl5005delta';
 method	perl_version_removed	=> undef;
-token	'?<!';
-method	perl_version_introduced	=> '5.005';	# 5.5.4 perldelta, perlre
-method	perl_version_removed	=> undef;
-
-class	'PPIx::Regexp::Token::GroupType::BranchReset';
-token	'?|';
-method	perl_version_introduced	=> '5.009005';
+token	'?<!', note => 'Negative lookbehind';
+method	perl_version_introduced	=> '5.005', note => 'perl5005delta';
 method	perl_version_removed	=> undef;
 
-class	'PPIx::Regexp::Token::GroupType::Code';
-token	'?p';
-method	perl_version_introduced	=> '5.005';	# Undocumented that I can find.
-						# Deprecated in 5.6.2.
-method	perl_version_removed	=> '5.009005';
-token	'?';
-method	perl_version_introduced	=> '5.005';	# 5.5.4 perldelta, perlre
-method	perl_version_removed	=> undef;
-token	'??';
-method	perl_version_introduced	=> '5.006';	# perl56delta
-						# Not in 5.5.4 perlre
+class	'PPIx::Regexp::Token::GroupType::BranchReset',
+    note => 'Branch reset';
+token	'?|',
+    note => 'Re-use capture group numbers in branches of alternation',
+    text => '(?|regexp|regexp...)';
+method	perl_version_introduced	=> '5.009005', note => '5.9.5 perlre';
 method	perl_version_removed	=> undef;
 
-class	'PPIx::Regexp::Token::GroupType::Modifier';
-token	'?:';
-method	perl_version_introduced	=> MINIMUM_PERL;	# 5.3.7 perlre
+class	'PPIx::Regexp::Token::GroupType::Code', note => 'Code',
+    text => '(%s{code})';
+token	'?p', note => 'Function unknown';
+method	perl_version_introduced	=> '5.005',
+    note => 'Undocumented that I can find';
+method	perl_version_removed	=> '5.009005', note => 'perl595delta';
+token	'?', note => 'Evaluate code. Always matches.';
+method	perl_version_introduced	=> '5.005', note => 'perl5005delta';
 method	perl_version_removed	=> undef;
-token	'?i:';
-method	perl_version_introduced	=> '5.005';	# 5.5.4 perldelta, perlre
-method	perl_version_removed	=> undef;
-token	'?i-x:';
-method	perl_version_introduced	=> '5.005';	# 5.5.4 perldelta, perlre
-method	perl_version_removed	=> undef;
-token	'?^i';
-method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
-method	perl_version_removed	=> undef;
-token	'?d';
-method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
-method	perl_version_removed	=> undef;
-token	'?l';
-method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
-method	perl_version_removed	=> undef;
-token	'?u';
-method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
+token	'??', note => 'Evaluate code, use as regexp at this point';
+method	perl_version_introduced	=> '5.006',
+    note => 'perl56delta (not in 5.5.4 perlre)';
 method	perl_version_removed	=> undef;
 
-class	'PPIx::Regexp::Token::GroupType::NamedCapture';
-token	'?<foo>';
-method	perl_version_introduced	=> '5.009005';	# perl595delta
+class	'PPIx::Regexp::Token::GroupType::Modifier', note => 'Clustering',
+    text => '(%sregexp)';
+token	'?:', note => 'Basic clustering';
+method	perl_version_introduced	=> MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	q{?'foo'};
-method	perl_version_introduced	=> '5.009005';
+token	'?i:', note => 'Cluster with case-independance';
+method	perl_version_introduced	=> '5.005', note => 'perl5005delta';
 method	perl_version_removed	=> undef;
-token	'?P<foo>';
-method	perl_version_introduced	=> '5.009005';
-method	perl_version_removed	=> undef;
-
-class	'PPIx::Regexp::Token::GroupType::Subexpression';
-token	'?>';
-method	perl_version_introduced	=> '5.005';	# 5.5.4 perldelta, perlre
+token	'?i-x:',
+    note => 'Cluster with case-independance but no extended syntax';
+method	perl_version_introduced	=> '5.005', note => 'perl5005delta';
 method	perl_version_removed	=> undef;
 
-class	'PPIx::Regexp::Token::GroupType::Switch';
+class	'PPIx::Regexp::Token::GroupType::Modifier', note => 'Modifiers',
+    text => '(%s)', report => 0;
+token	'?^i', note => 'Reassert defaults, case-independance';
+method	perl_version_introduced	=> '5.013006', note => 'perl5136delta';
+method	perl_version_removed	=> undef;
+token	'?d', note => 'Compile without locale or unicode_strings';
+method	perl_version_introduced	=> '5.013006', note => 'perl5136delta';
+method	perl_version_removed	=> undef;
+token	'?l', note => 'Compile with locale';
+method	perl_version_introduced	=> '5.013006', note => 'perl5136delta';
+method	perl_version_removed	=> undef;
+token	'?u', note => 'Compile with unicode_strings';
+method	perl_version_introduced	=> '5.013006', note => 'perl5136delta';
+method	perl_version_removed	=> undef;
+
+class	'PPIx::Regexp::Token::GroupType::NamedCapture',
+    note => 'Named capture', text => '(%sregexp)';
+token	'?<foo>', note => 'Basic named capture';
+method	perl_version_introduced	=> '5.009005', note => 'perl595delta';
+method	perl_version_removed	=> undef;
+token	q{?'foo'}, note => 'Named capture, quoted syntax';
+method	perl_version_introduced	=> '5.009005', note => '5.9.5 perlre';
+method	perl_version_removed	=> undef;
+token	'?P<foo>', note => 'Named capture, PCRE/Python syntax';
+method	perl_version_introduced	=> '5.009005', note => '5.9.5 perlre';
+method	perl_version_removed	=> undef;
+
+class	'PPIx::Regexp::Token::GroupType::Subexpression',
+    note => 'Subexpression', text => '(%sregexp)';
+token	'?>', note => 'Match subexpression without backtracking';
+method	perl_version_introduced	=> '5.005', note => 'perl5005delta';
+method	perl_version_removed	=> undef;
+
+class	'PPIx::Regexp::Token::GroupType::Switch', note => 'Switch',
+    report => 0;	# See PPIx::Regexp::Token::Condition
 token	'?';
 method	perl_version_introduced => '5.005';
 method	perl_version_removed	=> undef;
 
-class	'PPIx::Regexp::Token::Interpolation';
-token	'$foo';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+class	'PPIx::Regexp::Token::Interpolation', note => 'Interpolation';
+token	'$foo', note => 'Interpolate the contents of $foo';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
 
-class	'PPIx::Regexp::Token::Literal';
-token	'a';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+class	'PPIx::Regexp::Token::Literal', note => 'Literal';
+token	'a', note => q{Letter 'a'};
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\t';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'\b', note => 'Back space, in character class only';
+method	perl_version_introduced => MINIMUM_PERL;
 method	perl_version_removed	=> undef;
-token	'\n';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'\t', note => 'Horizontal tab';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\r';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'\n', note => 'New line';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\a';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'\r', note => 'Return';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\e';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'\a', note => 'Alarm (bell)';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\033';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'\e', note => 'Escape';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\o{61}';
-method	perl_version_introduced	=> '5.013003';	# perl5133delta
+token	'\033', note => 'Octal 33 = escape, classic';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\x1B';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'\o{61}', note => q{Octal 61 = '1', new style};
+method	perl_version_introduced	=> '5.013003', note => 'perl5133delta';
 method	perl_version_removed	=> undef;
-token	'\x{1b}';
-method	perl_version_introduced	=> '5.006';		# 5.6.0 perlre
-							# not in perldelta
+token	'\x1B', note => 'Hex 1b = escape, classic';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'\c[';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'\x{1b}', note => 'Hex 1b = escape, new style';
+method	perl_version_introduced	=> '5.006',
+    note => '5.6.0 perlre (not in perldelta)';
 method	perl_version_removed	=> undef;
-token	'\N{LATIN SMALL LETTER P}';
-method	perl_version_introduced => '5.006001';		# 5.6.1 perldelta
+token	'\c[', note => 'Control-[ = escape';	# ]
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token   '\N{U+32}';
-method  perl_version_introduced => '5.008';		# 5.8.0 charnames
+token	'\N{LATIN SMALL LETTER P}', note => q{Letter 'p', by name};
+method	perl_version_introduced => '5.006001', note => 'perl561delta';
+method	perl_version_removed	=> undef;
+token   '\N{U+32}', note => q{Digit '2', by Unicode code point};
+method  perl_version_introduced => '5.008', note => '5.8.0 charnames';
 method	perl_version_removed	=> undef;
 
-class	'PPIx::Regexp::Token::Modifier';
-token	'i';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+class	'PPIx::Regexp::Token::Modifier', note => 'Operator modifiers',
+    text => '/%s';
+token	'i', note => 'Case independent';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	's';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	's', note => 'Single-line';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'm';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'm', note => 'Multiple lines';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'x';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'x', note => 'Extended syntax';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'g';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlop
+token	'g', note => 'Global matching';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'o';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlop
+token	'o', note => 'Compile once';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'e';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlop
+token	'e', note => 'Replacement is expression';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'c';
-method	perl_version_introduced => '5.004';		# 5.4.5 perlop
+token	'ee', note => 'Replacement is eval-ed expression';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'p';
-method	perl_version_introduced => '5.009005';	# 5.9.5 perlop ( & !  5.9.4 )
+token	'c', note => 'Do not reset pos() on failure (with /g)';
+method	perl_version_introduced => '5.004', note => '5.4.5 perlop';
 method	perl_version_removed	=> undef;
-token	'r';
-method	perl_version_introduced => '5.013002';	# perl5132delta
+token	'p', note => 'Populate ${^PREMATCH}, ${^MATCH}, and ${^POSTMATCH}';
+method	perl_version_introduced => '5.009005', note => '5.9.5 perlop';
 method	perl_version_removed	=> undef;
-token	'(?i)';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'r',
+    note => 'Return modified string from s///, leaving original unmodified';
+method	perl_version_introduced => '5.013002', note => 'perl5132delta';
 method	perl_version_removed	=> undef;
-token	'(?i-x)';
-method	perl_version_introduced => '5.005';	# 5.5.4 perldelta, perlre
-method	perl_version_removed	=> undef;
-token	'pi';
+token	'pi', report => 0;
 method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
-token	'pir';
+token	'pir', report => 0;
 method	perl_version_introduced => '5.013002';
 method	perl_version_removed	=> undef;
-token	'(?^i)';
-method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
+token	'a',
+    note => 'Match like /u, but restrict non-Unicode classes to ASCII';
+method	perl_version_introduced	=> '5.013010', note => 'perl51310delta';
 method	perl_version_removed	=> undef;
-token	'(?a)';
-method	perl_version_introduced	=> '5.013009';	# 5.13.9 perldelta, perlre
+token	'aa',
+    note => 'Match like /a, and do not match ASCII and non-ASCII literals';
+method	perl_version_introduced	=> '5.013010', note => 'perl51310delta';
 method	perl_version_removed	=> undef;
-token	'(?d)';
-method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
+token	'd', note => 'Match using default (pre-5.13.10) semantics';
+method	perl_version_introduced	=> '5.013010', note => 'perl51310delta';
 method	perl_version_removed	=> undef;
-token	'(?l)';
-method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
+token	'l', note => 'Match using current locale semantics';
+method	perl_version_introduced	=> '5.013010', note => 'perl51310delta';
 method	perl_version_removed	=> undef;
-token	'(?u)';
-method	perl_version_introduced	=> '5.013006';	# 5.13.6 perldelta, perlre
-method	perl_version_removed	=> undef;
-token	'(?aa)';
-method	perl_version_introduced	=> '5.013010';	# 5.13.10 perldelta
-method	perl_version_removed	=> undef;
-token	'a';
-method	perl_version_introduced	=> '5.013010';	# 5.13.10 perldelta
-method	perl_version_removed	=> undef;
-token	'aa';
-method	perl_version_introduced	=> '5.013010';	# 5.13.10 perldelta
-method	perl_version_removed	=> undef;
-token	'd';
-method	perl_version_introduced	=> '5.013010';	# 5.13.10 perldelta
-method	perl_version_removed	=> undef;
-token	'l';
-method	perl_version_introduced	=> '5.013010';	# 5.13.10 perldelta
-method	perl_version_removed	=> undef;
-token	'u';
-method	perl_version_introduced	=> '5.013010';	# 5.13.10 perldelta
+token	'u', note => 'Match using Unicode semantics';
+method	perl_version_introduced	=> '5.013010', note => 'perl51310delta';
 method	perl_version_removed	=> undef;
 
-class	'PPIx::Regexp::Token::Operator';
-token	'|';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+class	'PPIx::Regexp::Token::Modifier', note => 'Embedded modifiers';
+token	'(?i)', note => 'Basic modifier (case-independence)';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'^';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'(?i-x)', note => 'Negated modifier (extended syntax)';
+method	perl_version_introduced => '5.005', note => 'perl5005delta';
 method	perl_version_removed	=> undef;
-token	'-';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'(?^i)', note => 'Re-apply defaults, plus case-independence';
+method	perl_version_introduced	=> '5.013006', note => 'perl5136delta';
+method	perl_version_removed	=> undef;
+token	'(?a)', note => 'Embedded /a';
+method	perl_version_introduced	=> '5.013009', note => 'perl5139delta';
+method	perl_version_removed	=> undef;
+token	'(?d)', note => 'Embedded /d';
+method	perl_version_introduced	=> '5.013006', note => 'perl5136delta';
+method	perl_version_removed	=> undef;
+token	'(?l)', note => 'Embedded /l';
+method	perl_version_introduced	=> '5.013006', note => 'perl5136delta';
+method	perl_version_removed	=> undef;
+token	'(?u)', note => 'Embedded /u';
+method	perl_version_introduced	=> '5.013006', note => 'perl5136delta';
+method	perl_version_removed	=> undef;
+token	'(?aa)', note => 'Embedded /aa';
+method	perl_version_introduced	=> '5.013010', note => 'perl51310delta';
 method	perl_version_removed	=> undef;
 
-class	'PPIx::Regexp::Token::Quantifier';
-token	'*';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+class	'PPIx::Regexp::Token::Operator', note => 'Operator';
+token	'|', note => 'Alternation (outside character class)';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'+';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'^', note => 'Character class inversion';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'?';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+token	'-', note => 'Character range (inside character class)';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
+method	perl_version_removed	=> undef;
+
+class	'PPIx::Regexp::Token::Quantifier', note => 'Quantifier';
+token	'*', note => 'Zero or more';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
+method	perl_version_removed	=> undef;
+token	'+', note => 'One or more';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
+method	perl_version_removed	=> undef;
+token	'?', note => 'Zero or one';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
 
 # TODO the quantifier {m,n} gets covered, if at all, under
 # PPIx::Regexp::Token::Structure.
 
-class	'PPIx::Regexp::Token::Recursion';
-token	'(?1)';
+class	'PPIx::Regexp::Token::Recursion', note => 'Recursion';
+token	'(?1)', note => 'Recurse to first capture';
 method	perl_version_introduced => '5.009005';	# perl595delta
 method	perl_version_removed	=> undef;
-token	'(?+1)';
+token	'(?+1)', note => 'Recurse to next capture';
 method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
-token	'(?-1)';
+token	'(?-1)', note => 'Recurse to previous capture';
 method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
-token	'(?R)';
+token	'(?R)', note => 'Recurse to beginning of pattern';
 method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
-token	'(?&foo)';
+token	'(?&foo)', note => 'Recurse to named capture <foo>';
 method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
-token	'(?P>foo)';
+token	'(?P>foo)',
+    note => 'Recurse to named capture <foo>, PCRE/Python syntax';
 method	perl_version_introduced => '5.009005';
 method	perl_version_removed	=> undef;
 
@@ -476,91 +554,200 @@ method	perl_version_removed	=> undef;
 # PPIx::Regexp::Token::Backreference, PPIx::Regexp::Token::Condition,
 # and PPIX::Regexp::Token::Recursion. It has no separate tests.
 
-class	'PPIx::Regexp::Token::Structure';
+class	'PPIx::Regexp::Token::Structure', report => 0;
 token	'(';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
 token	')';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
-method	perl_version_removed	=> undef;
-token	'{';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
-method	perl_version_removed	=> undef;
-token	'}',	is_quantifier => 1;
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
 token	'[';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
 token	']';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'm';
-method	perl_version_introduced => MINIMUM_PERL;
+token	'{';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'qr';
-method	perl_version_introduced => '5.005';
+
+class	'PPIx::Regexp::Token::Structure', note => 'Quantifier';
+token	'}',	is_quantifier => 1, note => 'Explicit quantifier',
+    text => '{n} or {n,m}';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
+method	perl_version_removed	=> undef;
+
+class	'PPIx::Regexp::Token::Structure', note => 'Perl operator';
+token	'm', note => 'Match', text => 'm//';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
+method	perl_version_removed	=> undef;
+token	's', note => 'Substitute', text => 's///';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
+method	perl_version_removed	=> undef;
+token	'qr', note => 'Regexp constructor', text => 'qr{}';
+method	perl_version_introduced => '5.005', note => 'perl5005delta';
 method	perl_version_removed	=> undef;
 # TODO if the quantifier {m,n} gets forms that are only legal for
 # certain Perls, things may get sticky, but at the token level '}' is
 # the one marked as a quantifier, so here's the starting point.
 
-class	'PPIx::Regexp::Token::Whitespace';
-token	' ';
-method	perl_version_introduced => MINIMUM_PERL;	# 5.3.7 perlre
+class	'PPIx::Regexp::Token::Whitespace', note => 'White space';
+token	' ', note => 'Not significant under /x';
+method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
 
-done_testing;
+finis;
 
 my $context;
+my @report_info;
 
 BEGIN {
     $context = {};
 }
-sub class ($) {
-    my ( $class ) = @_;
-    $context->{class} = undef;
+
+sub class (@) {
+    my ( $class, %args ) = @_;
+    $args{class} = $class;
+    $context = undef;
     my $title = "require $class";
     if ( eval "require $class; 1" ) {
-	$context->{class} = $class;
+	$context->{class} = \%args;
+	$REPORT
+	    and return;
 	@_ = ( $title );
 	goto &pass;
     } else {
+	$REPORT
+	    and die $title;
 	@_ = ( "$title: $@" );
 	goto &fail;
     }
 }
 
-sub method (@) {
-    my ( $method, @args ) = @_;
+sub _dor {	# Because we do not require 5.010.
+    my ( @args ) = @_;
+    foreach my $arg ( @args ) {
+	defined $arg
+	    and return $arg;
+    }
+    return undef;	# Yes, I want this in array context.
+}
 
-    SKIP: {
-	defined $context->{object}
-	    or skip 'No object defined', 1;
+{
+    my $csv;
 
-	my $want = pop @args;
-	my $argtxt = @args ? ' ' . join( ', ', map { "'$_'" } @args
-	    ) . ' ' : '';
-	my $title;
-	if ( defined $want ) {
-	    $title = "$method($argtxt) is '$want'";
-	} else {
-	    $title = "$method($argtxt) is undef";
+    sub _report {
+	my ( @args ) = @_;
+
+	if ( ! $csv ) {
+	    require Text::CSV;
+	    $csv = Text::CSV->new();
+	    my $status = $csv->combine(
+		'Kind', 'Token', 'Descr', 'Introduced', 'Ref',
+		'Removed', 'Ref' );
+	    print $csv->string(), "\n";
 	}
-	my $got;
-	eval {
-	    $got = $context->{object}->$method( @args );
-	    1;
-	} or do {
-	    $title .= ": $@";
-	    chomp $title;
-	    @_ = ( $title );
-	    goto &fail;
+
+	my $status = $csv->combine( @args );
+	print $csv->string(), "\n";
+
+	return;
+    }
+}
+
+sub finis () {
+    $REPORT
+	or goto &done_testing;
+
+    foreach my $item ( @report_info ) {
+	my @data = (
+	    _dor( $item->{class}{note}, $item->{class}{class} ),
+	    _dor( $item->{token}{text}, $item->{token}{content} ),
+	    _dor( $item->{token}{note}, '' ),
+	);
+	foreach my $method ( qw{ perl_version_introduced
+	    perl_version_removed } ) {
+	    if ( $item->{$method} ) {
+		push @data,
+		_dor( $item->{$method}{got}, '' ),
+		_dor( $item->{$method}{note}, '' );
+	    } else {
+		push @data, '', '';
+	    }
+	}
+	while ( @data && '' eq $data[-1] ) {
+	    pop @data;
+	}
+
+	_report( @data );
+    }
+    return;
+}
+
+{
+
+    my %annotate;
+
+    BEGIN {
+
+	%annotate = map { $_ => 1 } qw{
+	    perl_version_introduced
+	    perl_version_removed
 	};
-	@_ = ( $got, $want, $title );
-	goto &is;
 
     }
+
+    sub method (@) {
+	my ( $method, @args ) = @_;
+
+	my ( %info, $kind, $want );
+
+	if ( $annotate{$method} ) {
+	    $kind = $1;
+	    $want = shift @args;
+	    %info = @args;
+	    @args = ();
+	} else {
+	    $want = pop @args;
+	}
+
+	SKIP: {
+	    defined $context->{object}
+		or skip 'No object defined', 1;
+
+	    my $argtxt = @args ? ' ' . join( ', ', map { "'$_'" } @args
+		) . ' ' : '';
+	    my $title;
+	    if ( defined $want ) {
+		$title = "$method($argtxt) is '$want'";
+	    } else {
+		$title = "$method($argtxt) is undef";
+	    }
+	    my $got;
+	    eval {
+		$got = $context->{object}->$method( @args );
+		1;
+	    } or do {
+		$title .= ": $@";
+		chomp $title;
+		$REPORT
+		    and die $title;
+		@_ = ( $title );
+		goto &fail;
+	    };
+
+	    $info{got} = $got;
+	    $context->{$method} = \%info;
+
+	    $REPORT
+		and return;
+
+	    @_ = ( $got, $want, $title );
+	    goto &is;
+
+	}
+    }
+
 }
 
 sub token (@) {
@@ -570,10 +757,34 @@ sub token (@) {
 	defined $context->{class}
 	    or skip 'No class defined', 1;
 
-	my $title = "Instantiate $context->{class} with '$content'";
-	$context->{object} = undef;
+	$context = {
+	    class	=> $context->{class},
+	    token	=> {
+		content	=> $content,
+		note	=> delete $args{note},
+	    },
+	};
+
+	my $text = exists $args{text} ? delete $args{text} :
+	    exists $context->{class}{text} ?
+		sprintf $context->{class}{text}, $content :
+		undef;
+
+	defined $text
+	    and $context->{token}{text} = $text;
+
+	my $report = exists $args{report} ? delete $args{report} :
+	    exists $context->{class}{report} ? $context->{class}{report} :
+	    1;
+
+	$REPORT
+	    and $report
+	    and push @report_info, $context;
+
+	my $title = "Instantiate $context->{class}{class} with '$content'";
+
 	if ( eval {
-		my $obj = $context->{class}->_new( $content );
+		my $obj = $context->{class}{class}->_new( $content );
 		$obj->can( '__PPIX_TOKEN__post_make' )
 		    and $obj->__PPIX_TOKEN__post_make();
 		$context->{object} = $obj;
@@ -581,11 +792,15 @@ sub token (@) {
 	    while ( my ( $name, $val ) = each %args ) {
 		$context->{object}{$name} = $val;
 	    }
+	    $REPORT
+		and return;
 	    @_ = ( $title );
 	    goto &pass;
 	} else {
 	    $title .= ": $@";
 	    chomp $title;
+	    $REPORT
+		and die $title;
 	    @_ = ( $title );
 	    goto &fail;
 	}
