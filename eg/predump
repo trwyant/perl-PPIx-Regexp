@@ -8,6 +8,7 @@ use Pod::Usage;
 use PPIx::Regexp::Dumper;
 
 my %opt = (
+    default_modifiers => [],
     verbose => 0,
 );
 
@@ -19,6 +20,7 @@ GetOptions( \%opt,
 	    } )
     },
     qw{
+        default_modifiers|default-modifiers=s@
 	encoding=s
 	indent=i margin=i ordinal! perl_version!
 	significant!
@@ -31,10 +33,19 @@ GetOptions( \%opt,
 	-output		=> \*STDERR,
     } );
 
+$opt{default_modifiers} = [ map { split qr{ \s* , \s* }smx } @{
+    $opt{default_modifiers} } ];
+
 my $unescape = delete $opt{unescape};
 foreach my $re ( @ARGV ) {
     $unescape and $re =~ s{ \\\\ }{\\}smxg;
-    $opt{test} or print "\n$re\n";
+    if ( ! $opt{test} ) {
+	my @output = ( "\n$re" );
+	@{ $opt{default_modifiers} }
+	    and push @output, q{default_modifiers => '} . join( ',', @{
+		$opt{default_modifiers} } ) . q{'};
+	print join( "\t", @output ), "\n";
+    }
     PPIx::Regexp::Dumper->new( $re, %opt )->print();
 }
 
@@ -61,6 +72,15 @@ and dumps the results of the parse to standard out. The following
 options are recognized:
 
 =over
+
+=item -default-modifiers text
+
+This option specifies default modifiers for the regular expression. You
+can specify more than one, either as a comma-separated list or by
+specifying the option multiple times, or both. It is simply passed
+through to L<< PPIx::Regexp->new()|PPIx::Regexp/new >>.
+
+This option can also be expressed as C<-default_modifiers>.
 
 =item -encoding name
 

@@ -88,6 +88,7 @@ use warnings;
 use base qw{ PPIx::Regexp::Node };
 
 use PPIx::Regexp::Lexer ();
+use PPIx::Regexp::Token::Modifier ();	# For its modifier manipulations.
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };
 
@@ -109,6 +110,31 @@ expression. The possible options are:
 
 =over
 
+=item default_modifiers array_reference
+
+This option specifies a reference to an array of default modifiers to
+apply to the regular expression being parsed. Each modifier is specified
+as a string. Any actual modifiers found supersede the defaults.
+
+When applying the defaults, C<'?'> and C<'/'> are completely ignored,
+and C<'^'> is ignored unless it occurs at the beginning of the modifier.
+The first dash (C<'-'>) causes subsequent modifiers to be negated.
+
+So, for example, if you wish to produce a C<PPIx::Regexp> object
+representing the regular expression in
+
+ use re '/smx';
+ {
+    no re '/x';
+    m/ foo /;
+ }
+
+you would (after some help from L<PPI|PPI> in finding the relevant
+statements), do something like
+
+ my $re = PPIx::Regexp->new( 'm/ foo /',
+     default_modifiers => [ '/smx', '-/x' ] );
+`
 =item encoding name
 
 This option specifies the encoding of the regular expression. This is
@@ -153,6 +179,8 @@ is it supported.
 	my $self = $class->SUPER::_new( @nodes );
 	$self->{source} = $content;
 	$self->{failures} = $lexer->failures();
+	$self->{effective_modifiers} =
+	    $tokenizer->__effective_modifiers();
 	return $self;
     }
 
@@ -373,6 +401,12 @@ This method retrieves the modifier of the object. This comes from the
 end of the initializing string or object and will be a
 L<PPIx::Regexp::Token::Modifier|PPIx::Regexp::Token::Modifier>.
 
+B<Note> that this object represents the actual modifiers present on the
+regexp, and does not take into account any that may have been applied by
+default (i.e. via the C<default_modifiers> argument to C<new()>). For
+something that takes account of default modifiers, see
+L<modifier_asserted()|/modifier_asserted>, below.
+
 In the event of a parse failure, there may not be a modifier present, in
 which case nothing is returned.
 
@@ -381,6 +415,27 @@ which case nothing is returned.
 sub modifier {
     my ( $self ) = @_;
     return $self->_component( 'PPIx::Regexp::Token::Modifier' );
+}
+
+=head2 modifier_asserted
+
+ my $re = PPIx::Regexp->new( '/ . /',
+     default_modifiers => [ 'smx' ] );
+ print $re->modifier_asserted( 'x' ) ? "yes\n" : "no\n";
+ # prints 'yes'.
+
+This method returns true if the given modifier is asserted for the
+regexp, whether explicitly or by the modifiers passed in in the
+C<default_modifiers> argument.
+
+=cut
+
+sub modifier_asserted {
+    my ( $self, $modifier ) = @_;
+    return PPIx::Regexp::Token::Modifier::__asserts(
+	$self->{effective_modifiers},
+	$modifier,
+    );
 }
 
 =head2 regular_expression

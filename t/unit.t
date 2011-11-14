@@ -1248,6 +1248,14 @@ true    ( can_be_quantified => [] );
 false   ( is_quantifier => [] );
 false   ( is_case_sensitive => [] );
 
+parse   ( '/ . /' );
+false   ( modifier_asserted => 'u' );
+false   ( modifier_asserted => 'x' );
+
+parse   ( '/ . /', default_modifiers => [ 'smxu' ] );
+true    ( modifier_asserted => 'u' );
+true    ( modifier_asserted => 'x' );
+
 SKIP: {
     $is_ascii
 	or skip(

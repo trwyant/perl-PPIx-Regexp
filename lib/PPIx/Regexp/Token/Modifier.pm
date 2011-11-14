@@ -126,14 +126,19 @@ sub asserts {
     my ( $self, $modifier ) = @_;
     $self->{modifiers} ||= $self->_decode();
     if ( defined $modifier ) {
-	my $bin = $aggregate{$modifier}
-	    or return $self->{modifiers}{$modifier};
-	return $self->{modifiers}{$bin} eq $modifier;
+	return __asserts( $self->{modifiers}, $modifier );
     } else {
 	return ( sort grep { defined $_ && $self->{modifiers}{$_} }
 	    map { $de_aggregate{$_} ? $self->{modifiers}{$_} : $_ }
 	    keys %{ $self->{modifiers} } );
     }
+}
+
+sub __asserts {
+    my ( $present, $modifier ) = @_;
+    my $bin = $aggregate{$modifier}
+	or return $present->{$modifier};
+    return $modifier eq $present->{$bin};
 }
 
 sub can_be_quantified { return };
@@ -207,6 +212,12 @@ sub negates {
 
 sub perl_version_introduced {
     my ( $self ) = @_;
+    return ( $self->{perl_version_introduced} ||=
+	$self->_perl_version_introduced() );
+}
+
+sub _perl_version_introduced {
+    my ( $self ) = @_;
     my $content = $self->content();
     my $is_statement_modifier = ( $content !~ m/ \A [(]? [?] /smx );
     my $match_semantics = $self->match_semantics();
@@ -235,6 +246,12 @@ sub perl_version_introduced {
 	and not $is_statement_modifier
 	and return '5.013006';
 
+    # The '^' reassert-defaults modifier in embedded modifiers was
+    # introduced in 5.13.6.
+    not $is_statement_modifier
+	and $content =~ m/ \^ /smx
+	and return '5.013006';
+
     $self->asserts( 'r' ) and return '5.013002';
     $self->asserts( 'p' ) and return '5.009005';
     $self->content() =~ m/ \A [(]? [?] .* - /smx
@@ -245,6 +262,43 @@ sub perl_version_introduced {
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
+
+
+# $present => __aggregate_modifiers( 'modifiers', ... );
+#
+# This subroutine is private to the PPIx::Regexp package. It may change
+# or be retracted without notice. Its purpose is to support defaulted
+# modifiers.
+#
+# Aggregate the given modifiers left-to-right, returning a hash of those
+# present and their values.
+
+sub __aggregate_modifiers {
+    my ( @mods ) = @_;
+    my %present;
+    foreach my $content ( @mods ) {
+	$content =~ s{ [?/]+ }{}smxg;
+	if ( $content =~ m/ \A \^ /smx ) {
+	    @present{ MODIFIER_GROUP_MATCH_SEMANTICS(), qw{ i s m x } }
+		= qw{ d 0 0 0 0 };
+	}
+
+	# Have to do the global match rather than a split, because the
+	# expression modifiers come through here too, and we need to
+	# distinguish between s/.../.../e and s/.../.../ee.
+	my $value = 1;
+	while ( $content =~ m/ ( ( [[:alpha:]-] ) \2* ) /smxg ) {
+	    if ( '-' eq $1 ) {
+		$value = 0;
+	    } elsif ( my $bin = $aggregate{$1} ) {
+		$present{$bin} = $1;
+	    } else {
+		$present{$1} = $value;
+	    }
+	}
+    }
+    return \%present;
+}
 
 # This must be implemented by tokens which do not recognize themselves.
 # The return is a list of list references. Each list reference must
@@ -294,32 +348,7 @@ sub __PPIX_TOKEN__post_make {
     # Decode modifiers from the content of the token.
     sub _decode {
 	my ( $self ) = @_;
-	my $value = 1;
-	my %present;
-	my $content = $self->content();
-	if ( $content =~ m/ \^ /smx ) {
-	    %present = (
-		MODIFIER_GROUP_MATCH_SEMANTICS()	=> 'd',
-		i	=> 0,
-		s	=> 0,
-		m	=> 0,
-		x	=> 0,
-	    );
-	}
-	# Have to do the global match rather than a split, because the
-	# expression modifiers come through here too, and we need to
-	# distinguish between s/.../.../e and s/.../.../ee.
-	while ( $content =~ m/ ( ( [[:alpha:]-] ) \2* ) /smxg ) {
-	    if ( $1 eq '-' ) {
-		$value = 0;
-	    } elsif ( my $bin = $aggregate{$1} ) {
-		$present{$bin} = $1;
-	    } else {
-		$present{$1} = $value;
-	    }
-	}
-
-	return \%present;
+	return __aggregate_modifiers( $self->content() );
     }
 }
 

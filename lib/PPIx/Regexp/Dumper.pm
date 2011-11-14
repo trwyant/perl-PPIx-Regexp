@@ -63,6 +63,12 @@ The following options are recognized:
 
 =over
 
+=item default_modifiers array_reference
+
+This argument is a reference to a list of default modifiers to be
+applied to the statement being parsed. See L<PPIx::Regexp|PPIx::Regexp>
+L<new()|PPIx::Regexp/new> for the details.
+
 =item encoding name
 
 This argument is the name of the encoding of the regular expression. If
@@ -168,6 +174,9 @@ ignored.
 	    object => undef,
 	    source => $re,
 	};
+
+	exists $args{default_modifiers}
+	    and $self->{default_modifiers} = $args{default_modifiers};
 
 	foreach my $key ( keys %default ) {
 	    $self->{$key} = exists $args{$key} ?
@@ -329,6 +338,15 @@ sub _tokens_dump {
     return @rslt;
 }
 
+sub _format_default_modifiers {
+    my ( $self, $subr, $elem ) = @_;
+    my $default_modifiers = $self->{default_modifiers} || [];
+    @{ $default_modifiers }
+	or return sprintf '%-8s( %s );', $subr, $self->_safe( $elem );
+    return sprintf '%-8s( %s, default_modifiers => %s );', $subr,
+	$self->_safe( $elem ), $self->_safe( $default_modifiers );
+}
+
 sub _format_modifiers_dump {
     my ( $self, $elem ) = @_;
     my %mods = $elem->modifiers();
@@ -350,10 +368,12 @@ sub _tokens_test {
     not $self->{significant} or $elem->significant() or return;
 
     my @tokens = $elem->tokens();
+
     my @rslt = (
-	'tokenize( ' . $self->_safe( $elem ) . ' );',
-	'count   ( ' . scalar @tokens . ' );',
+	$self->_format_default_modifiers( tokenize => $elem ),
+	sprintf( 'count   ( %d );', scalar @tokens ),
     );
+
     my $inx = 0;
     foreach my $token ( @tokens ) {
 	not $self->{significant} or $token->significant() or next;
@@ -370,7 +390,8 @@ sub PPIx::Regexp::__PPIX_DUMPER__test {
 
     not $dumper->{significant} or $self->significant() or return;
 
-    my $parse = 'parse   ( ' . $dumper->_safe( $self ) . ' );';
+#   my $parse = 'parse   ( ' . $dumper->_safe( $self ) . ' );';
+    my $parse = $dumper->_format_default_modifiers( parse => $self );
     my $fail =  'value   ( failures => [], ' . $self->failures() . ' );';
 
     # Note that we can not use SUPER in the following because SUPER goes

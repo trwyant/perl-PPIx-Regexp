@@ -141,6 +141,13 @@ our $VERSION = '0.021';
 
 	$errstr = undef;
 
+	exists $args{default_modifiers}
+	    and 'ARRAY' ne ref $args{default_modifiers}
+	    and do {
+		$errstr = 'default_modifiers must be an array reference';
+		return;
+	    };
+
 	my $self = {
 	    capture => undef,	# Captures from find_regexp.
 	    content => undef,	# The string we are tokenizing.
@@ -152,6 +159,7 @@ our $VERSION = '0.021';
 	    			# called. Used by get_token to prevent
 				# recursion.
 	    cursor_modifiers => undef,	# Position of modifiers.
+	    default_modifiers => $args{default_modifiers} || [],
 	    delimiter_finish => undef,	# Finishing delimiter of regexp.
 	    delimiter_re =>	undef,	# Recognize finishing delimiter.
 	    delimiter_start => undef,	# Starting delimiter of regexp.
@@ -223,6 +231,18 @@ sub cookie {
     } else {
 	return delete $self->{cookie}{$name};
     }
+}
+
+sub default_modifiers {
+    my ( $self ) = @_;
+    return [ @{ $self->{default_modifiers} } ];
+}
+
+sub __effective_modifiers {
+    my ( $self ) = @_;
+    'HASH' eq ref $self->{effective_modifiers}
+	or return {};
+    return { %{ $self->{effective_modifiers} } };
 }
 
 sub encoding {
@@ -520,17 +540,21 @@ sub __PPIX_TOKENIZER__init {
 	and push @tokens, $tokenizer->make_token( length $white,
 	'PPIx::Regexp::Token::Whitespace' );
 
-    $tokenizer->{modifiers} = [ {} ];
-    if ( $tokenizer->{content} =~ m/ ( [[:lower:]]* ) \s* \z /smx ) {
-	local $_ = $1;
-	$tokenizer->{cursor_limit} -= length $_;
-	# Can't use a split() here, because we need to distinguish
-	# between s/.../.../e and s/.../.../ee.
-	while ( m/ ( ( . ) \2* ) /smxg ) {
-	    $tokenizer->{modifiers}[0]{$1} = 1;
+    {
+	my @mods = @{ $tokenizer->{default_modifiers} };
+	if ( $tokenizer->{content} =~ m/ ( [[:lower:]]* ) \s* \z /smx ) {
+	    my $mod = $1;
+	    $tokenizer->{cursor_limit} -= length $mod;
+	    push @mods, $mod;
 	}
+	$tokenizer->{effective_modifiers} =
+	    PPIx::Regexp::Token::Modifier::__aggregate_modifiers (
+		'^', @mods );
+	$tokenizer->{modifiers} = [
+	    { %{ $tokenizer->{effective_modifiers} } },
+	];
+	$tokenizer->{cursor_modifiers} = $tokenizer->{cursor_limit};
     }
-    $tokenizer->{cursor_modifiers} = $tokenizer->{cursor_limit};
 
     $tokenizer->{delimiter_start} = substr
 	$tokenizer->{content},
@@ -731,6 +755,13 @@ a leading dash. Supported options are:
 
 =over
 
+=item default_modifiers array_reference
+
+This argument specifies default statement modifiers. It is optional, but
+if specified must be an array reference. See the
+L<PPIx::Regexp|PPIx::Regexp> L<new()|PPIx::Regexp/new> documentation for
+the details.
+
 =item encoding name
 
 This option specifies the encoding of the string to be tokenized. If
@@ -762,6 +793,15 @@ return the reason.
 This method returns the string being tokenized. This will be the result
 of the L<< PPI::Element->content()|PPI::Element/content >> method if the
 object was instantiated with a L<PPI::Element|PPI::Element>.
+
+=head2 default_modifiers
+
+ print join ', ', @{ $tokenizer->default_modifiers() };
+
+This method returns a reference to a copy of the array passed to the
+C<default_modifiers> argument to L<new()|/new>. If this argument was not
+used to instantiate the object, the return is a reference to an empty
+array.
 
 =head2 encoding
 
