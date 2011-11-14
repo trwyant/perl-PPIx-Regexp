@@ -92,7 +92,7 @@ use PPIx::Regexp::Token::Modifier ();	# For its modifier manipulations.
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };
 
-our $VERSION = '0.021';
+our $VERSION = '0.021_10';
 
 =head2 new
 
@@ -111,6 +111,9 @@ expression. The possible options are:
 =over
 
 =item default_modifiers array_reference
+
+THIS FUNCTIONALITY IS EXPERIMENTAL, AND MAY BE CHANGED OR REVOKED
+WITHOUT WARNING
 
 This option specifies a reference to an array of default modifiers to
 apply to the regular expression being parsed. Each modifier is specified
@@ -418,6 +421,9 @@ sub modifier {
 }
 
 =head2 modifier_asserted
+
+THIS FUNCTIONALITY IS EXPERIMENTAL, AND MAY BE CHANGED OR REVOKED
+WITHOUT WARNING
 
  my $re = PPIx::Regexp->new( '/ . /',
      default_modifiers => [ 'smx' ] );

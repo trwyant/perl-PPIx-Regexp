@@ -1,3 +1,18 @@
+0.021_10	T. R. Wyant	14-Nov-2011
+  Support for default modifiers. This includes:
+    * default_modifiers argument to new() in PPIx::Regexp,
+      PPIx::Regexp::Tokenizer, and PPIx::Regexp::Dumper
+    * Public method modifier_asserted() on PPIx::Regexp, to return
+      whether a given modifier is actually in effect. The results of the
+      modifier() method are unchanged.
+    THIS FUNCTIONALITY IS EXPERIMENTAL, AND MAY BE CHANGED OR REVOKED
+    WITHOUT WARNING.
+  Require Test::More 0.88 for installation. Eliminate all the 'eval
+    { require ... }' logic in favor of 'use Test::More 0.88'.
+  Have Makefile.PL make use of {BUILD_REQUIRES} if it is available.
+  Fix PPIx::Regexp::Token::Whitespace->can_be_quantified() to return
+    false.
+
 0.021		T. R. Wyant	22-Jul-2011
   Modified tokenizer to correctly handle a back slash used as a
     delimiter. I believe.
