@@ -480,8 +480,8 @@ sub PPIx::Regexp::Node::__PPIX_DUMPER__test {
 		    "$method=$val" :
 		    "$method undef";
 	    }
-	    foreach my $method ( qw{ can_be_quantified is_quantifier
-		is_case_sensitive } ) {
+	    foreach my $method ( qw{ can_be_quantified is_quantifier } ) {
+##		is_case_sensitive
 		$self->can( $method ) or next;
 		$self->$method() and push @rslt, $method;
 	    }
@@ -575,8 +575,8 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__dump {
 	}
 
 	foreach my $method (
-	    qw{significant can_be_quantified is_quantifier
-	    is_case_sensitive } ) {
+	    qw{ significant can_be_quantified is_quantifier } ) {
+##	    is_case_sensitive
 	    $self->can( $method )
 		and $self->$method()
 		and push @rslt, $method;
@@ -620,8 +620,8 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__test {
     if ( $dumper->{verbose} ) {
 
 	foreach my $method (
-	    qw{significant can_be_quantified is_quantifier
-	    is_case_sensitive } ) {
+	    qw{ significant can_be_quantified is_quantifier } ) {
+##	    is_case_sensitive
 	    $self->can( $method ) or next;
 	    push @rslt, $self->$method() ?
 	        "true    ( $method => [] );" :

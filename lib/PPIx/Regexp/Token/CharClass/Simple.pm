@@ -41,27 +41,27 @@ use PPIx::Regexp::Constant qw{
 
 our $VERSION = '0.021';
 
-=head2 is_case_sensitive
-
-This override of the superclass method returns true for Unicode
-properties that specify case, and false (but defined) for all
-other character classes.
-
-The classes that specify case are documented in
-L<perluniprops|/perluniprops>.
-
-B<Known bug:> This method returns false (but defined) for user-defined
-Unicode properties. It should return C<undef>. This bug B<may> be fixed
-if I find a way to identify all system-defined Unicode properties.
-
-=cut
-
-sub is_case_sensitive {
-    my ( $self ) = @_;
-    exists $self->{is_case_sensitive}
-	and return $self->{is_case_sensitive};
-    return ( $self->{is_case_sensitive} = $self->_is_case_sensitive() );
-}
+##=head2 is_case_sensitive
+##
+##This override of the superclass method returns true for Unicode
+##properties that specify case, and false (but defined) for all
+##other character classes.
+##
+##The classes that specify case are documented in
+##L<perluniprops|/perluniprops>.
+##
+##B<Known bug:> This method returns false (but defined) for user-defined
+##Unicode properties. It should return C<undef>. This bug B<may> be fixed
+##if I find a way to identify all system-defined Unicode properties.
+##
+##=cut
+##
+##sub is_case_sensitive {
+##    my ( $self ) = @_;
+##    exists $self->{is_case_sensitive}
+##	and return $self->{is_case_sensitive};
+##    return ( $self->{is_case_sensitive} = $self->_is_case_sensitive() );
+##}
 
 {
     my %case_sensitive = map { $_ => 1 } qw{

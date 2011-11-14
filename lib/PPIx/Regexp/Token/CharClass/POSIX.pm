@@ -47,22 +47,22 @@ our $VERSION = '0.021';
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 
-=head2 is_case_sensitive
-
-This override of the superclass method of the same name returns true if
-the character class is C<[:lower:]> or C<[:upper:]>, and false (but
-defined) for all other POSIX character classes.
-
-=cut
-
-{
-    my %case_sensitive = map { $_ => 1 } qw{ [:lower:] [:upper:] };
-
-    sub is_case_sensitive {
-	my ( $self ) = @_;
-	return $case_sensitive{ $self->content() } || 0;
-    }
-}
+##=head2 is_case_sensitive
+##
+##This override of the superclass method of the same name returns true if
+##the character class is C<[:lower:]> or C<[:upper:]>, and false (but
+##defined) for all other POSIX character classes.
+##
+##=cut
+##
+##{
+##    my %case_sensitive = map { $_ => 1 } qw{ [:lower:] [:upper:] };
+##
+##    sub is_case_sensitive {
+##	my ( $self ) = @_;
+##	return $case_sensitive{ $self->content() } || 0;
+##    }
+##}
 
 sub perl_version_introduced {
 #   my ( $self ) = @_;
