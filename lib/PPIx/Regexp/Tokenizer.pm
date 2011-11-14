@@ -549,7 +549,7 @@ sub __PPIX_TOKENIZER__init {
 	}
 	$tokenizer->{effective_modifiers} =
 	    PPIx::Regexp::Token::Modifier::__aggregate_modifiers (
-		'^', @mods );
+		@mods );
 	$tokenizer->{modifiers} = [
 	    { %{ $tokenizer->{effective_modifiers} } },
 	];

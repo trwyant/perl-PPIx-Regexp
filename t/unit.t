@@ -1254,6 +1254,12 @@ false   ( modifier_asserted => 'x' );
 
 parse   ( '/ . /', default_modifiers => [ 'smxu' ] );
 true    ( modifier_asserted => 'u' );
+false   ( modifier_asserted => 'l' );
+true    ( modifier_asserted => 'x' );
+
+parse   ( '/ . /', default_modifiers => [ 'smxu', '-u' ] );
+false   ( modifier_asserted => 'u' );
+false   ( modifier_asserted => 'l' );
 true    ( modifier_asserted => 'x' );
 
 SKIP: {

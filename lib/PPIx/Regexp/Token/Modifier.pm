@@ -138,7 +138,7 @@ sub __asserts {
     my ( $present, $modifier ) = @_;
     my $bin = $aggregate{$modifier}
 	or return $present->{$modifier};
-    return $modifier eq $present->{$bin};
+    return defined $present->{$bin} && $modifier eq $present->{$bin};
 }
 
 sub can_be_quantified { return };
@@ -291,7 +291,7 @@ sub __aggregate_modifiers {
 	    if ( '-' eq $1 ) {
 		$value = 0;
 	    } elsif ( my $bin = $aggregate{$1} ) {
-		$present{$bin} = $1;
+		$present{$bin} = $value ? $1 : undef;
 	    } else {
 		$present{$1} = $value;
 	    }
