@@ -1,3 +1,11 @@
+0.021_11	T. R. Wyant	15-Nov-2011
+  Don't initialize effective modifiers with '^', since that wrongly
+    asserts that /d has been seen somewhere along the line.
+  Implement negation of match-semantic modifiers (e.g. 'no re /u;') by
+    setting the relevant datum to undef.
+  THE DEFAULT-MODIFIER FUNCTIONALITY IS EXPERIMENTAL, AND MAY BE CHANGED
+    WITHOUT NOTICE until the next production release.
+
 0.021_10	T. R. Wyant	14-Nov-2011
   Support for default modifiers. This includes:
     * default_modifiers argument to new() in PPIx::Regexp,
