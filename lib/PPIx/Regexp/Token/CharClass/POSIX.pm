@@ -13,7 +13,8 @@ PPIx::Regexp::Token::CharClass::POSIX - Represent a POSIX character class
 C<PPIx::Regexp::Token::CharClass::POSIX> is a
 L<PPIx::Regexp::Token::CharClass|PPIx::Regexp::Token::CharClass>.
 
-C<PPIx::Regexp::Token::CharClass::POSIX> has no descendants.
+C<PPIx::Regexp::Token::CharClass::POSIX> is the parent of
+L<PPIx::Regexp::Token::CharClass::POSIX::Unknown|PPIx::Regexp::Token::CharClass::POSIX::Unknown>.
 
 =head1 DESCRIPTION
 
@@ -23,7 +24,7 @@ recognized within a character class.
 Note that collating symbols (e.g. C<[.ch.]>) and equivalence classes
 (e.g. C<[=a=]>) are valid in the POSIX standard, but are not valid in
 Perl regular expressions. These end up being represented by
-L<PPIx::Regexp::Token::CharClass::Posix::Unknown|PPIx::Regexp::Token::CharClass::Posix::Unknown>,
+L<PPIx::Regexp::Token::CharClass::POSIX::Unknown|PPIx::Regexp::Token::CharClass::POSIX::Unknown>,
 and are considered a parse failure.
 
 =head1 METHODS

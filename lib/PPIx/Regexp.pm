@@ -320,7 +320,7 @@ delimiters, and index 1 represents the replacement string's delimiters,
 which may be undef. For example,
 
  print PPIx::Regexp->new('s{foo}<bar>')-delimiters(1);
- # prints '[]'
+ # prints '<>'
 
 If the object was not initialized with a valid regexp of some sort, the
 results of this method are undefined.

@@ -28,18 +28,18 @@ This class represents modifier characters at the end of the regular
 expression.  For example, in C<qr{foo}smx> this class would represent
 the terminal C<smx>.
 
-=head2 The C<a>, C<d>, C<l>, and C<u> modifiers
+=head2 The C<a>, C<aa>, C<d>, C<l>, and C<u> modifiers
 
-The C<a>, C<d>, C<l>, and C<u> modifiers, introduced into the C<(?...)>
-construction in Perl 5.13.6 (or 5.13.9 in the case of /a) are used to
-force either Unicode pattern semantics (C<u>), locale semantics (C<l>)
-default semantics (C<d> the traditional Perl semantics, which can also
-mean 'dual' since it means Unicode if the string's UTF-8 bit is on, and
-locale if the UTF-8 bit is off), or restricted default semantics (C<a>).
-These are mutually exclusive, and only one can be asserted at a time.
-Asserting any of these overrides the inherited value of any of the
-others. The C<asserted()> method reports as asserted the last one it
-sees, or none of them if it has seen none.
+The C<a>, C<aa>, C<d>, C<l>, and C<u> modifiers, introduced starting in
+Perl 5.13.6, are used to force either Unicode pattern semantics (C<u>),
+locale semantics (C<l>) default semantics (C<d> the traditional Perl
+semantics, which can also mean 'dual' since it means Unicode if the
+string's UTF-8 bit is on, and locale if the UTF-8 bit is off), or
+restricted default semantics (C<a>). These are mutually exclusive, and
+only one can be asserted at a time. Asserting any of these overrides
+the inherited value of any of the others. The C<asserted()> method
+reports as asserted the last one it sees, or none of them if it has seen
+none.
 
 For example, given C<PPIx::Regexp::Token::Modifier> C<$elem>
 representing the invalid regular expression fragment C<(?dul)>,
@@ -51,10 +51,6 @@ explicitly negated.
 If C<$elem> represented regular expression fragment C<(?i)>,
 C<< $elem->asserted( 'd' ) >> would return false, since even though C<d>
 represents the default behavior it is not explicitly asserted.
-
-B<Note> that if this functionality is retracted before Perl 5.14 is
-released, support for it will disappear. See L<PPIx::Regexp/NOTICE> for
-some explanation.
 
 =head2 The caret (C<^>) modifier
 
@@ -150,8 +146,8 @@ sub can_be_quantified { return };
  print "This token has $sem match semantics\n";
 
 This method returns the match semantics asserted by the token, as one of
-the letters C<a>, C<d>, C<l>, or C<u>. If no explicit match semantics
-are asserted, this method returns C<undef>.
+the strings C<'a'>, C<'aa'>, C<'d'>, C<'l'>, or C<'u'>. If no explicit
+match semantics are asserted, this method returns C<undef>.
 
 =cut
 

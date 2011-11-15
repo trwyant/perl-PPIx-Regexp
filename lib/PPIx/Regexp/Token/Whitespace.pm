@@ -19,7 +19,7 @@ C<PPIx::Regexp::Token::Whitespace> has no descendants.
 
 This class represents whitespace. It will appear inside the regular
 expression only if the /x modifier is present, but it may also appear
-between the type and the opening delimiter (e.g. C<qr {foo}> or after
+between the type and the opening delimiter (e.g. C<qr {foo}>) or after
 the regular expression in a bracketed substitution (e.g. C<s{foo}
 {bar}>).
 

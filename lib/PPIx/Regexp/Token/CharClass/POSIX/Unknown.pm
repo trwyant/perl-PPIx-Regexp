@@ -45,6 +45,8 @@ PPIx::Regexp::Token::CharClass::POSIX::Unknown - Represent an unknown or unsuppo
 C<PPIx::Regexp::Token::CharClass::POSIX::Unknown> is a
 L<PPIx::Regexp::Token::CharClass::POSIX|PPIx::Regexp::Token::CharClass::POSIX>.
 
+C<PPIx::Regexp::Token::CharClass::POSIX::Unknown> has no descendants.
+
 =head1 DESCRIPTION
 
 This class represents POSIX character classes which are recognized but

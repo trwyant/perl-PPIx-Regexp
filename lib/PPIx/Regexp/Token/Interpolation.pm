@@ -63,8 +63,8 @@ not be the same as the content of the original
 C<PPIx::Regexp::Token::Interpolation>. This can happen because
 interpolated variable names may be enclosed in curly brackets, but this
 does not happen in normal code. For example, in C</${foo}bar/>, the
-content of the C<PPIx> object will be C<'${foo}'>, but the content of
-the C<PPI::Document> will be C<'$foo'>.
+content of the C<PPIx::Regexp::Token::Interpolation> object will be
+C<'${foo}'>, but the content of the C<PPI::Document> will be C<'$foo'>.
 
 =cut
 
