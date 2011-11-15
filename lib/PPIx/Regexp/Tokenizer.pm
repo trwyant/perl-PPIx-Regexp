@@ -757,9 +757,6 @@ a leading dash. Supported options are:
 
 =item default_modifiers array_reference
 
-THIS FUNCTIONALITY IS EXPERIMENTAL, AND MAY BE CHANGED OR REVOKED
-WITHOUT WARNING
-
 This argument specifies default statement modifiers. It is optional, but
 if specified must be an array reference. See the
 L<PPIx::Regexp|PPIx::Regexp> L<new()|PPIx::Regexp/new> documentation for

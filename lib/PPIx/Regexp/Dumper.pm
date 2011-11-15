@@ -65,9 +65,6 @@ The following options are recognized:
 
 =item default_modifiers array_reference
 
-THIS FUNCTIONALITY IS EXPERIMENTAL, AND MAY BE CHANGED OR REVOKED
-WITHOUT WARNING.
-
 This argument is a reference to a list of default modifiers to be
 applied to the statement being parsed. See L<PPIx::Regexp|PPIx::Regexp>
 L<new()|PPIx::Regexp/new> for the details.

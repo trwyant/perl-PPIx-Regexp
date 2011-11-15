@@ -112,9 +112,6 @@ expression. The possible options are:
 
 =item default_modifiers array_reference
 
-THIS FUNCTIONALITY IS EXPERIMENTAL, AND MAY BE CHANGED OR REVOKED
-WITHOUT WARNING
-
 This option specifies a reference to an array of default modifiers to
 apply to the regular expression being parsed. Each modifier is specified
 as a string. Any actual modifiers found supersede the defaults.
@@ -421,9 +418,6 @@ sub modifier {
 }
 
 =head2 modifier_asserted
-
-THIS FUNCTIONALITY IS EXPERIMENTAL, AND MAY BE CHANGED OR REVOKED
-WITHOUT WARNING
 
  my $re = PPIx::Regexp->new( '/ . /',
      default_modifiers => [ 'smx' ] );
