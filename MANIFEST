@@ -79,6 +79,7 @@ t/unit.t
 t/version.t
 xt/author/critic.t
 xt/author/executable.t
+xt/author/kwalitee.t
 xt/author/manifest.t
 xt/author/perlcriticrc
 xt/author/pod.t
