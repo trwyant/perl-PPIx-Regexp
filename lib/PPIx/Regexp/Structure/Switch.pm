@@ -40,7 +40,7 @@ use PPIx::Regexp::Constant qw{
     TOKEN_UNKNOWN
 };
 
-our $VERSION = '0.021_11';
+our $VERSION = '0.022';
 
 sub __PPIX_LEXER__finalize {
     my ( $self ) = @_;

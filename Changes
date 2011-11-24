@@ -1,3 +1,7 @@
+0.022		T. R. Wyant	24-Nov-2011
+  Correct various documentation errors.
+  No code changes since 0.021_11.
+
 0.021_11	T. R. Wyant	15-Nov-2011
   Don't initialize effective modifiers with '^', since that wrongly
     asserts that /d has been seen somewhere along the line.
