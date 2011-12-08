@@ -1,5 +1,11 @@
+0.023		T. R. Wyant	08-Dec-2011
+  Correct address of FSF in the version of the GPL distributed in
+    LICENSES/Copying. Thanks to Petr Pisar for picking this up.
+
 0.022		T. R. Wyant	24-Nov-2011
   Correct various documentation errors.
+  The default-modifier functionality is no longer considered
+    experimental.
   No code changes since 0.021_11.
 
 0.021_11	T. R. Wyant	15-Nov-2011
