@@ -51,7 +51,7 @@ use Carp qw{ confess };
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };
 
-our $VERSION = '0.023';
+our $VERSION = '0.024';
 
 sub _new {
     my ( $class, @args ) = @_;
