@@ -77,6 +77,7 @@ t/basic.t
 t/parse.t
 t/unit.t
 t/version.t
+xt/author/changes.t
 xt/author/critic.t
 xt/author/executable.t
 xt/author/kwalitee.t

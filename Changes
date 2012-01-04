@@ -1,18 +1,18 @@
-0.024		T. R. Wyant	17-Dec-2011
+0.024		2011-12-17	T. R. Wyant
   Reinstate author test xt/author/manifest.t, which was clobbered
     shortly before the release of 0.021_10.
 
-0.023		T. R. Wyant	08-Dec-2011
+0.023		2011-12-08	T. R. Wyant
   Correct address of FSF in the version of the GPL distributed in
     LICENSES/Copying. Thanks to Petr Pisar for picking this up.
 
-0.022		T. R. Wyant	24-Nov-2011
+0.022		2011-11-24	T. R. Wyant
   Correct various documentation errors.
   The default-modifier functionality is no longer considered
     experimental.
   No code changes since 0.021_11.
 
-0.021_11	T. R. Wyant	15-Nov-2011
+0.021_11	2011-11-15	T. R. Wyant
   Don't initialize effective modifiers with '^', since that wrongly
     asserts that /d has been seen somewhere along the line.
   Implement negation of match-semantic modifiers (e.g. 'no re /u;') by
@@ -20,7 +20,7 @@
   THE DEFAULT-MODIFIER FUNCTIONALITY IS EXPERIMENTAL, AND MAY BE CHANGED
     WITHOUT NOTICE until the next production release.
 
-0.021_10	T. R. Wyant	14-Nov-2011
+0.021_10	2011-11-14	T. R. Wyant
   Support for default modifiers. This includes:
     * default_modifiers argument to new() in PPIx::Regexp,
       PPIx::Regexp::Tokenizer, and PPIx::Regexp::Dumper
@@ -35,17 +35,17 @@
   Fix PPIx::Regexp::Token::Whitespace->can_be_quantified() to return
     false.
 
-0.021		T. R. Wyant	22-Jul-2011
+0.021		2011-07-22	T. R. Wyant
   Modified tokenizer to correctly handle a back slash used as a
     delimiter. I believe.
   PPIx::Regexp::Dumper now dumps the results of ppi() if that method is
     present and -verbose is asserted.
 
-0.020		T. R. Wyant	02-Apr-2011
+0.020		2011-04-02	T. R. Wyant
   Corrected perl_version_introduced():
     \R is now 5.009005 (was 5.000).
 
-0.019		T. R. Wyant	01-Mar-2011
+0.019		2011-03-01	T. R. Wyant
   Various corrections to perl_version_introduced():
     \X is now 5.006 (was 5.000);
     \N{name} is now 5.006001 (was 5.006);
@@ -59,20 +59,20 @@
     modifiers when modifying the entire expression.
   Correct handling of interpolations like ${^foo} and $#{foo}.
 
-0.018		T. R. Wyant	16-Feb-2011
+0.018		2011-02-16	T. R. Wyant
   No changes (other than version) since 0.017_02.
 
-0.017_02	T. R. Wyant	31-Jan-2011
+0.017_02	2011-01-31	T. R. Wyant
   Override ppi() in PPIx::Regexp::Token::Interpolation to provide the
     proper PPI when variable names are bracketed.
   Properly parse bracketed variable names (I hope!), which may not be
     subscripted.
 
-0.017_01	T. R. Wyant	28-Jan-2011
+0.017_01	2011-01-28	T. R. Wyant
   Take account of possible '$' or '@' casts before a symbol in an
     interpolation (e.g. $$foo{bar}, which is equivalent to $foo->{bar}).
 
-0.017		T. R. Wyant	26-Jan-2011
+0.017		2011-01-26	T. R. Wyant
   Add the /a modifier to PPI::Regexp::Token::Modifiers, legal only in
     the (?:...) construction. This was introduced in Perl 5.13.9.
   When parsing an interpolation from a replacement string (rather than a
@@ -80,13 +80,13 @@
     trying to disambiguate them from quantifiers and character classes,
     which they can't be in this context.
 
-0.016		T. R. Wyant	05-Jan-2011
+0.016		2011-01-05	T. R. Wyant
   The PPIx::Regexp::Token::Code perl_version_introduced() method now
     returns the minimum Perl version (currently set to 5.000) if it is
     used to represent the substitution portion of s///e.
   Update copyright to 2011.
 
-0.015		T. R. Wyant	25-Oct-2010
+0.015		2010-10-25	T. R. Wyant
   Documented intent to revoke support for features introduced in a
     development Perl which do not make it to a production release. This
     is necessary because in this case the syntax could be reused with
@@ -99,7 +99,7 @@
   Corrected PPIx::Regexp::Constant RE_CAPTURE_NAME docs, somehow missed
     back at 0.010_01.
 
-0.014		T. R. Wyant	14-Oct-2010
+0.014		2010-10-14	T. R. Wyant
   Recognize \o{...} as a PPIx::Regexp::Token::Literal, with
     perl_version_introduced() of 5.0013003.
   Terminate \0.. through \7.. after three characters, as Perl does.
@@ -109,7 +109,7 @@
   Correct the PPIx::Regexp::Token::Literal ordinal() method for '\b'. As
     a literal, this is a back space.
 
-0.013		T. R. Wyant	10-Oct-2010
+0.013		2010-10-10	T. R. Wyant
   Declare a parse failure if characters are found between the '}' and
     the ')' of (?{...}) and (??{...}), and rebless the tokens to
     ::Unknown. Perl does not accept anything here, so I think I should
@@ -125,16 +125,16 @@
     perlop documents, so these should be taken with a HUGE grain of
     salt.
 
-0.012		T. R. Wyant	26-Sep-2010
+0.012		2010-09-26	T. R. Wyant
   Track all the features reported as introduced (or removed) in Perl
     5.010 back to Perl 5.009005, and report them as such.
   Report modifier /r as having been introduced in Perl 5.013002, rather
     than the default of 5.006.
 
-0.011		T. R. Wyant	16-Sep-2010
+0.011		2010-09-16	T. R. Wyant
   No changes from 0.010_01.
 
-0.010_01	T. R. Wyant	11-Sep-2010
+0.010_01	2010-09-11	T. R. Wyant
   Remove dependencies on Params::Util and Readonly. The latter was
     requested by ADAMK for the benefit of Padre. It involved changing
     the symbols exported from PPIx::Regexp::Constant, but these were
@@ -146,17 +146,17 @@
     read only. This means we need PPI 1.116. Cache the document, and
     ensure the cached result is returned on subsequent calls.
 
-0.010		T. R. Wyant	06-Aug-2010
+0.010		2010-08-06	T. R. Wyant
   Fix fatal error in PPIx::Regexp::Token::Code->ppi().
   Move author tests from xt/ to xt/author/.
 
-0.009		T. R. Wyant	03-Aug-2010
+0.009		2010-08-03	T. R. Wyant
   Recognize s/.../.../ee as being different from s/.../.../e. In
     particular, the replacement portion of the former is _not_ a Perl
     expression: it's an interpolatble string, which later gets
     eval{}'ed.
 
-0.008		T. R. Wyant	01-Jul-2010
+0.008		2010-07-01	T. R. Wyant
   Promote methods can_be_quantified() and is_quantifier() from
     PPIx::Regexp::Token to PPIx::Regexp::Element, so all classes inherit
     them. They still return true and false respectively.
@@ -174,19 +174,19 @@
     PPIx::Regexp::Token::Structure, and PPIx::Regexp::Tokenizer.
   Remove leftover boilerplate in PPIx::Regexp::Token::CharClass::Simple.
 
-0.007_01	T. R. Wyant	28-Jun-2010
+0.007_01	2010-06-28	T. R. Wyant
   Explicitly require a minimum Perl of 5.006.
   Centralized dependencies in inc/PPIx/Regexp/Meta.pm.
   Removed claim that PPIx::Regexp is alpha code. Docs still say that the
     interface can be changed, but now it will go through a deprecation
     cycle.
 
-0.007		T. R. Wyant	28-Apr-2010
+0.007		2010-04-28	T. R. Wyant
   PPIx::Regexp::Lexer no longer fails when encountering expressions like
     m{)}. Instead, it marks the right parenthesis as an unmatched
     delimiter.
 
-0.006_01	T. R. Wyant	23-Apr-2010
+0.006_01	2010-04-23	T. R. Wyant
   Fixed RT 56864 - PPIx::Regexp::Lexer fails in Perl::Critic under Perl
     5.13.0. This was due to the value of a returned $+[0] getting
     transmogrified before the caller saw it. I never did isolate what
@@ -195,7 +195,7 @@
     PPIX_REGEXP_TOKENIZER_TRACE to a non-zero numeric value. This is
     unsupported, though.
 
-0.006	T. R. Wyant	26-Feb-2010
+0.006		2010-02-26	T. R. Wyant
   Update copyright from 2009 to 2009-2010.
   Parse \N{...} in accordance with perl5115delta. The curlys must
     contain an alpha followed by alphanumerics, spaces, parens, colons,
@@ -207,7 +207,7 @@
   Add method match() to PPIx::Regexp::Tokenizer. This is analogous to
     capture(), but returns the entire matched string.
 
-0.005	T. R. Wyant	26-Dec-2009
+0.005		2009-12-26	T. R. Wyant
   Recognize \N (without curlys), back-ported from Perl 6 into 5.11.
   Recognize unicode characters as \N{[[:alpha:]] ... rather than
     \N{[\w\s:] ... This is per the 5.11 documentation, but I think Perl
@@ -221,7 +221,7 @@
     PPIx::Regexp::Structure::NamedCapture and
     PPIx::Regexp::Token::GroupType::NamedCapture.
 
-0.004	T. R. Wyant	09-Nov-2009
+0.004		2009-11-09	T. R. Wyant
   Have PPIx::Regexp::Token::Literal correctly recognize when
     charnames::vianame() is unavailable, and decouple this from the
     handling of \N{U+hhhh}.
@@ -229,7 +229,7 @@
     appears not to cut it.
   Correct the assignment of the license type in Makefile.PL.
 
-0.003	T. R. Wyant	05-Nov-2009
+0.003		2009-11-05	T. R. Wyant
   Have PPIx::Regexp::Token::Literal recognize \N{U+hhhh} (where hhhh
     represents hex digits), and provide its ordinal (hhhh). Remove
     recognition of \N. (. = any character), which Perl does not do.
@@ -240,7 +240,7 @@
   Increase test coverage and remove dead code.
   Count tests in t/parse.t and t/unit.t
 
-0.002	28-Oct-2009	T. R. Wyant
+0.002		2009-10-28	T. R. Wyant
   In verbose mode, have PPIx::Regexp::Dumper dump the absolute capture
     number referred to by a numbered reference.
   Have eg/preslurp pass its -verbose option to PPIx::Regexp::Dumper
@@ -248,5 +248,5 @@
     since some versions of Test::More require a reference for the first
     argument of isa_ok().
 
-0.001	21-Oct-2009	T. R. Wyant
+0.001		2009-10-21	T. R. Wyant
   Initial release.
