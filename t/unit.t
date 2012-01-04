@@ -1262,6 +1262,58 @@ false   ( modifier_asserted => 'u' );
 false   ( modifier_asserted => 'l' );
 true    ( modifier_asserted => 'x' );
 
+# Handle leading and trailing white space
+
+parse   ( ' /foo/ ' );
+value   ( failures => [], 0 );
+class   ( 'PPIx::Regexp' );
+count   ( 5 );
+value   ( delimiters => [], '//' );		# The purpose of these
+choose  ( modifier => [] );			# tests is to ensure
+class   ( 'PPIx::Regexp::Token::Modifier' );	# that the significant
+value   ( content => [], '' );			# parts of the regexp
+choose  ( regular_expression => [] );		# can still be found if
+class   ( 'PPIx::Regexp::Structure::Regexp' );	# we introduce leading
+choose  ( type => 0 );				# and trailing white
+class   ( 'PPIx::Regexp::Token::Structure' );	# space
+value   ( content => [], '' );			# ...
+choose  ( child => 0 );
+class   ( 'PPIx::Regexp::Token::Whitespace' );
+content ( ' ' );
+choose  ( child => 1 );
+class   ( 'PPIx::Regexp::Token::Structure' );
+content ( '' );
+choose  ( child => 2 );
+class   ( 'PPIx::Regexp::Structure::Regexp' );
+count   ( 3 );
+choose  ( child => 2, start => [] );
+count   ( 1 );
+choose  ( child => 2, start => 0 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '/' );
+choose  ( child => 2, type => [] );
+count   ( 0 );
+choose  ( child => 2, finish => [] );
+count   ( 1 );
+choose  ( child => 2, finish => 0 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '/' );
+choose  ( child => 2, child => 0 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'f' );
+choose  ( child => 2, child => 1 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'o' );
+choose  ( child => 2, child => 2 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'o' );
+choose  ( child => 3 );
+class   ( 'PPIx::Regexp::Token::Modifier' );
+content ( '' );
+choose  ( child => 4 );
+class   ( 'PPIx::Regexp::Token::Whitespace' );
+content ( ' ' );
+
 SKIP: {
     $is_ascii
 	or skip(

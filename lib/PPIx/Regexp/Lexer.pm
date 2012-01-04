@@ -182,8 +182,10 @@ sub lex {
 	);
     }
 
-    # Accept the modifiers, we hope.
-    push @content, $self->_get_token();
+    # Accept the modifiers (we hope!) plus any trailing white space.
+    while ( my $token = $self->_get_token() ) {
+	push @content, $token;
+    }
 
     # Let all the elements finalize themselves, recording any additional
     # errors as they do so.

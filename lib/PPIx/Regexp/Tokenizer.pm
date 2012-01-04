@@ -192,7 +192,11 @@ our $VERSION = '0.024';
 
 	$self->{content} = $self->decode( $self->{content} );
 
-	$self->{cursor_limit} = length $self->{content};
+	if ( $self->{content} =~ m/ \s+ \z /smx ) {
+	    $self->{cursor_limit} = $-[0];
+	} else {
+	    $self->{cursor_limit} = length $self->{content};
+	}
 
 	$self->{trace}
 	    and warn "\ntokenizing '$self->{content}'\n";
@@ -373,7 +377,7 @@ sub make_token {
 	and warn "make_token( $length, '$class' ) => '$content'\n";
     $self->{trace} > 1
 	and warn "    make_token: cursor_curr = $self->{cursor_curr}; ",
-    "cursor_limit = $self->{cursor_limit}\n";
+	    "cursor_limit = $self->{cursor_limit}\n";
     my $token = $class->_new( $content ) or return;
     $token->significant() and $self->{expect} = undef;
     $token->__PPIX_TOKEN__post_make( $self, $arg );
@@ -525,15 +529,22 @@ sub __PPIX_TOKENIZER__init {
     my ( $class, $tokenizer, $character ) = @_;
 
     $tokenizer->{mode} = 'kaput';
-    $tokenizer->{content} =~ m/ \A ( qr | m | s )? ( \s* ) ( [^\w\s] ) /smx
+    $tokenizer->{content} =~ m/ \A \s* ( qr | m | s )? ( \s* ) ( [^\w\s] ) /smx
 	or return $tokenizer->make_token(
 	    length( $tokenizer->{content} ), TOKEN_UNKNOWN );
 #   my ( $type, $white, $delim ) = ( $1, $2, $3 );
     my ( $type, $white ) = ( $1, $2 );
+    my $start_pos = defined $-[1] ? $-[1] :
+	defined $-[2] ? $-[2] :
+	defined $-[3] ? $-[3] : 0;
+
     defined $type or $type = '';
     $tokenizer->{type} = $type;
 
     my @tokens;
+    $start_pos
+	and push @tokens, $tokenizer->make_token( $start_pos,
+	'PPIx::Regexp::Token::Whitespace' );
     push @tokens, $tokenizer->make_token( length $type,
 	'PPIx::Regexp::Token::Structure' );
     length $white > 0
@@ -651,10 +662,22 @@ sub __PPIX_TOKENIZER__finish {
 
 	# We are out of string. Make the modifier token and close up
 	# shop.
-	$tokenizer->{cursor_limit} = length $tokenizer->{content};
+	my $trailer;
+	if ( $tokenizer->{content} =~ m/ \s+ \z /smx ) {
+	    $tokenizer->{cursor_limit} = $-[0];
+	    $trailer = length( $tokenizer->{content} ) -
+		$tokenizer->{cursor_curr};
+	} else {
+	    $tokenizer->{cursor_limit} = length $tokenizer->{content};
+	}
 	push @tokens, $tokenizer->make_token(
 	    $tokenizer->{cursor_limit} - $tokenizer->{cursor_curr},
 	    'PPIx::Regexp::Token::Modifier' );
+	if ( $trailer ) {
+	    $tokenizer->{cursor_limit} = length $tokenizer->{content};
+	    push @tokens, $tokenizer->make_token(
+		$trailer, 'PPIx::Regexp::Token::Whitespace' );
+	}
 	$tokenizer->{mode} = 'kaput';
 
     } else {
