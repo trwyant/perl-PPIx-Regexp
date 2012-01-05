@@ -1,3 +1,10 @@
+0.025		2012-01-04	T. R. Wyant
+  Tolerate leading and trailing white space around the regular
+    expression.  These are still round-trip safe, since the white space
+    is tokenized.
+  Make Changes file conform to CPAN::Changes, and add
+    xt/author/changes.t to ensure continued compliance.
+
 0.024		2011-12-17	T. R. Wyant
   Reinstate author test xt/author/manifest.t, which was clobbered
     shortly before the release of 0.021_10.
