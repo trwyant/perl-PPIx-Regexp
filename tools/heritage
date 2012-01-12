@@ -9,7 +9,7 @@ use File::Find;
 use Getopt::Long;
 use IO::File;
 use Text::Wrap;
-use YAML;
+use YAML::Any;
 
 my %opt;
 

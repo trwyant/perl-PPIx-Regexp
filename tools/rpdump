@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Regexp::Parser;
-use YAML;
+use YAML::Any;
 
 my $rp = Regexp::Parser->new();
 
