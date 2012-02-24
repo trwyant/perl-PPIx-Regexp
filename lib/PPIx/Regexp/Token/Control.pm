@@ -41,14 +41,30 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
-use PPIx::Regexp::Constant qw{ COOKIE_QUOTE TOKEN_LITERAL TOKEN_UNKNOWN };
+use PPIx::Regexp::Constant qw{
+    COOKIE_QUOTE MINIMUM_PERL TOKEN_LITERAL TOKEN_UNKNOWN
+};
 
 our $VERSION = '0.025';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 
-my %is_control = map { $_ => 1 } qw{ l u L U Q E };
+{
+    my %version_introduced = (
+	'\\F'	=> '5.015008',
+    );
+
+    sub perl_version_introduced {
+	my ( $self ) = @_;
+	my $content = $self->content();
+	defined $version_introduced{$content}
+	    and return $version_introduced{$content};
+	return MINIMUM_PERL;
+    }
+}
+
+my %is_control = map { $_ => 1 } qw{ l u L U Q E F };
 my %cookie = (
     Q	=> sub { return 1; },
     E	=> undef,
