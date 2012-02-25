@@ -1,3 +1,6 @@
+0.026		2012-02-24	T. R. Wyant
+  Add support for \F (fold case), added in 5.15.8.
+
 0.025		2012-01-04	T. R. Wyant
   Tolerate leading and trailing white space around the regular
     expression.  These are still round-trip safe, since the white space

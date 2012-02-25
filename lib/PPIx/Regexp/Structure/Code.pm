@@ -42,7 +42,7 @@ use base qw{ PPIx::Regexp::Structure };
 use Carp qw{ cluck };
 use PPIx::Regexp::Constant qw{ STRUCTURE_UNKNOWN TOKEN_UNKNOWN };
 
-our $VERSION = '0.025';
+our $VERSION = '0.026';
 
 # The only child of this structure should be a single
 # PPIx::Regexp::Token::Code. Anything else gets turned into the
