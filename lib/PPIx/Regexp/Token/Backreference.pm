@@ -73,7 +73,7 @@ my @recognize = (	# recognition used internally
 	}smx, { is_named => 0 }, ],
     [
 	qr{ \A \\ (?:		# named
-	    g \{ ( @{[ RE_CAPTURE_NAME ]} ) \} |
+	    g [{] ( @{[ RE_CAPTURE_NAME ]} ) [}] |
 	    k (?: \< ( @{[ RE_CAPTURE_NAME ]} ) \> |	# named with angles
 		' ( @{[ RE_CAPTURE_NAME ]} ) ' )	#   or quotes
 	)

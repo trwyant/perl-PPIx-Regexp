@@ -82,7 +82,7 @@ our $VERSION = '0.026';
     sub _is_case_sensitive {
 	my ( $self ) = @_;
 	my $content = $self->content();
-	$content =~ m/ \A \\ p { ( .* ) } /smxi
+	$content =~ m/ \A \\ p [{] ( .* ) [}] /smxi
 	    or return 0;
 	$content = lc $1;
 	$content =~ s/ \A ^ //smx;
