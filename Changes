@@ -1,3 +1,8 @@
+0.027		2012-05-28	T. R. Wyant
+  Eliminate unescaped literal "{" characters in regexps in
+    PPIx::Regexp::Token::Backreference and
+    PPIx::Regexp::Token::CharClass::Simple. These are deprecated in 5.17.0.
+
 0.026		2012-02-24	T. R. Wyant
   Add support for \F (fold case), added in 5.15.8.
 
