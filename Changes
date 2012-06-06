@@ -1,3 +1,7 @@
+0.028		2012-06-06	T. R. Wyant
+  Replace all uses of YAML::Any with YAML, since they come in the same
+    distro, and YAML does not suffer from deprecation warnings.
+
 0.027		2012-05-28	T. R. Wyant
   Eliminate unescaped literal "{" characters in regexps in
     PPIx::Regexp::Token::Backreference and
