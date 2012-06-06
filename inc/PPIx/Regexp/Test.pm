@@ -151,8 +151,8 @@ sub dump_result {
     } elsif ( __instance( $result, 'PPIx::Regexp::Tokenizer' ) ||
 	__instance( $result, 'PPIx::Regexp::Element' ) ) {
 	diag( PPIx::Regexp::Dumper->new( $obj, @args )->string() );
-    } elsif ( eval { require YAML::Any; 1; } ) {
-	diag( "Result dump:\n", YAML::Any::Dump( $result ) );
+    } elsif ( eval { require YAML; 1; } ) {
+	diag( "Result dump:\n", YAML::Dump( $result ) );
     } elsif ( eval { require Data::Dumper; 1 } ) {
 	diag( "Result dump:\n", Data::Dumper::Dumper( $result ) );
     } else {
