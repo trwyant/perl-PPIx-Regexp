@@ -645,13 +645,16 @@ sub _dor {	# Because we do not require 5.010.
 	if ( ! $csv ) {
 	    require Text::CSV;
 	    $csv = Text::CSV->new();
-	    my $status = $csv->combine(
+
+	    $csv->combine(
 		'Kind', 'Token', 'Descr', 'Introduced', 'Ref',
-		'Removed', 'Ref' );
+		'Removed', 'Ref' )
+		or die 'Invalid CSV input: ', $csv->error_input();
 	    print $csv->string(), "\n";
 	}
 
-	my $status = $csv->combine( @args );
+	$csv->combine( @args )
+	    or die 'Invalid CSV input: ', $csv->error_input();
 	print $csv->string(), "\n";
 
 	return;
