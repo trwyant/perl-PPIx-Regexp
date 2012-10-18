@@ -1,11 +1,17 @@
 #!/usr/local/bin/perl
 
+use 5.008;
+
 use strict;
 use warnings;
 
-use Getopt::Long;
+use Getopt::Long 2.33;
 use Pod::Usage;
+use PPI::Document;
 use PPIx::Regexp::Dumper;
+use Scalar::Util qw{ refaddr };
+
+our $VERSION = '0.000_01';
 
 my %opt = (
     default_modifiers => [],
@@ -21,8 +27,8 @@ GetOptions( \%opt,
     },
     qw{
         default_modifiers|default-modifiers=s@
-	encoding=s
-	indent=i margin=i ordinal! perl_version!
+	encoding=s files!
+	indent=i margin=i objectify! ordinal! perl_version!
 	significant!
 	test! tokens! trace+ unescape! verbose+
     } )
@@ -36,17 +42,98 @@ GetOptions( \%opt,
 $opt{default_modifiers} = [ map { split qr{ \s* , \s* }smx } @{
     $opt{default_modifiers} } ];
 
-my $unescape = delete $opt{unescape};
-foreach my $re ( @ARGV ) {
-    $unescape and $re =~ s{ \\\\ }{\\}smxg;
+foreach my $re ( process_args( \%opt, @ARGV ) ) {
+
     if ( ! $opt{test} ) {
 	my @output = ( "\n$re" );
 	@{ $opt{default_modifiers} }
 	    and push @output, q{default_modifiers => '} . join( ',', @{
 		$opt{default_modifiers} } ) . q{'};
 	print join( "\t", @output ), "\n";
+	@output = item_info( $re )
+	    and print join( "\t", @output ), "\n";
     }
+
     PPIx::Regexp::Dumper->new( $re, %opt )->print();
+
+}
+
+{
+
+    my @docs;	# Have to save reference
+
+    my %file;
+
+    sub process_args {
+	my ( $opt, @args ) = @_;
+
+	my @rslt;
+	foreach my $datum ( @args ) {
+
+	    if ( $opt->{files} ) {
+
+		my $doc = PPI::Document->new( $datum, readonly => 1 )
+		    or die "Can not make PPI::Document from file '$datum'\n";
+		$doc->index_locations();
+		push @docs, $doc;
+		push @rslt, extract_res( $doc );
+		$file{ refaddr( $doc ) } = {
+		    name	=> $datum,
+		};
+
+	    } else {
+
+		$opt->{unescape}
+		    and $datum =~ s/ \\\\ /\\/smxg;
+
+		if ( $opt->{objectify} ) {
+
+		    my $doc = PPI::Document->new( \$datum )
+			or die "Can not make PPI::Document from '$datum'\n";
+		    push @docs, $doc;
+		    push @rslt, extract_res( $doc );
+
+		} else {
+
+		    push @rslt, $datum;
+
+		}
+	    }
+	}
+
+	delete $opt->{files};
+	delete $opt->{objectify};
+	delete $opt->{unescape};
+
+	return @rslt;
+    }
+
+    sub item_info {
+	my ( $obj ) = @_;
+	ref $obj
+	    or return;
+	eval {
+	    $obj->isa( 'PPI::Element' );
+	} or return;
+	my $doc = $obj->document()
+	    or return;
+	my $info = $file{ refaddr $doc }
+	    or return;
+	return wantarray ?
+	    ( $info->{name}, @{ $obj->location() || [] }[0, 2] ) :
+	    $info->{name};
+    }
+}
+
+sub extract_res {
+    my ( $doc ) = @_;
+    return (
+	map { @{ $doc->find( $_ ) || [] } } qw{
+		PPI::Token::QuoteLike::Regexp
+		PPI::Token::Regexp::Match
+		PPI::Token::Regexp::Substitute
+	    }
+	);
 }
 
 __END__
@@ -57,6 +144,7 @@ predump - Dump a regular expression
 
 =head1 SYNOPSIS
 
+ predump 'qr{foo}smx'
  predump -ordinal 'm/foo/x'
 
 You can use
@@ -87,6 +175,12 @@ This option can also be expressed as C<-default_modifiers>.
 This option specifies the encoding of the regular expression. It is
 simply passed through to L<< PPIx::Regexp->new()|PPIx::Regexp/new >>.
 
+=item -files
+
+If true, this option specifies that the arguments are files whose
+regular expressions are to be analyzed. If this options is asserted,
+C<-objectify> and C<-unescape> are ignored.
+
 =item -indent number
 
 This option specifies the number of spaces to indent each level of the
@@ -98,6 +192,12 @@ L<< PPIx::Regexp::Dumper->new()|PPIx::Regexp::Dumper/new >>.
 This option specifies the width of the left margin of the dump output.
 It is simply passed through to
 L<< PPIx::Regexp::Dumper->new()|PPIx::Regexp::Dumper/new >>.
+
+=item -objectify
+
+If true, this option specifies that the arguments should be made into
+L<PPI::Token|PPI::Token> objects before being passed to PPIx::Regexp.
+This option is ignored if C<-files> is asserted.
 
 =item -ordinal
 
@@ -150,7 +250,7 @@ L<< PPIx::Regexp->new()|PPIx::Regexp/new >>.
 If true, this option causes the argument to be unescaped before
 processing. You would use it if the argument is a Perl single-quotish
 string, since Perl's single-quoted syntax differs from that of the usual
-Unix shell.
+Unix shell. This option is ignored if C<-files> is asserted.
 
 =item -verbose
 
