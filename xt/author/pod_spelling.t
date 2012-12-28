@@ -41,9 +41,11 @@ schildren
 subclasses
 TODO
 tokenization
+Tokenize
 tokenize
 tokenized
 tokenizer's
+TOKENIZERS
 tokenizers
 tokenizes
 tokenizing
@@ -52,5 +54,5 @@ unicode
 unterminated
 UTF
 version's
-wyant
+Wyant
 XS
