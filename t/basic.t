@@ -9,8 +9,8 @@ require_ok( 'PPI::Document' )
     or BAIL_OUT(
     q{PPI::Document is a prerequisite. Without it, we're hosed.} );
 
-require_ok( 'PPIx::Regexp' );
-class_isa_ok( 'PPIx::Regexp', 'PPIx::Regexp::Node' );
+require_ok( 'PPIx::Regexp' ) or BAIL_OUT;
+class_isa_ok( 'PPIx::Regexp', 'PPIx::Regexp::Node' ) or BAIL_OUT;
 
 require_ok( 'PPIx::Regexp::Constant' );
 class_isa_ok( 'PPIx::Regexp::Constant', 'Exporter' );
