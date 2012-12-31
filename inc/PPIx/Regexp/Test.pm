@@ -13,7 +13,7 @@ use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ looks_like_number refaddr };
 use Test::More 0.88;
 
-our $VERSION = '0.028_01';
+our $VERSION = '0.028_02';
 
 our @EXPORT_OK = qw{
     cache_count

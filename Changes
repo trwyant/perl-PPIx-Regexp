@@ -1,3 +1,10 @@
+0.028_02	2012-12-31	T. R. Wyant
+  Add method unescaped_content() to PPIx::Regexp::Element().
+  Rewrite the tokenizing code in PPIx::Regexp::Token::GroupType and
+    offspring to use regular expressions specific to the regexp
+    delimiter, and escaping only that delimiter. Thanks again to
+    Alexandr Ciornii for finding more of these.
+
 0.028_01	2012-12-20	T. R. Wyant
   Fix mis-parse of /(\?|I)/ as a branch reset (it's really an
     alternation). There may be more of these lurking. Thanks to Alexandr
