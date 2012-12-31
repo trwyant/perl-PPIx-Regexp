@@ -43,22 +43,8 @@ sub perl_version_introduced {
     return '5.009005';
 }
 
-my %matcher = (
-    q{?}	=> qr{ \A \\ \? \| }smx,
-    q{|}	=> qr{ \A \? \\ \| }smx,
-);
-
-sub __PPIX_TOKENIZER__regexp {
-    my ( $class, $tokenizer, $character ) = @_;
-
-    my $re = $matcher{ $tokenizer->get_start_delimiter() } ||
-	qr{ \A \? \| }smx;
-
-    if ( my $accept = $tokenizer->find_regexp( $re ) ) {
-	return $accept;
-    }
-
-    return;
+sub __defining_string {
+    return '?|';
 }
 
 1;

@@ -387,6 +387,11 @@ sub tokens {
     return ( map { $_->tokens() } $self->elements() );
 }
 
+sub unescaped_content {
+    my ( $self ) = @_;
+    return join '', map { $_->unescaped_content() } $self->elements();
+}
+
 # Help for nav();
 sub _nav {
     my ( $self, $child ) = @_;

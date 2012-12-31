@@ -45,6 +45,8 @@ sub perl_version_introduced {
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 
+=begin comment
+
 sub __PPIX_TOKENIZER__regexp {
     my ( $class, $tokenizer, $character ) = @_;
 
@@ -67,6 +69,24 @@ sub __PPIX_TOKENIZER__regexp {
     return;
 
 }
+
+=end comment
+
+=cut
+
+sub __defining_string {
+    return (
+	{ suffix => '(' },
+	'?',
+    );
+}
+
+sub __expect_after_match {
+    return ( qw{
+	    PPIx::Regexp::Token::Condition
+	} );
+}
+
 
 1;
 

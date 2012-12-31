@@ -48,7 +48,7 @@ our $VERSION = '0.028_01';
 
     sub perl_version_introduced {
 	my ( $self ) = @_;
-	my $content = $self->content();
+	my $content = $self->unescaped_content();
 	exists $perl_version_introduced{$content}
 	    and return $perl_version_introduced{$content};
 	my $ver = $self->SUPER::perl_version_introduced();
@@ -57,6 +57,8 @@ our $VERSION = '0.028_01';
     }
 
 }
+
+=begin comment
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
@@ -75,6 +77,31 @@ sub __PPIX_TOKENIZER__regexp {
 	and return $accept;
 
     return;
+}
+
+=end comment
+
+=cut
+
+sub __make_group_type_matcher {
+    return {
+	''	=> [
+	    qr{ \A [?] [[:lower:]]* -? [[:lower:]]* : }smx,
+	    qr{ \A [?] \^ [[:lower:]]* : }smx,
+	],
+	'?'	=> [
+	    qr{ \A \\ [?] [[:lower:]]* -? [[:lower:]]* : }smx,
+	    qr{ \A \\ [?] \^ [[:lower:]]* : }smx,
+	],
+	'-'	=> [
+	    qr{ \A [?] [[:lower:]]* (?: \\ - )? [[:lower:]]* : }smx,
+	    qr{ \A [?] \^ [[:lower:]]* : }smx,
+	],
+	':'	=> [
+	    qr{ \A [?] [[:lower:]]*  -? [[:lower:]]* \\ : }smx,
+	    qr{ \A [?] \^ [[:lower:]]* \\ : }smx,
+	],
+    };
 }
 
 1;

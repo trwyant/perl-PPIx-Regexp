@@ -46,26 +46,16 @@ our $VERSION = '0.028_01';
 
     sub perl_version_introduced {
 	my ( $self ) = @_;
-	return $perl_version_introduced{ $self->content() } || MINIMUM_PERL;
+	return $perl_version_introduced{ $self->unescaped_content() } ||
+	    MINIMUM_PERL;
     }
 }
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 
-sub __PPIX_TOKENIZER__regexp {
-    my ( $class, $tokenizer, $character ) = @_;
-
-    # The actual expression being matched is \A \? <? [=!]. All the
-    # optional escapes are because any of the non-open-bracket
-    # punctuation characters may itself be escaped if it is also used to
-    # quote the entire expression.
-    if ( my $assert = $tokenizer->find_regexp(
-	    qr{ \A \\? \? <? \\? [=!] }smx ) ) {
-	return $assert;
-    }
-
-    return;
+sub __defining_string {
+    return ( '?=', '?<=', '?!', '?<!' );
 }
 
 1;

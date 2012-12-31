@@ -87,6 +87,8 @@ sub __PPIX_TOKEN__post_make {
     confess 'Programming error - can not figure out capture name';
 }
 
+=begin comment
+
 sub __PPIX_TOKENIZER__regexp {
     my ( $class, $tokenizer, $character ) = @_;
 
@@ -97,6 +99,27 @@ sub __PPIX_TOKENIZER__regexp {
     }
 
     return;
+}
+
+=end comment
+
+=cut
+
+sub __make_group_type_matcher {
+    return {
+	''	=> [ 
+	    qr/ \A [?] P? < ( @{[ RE_CAPTURE_NAME ]} ) > /smxo,
+	    qr/ \A [?] ' ( @{[ RE_CAPTURE_NAME ]} ) ' /smxo,
+	],
+	'?'	=> [
+	    qr/ \A \\ [?] P? < ( @{[ RE_CAPTURE_NAME ]} ) > /smxo,
+	    qr/ \A \\ [?] ' ( @{[ RE_CAPTURE_NAME ]} ) ' /smxo,
+	],
+	q{'}	=> [
+	    qr/ \A [?] P? < ( @{[ RE_CAPTURE_NAME ]} ) > /smxo,
+	    qr/ \A [?] \\ ' ( @{[ RE_CAPTURE_NAME ]} ) \\ ' /smxo,
+	],
+    };
 }
 
 1;

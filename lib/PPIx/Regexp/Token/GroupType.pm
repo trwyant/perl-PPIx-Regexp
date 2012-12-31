@@ -48,17 +48,118 @@ our $VERSION = '0.028_01';
 # Return true if the token can be quantified, and false otherwise
 sub can_be_quantified { return };
 
-=begin comment
+=head2 __defining_string
+
+ my $string = $class->__defining_string();
+
+This method is private to the C<PPIx-Regexp> package, and is documented
+for the author's benefit only. It may be changed or revoked without
+notice.
+
+This method returns an array of strings that define the specific group
+type.  These strings will normally start with C<'?'>.
+
+Optionally, the first returned item may be a hash reference. The only
+supported key is C<{suffix}>, which is a string to be suffixed to each
+of the regular expressions made by C<__make_group_type_matcher()> out of
+the defining strings, inside a C<(?= ... )>, so that it is not included
+in the match.
+
+This method B<must> be overridden, unless C<__make_group_type_matcher()>
+is.
+
+=cut
+
+sub __defining_string {
+    require Carp;
+    Carp::confess(
+	'Programming error - __defining_string() must be overridden' );
+}
+
+=head2 __expect_after_match
+
+ $tokenizer->expect( $class->__expect_after_match() );
+
+This method is private to the C<PPIx-Regexp> package, and is documented
+for the author's benefit only. It may be changed or revoked without
+notice.
+
+This method is called only if the class matched at the current position
+in the string being parsed. It must return the fully-qualified class
+names of the tokens to be expected after a match.
+
+This method need not be overridden. The default returns nothing.
+
+=cut
+
+sub __expect_after_match {
+    return;
+}
+
+=head2 __make_group_type_matcher
+
+ my $hash_ref = $class->__make_group_type_matcher();
+
+This method is private to the C<PPIx-Regexp> package, and is documented
+for the author's benefit only. It may be changed or revoked without
+notice.
+
+This method returns a reference to a hash. The keys are regexp delimiter
+characters which appear in the defining strings for the group type. For
+each key, the value is a reference to an array of C<Regexp> objects,
+properly escaped for the key character. Key C<''> provides the regular
+expressions to be used if the regexp delimiter does not appear in any of
+the defining strings.
+
+If this method is overridden by the subclass, method
+C<__defining_string()> need not be, unless the overridden
+C<__make_group_type_matcher()> calls C<__defining_string()>.
+
+=cut
+
+sub __make_group_type_matcher {
+    my ( $class ) = @_;
+
+    my @defs = $class->__defining_string();
+
+    my $opt = ref $defs[0] ? shift @defs : {};
+
+    my $suffix = defined $opt->{suffix} ?
+	qr/ (?= \Q$opt->{suffix}\E ) /smx :
+	'';
+
+    my %rslt;
+    foreach my $str ( $class->__defining_string() ) {
+	my %seen;
+	my @chars = grep { ! $seen{$_}++ } split qr{}smx, $str;
+	push @{ $rslt{''} ||= [] }, qr{ \A \Q$str\E $suffix }smx;
+	foreach my $chr ( @chars ) {
+	    ( my $expr = $str ) =~ s/ (?= \Q$chr\E ) /\\/smxg;
+	    push @{ $rslt{$chr} ||= [] }, qr{ \A \Q$expr\E $suffix }smx;
+	}
+    }
+    return \%rslt;
+}
+
+my %matcher;
 
 sub __PPIX_TOKENIZER__regexp {
     my ( $class, $tokenizer, $character ) = @_;
 
-    return $character eq 'x' ? 1 : 0;
+    my $mtch = $matcher{$class} ||= $class->__make_group_type_matcher();
+
+    my $re_list = $mtch->{ $tokenizer->get_start_delimiter() } ||
+	$mtch->{''};
+
+    foreach my $re ( @{ $re_list } ) {
+	my $accept = $tokenizer->find_regexp( $re )
+	    or next;
+	$tokenizer->expect( $class->__expect_after_match() );
+	return $accept;
+    }
+
+    return;
 }
-
-=end comment
-
-=cut
 
 1;
 

@@ -69,6 +69,13 @@ sub content {
     return $self->{content};
 }
 
+sub unescaped_content {
+    my ( $self ) = @_;
+    my $content = $self->content();
+    $content =~ s/ \\ (?= . ) //smxg;
+    return $content;
+}
+
 
 # Called after the token is manufactured. The calling sequence is
 # $token->__PPIX_TOKEN__post_make( $tokenizer );

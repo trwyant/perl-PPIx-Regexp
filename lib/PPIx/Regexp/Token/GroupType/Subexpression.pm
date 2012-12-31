@@ -44,17 +44,8 @@ sub perl_version_introduced {
     return '5.005';
 }
 
-sub __PPIX_TOKENIZER__regexp {
-    my ( $class, $tokenizer, $character ) = @_;
-
-    # The optional escapes are because any non-open-bracket character
-    # may be the delimiter of the regular expression.
-    if ( my $accept = $tokenizer->find_regexp(
-	    qr{ \A \\? \? \\? > }smx ) ) {
-	return $accept;
-    }
-
-    return;
+sub __defining_string {
+    return '?>';
 }
 
 1;

@@ -256,6 +256,10 @@ sub encoding {
 
 sub expect {
     my ( $self, @args ) = @_;
+
+    @args
+	or return;
+
     $self->{expect_next} = [
 	map { m/ \A PPIx::Regexp:: /smx ? $_ : 'PPIx::Regexp::' . $_ }
 	@args
@@ -953,6 +957,8 @@ the parse is all that is required.
 This method inserts a given class at the head of the token scan, for the
 next iteration only. More than one class can be specified. Class names
 can be abbreviated by removing the leading 'PPIx::Regexp::'.
+
+If no class is specified, this method does nothing.
 
 The expectation lasts from the next time L</get_token> is called until
 the next time L<make_token> makes a significant token, or until the next

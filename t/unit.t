@@ -1314,7 +1314,7 @@ choose  ( child => 4 );
 class   ( 'PPIx::Regexp::Token::Whitespace' );
 content ( ' ' );
 
-# RT #82140: incorrect parsing of \? - Alexandr Ciornii
+# RT #82140: incorrect parsing of (\?|...) - Alexandr Ciornii
 
 tokenize( '/(\\?|I)/' );
 value   ( failures => [], 0 );
@@ -1329,6 +1329,38 @@ count   ( 8 );
 choose  ( 3 );
 class   ( 'PPIx::Regexp::Token::GroupType::BranchReset' );
 content ( '\\?|' );
+
+# RT #82140: incorrect parsing of (\?>...) - Alexandr Ciornii
+
+tokenize( '/(\\?>I)/' );
+value   ( failures => [], 0 );
+count   ( 9 );
+choose  ( 3 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( '\\?' );
+
+tokenize( '?(\\?>I)?' );
+value   ( failures => [], 0 );
+count   ( 8 );
+choose  ( 3 );
+class   ( 'PPIx::Regexp::Token::GroupType::Subexpression' );
+content ( '\\?>' );
+
+# RT #82140: incorrect parsing of (\?:...) - Alexandr Ciornii
+
+tokenize( '/(\\?:I)/' );
+value   ( failures => [], 0 );
+count   ( 9 );
+choose  ( 3 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( '\\?' );
+
+tokenize( '?(\\?:I)?' );
+value   ( failures => [], 0 );
+count   ( 8 );
+choose  ( 3 );
+class   ( 'PPIx::Regexp::Token::GroupType::Modifier' );
+content ( '\\?:' );
 
 SKIP: {
     $is_ascii

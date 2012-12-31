@@ -283,6 +283,16 @@ sub top {
     return $kid;
 }
 
+=head2 unescaped_content
+
+This method returns the content of the element, unescaped.
+
+=cut
+
+sub unescaped_content {
+    return;
+}
+
 =head2 whitespace
 
 This method returns true if the element is whitespace and false
