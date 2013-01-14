@@ -46,7 +46,7 @@ use base qw{ PPIx::Regexp::Token };
 use PPI::Document;
 use PPIx::Regexp::Util qw{ __instance };
 
-our $VERSION = '0.028_02';
+our $VERSION = '0.029';
 
 sub _new {
     my ( $class, $content ) = @_;

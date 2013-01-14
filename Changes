@@ -1,3 +1,6 @@
+0.029		2013-01-14	T. R. Wyant
+  No changes from 0.028_02.
+
 0.028_02	2012-12-31	T. R. Wyant
   Add method unescaped_content() to PPIx::Regexp::Element().
   Rewrite the tokenizing code in PPIx::Regexp::Token::GroupType and
