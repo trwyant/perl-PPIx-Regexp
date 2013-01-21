@@ -76,26 +76,6 @@ sub __defining_string {
 	'Programming error - __defining_string() must be overridden' );
 }
 
-=head2 __expect_after_match
-
- $tokenizer->expect( $class->__expect_after_match() );
-
-This method is private to the C<PPIx-Regexp> package, and is documented
-for the author's benefit only. It may be changed or revoked without
-notice.
-
-This method is called only if the class matched at the current position
-in the string being parsed. It must return the fully-qualified class
-names of the tokens to be expected after a match.
-
-This method need not be overridden. The default returns nothing.
-
-=cut
-
-sub __expect_after_match {
-    return;
-}
-
 =head2 __make_group_type_matcher
 
  my $hash_ref = $class->__make_group_type_matcher();
@@ -141,6 +121,29 @@ sub __make_group_type_matcher {
     return \%rslt;
 }
 
+
+=head2 __match_setup
+
+ $class->__match_setup( $tokenizer );
+
+This method is private to the C<PPIx-Regexp> package, and is documented
+for the author's benefit only. It may be changed or revoked without
+notice.
+
+This method performs whatever setup is needed once it is determined that
+the given group type has been detected.  This method is called only if
+the class matched at the current position in the string being parsed. It
+must perform whatever extra setup is needed for the match. It returns
+nothing.
+
+This method need not be overridden. The default does nothing.
+
+=cut
+
+sub __match_setup {
+    return;
+}
+
 my %matcher;
 
 sub __PPIX_TOKENIZER__regexp {
@@ -154,7 +157,7 @@ sub __PPIX_TOKENIZER__regexp {
     foreach my $re ( @{ $re_list } ) {
 	my $accept = $tokenizer->find_regexp( $re )
 	    or next;
-	$tokenizer->expect( $class->__expect_after_match() );
+	$class->__match_setup( $tokenizer );
 	return $accept;
     }
 

@@ -111,10 +111,10 @@ sub __defining_string {
     );
 }
 
-sub __expect_after_match {
-    return ( qw{
-	    PPIx::Regexp::Token::Code
-	} );
+sub __match_setup {
+    my ( $class, $tokenizer ) = @_;
+    $tokenizer->expect( qw{ PPIx::Regexp::Token::Code } );
+    return;
 }
 
 1;
