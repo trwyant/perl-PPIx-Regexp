@@ -1,3 +1,13 @@
+0.030		2013-01-22	T. R. Wyant
+  Add Regex Sets, which were added to Perl as an experimental feature in
+    5.17.8. This is experimental in Perl, therefore the parse may
+    change.
+  Ditch PPIx::Regexp::Token::GroupType method __expect_after_match() in
+    favor of the more general __match_setup(). This is done without
+    deprecation because __expect_after_match() was documeted as
+    package-private, but noted in the change log because it _was_
+    documented.
+
 0.029		2013-01-14	T. R. Wyant
   No changes from 0.028_02.
 
