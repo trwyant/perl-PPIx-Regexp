@@ -28,6 +28,9 @@ or from the replacement side of an s///e. Technically, interpolations
 are also code, but they parse differently and therefore end up in a
 different token.
 
+This token may not appear inside a regex set (i.e. C<(?[ ... ])>. If
+found, it will become a C<PPIx::Regexp::Token::Unknown>.
+
 =head1 METHODS
 
 This class provides the following public methods. Methods not documented
@@ -44,6 +47,7 @@ use warnings;
 use base qw{ PPIx::Regexp::Token };
 
 use PPI::Document;
+use PPIx::Regexp::Constant qw{ COOKIE_REGEX_SET TOKEN_UNKNOWN };
 use PPIx::Regexp::Util qw{ __instance };
 
 our $VERSION = '0.030';
@@ -122,6 +126,9 @@ sub ppi {
 	    exists $self->{$key}
 		or $self->{$key} = $default{$key};
 	}
+
+	$tokenizer->cookie( COOKIE_REGEX_SET )
+	    and bless $self, TOKEN_UNKNOWN;
 
 	return;
     }
