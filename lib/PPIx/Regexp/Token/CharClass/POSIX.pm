@@ -41,7 +41,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token::CharClass };
 
-use PPIx::Regexp::Constant qw{ COOKIE_CLASS MINIMUM_PERL };
+use PPIx::Regexp::Constant qw{ COOKIE_CLASS COOKIE_REGEX_SET MINIMUM_PERL };
 
 our $VERSION = '0.029';
 
@@ -79,7 +79,9 @@ sub perl_version_introduced {
     sub __PPIX_TOKENIZER__regexp {
 	my ( $class, $tokenizer, $character ) = @_;
 
-	$tokenizer->cookie( COOKIE_CLASS ) or return;
+	$tokenizer->cookie( COOKIE_CLASS )
+	    or $tokenizer->cookie( COOKIE_REGEX_SET )
+	    or return;
 
 	if ( my $accept = $tokenizer->find_regexp(
 		qr{ \A [[] ( [.=:] ) \^? .*? \1 []] }smx ) ) {

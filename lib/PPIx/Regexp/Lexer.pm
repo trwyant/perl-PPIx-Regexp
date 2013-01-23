@@ -53,6 +53,7 @@ use PPIx::Regexp::Structure::Modifier			();
 use PPIx::Regexp::Structure::NamedCapture		();
 use PPIx::Regexp::Structure::Quantifier			();
 use PPIx::Regexp::Structure::Regexp			();
+use PPIx::Regexp::Structure::RegexSet			();
 use PPIx::Regexp::Structure::Replacement		();
 use PPIx::Regexp::Structure::Switch			();
 use PPIx::Regexp::Structure::Unknown			();
@@ -253,6 +254,7 @@ sub _finalize {
 	'{' => '}',
 	'(' => ')',
 	'[' => ']',
+	'(?['	=> '])',
     ##  '<' => '>',
     );
 
@@ -328,7 +330,9 @@ sub _finalize {
 
 	    # We have to hand-roll the Range object.
 	    if ( __instance( $rslt[-1][-2], 'PPIx::Regexp::Token::Operator' )
-		&& $rslt[-1][-2]->content() eq '-' ) {
+		&& $rslt[-1][-2]->content() eq '-'
+		&& $rslt[-1][0] eq ']'	# It's a character class
+	    ) {
 		my @tokens = splice @{ $rslt[-1] }, -3;
 		push @{ $rslt[-1] },
 		    PPIx::Regexp::Node::Range->_new( @tokens );
@@ -379,6 +383,7 @@ sub _get_token {
 	'(' => '_round',
 	'[' => '_square',
 	'{' => '_curly',
+	'(?['	=> '_regex_set',
     );
 
     sub _make_node {
@@ -492,8 +497,21 @@ sub _recover_curly_quantifiers {
     return;
 }
 
+sub _in_regex_set {
+    my ( $self ) = @_;
+    foreach my $stack_entry ( reverse @{ $self->{_rslt} } ) {
+	$stack_entry->[0] eq '])'
+	    and return 1;
+    }
+    return 0;
+}
+
 sub _round {
     my ( $self, $args ) = @_;
+
+    # If we're inside a regex set, parens do not capture.
+    $self->_in_regex_set()
+	and return PPIx::Regexp::Structure->_new( @{ $args } );
 
     # The instantiator will rebless based on the first token if need be.
     return PPIx::Regexp::Structure::Capture->_new( @{ $args } );
@@ -502,6 +520,11 @@ sub _round {
 sub _square {
     my ( $self, $args ) = @_;
     return PPIx::Regexp::Structure::CharClass->_new( @{ $args } );
+}
+
+sub _regex_set {
+    my ( $self, $args ) = @_;
+    return PPIx::Regexp::Structure::RegexSet->_new( @{ $args } );
 }
 
 #	$self->_unget_token( $token );

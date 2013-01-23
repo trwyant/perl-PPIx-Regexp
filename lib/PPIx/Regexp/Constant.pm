@@ -11,6 +11,7 @@ our @EXPORT_OK = qw{
     COOKIE_CLASS
     COOKIE_QUANT
     COOKIE_QUOTE
+    COOKIE_REGEX_SET
     MINIMUM_PERL
     MODIFIER_GROUP_MATCH_SEMANTICS
     RE_CAPTURE_NAME
@@ -22,6 +23,7 @@ our @EXPORT_OK = qw{
 use constant COOKIE_CLASS	=> ']';
 use constant COOKIE_QUANT	=> '}';
 use constant COOKIE_QUOTE	=> '\\E';
+use constant COOKIE_REGEX_SET	=> '])';
 
 use constant MINIMUM_PERL	=> '5.000';
 
@@ -100,6 +102,10 @@ quoted literals.
 This cookie is set in
 L<PPIx::Regexp::Token::Control|PPIx::Regexp::Token::Control> when a
 C<\Q> is encountered, and it persists until the next C<\E>.
+
+=head2 COOKIE_REGEX_SET
+
+The name of the cookie used to control regular expression sets.
 
 =head2 MINIMUM_PERL
 

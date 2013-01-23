@@ -40,6 +40,7 @@ use base qw{ PPIx::Regexp::Token };
 use PPIx::Regexp::Constant qw{
     COOKIE_CLASS
     COOKIE_QUANT
+    COOKIE_REGEX_SET
     MINIMUM_PERL
     TOKEN_LITERAL
 };
@@ -82,6 +83,7 @@ sub is_quantifier {
 
     my %perl_version_introduced = (
 	qr	=> '5.005',
+	'(?['	=> '5.017008',
     );
 
     sub perl_version_introduced {
@@ -134,6 +136,24 @@ sub is_quantifier {
 		}
 	    }
 
+	    # Modifier changes are local to this parenthesis group
+	    $tokenizer->modifier_duplicate();
+
+	    # The regex-set functionality introduced with 5.17.8 is most
+	    # conveniently handled by treating the initial '(?[' and
+	    # final '])' as ::Structure tokens. Fortunately for us,
+	    # perl5178delta documents that these may not have interior
+	    # spaces.
+
+	    if ( my $accept = $tokenizer->find_regexp(
+		    qr{ \A [(] [?] [[] }smx	# ] ) - help for vim
+		)
+	    ) {
+		$tokenizer->cookie( COOKIE_REGEX_SET, sub { return 1 } );
+		$tokenizer->modifier_modify( x => 1 );	# Implicitly /x
+		return $accept;
+	    }
+
 	    # We expect certain tokens only after a left paren.
 	    $tokenizer->expect(
 		'PPIx::Regexp::Token::GroupType::Modifier',
@@ -144,9 +164,6 @@ sub is_quantifier {
 		'PPIx::Regexp::Token::GroupType::Subexpression',
 		'PPIx::Regexp::Token::GroupType::Switch',
 	    );
-
-	    # Modifier changes are local to this parenthesis group
-	    $tokenizer->modifier_duplicate();
 
 	    # Accept the parenthesis.
 	    return 1;
@@ -257,8 +274,28 @@ sub is_quantifier {
 	# per perlop, the metas outside a [] are {}[]()^$.|*+?\
 	# The difference is that {}[().|*+? are not metas in [], but - is.
 
-	# On encountering our close bracket, we need to delete the cookie.
+	# Close bracket is complicated by the addition of regex sets.
+	# And more complicated by the fact that you can have an
+	# old-style character class inside a regex set. Fortunately they
+	# have not (yet!) permitted nested regex sets.
 	if ( $character eq ']' ) {
+
+	    # If we find '])' and COOKIE_REGEX_SET is present, we have a
+	    # regex set. We need to delete the cookie and accept both
+	    # characters.
+	    if ( ( my $accept = $tokenizer->find_regexp(
+		    # help vim - ( [
+		    qr{ \A []] [)] }smx
+		) )
+		&& $tokenizer->cookie( COOKIE_REGEX_SET )
+
+	    ) {
+		$tokenizer->cookie( COOKIE_REGEX_SET, undef );
+		return $accept;
+	    }
+
+	    # Otherwise we assume we're in a bracketed character class,
+	    # delete the cookie, and accept the close bracket.
 	    $tokenizer->cookie( COOKIE_CLASS, undef );
 	    return 1;
 	}

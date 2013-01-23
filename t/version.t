@@ -599,6 +599,11 @@ token	' ', note => 'Not significant under /x';
 method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
 
+class   'PPIx::Regexp::Token::Structure', note => 'Regex set';
+token   '(?[';
+method  perl_version_introduced => '5.017008', note => 'perl5178delta';
+method	perl_version_removed	=> undef;
+
 finis;
 
 my $context;

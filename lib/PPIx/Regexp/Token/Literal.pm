@@ -34,7 +34,9 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
-use PPIx::Regexp::Constant qw{ COOKIE_CLASS MINIMUM_PERL };
+use PPIx::Regexp::Constant qw{
+    COOKIE_CLASS COOKIE_REGEX_SET MINIMUM_PERL TOKEN_UNKNOWN
+};
 
 our $VERSION = '0.029';
 
@@ -86,14 +88,52 @@ my %extra_ordinary = map { $_ => 1 }
 #   ^ -> Token::Assertion
 #   | - -> Token::Operator
 
+my %regex_set_operator = map { $_ => 1 } qw{ & + | - ^ ! };
+my %regex_pass_on = map { $_ => 1 } qw{ [ ] ( ) $ \ };
+
 sub __PPIX_TOKENIZER__regexp {
     my ( $class, $tokenizer, $character, $char_type ) = @_;
 
-    # Handle the characters that may or may not be literals depending on
-    # whether or not we are in a character class.
-    if ( my $class = $double_agent{$character} ) {
-	my $inx = $tokenizer->cookie( COOKIE_CLASS ) ? 1 : 0;
-	return $class->[$inx];
+    if ( $tokenizer->cookie( COOKIE_REGEX_SET ) ) {
+	# If we're inside a regex set no literals are allowed, but not
+	# all characters that get here are seen as literals.
+
+	$regex_set_operator{$character}
+	    and return $tokenizer->make_token(
+	    length $character, 'PPIx::Regexp::Token::Operator' );
+
+	my $accept;
+
+	$accept = $tokenizer->find_regexp(
+	    qr< \A 
+		[\s\N{U+0085}\N{U+200E}\N{U+200F}\N{U+2028}\N{U+2029}]+
+	    >smx
+	) and return $tokenizer->make_token(
+	    $accept, 'PPIx::Regexp::Token::Whitespace' );
+
+	$accept = _escaped( $tokenizer, $character )
+	    and return $accept;
+
+	$regex_pass_on{$character}
+	    and return;
+
+	# At this point we have a single character which is poised to be
+	# interpreted as a literal. These are not legal in a regex set
+	# except when also in a bracketed class.
+	return $tokenizer->cookie( COOKIE_CLASS ) ?
+	    length $character :
+	    $tokenizer->make_token(
+		length $character, TOKEN_UNKNOWN );
+
+    } else {
+
+	# Otherwise uandle the characters that may or may not be
+	# literals depending on whether or not we are in a character
+	# class.
+	if ( my $class = $double_agent{$character} ) {
+	    my $inx = $tokenizer->cookie( COOKIE_CLASS ) ? 1 : 0;
+	    return $class->[$inx];
+	}
     }
 
     # If /x is in effect _and_ we are not inside a character class, \s
@@ -114,6 +154,17 @@ sub __PPIX_TOKENIZER__regexp {
 	    and return 1;
     }
 
+    my $accept;
+    $accept = _escaped( $tokenizer, $character )
+	and return $accept;
+
+    # All other characters which are not extra ordinary get accepted.
+    $extra_ordinary{$character} or return 1;
+
+    return;
+}
+
+
 =begin comment
 
 The following is from perlop:
@@ -130,32 +181,32 @@ The following is from perlop:
 
 =cut
 
-    # Recognize all the escaped constructions that generate literal
-    # characters in one gigantic regexp. Technically \1.. through \7..
-    # are octal literals too, but we can not disambiguate these from
-    # back references until we know how many there are. So the lexer
-    # gets another dirty job.
-    if ( $character eq '\\' ) {
-	if ( my $accept = $tokenizer->find_regexp(
-		qr< \A \\ (?:
-		    [^\w\s] |		# delimiters/metas
-		    [tnrfae] |		# C-style escapes
-		    0 [01234567]{0,2} |	# octal
-#		    [01234567]{1,3} |	# made from backref by lexer
-		    c [][[:alpha:]\@\\^_?] |	# control characters
-		    x (?: \{ [[:xdigit:]]* \} | [[:xdigit:]]{0,2} ) | # hex
-		    o [{] [01234567]+ [}] |	# octal as of 5.13.3
-##		    N (?: \{ (?: [[:alpha:]] [\w\s:()-]* | # must begin w/ alpha
-##			U [+] [[:xdigit:]]+ ) \} ) |	# unicode
-		    N (?: [{] (?= \D ) [^\}]+ [}] )	# unicode
-		) >smx ) ) {
-	    return $accept;
-	}
+# Recognize all the escaped constructions that generate literal
+# characters in one gigantic regexp. Technically \1.. through \7.. are
+# octal literals too, but we can not disambiguate these from back
+# references until we know how many there are. So the lexer gets another
+# dirty job.
+sub _escaped {
+    my ( $tokenizer, $character ) = @_;
+
+    $character eq '\\'
+	or return;
+
+    if ( my $accept = $tokenizer->find_regexp(
+	    qr< \A \\ (?:
+		[^\w\s] |		# delimiters/metas
+		[tnrfae] |		# C-style escapes
+		0 [01234567]{0,2} |	# octal
+#		[01234567]{1,3} |	# made from backref by lexer
+		c [][[:alpha:]\@\\^_?] |	# control characters
+		x (?: \{ [[:xdigit:]]* \} | [[:xdigit:]]{0,2} ) | # hex
+		o [{] [01234567]+ [}] |	# octal as of 5.13.3
+##		N (?: \{ (?: [[:alpha:]] [\w\s:()-]* | # must begin w/ alpha
+##		    U [+] [[:xdigit:]]+ ) \} ) |	# unicode
+		N (?: [{] (?= \D ) [^\}]+ [}] )	# unicode
+	    ) >smx ) ) {
+	return $accept;
     }
-
-    # All other characters which are not extra ordinary get accepted.
-    $extra_ordinary{$character} or return 1;
-
     return;
 }
 
