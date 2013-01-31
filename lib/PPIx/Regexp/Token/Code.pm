@@ -127,7 +127,10 @@ sub ppi {
 		or $self->{$key} = $default{$key};
 	}
 
-	$tokenizer->cookie( COOKIE_REGEX_SET )
+	# If we're manufacturing objects directly (which is UNSUPPORTED,
+	# but used in t/version.t) we may not have a $tokenizer.
+	$tokenizer
+	    and $tokenizer->cookie( COOKIE_REGEX_SET )
 	    and bless $self, TOKEN_UNKNOWN;
 
 	return;
