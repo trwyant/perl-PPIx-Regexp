@@ -1,3 +1,7 @@
+0.032		2013-02-06	T. R. Wyant
+  Fix problems with Regex Set functionality under Perl 5.6.2. CPAN
+    testers RULE!
+
 0.031		2013-01-31	T. R. Wyant
   Have PPIx::Regexp::Token::Code (and offspring) become
     PPIx::Regexp::Token::Unknown inside a regex set.
