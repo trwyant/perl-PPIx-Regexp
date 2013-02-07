@@ -89,6 +89,20 @@ my %extra_ordinary = map { $_ => 1 }
 #   | - -> Token::Operator
 
 my %regex_set_operator = map { $_ => 1 } qw{ & + | - ^ ! };
+
+# The regex for the extended white space available under regex sets. I
+# have been unable to get this to work under Perl 5.6.2, so for that we
+# fall back to ASCII white space. The stringy eval is because I have
+# been unable to get satisfaction out of either interpolated characters
+# (in general) or eval-ed "\N{U+...}" (under 5.6.2) or \x{...} (ditto).
+#
+# See PPIx::Regexp::Structure::RegexSet for the documentaion of this
+# mess.
+my $regex_set_space = $] >= 5.008 ?
+'qr< \\A [\\s\\N{U+0085}\\N{U+200E}\\N{U+200F}\\N{U+2028}\\N{U+2029}]+ >smx' :
+'qr< \\A \\s+ >smx';
+$regex_set_space = eval $regex_set_space;  ## no critic (ProhibitStringyEval)
+
 my %regex_pass_on = map { $_ => 1 } qw{ [ ] ( ) $ \ };
 
 sub __PPIX_TOKENIZER__regexp {
@@ -104,12 +118,9 @@ sub __PPIX_TOKENIZER__regexp {
 
 	my $accept;
 
-	$accept = $tokenizer->find_regexp(
-	    qr< \A 
-		[\s\N{U+0085}\N{U+200E}\N{U+200F}\N{U+2028}\N{U+2029}]+
-	    >smx
-	) and return $tokenizer->make_token(
-	    $accept, 'PPIx::Regexp::Token::Whitespace' );
+	$accept = $tokenizer->find_regexp( $regex_set_space )
+	    and return $tokenizer->make_token(
+		$accept, 'PPIx::Regexp::Token::Whitespace' );
 
 	$accept = _escaped( $tokenizer, $character )
 	    and return $accept;

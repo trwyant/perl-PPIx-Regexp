@@ -28,6 +28,20 @@ L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
 C<PPIx::Regexp::Structure::RegexSet> has no descendants.
 
+=head1 RESTRICTION
+
+When running under Perl 5.6, the extended white space characters are not
+recognized as white space.
+
+=begin comment
+
+See the code in PPIx::Regexp::Token::Literal that generates
+$regex_set_space for the actual machinery. The reason for the
+restriction is that I was, for some reason, not able to get '\x{...}' to
+work.
+
+=end comment
+
 =head1 DESCRIPTION
 
 This class represents a regex character set.
