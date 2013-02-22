@@ -1,3 +1,8 @@
+0.033		2013-02-22	T. R. Wyant
+  Allow interpolation in regex sets. It implies Perl 5.17.9 or higher.
+  Allow non-ASCII white space under /x. It implies Perl 5.17.9 or
+    higher.
+
 0.032		2013-02-06	T. R. Wyant
   Fix problems with Regex Set functionality under Perl 5.6.2. CPAN
     testers RULE!
