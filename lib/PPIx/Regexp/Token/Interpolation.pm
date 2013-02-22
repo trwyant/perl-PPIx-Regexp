@@ -35,7 +35,9 @@ use warnings;
 use base qw{ PPIx::Regexp::Token::Code };
 
 use PPI::Document;
-use PPIx::Regexp::Constant qw{ COOKIE_CLASS TOKEN_LITERAL MINIMUM_PERL };
+use PPIx::Regexp::Constant qw{
+    COOKIE_CLASS COOKIE_REGEX_SET TOKEN_LITERAL MINIMUM_PERL
+};
 
 our $VERSION = '0.032';
 
@@ -46,12 +48,13 @@ our $VERSION = '0.032';
 
 # We overrode this in PPIx::Regexp::Token::Code, since (?{...}) did not
 # appear until Perl 5.5. But interpolation has been there since the
-# beginning, so we have to override again. Sigh.
+# beginning, so we have to override again. This turns out to be OK,
+# though, because while Regex Sets were introduced in 5.17.8,
+# interpolation inside them was not introduced until 5.17.9.
 sub perl_version_introduced {
-#   my ( $self ) = @_;
-    return MINIMUM_PERL;
+    my ( $self ) = @_;
+    return $self->{perl_version_introduced};
 }
-
 
 =head2 ppi
 
@@ -299,6 +302,28 @@ sub _square {
 
     # Anything else is rejected.
     return;
+}
+
+{
+
+    my %default = (
+	perl_version_introduced	=> MINIMUM_PERL,
+    );
+
+    sub __PPIX_TOKEN__post_make {
+	my ( $self, $tokenizer, $arg ) = @_;
+
+	# If we're manufacturing objects directly (which is UNSUPPORTED,
+	# but used in t/version.t) we may not have a $tokenizer.
+	$tokenizer
+	    and $tokenizer->cookie( COOKIE_REGEX_SET )
+	    and $self->{perl_version_introduced} = '5.017009';
+
+	$self->__impose_defaults( $arg, \%default );
+
+	return;
+    }
+
 }
 
 # Alternate classes for the sigils, depending on whether we are in a

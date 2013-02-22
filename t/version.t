@@ -58,7 +58,8 @@ our $REPORT;	# True to report rather than test.
 
 # Trailing empty fields are removed.
 
-use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
+use PPIx::Regexp::Constant qw{ COOKIE_REGEX_SET MINIMUM_PERL };
+use PPIx::Regexp::Tokenizer;
 
 sub class (@);
 sub finis ();
@@ -375,6 +376,10 @@ class	'PPIx::Regexp::Token::Interpolation', note => 'Interpolation';
 token	'$foo', note => 'Interpolate the contents of $foo';
 method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
+token	'$foo', cookie => COOKIE_REGEX_SET,
+    note => 'Interpolation in regex set';
+method	perl_version_introduced	=> '5.017009', note => 'perl5179delta';
+method	perl_version_removed	=> undef;
 
 class	'PPIx::Regexp::Token::Literal', note => 'Literal';
 token	'a', note => q{Letter 'a'};
@@ -598,6 +603,14 @@ class	'PPIx::Regexp::Token::Whitespace', note => 'White space';
 token	' ', note => 'Not significant under /x';
 method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
+if ( $] >= 5.008 ) {
+    # The following eval is to hide the construct from Perl 5.6, which
+    # does not understand \N{...}.
+    token	eval q<"\\N{U+0085}">,	## no critic (ProhibitStringyEval)
+		note	=> 'Non-ASCII space';
+    method	perl_version_introduced	=> '5.017009', note => 'perl5179delta';
+    method	perl_version_removed	=> undef;
+}
 
 class   'PPIx::Regexp::Token::Structure', note => 'Regex set';
 token   '(?[';
@@ -796,8 +809,13 @@ sub token (@) {
 
 	if ( eval {
 		my $obj = $context->{class}{class}->_new( $content );
+		my $tokenizer;
+		if ( my $cookie = delete $args{cookie} ) {
+		    $tokenizer = PPIx::Regexp::Tokenizer->new( $content );
+		    $tokenizer->cookie( $cookie => sub { 1 } );
+		}
 		$obj->can( '__PPIX_TOKEN__post_make' )
-		    and $obj->__PPIX_TOKEN__post_make();
+		    and $obj->__PPIX_TOKEN__post_make( $tokenizer );
 		$context->{object} = $obj;
 	    } ) {
 	    while ( my ( $name, $val ) = each %args ) {

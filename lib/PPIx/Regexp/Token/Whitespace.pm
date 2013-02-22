@@ -37,7 +37,14 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
+use PPIx::Regexp::Constant qw{ COOKIE_REGEX_SET MINIMUM_PERL };
+
 our $VERSION = '0.032';
+
+sub perl_version_introduced {
+    my ( $self ) = @_;
+    return $self->{perl_version_introduced};
+}
 
 sub significant {
     return;
@@ -67,6 +74,20 @@ sub __PPIX_TOKENIZER__regexp {
 =end comment
 
 =cut
+
+sub __PPIX_TOKEN__post_make {
+    my ( $self, $tokenizer, $arg ) = @_;
+
+    if ( ord $self->content() < 128 ) {
+	$self->{perl_version_introduced} = MINIMUM_PERL;
+    } elsif ( $tokenizer && $tokenizer->cookie( COOKIE_REGEX_SET ) ) {
+	$self->{perl_version_introduced} = '5.017008';
+    } else {
+	$self->{perl_version_introduced} = '5.017009';
+    }
+
+    return;
+}
 
 1;
 

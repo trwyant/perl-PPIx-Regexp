@@ -115,17 +115,7 @@ sub ppi {
     sub __PPIX_TOKEN__post_make {
 	my ( $self, $tokenizer, $arg ) = @_;
 
-	if ( 'HASH' eq ref $arg ) {
-	    foreach my $key ( qw{ perl_version_introduced } ) {
-		exists $arg->{$key}
-		    and $self->{$key} = $arg->{$key};
-	    }
-	}
-
-	foreach my $key ( keys %default ) {
-	    exists $self->{$key}
-		or $self->{$key} = $default{$key};
-	}
+	$self->__impose_defaults( $arg, \%default );
 
 	# If we're manufacturing objects directly (which is UNSUPPORTED,
 	# but used in t/version.t) we may not have a $tokenizer.

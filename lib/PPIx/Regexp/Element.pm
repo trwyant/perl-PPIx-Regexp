@@ -381,6 +381,27 @@ sub nav {
 
 }
 
+# $self->__impose_defaults( $arg, \%default );
+#
+# This method can be called in __PPIX_TOKEN__post_make() to supply
+# defaults for attributes. It returns nothing.
+#
+# The arguments are hash references, which are taken in left-to-right
+# order, with the, with the first extant value being used.
+
+sub __impose_defaults {
+    my ( $self, @args ) = @_;
+    foreach my $arg ( @args ) {
+	ref $arg eq 'HASH'
+	    or next;
+	foreach my $key ( keys %{ $arg } ) {
+	    exists $self->{$key}
+		or $self->{$key} = $arg->{$key};
+	}
+    }
+    return;
+}
+
 # Called by the lexer to record the capture number.
 sub __PPIX_LEXER__record_capture_number {
     my ( $self, $number ) = @_;
