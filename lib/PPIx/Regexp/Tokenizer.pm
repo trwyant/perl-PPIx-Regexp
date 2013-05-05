@@ -48,7 +48,7 @@ our $VERSION = '0.033';
     # Names of classes containing tokenization machinery. There are few
     # known ordering requirements, since each class recognizes its own,
     # and I have tried to prevent overlap. Absent such constraints, the
-    # order is in percieved frequency of acceptance, to keep the search
+    # order is in perceived frequency of acceptance, to keep the search
     # as short as possible. If I were conscientious I would gather
     # statistics on this.
     my @classes = (	# TODO make readonly when acceptable way appears

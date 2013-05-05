@@ -97,7 +97,7 @@ my %regex_set_operator = map { $_ => 1 } qw{ & + | - ^ ! };
 # satisfaction out of either interpolated characters (in general) or
 # eval-ed "\N{U+...}" (under 5.6.2) or \x{...} (ditto).
 #
-# See PPIx::Regexp::Structure::RegexSet for the documentaion of this
+# See PPIx::Regexp::Structure::RegexSet for the documentation of this
 # mess.
 my $white_space_re = $] >= 5.008 ?
 'qr< \\A [\\s\\N{U+0085}\\N{U+200E}\\N{U+200F}\\N{U+2028}\\N{U+2029}]+ >smx' :
@@ -139,7 +139,7 @@ sub __PPIX_TOKENIZER__regexp {
 
     } else {
 
-	# Otherwise uandle the characters that may or may not be
+	# Otherwise handle the characters that may or may not be
 	# literals depending on whether or not we are in a character
 	# class.
 	if ( my $class = $double_agent{$character} ) {

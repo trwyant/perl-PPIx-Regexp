@@ -122,7 +122,7 @@ sub _interpolation {
 	return $len;
     }
 
-    # Make sure we start off plausably
+    # Make sure we start off plausibly
     $tokenizer->find_regexp( $interp_re )
 	or return;
 
