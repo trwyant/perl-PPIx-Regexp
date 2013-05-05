@@ -36,7 +36,7 @@ use base qw{ PPIx::Regexp::Token::GroupType };
 
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 
-our $VERSION = '0.033';
+our $VERSION = '0.033_01';
 
 {
     my %perl_version_introduced = (
