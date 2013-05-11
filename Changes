@@ -1,6 +1,9 @@
+0.034		2013-05-11	T. R. Wyant
+  No changes since 0.033_01
+
 0.033_01	2013-05-05	T. R. Wyant
   Correct spelling and grammar errors in POD and comments. RT #85050.
-    Thanks to D. Steinbrunner for catching these.
+    Thanks David Steinbrunner for catching these.
 
 0.033		2013-02-22	T. R. Wyant
   Allow interpolation in regex sets. It implies Perl 5.17.9 or higher.
