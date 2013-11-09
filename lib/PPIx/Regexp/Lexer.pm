@@ -198,38 +198,12 @@ sub lex {
 	# Retrieve the maximum capture group.
 	my $max_capture = $regexp->max_capture_number();
 
-	# If we have any back references
-	if ( my $backrefs = $regexp->find(
-		'PPIx::Regexp::Token::Backreference' ) ) {
-
-	    # The break point for capture group numbers is either 9 or
-	    # the actual number found, whichever is greater.
-	    my $limit = $max_capture > 9 ? $max_capture : 9;
-
-	    foreach my $elem ( @{ $backrefs } ) {
-
-		# Named or relative captures are not at issue.
-		$elem->is_named() and next;
-		$elem->is_relative() and next;
-
-		# Anything less than or equal to the break point remains
-		# a capture group.
-		$elem->absolute() <= $limit and next;
-
-		# Anything greater than the break point (in decimal)
-		# gets made a literal. Because the literal is octal, we
-		# make an unknown instead if it contains non-octal
-		# digits.
-		if ( $elem->content() =~ m/ [89] /smx ) {
-		    bless $elem, TOKEN_UNKNOWN;
-		    # We must hand-increment the failures since we
-		    # already finalized.
-		    $self->{failures}++;
-		} else {
-		    bless $elem, TOKEN_LITERAL;
-		}
-
-	    }
+	# For all the backreferences found
+	foreach my $elem ( @{ $regexp->find(
+	    'PPIx::Regexp::Token::Backreference' ) || [] } ) {
+	    # Rebless them as needed, recording any errors found.
+	    $self->{failures} +=
+		$elem->__PPIX_LEXER__rebless( $max_capture );
 	}
     }
 

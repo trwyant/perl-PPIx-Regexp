@@ -35,7 +35,10 @@ use warnings;
 use base qw{ PPIx::Regexp::Token::Reference };
 
 use Carp qw{ confess };
-use PPIx::Regexp::Constant qw{ MINIMUM_PERL RE_CAPTURE_NAME };
+use PPIx::Regexp::Constant qw{
+    MINIMUM_PERL RE_CAPTURE_NAME
+    TOKEN_LITERAL TOKEN_UNKNOWN
+};
 
 our $VERSION = '0.034';
 
@@ -117,6 +120,38 @@ sub __PPIX_TOKENIZER__repl {
     $tokenizer->interpolates() and goto &__PPIX_TOKENIZER__regexp;
 
     return;
+}
+
+# Called by the lexer to disambiguate between captures, literals, and
+# whatever. We have to return the number of tokens reblessed to
+# TOKEN_UNKNOWN (i.e. either 0 or 1) because we get called after the
+# parse is finalized.
+sub __PPIX_LEXER__rebless {
+    my ( $self, $captures ) = @_;
+    $self->is_named()
+	and return 0;
+
+    # TODO this is probably not right, but I may not have the machinery
+    # I need to fix it.
+    $self->is_relative()
+	and return 0;
+
+    # It's known to be a capture if it's a valid number.
+    $self->absolute() <= $captures
+	and return 0;
+
+    # It's not a valid capture. If it's an octal literal, rebless it so.
+    # Note that we can't rebless \7, since single-digit thingys can't be
+    # octal literals.
+    my $content = $self->content();
+    if ( $content =~ m/ \A \\ \d{2,} \z /smx && $content !~ m/ [89] /smx ) {
+	bless $self, TOKEN_LITERAL;
+	return 0;
+    }
+
+    # Anything else is an error.
+    bless $self, TOKEN_UNKNOWN;
+    return 1;
 }
 
 1;
