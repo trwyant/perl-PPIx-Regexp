@@ -1,0 +1,15 @@
+/blib
+/Build
+/_build
+/cover_db
+/Debian_CPANTS.txt
+/Makefile
+/MANIFEST.bak
+/META.yml
+/META.json
+/MYMETA.yml
+/MYMETA.json
+/nytprof*
+/PPIx-Regexp-*
+/pm_to_blib
+/ref
