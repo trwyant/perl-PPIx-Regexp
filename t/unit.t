@@ -1262,6 +1262,18 @@ false   ( modifier_asserted => 'u' );
 false   ( modifier_asserted => 'l' );
 true    ( modifier_asserted => 'x' );
 
+# This to be sure we recognize 'aa' when consecutive.
+
+parse   ( '/ . /aasmx' );
+true    ( modifier_asserted => 'aa' );
+false   ( modifier_asserted => 'a' );
+
+# Bug reported by Anonymous Monk. /aia is equivalent to /aai
+
+parse   ( '/ . /asmxa' );
+true    ( modifier_asserted => 'aa' );
+false   ( modifier_asserted => 'a' );
+
 # Handle leading and trailing white space
 
 parse   ( ' /foo/ ' );
