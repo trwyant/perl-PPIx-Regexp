@@ -150,7 +150,10 @@ sub __PPIX_TOKENIZER__regexp {
 	    # As of Perl 5.11.5, [\N] is a fatal error.
 	    '\\N' eq $match
 		and return $tokenizer->make_token(
-		    $accept, TOKEN_UNKNOWN );
+		    $accept, TOKEN_UNKNOWN, {
+			    error	=> '\\N invalid inside character class',
+			},
+		    );
 	    # \R is not recognized inside a character class. It
 	    # eventually ends up as a literal.
 	    '\\R' eq $match and return;

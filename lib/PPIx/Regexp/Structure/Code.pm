@@ -39,9 +39,6 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Structure };
 
-use Carp qw{ cluck };
-use PPIx::Regexp::Constant qw{ STRUCTURE_UNKNOWN TOKEN_UNKNOWN };
-
 our $VERSION = '0.034';
 
 # The only child of this structure should be a single
@@ -55,20 +52,18 @@ sub __PPIX_LEXER__finalize {
 
     foreach my $kid ( $self->children() ) {
 
-	$kid->isa( 'PPIx::Regexp::Token::Code' )
-	    and not $count++
-	    and next;
-
-	$errors++;
-
-	if ( $kid->isa( 'PPIx::Regexp::Token' ) ) {
-	    bless $kid, TOKEN_UNKNOWN;
-	} elsif ( $kid->isa( 'PPIx::Regexp::Structure' ) ) {
-	    bless $kid, STRUCTURE_UNKNOWN;
+	if ( $kid->isa( 'PPIx::Regexp::Token::Code' ) ) {
+	    $count++
+		or next;
+	    $errors++;
+	    $kid->__error(
+		'Code structure can contain only one code token' );
 	} else {
-	    cluck( 'Programming error - unexpected element of class ',
-		ref $kid, ' found in a PPIx::Regexp::Structure::Code. ',
-		'Please contact the author' );
+
+	    $errors++;
+
+	    $kid->__error(
+		'Code structure may not contain a ' . ref $kid );
 	}
 
     }

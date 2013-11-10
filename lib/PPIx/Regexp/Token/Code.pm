@@ -47,7 +47,7 @@ use warnings;
 use base qw{ PPIx::Regexp::Token };
 
 use PPI::Document;
-use PPIx::Regexp::Constant qw{ COOKIE_REGEX_SET TOKEN_UNKNOWN };
+use PPIx::Regexp::Constant qw{ COOKIE_REGEX_SET };
 use PPIx::Regexp::Util qw{ __instance };
 
 our $VERSION = '0.034';
@@ -121,7 +121,7 @@ sub ppi {
 	# but used in t/version.t) we may not have a $tokenizer.
 	$tokenizer
 	    and $tokenizer->cookie( COOKIE_REGEX_SET )
-	    and bless $self, TOKEN_UNKNOWN;
+	    and $self->__error( 'Code token not valid in Regex set' );
 
 	return;
     }

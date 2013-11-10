@@ -34,12 +34,6 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Structure };
 
-use PPIx::Regexp::Constant qw{
-    MINIMUM_PERL
-    STRUCTURE_UNKNOWN
-    TOKEN_UNKNOWN
-};
-
 our $VERSION = '0.034';
 
 sub __PPIX_LEXER__finalize {
@@ -73,14 +67,14 @@ sub __PPIX_LEXER__finalize {
 	    $kid->isa( 'PPIx::Regexp::Token::Operator' ) or next;
 	    $kid->content() eq '|' or next;
 	    --$alternations >= 0 and next;
-	    bless $kid, TOKEN_UNKNOWN;
+	    $kid->__error( 'Too many alternatives for switch' );
 	    $rslt++;
 	}
     } else {
 	# If we could not figure out how many alternations were allowed,
 	# it means we did not understand our condition. Rebless
 	# ourselves to the unknown structure and count a parse failure.
-	bless $self, STRUCTURE_UNKNOWN;
+	$self->__error( 'Switch condition not understood' );
 	$rslt++;
     }
 

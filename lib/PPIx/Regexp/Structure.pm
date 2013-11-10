@@ -48,6 +48,7 @@ use warnings;
 use base qw{ PPIx::Regexp::Node };
 
 use Carp qw{ confess };
+use PPIx::Regexp::Constant qw{ STRUCTURE_UNKNOWN };
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };
 
@@ -327,6 +328,15 @@ sub _check_for_interpolated_match {
 
     # We have done all the damage we can.
     return;
+}
+
+sub __error {
+    my ( $self, $msg ) = @_;
+    defined $msg
+	or $msg = 'Was class ' . ref $self;
+    $self->{error} = $msg;
+    bless $self, STRUCTURE_UNKNOWN;
+    return 1;
 }
 
 1;

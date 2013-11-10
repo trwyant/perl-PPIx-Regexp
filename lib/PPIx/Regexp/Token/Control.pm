@@ -92,7 +92,10 @@ sub __PPIX_TOKENIZER__regexp {
     # do. If there is no next character, we do not know what to call the
     # back slash.
     my $control = $tokenizer->peek( 1 )
-	or return $reject->( 1, TOKEN_UNKNOWN );
+	or return $reject->( 1, TOKEN_UNKNOWN, {
+		error => 'Trailing back slash'
+	    },
+	);
 
     # We reject any escapes that do not represent controls.
     $is_control{$control} or return $reject->( 2 );

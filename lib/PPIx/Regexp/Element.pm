@@ -35,11 +35,12 @@ use warnings;
 
 use 5.006;
 
+use Carp;
 use List::MoreUtils qw{ firstidx };
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr weaken };
 
-use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
+use PPIx::Regexp::Constant qw{ MINIMUM_PERL TOKEN_UNKNOWN };
 
 our $VERSION = '0.034';
 
@@ -118,6 +119,21 @@ sub descendant_of {
     my ( $self, $node ) = @_;
     __instance( $node, __PACKAGE__ ) or return;
     return $node->ancestor_of( $self );
+}
+
+=head2 error
+
+ say $token->error();
+
+If an element is one of the classes that represents a parse error, this
+method B<may> return a brief message saying why. Otherwise it will
+return C<undef>.
+
+=cut
+
+sub error {
+    my ( $self ) = @_;
+    return $self->{error};
 }
 
 
@@ -400,6 +416,19 @@ sub __impose_defaults {
 	}
     }
     return;
+}
+
+# Bless into TOKEN_UNKNOWN, record error message, return 1.
+sub __error {
+    my ( $self, $msg ) = @_;
+    $self->isa( 'PPIx::Token::Node' )
+	and confess 'Programming error - __error() must be overridden',
+	    ' for class ', ref $self;
+    defined $msg
+	or $msg = 'Was ' . ref $self;
+    $self->{error} = $msg;
+    bless $self, TOKEN_UNKNOWN;
+    return 1;
 }
 
 # Called by the lexer to record the capture number.

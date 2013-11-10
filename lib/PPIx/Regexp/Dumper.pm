@@ -557,40 +557,47 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__dump {
 
     my @rslt = ( ref $self, $dumper->_safe( $self ) );
 
-    $dumper->{perl_version}
-	and push @rslt, $dumper->_perl_version( $self );
+    if ( defined( my $err = $self->error() ) ) {
 
-    if ( $dumper->{ordinal} && $self->can( 'ordinal' )
-	&& defined ( my $ord = $self->ordinal() ) ) {
-	push @rslt, sprintf '0x%02x', $ord;
-    }
+	push @rslt, $err;
 
-    if ( $dumper->{verbose} ) {
+    } else {
 
-	if ( $self->isa( 'PPIx::Regexp::Token::Reference' ) ) {
-	    foreach my $method ( qw{ absolute name number } ) {
-		defined( my $val = $self->$method() ) or next;
-		push @rslt, "$method=$val";
+	$dumper->{perl_version}
+	    and push @rslt, $dumper->_perl_version( $self );
+
+	if ( $dumper->{ordinal} && $self->can( 'ordinal' )
+	    && defined ( my $ord = $self->ordinal() ) ) {
+	    push @rslt, sprintf '0x%02x', $ord;
+	}
+
+	if ( $dumper->{verbose} ) {
+
+	    if ( $self->isa( 'PPIx::Regexp::Token::Reference' ) ) {
+		foreach my $method ( qw{ absolute name number } ) {
+		    defined( my $val = $self->$method() ) or next;
+		    push @rslt, "$method=$val";
+		}
 	    }
+
+	    foreach my $method (
+		qw{ significant can_be_quantified is_quantifier } ) {
+##		is_case_sensitive
+		$self->can( $method )
+		    and $self->$method()
+		    and push @rslt, $method;
+	    }
+
+	    $self->can( 'ppi' )
+		and push @rslt, $self->ppi()->content();
+
+	    if ( $self->isa( 'PPIx::Regexp::Token::Modifier' ) ||
+		$self->isa( 'PPIx::Regexp::Token::GroupType::Modifier' )
+	    ) {
+		push @rslt, $dumper->_format_modifiers_dump( $self );
+	    }
+
 	}
-
-	foreach my $method (
-	    qw{ significant can_be_quantified is_quantifier } ) {
-##	    is_case_sensitive
-	    $self->can( $method )
-		and $self->$method()
-		and push @rslt, $method;
-	}
-
-	$self->can( 'ppi' )
-	    and push @rslt, $self->ppi()->content();
-
-	if ( $self->isa( 'PPIx::Regexp::Token::Modifier' ) ||
-	    $self->isa( 'PPIx::Regexp::Token::GroupType::Modifier' )
-	) {
-	    push @rslt, $dumper->_format_modifiers_dump( $self );
-	}
-
     }
     return join( "\t", @rslt );
 }
@@ -607,31 +614,39 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__test {
 	'content ( ' . $dumper->_safe( $self ) . ' );',
     );
 
-    if ( $dumper->{perl_version} ) {
-	foreach my $method ( qw{
-	    perl_version_introduced
-	    perl_version_removed
-	} ) {
-	    push @rslt, "value   ( $method => [], " .
-		$dumper->_safe_version( $self->$method() ) . ' );';
-	}
-    }
+    if ( defined( my $err = $self->error() ) ) {
 
-    if ( $dumper->{verbose} ) {
+	push @rslt,
+	    'error   ( ' . $dumper->_safe( $err ) . ' );';
 
-	foreach my $method (
-	    qw{ significant can_be_quantified is_quantifier } ) {
-##	    is_case_sensitive
-	    $self->can( $method ) or next;
-	    push @rslt, $self->$method() ?
-	        "true    ( $method => [] );" :
-	        "false   ( $method => [] );";
+    } else {
+
+	if ( $dumper->{perl_version} ) {
+	    foreach my $method ( qw{
+		perl_version_introduced
+		perl_version_removed
+	    } ) {
+		push @rslt, "value   ( $method => [], " .
+		    $dumper->_safe_version( $self->$method() ) . ' );';
+	    }
 	}
 
-	$self->can( 'ppi' )
-	    and push @rslt, "value   ( ppi => [], " .
-		$dumper->_safe( $self->ppi() ) . ' );';
+	if ( $dumper->{verbose} ) {
 
+	    foreach my $method (
+		qw{ significant can_be_quantified is_quantifier } ) {
+##		is_case_sensitive
+		$self->can( $method ) or next;
+		push @rslt, $self->$method() ?
+		    "true    ( $method => [] );" :
+		    "false   ( $method => [] );";
+	    }
+
+	    $self->can( 'ppi' )
+		and push @rslt, "value   ( ppi => [], " .
+		    $dumper->_safe( $self->ppi() ) . ' );';
+
+	}
     }
 
     return @rslt;

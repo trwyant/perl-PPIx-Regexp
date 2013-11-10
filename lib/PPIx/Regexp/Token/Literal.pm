@@ -135,7 +135,10 @@ sub __PPIX_TOKENIZER__regexp {
 	return $tokenizer->cookie( COOKIE_CLASS ) ?
 	    length $character :
 	    $tokenizer->make_token(
-		length $character, TOKEN_UNKNOWN );
+		length $character, TOKEN_UNKNOWN, {
+			error	=> 'Literal not valid in Regex set',
+		    },
+		);
 
     } else {
 

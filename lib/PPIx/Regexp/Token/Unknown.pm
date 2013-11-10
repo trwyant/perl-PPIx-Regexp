@@ -56,6 +56,18 @@ sub ordinal {
     return ord $self->content();
 }
 
+sub __PPIX_TOKEN__post_make {
+    my ( $self, $tokenizer, $arg ) = @_;
+    my $msg = $arg->{error};
+    use Carp;
+    defined $msg
+	or Carp::cluck( 'Making unknown token with no error message' );
+    defined $msg
+	or $msg = 'Unspecified error';
+    $self->{error} = $msg;
+    return;
+}
+
 # Since the lexer does not count these on the way in (because it needs
 # the liberty to rebless them into a known class if it figures out what
 # is going on) we count them as failures at the finalization step.

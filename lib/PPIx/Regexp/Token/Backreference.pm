@@ -133,8 +133,7 @@ sub __PPIX_LEXER__rebless {
     if ( $self->is_named() ) {
 	$arg{capture_name}{$self->name()}
 	    and return 0;
-	bless $self, TOKEN_UNKNOWN;
-	return 1;
+	return $self->__error();
     }
 
     # Get the absolute capture group number.
@@ -142,10 +141,8 @@ sub __PPIX_LEXER__rebless {
 
     # If it is zero or negative, we have a relateive reference to a
     # non-existent capture group.
-    if ( $absolute <= 0 ) {
-	bless $self, TOKEN_UNKNOWN;
-	return 1;
-    }
+    $absolute <= 0
+	and return $self->__error();
 
     # If the absolute number is less than or equal to the maximum
     # capture group number, we are good.
@@ -162,6 +159,14 @@ sub __PPIX_LEXER__rebless {
     }
 
     # Anything else is an error.
+    return $self->__error();
+}
+
+sub __error {
+    my ( $self, $msg ) = @_;
+    defined $msg
+	or $msg = 'No corresponding capture group';
+    $self->{error} = $msg;
     bless $self, TOKEN_UNKNOWN;
     return 1;
 }
