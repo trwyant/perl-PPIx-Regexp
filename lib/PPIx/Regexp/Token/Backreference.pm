@@ -137,18 +137,24 @@ sub __PPIX_LEXER__rebless {
 	return 1;
     }
 
-    # TODO this is probably not right, but I may not have the machinery
-    # I need to fix it.
-    $self->is_relative()
-	and return 0;
+    # Get the absolute capture group number.
+    my $absolute = $self->absolute();
 
-    # It's known to be a capture if it's a valid number.
-    $self->absolute() <= $arg{max_capture}
+    # If it is zero or negative, we have a relateive reference to a
+    # non-existent capture group.
+    if ( $absolute <= 0 ) {
+	bless $self, TOKEN_UNKNOWN;
+	return 1;
+    }
+
+    # If the absolute number is less than or equal to the maximum
+    # capture group number, we are good.
+    $absolute <= $arg{max_capture}
 	and return 0;
 
     # It's not a valid capture. If it's an octal literal, rebless it so.
-    # Note that we can't rebless \7, since single-digit thingys can't be
-    # octal literals.
+    # Note that we can't rebless single-digit numbers, since they can't
+    # be octal literals.
     my $content = $self->content();
     if ( $content =~ m/ \A \\ \d{2,} \z /smx && $content !~ m/ [89] /smx ) {
 	bless $self, TOKEN_LITERAL;
