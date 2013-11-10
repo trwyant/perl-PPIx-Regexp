@@ -127,9 +127,15 @@ sub __PPIX_TOKENIZER__repl {
 # TOKEN_UNKNOWN (i.e. either 0 or 1) because we get called after the
 # parse is finalized.
 sub __PPIX_LEXER__rebless {
-    my ( $self, $captures ) = @_;
-    $self->is_named()
-	and return 0;
+    my ( $self, %arg ) = @_;
+
+    # Handle named back references
+    if ( $self->is_named() ) {
+	$arg{capture_name}{$self->name()}
+	    and return 0;
+	bless $self, TOKEN_UNKNOWN;
+	return 1;
+    }
 
     # TODO this is probably not right, but I may not have the machinery
     # I need to fix it.
@@ -137,7 +143,7 @@ sub __PPIX_LEXER__rebless {
 	and return 0;
 
     # It's known to be a capture if it's a valid number.
-    $self->absolute() <= $captures
+    $self->absolute() <= $arg{max_capture}
 	and return 0;
 
     # It's not a valid capture. If it's an octal literal, rebless it so.

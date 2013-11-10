@@ -198,12 +198,20 @@ sub lex {
 	# Retrieve the maximum capture group.
 	my $max_capture = $regexp->max_capture_number();
 
+	# Hashify the known capture names
+	my $capture_name = {
+	    map { $_ => 1 } $regexp->capture_names(),
+	};
+
 	# For all the backreferences found
 	foreach my $elem ( @{ $regexp->find(
 	    'PPIx::Regexp::Token::Backreference' ) || [] } ) {
 	    # Rebless them as needed, recording any errors found.
 	    $self->{failures} +=
-		$elem->__PPIX_LEXER__rebless( $max_capture );
+		$elem->__PPIX_LEXER__rebless(
+		    capture_name	=> $capture_name,
+		    max_capture		=> $max_capture,
+		);
 	}
     }
 
