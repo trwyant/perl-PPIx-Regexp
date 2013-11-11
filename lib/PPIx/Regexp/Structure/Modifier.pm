@@ -37,6 +37,22 @@ use base qw{ PPIx::Regexp::Structure };
 
 our $VERSION = '0.034';
 
+# This is a kluge for both determining whether the object asserts
+# modifiers (hence the 'ductype') and determining whether the given
+# modifier is actually asserted. The signature is the invocant and the
+# modifier name, which must not be undef. The return is a boolean.
+sub __ducktype_modifier_asserted {
+    my ( $self, $modifier ) = @_;
+    foreach my $type ( reverse $self->type() ) {
+	$type->can( '__ducktype_modifier_asserted' )
+	    or next;
+	defined( my $val = $type->__ducktype_modifier_asserted( $modifier ) )
+	    or next;
+	return $val;
+    }
+    return;
+}
+
 1;
 
 __END__

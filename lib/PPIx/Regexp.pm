@@ -438,6 +438,12 @@ sub modifier_asserted {
     );
 }
 
+# This is a kluge for both determining whether the object asserts
+# modifiers (hence the 'ductype') and determining whether the given
+# modifier is actually asserted. The signature is the invocant and the
+# modifier name, which must not be undef. The return is a boolean.
+*__ducktype_modifier_asserted = \&modifier_asserted;
+
 =head2 regular_expression
 
  my $re = PPIx::Regexp->new( 's/(foo)/${1}bar/smx' );

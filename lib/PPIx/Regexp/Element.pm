@@ -151,6 +151,47 @@ greediness token is possible.
 
 sub is_quantifier { return; }
 
+=head2 modifier_asserted
+
+ $token->modifier_asserted( 'i' )
+     and print "Matched without regard to case.\n";
+
+This method returns true if the given modifier is in effect for the
+element, and false otherwise.
+
+What it does is to walk backwards from the element until it finds a
+modifier object that specifies the modifier, whether asserted or
+negated. and returns the specified value. If nobody specifies the
+modifier, it returns C<undef>.
+
+This method will not work reliably if called on tokenizer output.
+
+=cut
+
+sub modifier_asserted {
+    my ( $self, $modifier ) = @_;
+
+    defined $modifier
+	or croak 'Modifier must be defined';
+
+    my $elem = $self;
+
+    while ( $elem ) {
+	if ( $elem->can( '__ducktype_modifier_asserted' ) ) {
+	    my $val;
+	    defined( $val = $elem->__ducktype_modifier_asserted( $modifier ) )
+		and return $val;
+	}
+	if ( my $prev = $elem->sprevious_sibling() ) {
+	    $elem = $prev;
+	} else {
+	    $elem = $elem->parent();
+	}
+    }
+
+    return;
+}
+
 =head2 next_sibling
 
 This method returns the element's next sibling, or nothing if there is

@@ -1265,14 +1265,87 @@ true    ( modifier_asserted => 'x' );
 # This to be sure we recognize 'aa' when consecutive.
 
 parse   ( '/ . /aasmx' );
+value   ( failures => [], 0 );
 true    ( modifier_asserted => 'aa' );
 false   ( modifier_asserted => 'a' );
 
 # Bug reported by Anonymous Monk. /aia is equivalent to /aai
 
 parse   ( '/ . /asmxa' );
+value   ( failures => [], 0 );
 true    ( modifier_asserted => 'aa' );
 false   ( modifier_asserted => 'a' );
+
+# Wishlist by Anonymous Monk to know what modifiers were asserted where.
+
+parse	( '/foo/i' );
+value   ( failures => [], 0 );
+class   ( 'PPIx::Regexp' );
+count   ( 3 );
+choose	( child => 1 );
+class	( 'PPIx::Regexp::Structure::Regexp' );
+count	( 3 );
+choose	( child => 1, child => 0 );
+class	( 'PPIx::Regexp::Token::Literal' );
+content	( 'f' );
+true	( modifier_asserted => 'i' );
+
+parse	( '/(?i)foo/' );
+value   ( failures => [], 0 );
+class   ( 'PPIx::Regexp' );
+count   ( 3 );
+choose	( child => 1 );
+class	( 'PPIx::Regexp::Structure::Regexp' );
+count	( 4 );
+choose	( child => 1, child => 1 );
+class	( 'PPIx::Regexp::Token::Literal' );
+content	( 'f' );
+true	( modifier_asserted => 'i' );
+
+parse	( '/(?i:foo)/' );
+value   ( failures => [], 0 );
+class   ( 'PPIx::Regexp' );
+count   ( 3 );
+choose	( child => 1 );
+class	( 'PPIx::Regexp::Structure::Regexp' );
+count	( 1 );
+choose	( child => 1, child => 0 );
+class	( 'PPIx::Regexp::Structure::Modifier' );
+count	( 3 );
+choose	( child => 1, child => 0, child => 0 );
+class	( 'PPIx::Regexp::Token::Literal' );
+content	( 'f' );
+true	( modifier_asserted => 'i' );
+
+parse	( '/foo/', default_modifiers => [ 'i' ] );
+value   ( failures => [], 0 );
+class   ( 'PPIx::Regexp' );
+count   ( 3 );
+choose	( child => 1 );
+class	( 'PPIx::Regexp::Structure::Regexp' );
+count	( 3 );
+choose	( child => 1, child => 0 );
+class	( 'PPIx::Regexp::Token::Literal' );
+content	( 'f' );
+true	( modifier_asserted => 'i' );
+
+parse	( '/(?-i:foo)/i' );
+value   ( failures => [], 0 );
+class   ( 'PPIx::Regexp' );
+count   ( 3 );
+choose	( child => 1 );
+class	( 'PPIx::Regexp::Structure::Regexp' );
+count	( 1 );
+choose	( child => 1, child => 0 );
+class	( 'PPIx::Regexp::Structure::Modifier' );
+count	( 3 );
+choose	( child => 1, child => 0, child => 0 );
+class	( 'PPIx::Regexp::Token::Literal' );
+content	( 'f' );
+false	( modifier_asserted => 'i' );
+
+
+# End of wishlist by Anonymous Monk to know what modifiers were asserted where.
 
 # Handle leading and trailing white space
 
