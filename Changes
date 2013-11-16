@@ -1,3 +1,17 @@
+0.035		2013-11-15	T. R. Wyant
+  Properly handle multi-character modifiers like /ee. We now handle /eie
+    as being the same as /eei. Thanks to Anonymous Monk for finding
+    this.
+  Properly handle \g and \k back references that do not correspond to an
+    actual capture group. They are now reblessed into the unknown token,
+    and counted as errors. Thanks to Anonymous Monk for finding this.
+  Add method error() to PPIx::Regexp::Element. This should return an
+    error message when the element is in error -- normally when it has
+    been blessed into the unknown token or structure.
+  Add method modifier_asserted() to PPIx::Regexp::Element. This walks
+    the parse tree backward to determine if the given modifier is in
+    effect for the element.
+
 0.034		2013-05-11	T. R. Wyant
   No changes since 0.033_01
 
