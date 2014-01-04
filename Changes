@@ -1,3 +1,10 @@
+0.036		2014-01-04	T. R. Wyant
+  Retract the "Allow non-ASCII white space under /x" change introduced
+    in version 0.033. I misread perl5170delta, and implemented early.
+  Change tp explicit character class to recognize white space under /x.
+    I was previously using \s, which matched too much.
+  Thanks to Nobuo Kumagai for finding and reporting this.
+
 0.035		2013-11-15	T. R. Wyant
   Properly handle multi-character modifiers like /ee. We now handle /eie
     as being the same as /eei. Thanks to Anonymous Monk for finding
