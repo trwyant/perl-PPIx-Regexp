@@ -603,6 +603,14 @@ class	'PPIx::Regexp::Token::Whitespace', note => 'White space';
 token	' ', note => 'Not significant under /x';
 method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
+
+# RT #91798. The following was implemented prematurely. What happened in
+# 5.17.9 was not the recognition of non-ASCII spaces, but the
+# requirement that they be escaped, so they could be recognized
+# eventually.
+
+=begin comment
+
 if ( $] >= 5.008 ) {
     # The following eval is to hide the construct from Perl 5.6, which
     # does not understand \N{...}.
@@ -611,6 +619,10 @@ if ( $] >= 5.008 ) {
     method	perl_version_introduced	=> '5.017009', note => 'perl5179delta';
     method	perl_version_removed	=> undef;
 }
+
+=end comment
+
+=cut
 
 class   'PPIx::Regexp::Token::Structure', note => 'Regex set';
 token   '(?[';

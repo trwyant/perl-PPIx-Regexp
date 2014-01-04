@@ -99,9 +99,19 @@ my %regex_set_operator = map { $_ => 1 } qw{ & + | - ^ ! };
 #
 # See PPIx::Regexp::Structure::RegexSet for the documentation of this
 # mess.
-my $white_space_re = $] >= 5.008 ?
-'qr< \\A [\\s\\N{U+0085}\\N{U+200E}\\N{U+200F}\\N{U+2028}\\N{U+2029}]+ >smx' :
-'qr< \\A \\s+ >smx';
+# my $white_space_re = $] >= 5.008 ?
+# 'qr< \\A [\\s\\N{U+0085}\\N{U+200E}\\N{U+200F}\\N{U+2028}\\N{U+2029}]+ >smx' :
+# 'qr< \\A \\s+ >smx';
+#
+# RT #91798
+# The above turns out to be wrong, because \s matches too many
+# characters. We need the following to get the right match. Note that
+# \cK was added experimentally in 5.17.0 and made it into 5.18. The \N{}
+# characters were NOT added (as I originally thought) but were simply
+# made characters that generated warnings when escaped, in preparation
+# for adding them. When they actually get added, I will have to add back
+# the trinary operator. Sigh.
+my $white_space_re = 'qr< \A [\t\n\cK\f\r ] >smx';
 $white_space_re = eval $white_space_re;  ## no critic (ProhibitStringyEval)
 
 my %regex_pass_on = map { $_ => 1 } qw{ [ ] ( ) $ \ };

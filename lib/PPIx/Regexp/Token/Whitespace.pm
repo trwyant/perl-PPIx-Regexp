@@ -78,6 +78,15 @@ sub __PPIX_TOKENIZER__regexp {
 sub __PPIX_TOKEN__post_make {
     my ( $self, $tokenizer, $arg ) = @_;
 
+    $self->{perl_version_introduced} = MINIMUM_PERL;
+
+    # RT #91798.
+    # TODO the above needs to be replaced by the following (suitably
+    # modified) when the non-ASCII white space characters are finally
+    # recognized by Perl.
+
+=begin comment
+
     if ( ord $self->content() < 128 ) {
 	$self->{perl_version_introduced} = MINIMUM_PERL;
     } elsif ( $tokenizer && $tokenizer->cookie( COOKIE_REGEX_SET ) ) {
@@ -85,6 +94,10 @@ sub __PPIX_TOKEN__post_make {
     } else {
 	$self->{perl_version_introduced} = '5.017009';
     }
+
+=end comment
+
+=cut
 
     return;
 }

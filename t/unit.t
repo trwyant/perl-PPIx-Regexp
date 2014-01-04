@@ -1447,6 +1447,15 @@ choose  ( 3 );
 class   ( 'PPIx::Regexp::Token::GroupType::Modifier' );
 content ( '\\?:' );
 
+# RT 91798: non-breaking space should not be whitespace - Nobuo Kumagai
+
+tokenize( "/\240/x" );
+value   ( failures => [], 0 );
+count   ( 5 );
+choose  ( 2 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( "\240" );
+
 SKIP: {
     $is_ascii
 	or skip(
