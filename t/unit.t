@@ -1456,6 +1456,37 @@ choose  ( 2 );
 class   ( 'PPIx::Regexp::Token::Literal' );
 content ( "\240" );
 
+note '/ee should parse like /e';
+tokenize( 's/foo/bar(42)/ee' );
+count   ( 9 );
+choose  ( 0 );
+class   ( 'PPIx::Regexp::Token::Structure' );
+content ( 's' );
+choose  ( 1 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '/' );
+choose  ( 2 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'f' );
+choose  ( 3 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'o' );
+choose  ( 4 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'o' );
+choose  ( 5 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '/' );
+choose  ( 6 );
+class   ( 'PPIx::Regexp::Token::Code' );
+content ( 'bar(42)' );
+choose  ( 7 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '/' );
+choose  ( 8 );
+class   ( 'PPIx::Regexp::Token::Modifier' );
+content ( 'ee' );
+
 SKIP: {
     $is_ascii
 	or skip(

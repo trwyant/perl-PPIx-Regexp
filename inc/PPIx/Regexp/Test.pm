@@ -29,6 +29,7 @@ our @EXPORT_OK = qw{
     finis
     equals
     navigate
+    note
     parse
     plan
     ppi

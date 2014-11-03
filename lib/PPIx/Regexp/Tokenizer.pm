@@ -722,9 +722,9 @@ sub __PPIX_TOKENIZER__finish {
 	    $tokenizer->{delimiter_re} = undef;
 	}
 
-	if ( $tokenizer->modifier( 'e' ) ) {
-	    # With /e, the replacement portion is code. We make it all
-	    # into one big PPIx::Regexp::Token::Code, slap on the
+	if ( $tokenizer->modifier( 'e' ) || $tokenizer->modifier( 'ee' ) ) {
+	    # With /e or /ee, the replacement portion is code. We make
+	    # it all into one big PPIx::Regexp::Token::Code, slap on the
 	    # trailing delimiter and modifiers, and return it all.
 	    push @tokens, $tokenizer->make_token(
 		$tokenizer->{cursor_limit} - $tokenizer->{cursor_curr},
