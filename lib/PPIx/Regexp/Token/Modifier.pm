@@ -89,7 +89,7 @@ use PPIx::Regexp::Constant qw{
     MODIFIER_GROUP_MATCH_SEMANTICS
 };
 
-our $VERSION = '0.036';
+our $VERSION = '0.036_01';
 
 # Define modifiers that are to be aggregated internally for ease of
 # computation.
@@ -114,7 +114,7 @@ This method returns true if the token explicitly asserts the given
 modifier. The example would return true for the modifier in
 C<(?i:foo)>, but false for C<(?-i:foo)>.
 
-Starting with version [%% next_version %%], if the argument is a
+Starting with version 0.036_01, if the argument is a
 single-character modifier followed by an asterisk (intended as a wild
 card character), the return is the number of times that modifier
 appears. In this case an exception will be thrown if you specify a

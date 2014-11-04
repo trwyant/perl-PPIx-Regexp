@@ -38,7 +38,7 @@ use PPIx::Regexp::Constant qw{
     COOKIE_CLASS COOKIE_REGEX_SET MINIMUM_PERL TOKEN_UNKNOWN
 };
 
-our $VERSION = '0.036';
+our $VERSION = '0.036_01';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };

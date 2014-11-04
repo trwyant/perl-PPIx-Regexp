@@ -1,7 +1,25 @@
+0.036_01	2014-11-04	T. R. Wyant
+  Correctly mark the replacement portion of s///ee as code. Prior to
+    this release it was parsed as though no /e were present.
+  Make available the number of times a given modifier is asserted
+    (except for the match semantics modifiers which get handled
+    differently). See PPIx::Regexp::Token::Modifier->asserted() and
+    PPIx::Regexp::Tokenizer->modifier() for details.
+
+commit ebc3635b4d4ef31fa1914a0c2abed1baea5be5ec
+Author: Tom Wyant <wyant@cpan.org>
+Date:   Mon Nov 3 13:48:31 2014 -0500
+
+    Correctly handle /ee
+    
+    The code was treating the replacement portion of s/foo/bar(42)/ee as
+    literals, rather than code.
+
+
 0.036		2014-01-04	T. R. Wyant
   Retract the "Allow non-ASCII white space under /x" change introduced
     in version 0.033. I misread perl5170delta, and implemented early.
-  Change tp explicit character class to recognize white space under /x.
+  Change to explicit character class to recognize white space under /x.
     I was previously using \s, which matched too much.
   Thanks to Nobuo Kumagai for finding and reporting this.
 

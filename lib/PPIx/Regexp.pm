@@ -92,7 +92,7 @@ use PPIx::Regexp::Token::Modifier ();	# For its modifier manipulations.
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };
 
-our $VERSION = '0.036';
+our $VERSION = '0.036_01';
 
 =head2 new
 
@@ -428,7 +428,7 @@ This method returns true if the given modifier is asserted for the
 regexp, whether explicitly or by the modifiers passed in the
 C<default_modifiers> argument.
 
-Starting with version [%% next_version %%], if the argument is a
+Starting with version 0.036_01, if the argument is a
 single-character modifier followed by an asterisk (intended as a wild
 card character), the return is the number of times that modifier
 appears. In this case an exception will be thrown if you specify a

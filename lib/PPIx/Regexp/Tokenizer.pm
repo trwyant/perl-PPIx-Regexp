@@ -42,7 +42,7 @@ use PPIx::Regexp::Token::Whitespace		();
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ looks_like_number };
 
-our $VERSION = '0.036';
+our $VERSION = '0.036_01';
 
 {
     # Names of classes containing tokenization machinery. There are few
@@ -871,7 +871,7 @@ L<PPIx::Regexp::Token::Unknown|PPIx::Regexp::Token::Unknown>.
 This method returns true if the given modifier character was found on
 the end of the regular expression, and false otherwise.
 
-Starting with version [%% next_version %%], if the argument is a
+Starting with version 0.036_01, if the argument is a
 single-character modifier followed by an asterisk (intended as a wild
 card character), the return is the number of times that modifier
 appears. In this case an exception will be thrown if you specify a
