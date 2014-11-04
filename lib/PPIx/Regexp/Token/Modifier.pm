@@ -83,6 +83,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
+use Carp;
 use PPIx::Regexp::Constant qw{
     MINIMUM_PERL
     MODIFIER_GROUP_MATCH_SEMANTICS
@@ -113,6 +114,13 @@ This method returns true if the token explicitly asserts the given
 modifier. The example would return true for the modifier in
 C<(?i:foo)>, but false for C<(?-i:foo)>.
 
+Starting with version [%% next_version %%], if the argument is a
+single-character modifier followed by an asterisk (intended as a wild
+card character), the return is the number of times that modifier
+appears. In this case an exception will be thrown if you specify a
+multi-character modifier (e.g.  C<'ee*'>), or if you specify one of the
+match semantics modifiers (e.g.  C<'a*'>).
+
 If called without an argument, or with an undef argument, all modifiers
 explicitly asserted by this token are returned.
 
@@ -138,9 +146,19 @@ sub asserts {
 
 sub __asserts {
     my ( $present, $modifier ) = @_;
-    my $bin = $aggregate{$modifier}
-	or return $present->{$modifier};
-    return defined $present->{$bin} && $modifier eq $present->{$bin};
+    if ( my $bin = $aggregate{$modifier} ) {
+	return defined $present->{$bin} && $modifier eq $present->{$bin};
+    }
+    if ( $modifier =~ s/ [*] \z //smx ) {
+	$aggregate{$modifier}
+	    and croak "Can not use wild card on modifier '$modifier*'";
+	1 == length $modifier
+	    or croak "Can not use wild card on multi-character modifier '$modifier*'";
+	return $present->{$modifier} || 0;
+    }
+    my $len = length $modifier;
+    $modifier = substr $modifier, 0, 1;
+    return $present->{$modifier} && $len == $present->{$modifier};
 }
 
 sub can_be_quantified { return };
@@ -301,7 +319,11 @@ sub __aggregate_modifiers {
 		# also comes through here, so we have to handle it.
 		$present{$bin} = $value ? $1 : undef;
 	    } else {
-		$present{$1} = $value;
+		# TODO have to think about this, since I need asserts(
+		# 'e' ) to be 2 if we in fact have 'ee'. Is this
+		# correct?
+#		$present{$1} = $value;
+		$present{$2} = $value * length $1;
 	    }
 	}
     }

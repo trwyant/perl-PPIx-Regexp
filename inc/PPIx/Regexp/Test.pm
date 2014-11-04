@@ -22,6 +22,7 @@ our @EXPORT_OK = qw{
     cmp_ok
     content
     count
+    diag
     different
     done_testing
     dump_result
