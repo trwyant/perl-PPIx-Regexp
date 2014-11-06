@@ -54,6 +54,10 @@ parse. If this functionality is retracted and the syntax used for
 something else, C<PPIx::Regexp> will forget completely about regex
 character sets.
 
+At some point, the documentation started calling these "Extended
+Bracketed Character Classes", and documenting them in
+L<perlrecharclass|perlrecharclass>.
+
 =head1 METHODS
 
 This class supports no public methods over and above those supported by

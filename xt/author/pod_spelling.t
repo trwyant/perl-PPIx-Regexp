@@ -29,6 +29,7 @@ lexes
 merchantability
 nav
 navigational
+perlrecharclass
 perluniprops
 POSIX
 PPI
