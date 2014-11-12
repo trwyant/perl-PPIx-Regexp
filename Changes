@@ -1,3 +1,8 @@
+0.037		2014-11-12	T. R. Wyant
+  Have PPIx::Regexp::Structure::RegexSet POD recognize that the Perl
+    docs (specifically perlrecharclass) now call this construction
+    Extended Bracketed Character Classes, not sets.
+
 0.036_01	2014-11-04	T. R. Wyant
   Correctly mark the replacement portion of s///ee as code. Prior to
     this release it was parsed as though no /e were present.
@@ -5,16 +10,6 @@
     (except for the match semantics modifiers which get handled
     differently). See PPIx::Regexp::Token::Modifier->asserted() and
     PPIx::Regexp::Tokenizer->modifier() for details.
-
-commit ebc3635b4d4ef31fa1914a0c2abed1baea5be5ec
-Author: Tom Wyant <wyant@cpan.org>
-Date:   Mon Nov 3 13:48:31 2014 -0500
-
-    Correctly handle /ee
-    
-    The code was treating the replacement portion of s/foo/bar(42)/ee as
-    literals, rather than code.
-
 
 0.036		2014-01-04	T. R. Wyant
   Retract the "Allow non-ASCII white space under /x" change introduced
@@ -354,3 +349,5 @@ Date:   Mon Nov 3 13:48:31 2014 -0500
 
 0.001		2009-10-21	T. R. Wyant
   Initial release.
+
+# ex: set textwidth=72 autoindent :
