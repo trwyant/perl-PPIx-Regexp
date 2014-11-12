@@ -4,30 +4,42 @@ use strict;
 use warnings;
 
 use File::Spec;
+use Getopt::Long 2.33 qw{ :config auto_version };
+use Pod::Usage;
+
+our $VERSION = '0.000_01';
+
+my %opt;
+
+GetOptions( \%opt,
+    help => sub { pod2usage( { -verbose => 2 } ) },
+) and @ARGV or pod2usage( { -verbose => 0 } );
+
+my $year = ( localtime )[5] + 1900;
 
 @ARGV or die "No class name provided";
 
-my $template = <<'EOD';
-=head1 NAME
+my $template = <<"EOD";
+*=head1 NAME
 
-%1$s - Do something for the PPIx::Regexp package.
+%1\$s - Do something for the PPIx::Regexp package.
 
-=head1 SYNOPSIS
+*=head1 SYNOPSIS
 
  use PPIx::Regexp::Dumper;
  PPIx::Regexp::Dumper->new( 'qr{foo}smx' )
      ->print();
 
-=head1 INHERITANCE
+*=head1 INHERITANCE
 
- %1$s
- isa %2$s
+ %1\$s
+ isa %2\$s
 
-=head1 DESCRIPTION
+*=head1 DESCRIPTION
 
 Insert tedious prose here.
 
-=head1 METHODS
+*=head1 METHODS
 
 This class provides no public methods beyond those provided by its
 superclass.
@@ -36,33 +48,33 @@ This class provides the following public methods. Methods not documented
 here are private, and unsupported in the sense that the author reserves
 the right to change or remove them without notice.
 
-=cut
+*=cut
 
-package %1$s;
+package %1\$s;
 
 use strict;
 use warnings;
-%3$s
-use base qw{ %2$s };
+%3\$s
+use base qw{ %2\$s };
 
-our $VERSION = '0.000_05';
-%4$s
+our \$VERSION = '0.000_05';
+%4\$s
 1;
 
 __END__
 
-=head1 SUPPORT
+*=head1 SUPPORT
 
 Support is by the author. Please file bug reports at
 L<http://rt.cpan.org>, or in electronic mail to the author.
 
-=head1 AUTHOR
+*=head1 AUTHOR
 
 Thomas R. Wyant, III F<wyant at cpan dot org>
 
-=head1 COPYRIGHT AND LICENSE
+*=head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2009-2011 by Thomas R. Wyant, III
+Copyright (C) $year by Thomas R. Wyant, III
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl 5.10.0. For more details, see the full text
@@ -72,10 +84,12 @@ This program is distributed in the hope that it will be useful, but
 without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
-=cut
+*=cut
 
 # ex: set textwidth=72 :
 EOD
+
+$template =~ s/ ( \A | (?<= \n ) ) [*] (?= = ) //smxg;
 
 foreach my $class ( @ARGV ) {
     my $full = 'PPIx::Regexp::' . $class;
@@ -103,11 +117,61 @@ EOD
 	$code = '';
     }
     my $fn = File::Spec->catfile( @path );
+    -e $fn
+	and die "$fn already exists\n";
     open ( my $fh, '>', $fn )
 	or die "Failed to open $fn: $!\n";
     print { $fh } sprintf $template, $full, $super, $use, $code;
     close $fh;
     system {'gvim'} 'gvim', $fn;
 }
+
+__END__
+
+=head1 TITLE
+
+generate - Generate a new PPIx::Regexp module
+
+=head1 SYNOPSIS
+
+ generate Foo      # Generates PPIx::Regexp::Foo
+ generate -help
+ generate -version
+
+=head1 OPTIONS
+
+=head2 -help
+
+This option displays the documentation for this script. The script then
+exits.
+
+=head2 -version
+
+This option displays the version of this script. The script then exits.
+
+=head1 DETAILS
+
+This Perl script generates a new PPIx::Regexp module, providing some of
+the more usual boiler plate. The arguments are one or more module names,
+without the leading C<'PPIx::Regexp::'>.
+
+=head1 AUTHOR
+
+Thomas R. Wyant, III F<wyant at cpan dot org>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2009-2014 by Thomas R. Wyant, III
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl 5.10.0. For more details, see the full text
+of the licenses in the directory LICENSES.
+
+This program is distributed in the hope that it will be useful, but
+without any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.
+
+=cut
+
 
 # ex: set textwidth=72 :

@@ -72,6 +72,9 @@ my %special = (
     'PPIx::Regexp::Token' => {
 	parent	=> 'PPIx::Regexp::Element',
     },
+    'PPIx::Regexp::Util'	=> {
+	parent	=> undef,
+    },
 );
 
 my %normal = (
@@ -108,7 +111,7 @@ foreach my $pkg ( sort @found ) {
     if ( defined( my $parent = determine( $pkg, 'parent' ) ) ) {
 	my @folks = ref $parent eq 'ARRAY' ? @{ $parent } : $parent;
 	foreach my $pop ( @folks ) {
-	    push @tests, "class_isa_ok( '$pkg', '$pop' )";
+	    push @tests, "isa_ok( '$pkg', '$pop' )";
 	}
     }
 
@@ -120,33 +123,29 @@ foreach my $pkg ( sort @found ) {
 
 }
 
-print <<EOD;
+print <<'EOD';
 package main;
 
 use strict;
 use warnings;
 
 use Test::More 0.88;
+
+require_ok( 'PPI::Document' )
+    or BAIL_OUT(
+    q{PPI::Document is a prerequisite. Without it, we're hosed.} );
+
 EOD
 
 foreach my $tst ( @tests ) {
     $tst =~ m/ \A require_ok \b /smx
 	and print "\n";
-    print wrap( '', '    ', "$tst;\n");
+    print wrap( '', '    ', "$tst or BAIL_OUT;\n");
 }
 
 print <<'EOD';
 
 done_testing;
-
-sub class_isa_ok {
-    my ( $class, $isa ) = @_;
-    @_ = (
-	eval { $class->isa( $isa ) },
-	"$class isa $isa",
-    );
-    goto &ok,
-}
 
 1;
 EOD
@@ -166,5 +165,50 @@ sub safe {
 }
 
 __END__
+
+=head1 TITLE
+
+basic - Generate t/basic.t
+
+=head1 SYNOPSIS
+
+ basic >t/basic.t
+ basic -help
+ basic -version
+
+=head1 OPTIONS
+
+=head2 -help
+
+This option displays the documentation for this script. The script then
+exits.
+
+=head2 -version
+
+This option displays the version of this script. The script then exits.
+
+=head1 DETAILS
+
+This Perl script generates F<t/basic.t> by traversing the F<lib/>
+directory. The individual modules are not, unfortunately, loaded in
+dependency order.
+
+=head1 AUTHOR
+
+Thomas R. Wyant, III F<wyant at cpan dot org>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2009-2014 by Thomas R. Wyant, III
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl 5.10.0. For more details, see the full text
+of the licenses in the directory LICENSES.
+
+This program is distributed in the hope that it will be useful, but
+without any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.
+
+=cut
 
 # ex: set textwidth=72 :
