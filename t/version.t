@@ -55,6 +55,9 @@ our $REPORT;	# True to report rather than test.
 #         Perl.
 #     Ref => The source of the version removed, if known, and if the
 #         element has in fact been removed.
+#
+# One way to use this is
+#     $ perl -e '$REPORT = 1; do "t/version.t";'
 
 # Trailing empty fields are removed.
 
@@ -93,6 +96,24 @@ method	perl_version_introduced => '5.005', note => 'perl5005delta';
 method	perl_version_removed	=> undef;
 token	'\K', note => 'In s///, keep everything before the \K';
 method	perl_version_introduced => '5.009005', note => 'perl595delta';
+method	perl_version_removed	=> undef;
+token	'\b{gcb}', note => 'Assert grapheme cluster boundary';
+method	perl_version_introduced => '5.021009', note => 'perl5219delta';
+method	perl_version_removed	=> undef;
+token	'\b{wb}', note => 'Assert word boundary';
+method	perl_version_introduced => '5.021009', note => 'perl5219delta';
+method	perl_version_removed	=> undef;
+token	'\b{sb}', note => 'Assert sentence boundary';
+method	perl_version_introduced => '5.021009', note => 'perl5219delta';
+method	perl_version_removed	=> undef;
+token	'\B{gcb}', note => 'Assert no grapheme cluster boundary';
+method	perl_version_introduced => '5.021009', note => 'perl5219delta';
+method	perl_version_removed	=> undef;
+token	'\B{wb}', note => 'Assert no word boundary';
+method	perl_version_introduced => '5.021009', note => 'perl5219delta';
+method	perl_version_removed	=> undef;
+token	'\B{sb}', note => 'Assert no sentence boundary';
+method	perl_version_introduced => '5.021009', note => 'perl5219delta';
 method	perl_version_removed	=> undef;
 
 class	'PPIx::Regexp::Token::Backreference', note => 'Back reference';

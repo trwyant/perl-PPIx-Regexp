@@ -19,8 +19,19 @@ C<PPIx::Regexp::Token::Assertion> has no descendants.
 
 This class represents one of the simple assertions; that is, those that
 are not defined via parentheses. This includes the zero-width assertions
-C<^>, C<$>, C<\b>, C<\B>, C<\A>, C<\Z>, C<\z> and C<\G>, as well as the
-positive look-behind assertion C<\K> added in Perl 5.009005.
+C<^>, C<$>, C<\b>, C<\B>, C<\A>, C<\Z>, C<\z> and C<\G>, as well as:
+
+=over
+
+=item * The C<\z> assertion added in Perl 5.005,
+
+=item * The C<\K> assertion added in Perl 5.009005,
+
+=item * The C<\b{gcb}> assertion (and friends) added in Perl 5.021009.
+Similar braced constructions (like C<\b{foo}>) are still literals, not
+assertions.
+
+=back
 
 =head1 METHODS
 
@@ -43,6 +54,17 @@ our $VERSION = '0.037';
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 
+
+my @braced_assertions = (
+    [ qr< \\ [bB] [{] (?: gcb | wb | sb ) [}] >smx, '5.021009' ],
+);
+
+sub perl_version_introduced {
+    my ( $self ) = @_;
+    return ( $self->{perl_version_introduced} ||=
+	$self->_perl_version_introduced() );
+}
+
 {
 
     my %perl_version_introduced = (
@@ -50,9 +72,14 @@ our $VERSION = '0.037';
 	'\\z' => '5.005',
     );
 
-    sub perl_version_introduced {
+    sub _perl_version_introduced {
 	my ( $self ) = @_;
-	return $perl_version_introduced{$self->content()} || MINIMUM_PERL;
+	my $content = $self->content();
+	foreach my $item ( @braced_assertions ) {
+	    $content =~ m/ \A $item->[0] \z /smx
+		and return $item->[1];
+	}
+	return $perl_version_introduced{ $content } || MINIMUM_PERL;
     }
 
 }
@@ -84,6 +111,18 @@ sub __PPIX_TOKENIZER__regexp {
     $character eq '\\' or return;
 
     defined ( my $next = $tokenizer->peek( 1 ) ) or return;
+
+    # Handle assertions of the form \b{gcb} and friends, introduced in
+    # Perl 5.21.9. These are not recognized inside square bracketed
+    # character classes, where \b is not an assertion but a backspace
+    # character.
+    if ( __PACKAGE__ eq $make ) {	# Only outside [...]
+	foreach my $item ( @braced_assertions ) {
+	    my $end;
+	    $end = $tokenizer->find_regexp( qr/ \A $item->[0] /smx )
+		and return $end;
+	}
+    }
 
     $escaped{$next}
 	and return $tokenizer->make_token( 2, $make );
