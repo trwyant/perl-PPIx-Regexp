@@ -1,3 +1,15 @@
+0.037_01	2015-02-25	T. R. Wyant
+  Handle the boundary assertions introduced in Perl 5.21.9: '\b{gcb}'
+    (grapheme cluster boundary), '\b{wb}' (word boundary), '\b{sb}'
+    (sentence boundary), and the corresponding '\B{...}' constructions.
+    Similar-looking things like '\b{foo}' are not recognized as
+    assertions, and end up being literals.  This is less general than I
+    usually make things, but was done against the possibility that
+    (e.g.) '\b{foo}' might be introduced later, requiring
+    perl_version_released() to return a different number. Any of these
+    retracted prior to Perl 5.22.0 will simply be removed from
+    PPIx::Regexp.
+
 0.037		2014-11-12	T. R. Wyant
   Have PPIx::Regexp::Structure::RegexSet POD recognize that the Perl
     docs (specifically perlrecharclass) now call this construction
