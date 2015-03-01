@@ -47,7 +47,9 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
-use PPIx::Regexp::Constant qw{ COOKIE_CLASS MINIMUM_PERL TOKEN_LITERAL };
+use PPIx::Regexp::Constant qw{
+    COOKIE_CLASS MINIMUM_PERL TOKEN_LITERAL TOKEN_UNKNOWN
+};
 
 our $VERSION = '0.037_01';
 
@@ -57,6 +59,9 @@ our $VERSION = '0.037_01';
 
 my @braced_assertions = (
     [ qr< \\ [bB] [{] (?: gcb | wb | sb ) [}] >smx, '5.021009' ],
+    [ qr< \\ [bB] [{] .*? [}] >smx, undef, TOKEN_UNKNOWN,
+	{ error => 'Unknown bound type' },
+    ],
 );
 
 sub perl_version_introduced {
@@ -118,9 +123,11 @@ sub __PPIX_TOKENIZER__regexp {
     # character.
     if ( __PACKAGE__ eq $make ) {	# Only outside [...]
 	foreach my $item ( @braced_assertions ) {
-	    my $end;
-	    $end = $tokenizer->find_regexp( qr/ \A $item->[0] /smx )
-		and return $end;
+	    my $end = $tokenizer->find_regexp( qr/ \A $item->[0] /smx )
+		or next;
+	    $item->[2]
+		or return $end;
+	    return $tokenizer->make_token( $end, $item->[2], $item->[3] );
 	}
     }
 
