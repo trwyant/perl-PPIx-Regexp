@@ -43,7 +43,7 @@ use Carp qw{ confess };
 
 use PPIx::Regexp::Constant qw{ RE_CAPTURE_NAME };
 
-our $VERSION = '0.037_01';
+our $VERSION = '0.037_02';
 
 use constant NAMED_CAPTURE =>
     qr{ \A \\? \? (?: P? < ( @{[ RE_CAPTURE_NAME ]} ) \\? > |
