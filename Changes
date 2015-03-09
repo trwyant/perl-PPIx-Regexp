@@ -1,3 +1,6 @@
+0.038		2015-03-09	T. R. Wyant
+  No changes since 0.037_01.
+
 0.037_02	2015-03-01	T. R. Wyant
   Make \b{foo} into an unknown token (and therefore an error. This
     applies to \b{anything}, where 'anything' is anything bur 'gcb',
