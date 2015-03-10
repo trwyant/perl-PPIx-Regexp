@@ -28,8 +28,7 @@ C<^>, C<$>, C<\b>, C<\B>, C<\A>, C<\Z>, C<\z> and C<\G>, as well as:
 =item * The C<\K> assertion added in Perl 5.009005,
 
 =item * The C<\b{gcb}> assertion (and friends) added in Perl 5.021009.
-Similar braced constructions (like C<\b{foo}>) are still literals, not
-assertions.
+Similar braced constructions (like C<\b{foo}>) are unknown tokens.
 
 =back
 
@@ -58,7 +57,7 @@ our $VERSION = '0.038';
 
 
 my @braced_assertions = (
-    [ qr< \\ [bB] [{] (?: gcb | wb | sb ) [}] >smx, '5.021009' ],
+    [ qr< \\ [bB] [{] (?: g | gcb | wb | sb ) [}] >smx, '5.021009' ],
     [ qr< \\ [bB] [{] .*? [}] >smx, undef, TOKEN_UNKNOWN,
 	{ error => 'Unknown bound type' },
     ],
