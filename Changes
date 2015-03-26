@@ -1,3 +1,11 @@
+0.038_01	2015-03-26	T. R. Wyant
+  Recognize nested subscripts in interpolation.
+    Thanks to Andy Lester for finding this, which actually manifested in
+    Perl-Critic-Policy-Variables-ProhibitUnusedVarsStricter. The problem is
+    that the actual heuristics for finding the end of an interpolation are
+    undocumented, and I missed this rather-obvious case.
+  Add \b{g} (= \b{gcb})
+
 0.038		2015-03-09	T. R. Wyant
   No changes since 0.037_01.
 
