@@ -89,7 +89,7 @@ sub ppi {
 # Match the beginning of an interpolation.
 
 my $interp_re =
-	qr{ \A (?: [\@\$]? \$ [-\w&`'+^./\\";%=~:?!\@\$<>\[\]\{\},#] |
+	qr{ \A (?= [\@\$]? \$ [-\w&`'+^./\\";%=~:?!\@\$<>\[\]\{\},#] |
 		   \@ [\w\{] )
 	}smx;
 
@@ -123,7 +123,7 @@ sub _interpolation {
     }
 
     # Make sure we start off plausibly
-    $tokenizer->find_regexp( $interp_re )
+    defined $tokenizer->find_regexp( $interp_re )
 	or return;
 
     # See if PPI can figure out what we have
@@ -280,11 +280,17 @@ sub _curly {
 	    and return 1;
     }
 
-    # If we have exactly one child which is a symbol, we accept it as a
-    # subscript.
-    @kids == 1
-	and $kids[0]->isa( 'PPI::Token::Symbol' )
-	and return 1;
+    # If the first child is a symbol,
+    if ( @kids && $kids[0]->isa( 'PPI::Token::Symbol' ) ) {
+	# Accept it if it is the only child
+	@kids == 1
+	    and return 1;
+	# Accept it if there are exactly two children and the second is
+	# a subscript.
+	@kids == 2
+	    and $kids[1]->isa( 'PPI::Structure::Subscript' )
+	    and return 1;
+    }
 
     # We reject anything else.
     return;

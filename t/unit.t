@@ -37,6 +37,24 @@ value   ( capture_names => [], undef );
 value   ( max_capture_number => [], undef );
 value   ( source => [], 'fubar' );
 
+tokenize( '/$x{$y{z}}/' );
+count   ( 5 );
+choose  ( 0 );
+class   ( 'PPIx::Regexp::Token::Structure' );
+content ( '' );
+choose  ( 1 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '/' );
+choose  ( 2 );
+class   ( 'PPIx::Regexp::Token::Interpolation' );
+content ( '$x{$y{z}}' );
+choose  ( 3 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '/' );
+choose  ( 4 );
+class   ( 'PPIx::Regexp::Token::Modifier' );
+content ( '' );
+
 {
 
     # The navigation tests get done in their own local scope so that all
