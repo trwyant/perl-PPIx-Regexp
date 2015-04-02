@@ -1,3 +1,6 @@
+0.039		2015-04-02	T. R. Wyant
+  No changes since 0.038_01.
+
 0.038_01	2015-03-26	T. R. Wyant
   Recognize nested subscripts in interpolation.
     Thanks to Andy Lester for finding this, which actually manifested in

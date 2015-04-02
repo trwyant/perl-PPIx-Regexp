@@ -43,7 +43,7 @@ use base qw{ PPIx::Regexp::Token::GroupType };
 
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 
-our $VERSION = '0.038_01';
+our $VERSION = '0.039';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
