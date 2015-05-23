@@ -656,6 +656,11 @@ token   '(?[';
 method  perl_version_introduced => '5.017008', note => 'perl5178delta';
 method	perl_version_removed	=> undef;
 
+class	'PPIx::Regexp::Token::Modifier', note => 'Non-capturing parens';
+token	'n';
+method	perl_version_introduced => '5.021008', note => 'perl5218delta';
+method	perl_version_removed	=> undef;
+
 finis;
 
 my $context;

@@ -242,6 +242,10 @@ sub _perl_version_introduced {
     my $is_statement_modifier = ( $content !~ m/ \A [(]? [?] /smx );
     my $match_semantics = $self->match_semantics();
 
+    # Disabling capture with /n was introduced in 5.21.8
+    $self->asserts( 'n' )
+	and return '5.021008';
+
     # Match semantics modifiers became available as regular expression
     # modifiers in 5.13.10.
     defined $match_semantics
