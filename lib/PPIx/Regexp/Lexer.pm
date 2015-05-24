@@ -495,6 +495,10 @@ sub _round {
     $self->_in_regex_set()
 	and return PPIx::Regexp::Structure->_new( @{ $args } );
 
+    # If /n is asserted, parens do not capture.
+    $self->{tokenizer}->modifier( 'n' )
+	and return PPIx::Regexp::Structure->_new( @{ $args } );
+
     # The instantiator will rebless based on the first token if need be.
     return PPIx::Regexp::Structure::Capture->_new( @{ $args } );
 }

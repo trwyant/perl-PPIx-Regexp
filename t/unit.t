@@ -1505,6 +1505,13 @@ choose  ( 8 );
 class   ( 'PPIx::Regexp::Token::Modifier' );
 content ( 'ee' );
 
+# Make sure we record the correct number of captures in the presence of
+# the /n qualifier.
+parse   ( '/(foo)/n' );
+value   ( max_capture_number => [], 0 );
+parse   ( '/(?<foo>foo)/n' );
+value   ( max_capture_number => [], 1 );
+
 SKIP: {
     $is_ascii
 	or skip(
@@ -1527,10 +1534,10 @@ EOD
     parse   ( '/(foo[a-z\\d])/x' );
     dump_result( verbose => 1,
 	<<'EOD', q<Verbose parse of '/(foo[a-z\\d])/x'> );
-PPIx::Regexp	failures=0
+PPIx::Regexp	failures=0	max_capture_number=1
   PPIx::Regexp::Token::Structure	''	significant
-  PPIx::Regexp::Structure::Regexp	/ ... /
-    PPIx::Regexp::Structure::Capture	( ... )	number=1	name undef	can_be_quantified
+  PPIx::Regexp::Structure::Regexp	/ ... /	max_capture_number=1
+    PPIx::Regexp::Structure::Capture	( ... )	number=1	name=undef	can_be_quantified
       PPIx::Regexp::Token::Literal	'f'	0x66	significant	can_be_quantified
       PPIx::Regexp::Token::Literal	'o'	0x6f	significant	can_be_quantified
       PPIx::Regexp::Token::Literal	'o'	0x6f	significant	can_be_quantified

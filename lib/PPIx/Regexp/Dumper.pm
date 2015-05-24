@@ -414,7 +414,10 @@ sub PPIx::Regexp::Node::__PPIX_DUMPER__dump {
 
     my @rslt = ref $self;
     $self->isa( 'PPIx::Regexp' )
-	and $rslt[-1] .= "\tfailures=" . $self->failures();
+	and $rslt[-1] .= $dumper->{verbose}
+	    ? sprintf "\tfailures=%d\tmax_capture_number=%d",
+		$self->failures(), $self->max_capture_number()
+	    : sprintf "\tfailures=%d", $self->failures();
     $dumper->{perl_version}
 	and $rslt[-1] .= "\t" . $dumper->_perl_version( $self );
     my $indent = ' ' x $dumper->{indent};
@@ -450,6 +453,16 @@ sub PPIx::Regexp::Node::__PPIX_DUMPER__test {
     return @rslt;
 }
 
+sub _format_value {
+    my ( $val ) = @_;
+    defined $val
+	or return 'undef';
+    $val =~ m/ \A [0-9]+ \z /smx
+	and return $val;
+    $val =~ s/ (?= [\\"] ) /\\/smxg;
+    return qq{"$val"};
+}
+
 {
 
     my %dflt = (
@@ -473,12 +486,10 @@ sub PPIx::Regexp::Node::__PPIX_DUMPER__test {
 	$dumper->{perl_version}
 	    and push @rslt, $dumper->_perl_version( $self );
 	if ( $dumper->{verbose} ) {
-	    foreach my $method ( qw{ number name } ) {
+	    foreach my $method ( qw{ number name max_capture_number } ) {
 		$self->can( $method ) or next;
-		my $val = $self->$method;
-		push @rslt, defined $val ?
-		    "$method=$val" :
-		    "$method undef";
+		push @rslt, sprintf '%s=%s', $method, _format_value(
+		    $self->$method() );
 	    }
 	    foreach my $method ( qw{ can_be_quantified is_quantifier } ) {
 ##		is_case_sensitive
