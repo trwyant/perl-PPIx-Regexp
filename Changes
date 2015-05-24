@@ -1,3 +1,11 @@
+0.039_02	2015-05-24	T. R. Wyant
+  Do not parse unadorned parentheses as capture groups when /n is in
+    effect. Instead, they are parsed as PPIx::Regexp::Structure. Named
+    captures appear to be unaffected by /n.
+  Made a verbose dump a little more so. Specifically, dump
+    max_capture_group where relevant, and display dumped values a bit
+    more informatively.
+
 0.039_01	2015-05-23	T. R. Wyant
   Report /n (no captures) as having been added in 5.21.8.
 

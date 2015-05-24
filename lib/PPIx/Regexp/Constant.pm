@@ -3,7 +3,7 @@ package PPIx::Regexp::Constant;
 use strict;
 use warnings;
 
-our $VERSION = '0.039_01';
+our $VERSION = '0.039_02';
 
 use base qw{ Exporter };
 
