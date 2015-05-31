@@ -1,3 +1,6 @@
+0.040		2015-05-31	T. R. Wyant
+  No changes since 0.039_02.
+
 0.039_02	2015-05-24	T. R. Wyant
   Do not parse unadorned parentheses as capture groups when /n is in
     effect. Instead, they are parsed as PPIx::Regexp::Structure. Named
