@@ -99,6 +99,13 @@ sub __PPIX_TOKEN__post_make {
 
 =cut
 
+    # The extended white space characters came back in Perl 5.21.1
+
+    $self->{perl_version_introduced} =
+	( grep { 127 < ord } split qr{}, $self->content() )
+	? '5.021001'
+	: MINIMUM_PERL;
+
     return;
 }
 

@@ -635,21 +635,16 @@ method	perl_version_removed	=> undef;
 # 5.17.9 was not the recognition of non-ASCII spaces, but the
 # requirement that they be escaped, so they could be recognized
 # eventually.
-
-=begin comment
+# The non-ASCII white space was finally introduced in 5.21.1.
 
 if ( $] >= 5.008 ) {
     # The following eval is to hide the construct from Perl 5.6, which
     # does not understand \N{...}.
-    token	eval q<"\\N{U+0085}">,	## no critic (ProhibitStringyEval)
+    token	eval q<" \\N{U+0085}">,	## no critic (ProhibitStringyEval)
 		note	=> 'Non-ASCII space';
-    method	perl_version_introduced	=> '5.017009', note => 'perl5179delta';
+    method	perl_version_introduced	=> '5.021001', note => 'perl5179delta';
     method	perl_version_removed	=> undef;
 }
-
-=end comment
-
-=cut
 
 class   'PPIx::Regexp::Token::Structure', note => 'Regex set';
 token   '(?[';

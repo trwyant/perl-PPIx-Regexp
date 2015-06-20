@@ -111,7 +111,12 @@ my %regex_set_operator = map { $_ => 1 } qw{ & + | - ^ ! };
 # made characters that generated warnings when escaped, in preparation
 # for adding them. When they actually get added, I will have to add back
 # the trinary operator. Sigh.
-my $white_space_re = 'qr< \A [\t\n\cK\f\r ] >smx';
+# my $white_space_re = 'qr< \A [\t\n\cK\f\r ] >smx';
+#
+# The extended white space characters came back in Perl 5.21.1.
+my $white_space_re = $] >= 5.008 ?
+'qr< \\A [\\t\\n\\cK\\f\\r \\N{U+0085}\\N{U+200E}\\N{U+200F}\\N{U+2028}\\N{U+2029}]+ >smx' :
+'qr< \\A [\\t\\n\\cK\\f\\r ]+ >smx';
 $white_space_re = eval $white_space_re;  ## no critic (ProhibitStringyEval)
 
 my %regex_pass_on = map { $_ => 1 } qw{ [ ] ( ) $ \ };
