@@ -1,3 +1,12 @@
+0.040_01	2015-06-20	T. R. Wyant
+  Accept non-ASCII whitespace under /x. The Whitespace object can be
+    multiple characters; the perl_version_introduced() becomes
+    '5.021001' if any of them is a code point above 127.
+  The perl_version_removed() method now returns '5.021001' when called
+    on a PPIx::Regexp object produced by parsing '?foo?' (match once
+    without explicit 'm'). The object produced by parsing 'm?foo?' still
+    returns the minimum Perl version.
+
 0.040		2015-05-31	T. R. Wyant
   No changes since 0.039_02.
 
