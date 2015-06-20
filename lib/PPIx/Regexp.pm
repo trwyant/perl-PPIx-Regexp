@@ -451,6 +451,21 @@ sub modifier_asserted {
 # modifier name, which must not be undef. The return is a boolean.
 *__ducktype_modifier_asserted = \&modifier_asserted;
 
+# As of Perl 5.21.1 you can not leave off the type of a '?'-delimited
+# regexp. Because this is not associated with any single child we
+# compute it here.
+sub perl_version_removed {
+    my ( $self ) = @_;
+    my $v = $self->SUPER::perl_version_removed();
+    defined $v
+	and $v <= 5.021001
+	and return $v;
+    '??' eq $self->delimiters()
+	and '' eq $self->type()->content()
+	and return '5.021001';
+    return $v;
+}
+
 =head2 regular_expression
 
  my $re = PPIx::Regexp->new( 's/(foo)/${1}bar/smx' );

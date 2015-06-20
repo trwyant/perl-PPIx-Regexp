@@ -1507,10 +1507,21 @@ content ( 'ee' );
 
 # Make sure we record the correct number of captures in the presence of
 # the /n qualifier.
+note	'Correct number of captures in presence of /n qualifier';
 parse   ( '/(foo)/n' );
 value   ( max_capture_number => [], 0 );
 parse   ( '/(?<foo>foo)/n' );
 value   ( max_capture_number => [], 1 );
+
+# ?foo? without a specific type has been removed as of 5.21.1. These
+# would be in t/version.t except that the limit is not on a single
+# token but on the combination of empty type and question mark
+# delimiters.
+note    '?foo? without explicit type is removed in 5.21.1';
+parse   ( '?foo?' );
+value   ( perl_version_removed => [], 5.021001 );
+parse   ( 'm?foo?' );
+value   ( perl_version_removed => [], undef );
 
 SKIP: {
     $is_ascii
@@ -1518,6 +1529,8 @@ SKIP: {
 	'Non-ASCII machines will have different ordinal values',
 	10,
     );
+
+    note 'Ordinals';
 
     tokenize( '/foo/', '--notokens' );
     dump_result( ordinal => 1, tokens => 1,
