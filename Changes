@@ -1,3 +1,6 @@
+0.040_02	2015-06-25	T. R. Wyant
+  Report \C (match octet) as removed in 5.23.0.
+
 0.040_01	2015-06-20	T. R. Wyant
   Accept non-ASCII whitespace under /x. The Whitespace object can be
     multiple characters; the perl_version_introduced() becomes
