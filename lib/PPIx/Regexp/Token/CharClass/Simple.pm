@@ -128,6 +128,17 @@ our $VERSION = '0.040_01';
 
 }
 
+{
+    my %removed	 = (
+	'\\C'	=> '5.023',	# Before this, matched an octet
+    );
+
+    sub perl_version_removed {
+	my ( $self ) = @_;
+	return $removed{ $self->content() };
+    }
+}
+
 sub __PPIX_TOKENIZER__regexp {
     my ( $class, $tokenizer, $character ) = @_;
 
