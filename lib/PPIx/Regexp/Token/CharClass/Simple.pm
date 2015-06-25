@@ -99,14 +99,14 @@ our $VERSION = '0.040_01';
 {
 
     my %introduced = (
-	'\h'	=> '5.009005',	# Before this, parsed as 'h'
-	'\v'	=> '5.009005',	# Before this, parsed as 'v'
-	'\H'	=> '5.009005',	# Before this, parsed as 'H'
-	'\N'	=> '5.011',	# Before this, an error.
-	'\V'	=> '5.009005',	# Before this, parsed as 'V'
-	'\R'	=> '5.009005',
-	'\C'	=> '5.006',
-	'\X'	=> '5.006',
+	'\\h'	=> '5.009005',	# Before this, parsed as 'h'
+	'\\v'	=> '5.009005',	# Before this, parsed as 'v'
+	'\\H'	=> '5.009005',	# Before this, parsed as 'H'
+	'\\N'	=> '5.011',	# Before this, an error.
+	'\\V'	=> '5.009005',	# Before this, parsed as 'V'
+	'\\R'	=> '5.009005',
+	'\\C'	=> '5.006',
+	'\\X'	=> '5.006',
     );
 
     sub perl_version_introduced {
