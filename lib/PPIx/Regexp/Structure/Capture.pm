@@ -35,7 +35,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Structure };
 
-our $VERSION = '0.040_02';
+our $VERSION = '0.041';
 
 =head2 name
 

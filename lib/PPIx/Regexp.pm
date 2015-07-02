@@ -92,7 +92,7 @@ use PPIx::Regexp::Token::Modifier ();	# For its modifier manipulations.
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };
 
-our $VERSION = '0.040_02';
+our $VERSION = '0.041';
 
 =head2 new
 
