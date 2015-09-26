@@ -1505,6 +1505,46 @@ choose  ( 8 );
 class   ( 'PPIx::Regexp::Token::Modifier' );
 content ( 'ee' );
 
+# RT 107331 - Bogus trailing characters should cause error - Klaus Rindfrey
+
+parse   ( '/foo/|' );
+value   ( failures => [], 1 );
+class   ( 'PPIx::Regexp' );
+count   ( 3 );
+choose  ( child => 0 );
+class   ( 'PPIx::Regexp::Token::Structure' );
+content ( '' );
+choose  ( child => 1 );
+class   ( 'PPIx::Regexp::Structure::Regexp' );
+count   ( 4 );
+choose  ( child => 1, start => [] );
+count   ( 1 );
+choose  ( child => 1, start => 0 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '/' );
+choose  ( child => 1, type => [] );
+count   ( 0 );
+choose  ( child => 1, finish => [] );
+count   ( 1 );
+choose  ( child => 1, finish => 0 );
+class   ( 'PPIx::Regexp::Token::Unknown' );
+content ( '|' );
+choose  ( child => 1, child => 0 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'f' );
+choose  ( child => 1, child => 1 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'o' );
+choose  ( child => 1, child => 2 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'o' );
+choose  ( child => 1, child => 3 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( '/' );
+choose  ( child => 2 );
+class   ( 'PPIx::Regexp::Token::Modifier' );
+content ( '' );
+
 # Make sure we record the correct number of captures in the presence of
 # the /n qualifier.
 note	'Correct number of captures in presence of /n qualifier';

@@ -500,6 +500,15 @@ sub _format_value {
 		and push @rslt, $dumper->_format_modifiers_dump(
 		$self->type( 0 ) );
 	}
+
+	foreach my $method ( qw{ start finish } ) {
+	    my $ele = $self->$method()
+		or next;
+	    if ( defined ( my $err = $ele->error() ) ) {
+		push @rslt, $err;
+	    }
+	}
+
 	@rslt = ( join( "\t", @rslt ) );
 	my $indent = ' ' x $dumper->{indent};
 	foreach my $elem ( $self->children() ) {

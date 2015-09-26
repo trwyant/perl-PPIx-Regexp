@@ -63,7 +63,9 @@ will go through a deprecation cycle.
 The goal of this package is to parse well-formed regular expressions
 correctly. A secondary goal is not to blow up on ill-formed regular
 expressions. The correct identification and characterization of
-ill-formed regular expressions is B<not> a goal of this package.
+ill-formed regular expressions is B<not> a goal of this package, nor is
+the consistent parsing of ill-formed regular expressions from release to
+release.
 
 This policy attempts to track features in development releases as well
 as public releases. However, features added in a development release and
@@ -102,8 +104,11 @@ This method instantiates a C<PPIx::Regexp> object from a string, a
 L<PPI::Token::QuoteLike::Regexp|PPI::Token::QuoteLike::Regexp>, a
 L<PPI::Token::Regexp::Match|PPI::Token::Regexp::Match>, or a
 L<PPI::Token::Regexp::Substitute|PPI::Token::Regexp::Substitute>.
-Honestly, any L<PPI::Element|PPI::Element> will do, but only the three
+Honestly, any L<PPI::Element|PPI::Element> will work, but only the three
 Regexp classes mentioned previously are likely to do anything useful.
+
+Whatever form the argument takes, it is assumed to consist entirely of a
+valid match, substitution, or C<< qr<> >> string.
 
 Optionally you can pass one or more name/value pairs after the regular
 expression. The possible options are:
