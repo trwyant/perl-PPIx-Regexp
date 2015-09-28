@@ -37,7 +37,7 @@ use base qw{ PPIx::Regexp::Token::Reference };
 
 use PPIx::Regexp::Constant qw{ RE_CAPTURE_NAME };
 
-our $VERSION = '0.041';
+our $VERSION = '0.041_01';
 
 sub perl_version_introduced {
     my ( $self ) = @_;

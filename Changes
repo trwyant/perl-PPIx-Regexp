@@ -1,3 +1,15 @@
+0.041_01	2015-09-28	T. R. Wyant
+  RT 107331 Produce parse error in the presence of trailing cruft
+    The tokenizer now does a preliminary scan for delimiting brackets
+    and modifiers. Anything after the modifiers except for white space
+    is now made into a PPIx::Regexp::Token::Unknown, resulting in a
+    parse failure being reported. The previous implementation simply
+    assumed a valid expression, and in the case of the expression in the
+    ticket blithely mismatched the delimiters and returned a parse
+    without failures, but which was manifestly bogus.
+    Thanks to Klaus Rindfrey for catching this.
+  Tweak documentation in PPIx::Regexp.
+
 0.041		2015-07-02	T. R. Wyant
   No changes since 0.041_02.
 
