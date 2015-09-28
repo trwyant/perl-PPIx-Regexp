@@ -26,6 +26,7 @@ our @EXPORT_OK = qw{
     different
     done_testing
     dump_result
+    error
     false
     finis
     equals
@@ -89,18 +90,8 @@ sub class {		## no critic (RequireArgUnpacking)
 }
 
 sub content {		## no critic (RequireArgUnpacking)
-    my @args = @_;
-    my $expect = pop @args;
-    $result = undef;
-    defined $obj and $result = $obj->content();
-    my $safe;
-    if ( defined $result ) {
-	($safe = $result) =~ s/([\\'])/\\$1/smxg;
-    } else {
-	$safe = 'undef';
-    }
-    @_ = ( $result, $expect, "$kind $nav content '$safe'" );
-    goto &is;
+    unshift @_, 'content';
+    goto &_method_result;
 }
 
 sub count {		## no critic (RequireArgUnpacking)
@@ -181,6 +172,11 @@ sub equals {		## no critic (RequireArgUnpacking)
 	@_ = ( $left eq $right, $name );
     }
     goto &ok;
+}
+
+sub error {		## no critic (RequireArgUnpacking)
+    unshift @_, 'error';
+    goto &_method_result;
 }
 
 sub false {		## no critic (RequireArgUnpacking)
@@ -357,6 +353,21 @@ sub _format_args {
     $opt{bare} and return $string;
     @rslt or return '()';
     return "( $string )";
+}
+
+sub _method_result {		## no critic (RequireArgUnpacking)
+    my ( $method, @args ) = @_;
+    my $expect = pop @args;
+    $result = undef;
+    defined $obj and $result = $obj->$method();
+    my $safe;
+    if ( defined $result ) {
+	($safe = $result) =~ s/([\\'])/\\$1/smxg;
+    } else {
+	$safe = 'undef';
+    }
+    @_ = ( $result, $expect, "$kind $nav $method '$safe'" );
+    goto &is;
 }
 
 sub _parse_constructor_args {

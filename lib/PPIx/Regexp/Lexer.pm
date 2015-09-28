@@ -160,7 +160,6 @@ sub lex {
 	    'PPIx::Regexp::Structure::Regexp' ) );
 
     # If we are a substitution ...
-    my $subst;
     if ( $content[0]->content() eq 's' ) {
 
 	# Accept any insignificant stuff.
@@ -178,10 +177,9 @@ sub lex {
 	    $regexp->start( 0 ) ) || 0;
 
 	# Accept the next delimited structure.
-	push @content, ( $subst = $self->_get_delimited(
+	push @content, $self->_get_delimited(
 		'PPIx::Regexp::Structure::Replacement',
 		$expect_open_bracket,
-	    )
 	);
     }
 
@@ -214,31 +212,6 @@ sub lex {
 		    capture_name	=> $capture_name,
 		    max_capture		=> $max_capture,
 		);
-	}
-
-	# Check that we have matching brackets.
-	my $start;	# Start delim defaults to prior.
-	foreach my $struct ( $regexp, $subst ) {
-	    defined $struct
-		or next;
-	    if ( my $start_obj = $struct->start() ) {
-		$start = $start_obj->content();
-	    }
-	    # TODO Oh, for 5.10 and the DOR operator
-	    my $want = $self->close_bracket( $start );
-	    defined $want
-		or $want = $start;
-	    my $finish = $struct->finish();
-	    if ( $finish->content() ne $want ) {
-		bless $finish, TOKEN_UNKNOWN;
-		$finish->__PPIX_TOKEN__post_make(
-		    undef,
-		    {
-			error	=> 'Mismatched delimiter',
-		    }
-		);
-		$self->{failures}++;
-	    }
 	}
     }
 
