@@ -139,7 +139,7 @@ statements), do something like
 
  my $re = PPIx::Regexp->new( 'm/ foo /',
      default_modifiers => [ '/smx', '-/x' ] );
-`
+
 =item encoding name
 
 This option specifies the encoding of the regular expression. This is
@@ -324,7 +324,7 @@ will be returned; index 0 represents the regular expression's
 delimiters, and index 1 represents the replacement string's delimiters,
 which may be undef. For example,
 
- print PPIx::Regexp->new('s{foo}<bar>')-delimiters(1);
+ print PPIx::Regexp->new('s{foo}<bar>')->delimiters(1);
  # prints '<>'
 
 If the object was not initialized with a valid regexp of some sort, the
