@@ -368,7 +368,10 @@ sub get_token {
 
     caller eq __PACKAGE__ or $self->{cursor_curr} > $self->{cursor_orig}
 	or confess 'Programming error - get_token() called without ',
-	    'first calling make_token()';
+	    'first calling make_token(). ',
+	    "cursor_curr = $self->{cursor_curr}; ",
+	    "cursor_limit = $self->{cursor_limit}; ",
+	    "length( content ) = ", length $self->{content};
 
     my $handler = '__PPIX_TOKENIZER__' . $self->{mode};
 
@@ -646,9 +649,25 @@ sub __PPIX_TOKENIZER__init {
     {
 	my @mods = @{ $tokenizer->{default_modifiers} };
 	pos $tokenizer->{content} = $tokenizer->{cursor_modifiers};
-	if ( $tokenizer->{content} =~ m/ ( [[:lower:]]* ) /smxgc ) {
-	    push @mods, "$1";	# De-magic needed under some Perls.
+	local $tokenizer->{cursor_curr} = $tokenizer->{cursor_modifiers};
+	local $tokenizer->{cursor_limit} = length $tokenizer->{content};
+	my @trailing;
+	{
+	    my $len = $tokenizer->find_regexp( qr{ \A [[:lower:]]* }smx );
+	    push @trailing, $tokenizer->make_token( $len,
+		'PPIx::Regexp::Token::Modifier' );
 	}
+	if ( my $len = $tokenizer->find_regexp( qr{ \A \s+ }smx ) ) {
+	    push @trailing, $tokenizer->make_token( $len,
+		'PPIx::Regexp::Token::Whitespace' );
+	}
+	if ( my $len = $tokenizer->find_regexp( qr{ \A .+ }smx ) ) {
+	    push @trailing, $tokenizer->make_token( $len, TOKEN_UNKNOWN, {
+		    error	=> 'Trailing characters after expression',
+		} );
+	}
+	$tokenizer->{trailing_tokens} = \@trailing;
+	push @mods, $trailing[0]->content();
 	$tokenizer->{effective_modifiers} =
 	    PPIx::Regexp::Token::Modifier::__aggregate_modifiers (
 		@mods );
@@ -742,25 +761,11 @@ sub __PPIX_TOKENIZER__finish {
 
     if ( $tokenizer->{cursor_curr} == $tokenizer->{cursor_modifiers} ) {
 
-	# We are out of string. Make the modifier token and close up
-	# shop.
+	# We are out of string. Add the trailing tokens (created when we
+	# did the initial bracket scan) and close up shop.
 
-	$tokenizer->{cursor_limit} = length $tokenizer->{content};
-	push @tokens, $tokenizer->make_token(
-	    scalar $tokenizer->find_regexp( qr{ \A [[:lower:]]* }smx ),
-		'PPIx::Regexp::Token::Modifier' );
-	if ( my $len = $tokenizer->find_regexp( qr{ \A \s+ }smx ) ) {
-	    push @tokens, $tokenizer->make_token( $len,
-		'PPIx::Regexp::Token::Whitespace' );
-	}
-	if (
-	    my $len = $tokenizer->find_regexp( qr{ \A .+ }smx ) ) {
-	    push @tokens, $tokenizer->make_token( $len, TOKEN_UNKNOWN,
-		{
-		    error	=> 'Trailing characters after expression',
-		},
-	    );
-	}
+	$tokenizer->{cursor_curr} = $tokenizer->{cursor_limit} = length $tokenizer->{content};
+	push @tokens, @{ delete $tokenizer->{trailing_tokens} };
 
 	$tokenizer->{mode} = 'kaput';
 
