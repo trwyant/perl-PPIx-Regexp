@@ -145,10 +145,14 @@ sub lex {
     $self->{failures} = 0;
 
     # Accept everything up to the first delimiter.
+    my $kind;	# Initial PPIx::Regexp::Token::Structure
     {
 	my $token = $self->_get_token()
 	    or return $self->_finalize( @content );
 	$token->isa( 'PPIx::Regexp::Token::Delimiter' ) or do {
+	    not $kind
+		and $token->isa( 'PPIx::Regexp::Token::Structure' )
+		and $kind = $token;
 	    push @content, $token;
 	    redo;
 	};
@@ -160,7 +164,8 @@ sub lex {
 	    'PPIx::Regexp::Structure::Regexp' ) );
 
     # If we are a substitution ...
-    if ( $content[0]->content() eq 's' ) {
+#   if ( $content[0]->content() eq 's' ) {
+    if ( $kind && 's' eq $kind->content() ) {
 
 	# Accept any insignificant stuff.
 	while ( my $token = $self->_get_token() ) {
