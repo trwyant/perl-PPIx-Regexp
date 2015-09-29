@@ -66,7 +66,8 @@ the defining strings, inside a C<(?= ... )>, so that it is not included
 in the match.
 
 This method B<must> be overridden, unless C<__make_group_type_matcher()>
-is.
+is. The override B<must> return the same thing each time, since the
+results of C<__make_group_type_matcher()> are cached.
 
 =cut
 
