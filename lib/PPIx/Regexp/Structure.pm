@@ -103,6 +103,10 @@ sub _new {
 	    $val->_parent( $self );
 	}
     }
+
+    @{ $self->{finish} }
+	or $self->{error} = 'Missing end delimiter';
+
     return $self;
 }
 

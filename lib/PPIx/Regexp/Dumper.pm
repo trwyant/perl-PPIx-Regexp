@@ -501,8 +501,8 @@ sub _format_value {
 		$self->type( 0 ) );
 	}
 
-	foreach my $method ( qw{ start finish } ) {
-	    my $ele = $self->$method()
+	foreach my $method ( 'start', undef, 'finish' ) {
+	    my $ele = defined $method ? $self->$method() : $self
 		or next;
 	    if ( defined ( my $err = $ele->error() ) ) {
 		push @rslt, $err;
