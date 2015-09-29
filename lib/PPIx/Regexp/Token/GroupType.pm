@@ -108,10 +108,11 @@ sub __make_group_type_matcher {
 	qr/ (?= \Q$opt->{suffix}\E ) /smx :
 	'';
 
+    my %seen;
+    my @chars = grep { ! $seen{$_}++ } split qr{}smx, join '', @defs;
+
     my %rslt;
-    foreach my $str ( $class->__defining_string() ) {
-	my %seen;
-	my @chars = grep { ! $seen{$_}++ } split qr{}smx, $str;
+    foreach my $str ( @defs ) {
 	push @{ $rslt{''} ||= [] }, qr{ \A \Q$str\E $suffix }smx;
 	foreach my $chr ( @chars ) {
 	    ( my $expr = $str ) =~ s/ (?= \Q$chr\E ) /\\/smxg;
