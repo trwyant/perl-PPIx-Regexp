@@ -2,5 +2,5 @@
 
 ign=foo/ignore_$1
 test ! -e $ign && cp -v /dev/null $ign
-tools/slurp -fail -arch -igno $ign \
+perl eg/preslurp -fail -arch -igno $ign \
     ~/Nobackup/Mini-CPAN/authors/id/$1/ >foo/patho/$1.log

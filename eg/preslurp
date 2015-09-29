@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
@@ -6,7 +6,7 @@ use warnings;
 use Cwd qw{ abs_path getcwd };
 use File::Find;
 use File::Temp;
-use Getopt::Long;
+use Getopt::Long 2.33 qw{ :config auto_version };
 use IO::File;
 use Pod::Usage;
 use PPI::Document;
@@ -14,19 +14,7 @@ use PPIx::Regexp;
 use PPIx::Regexp::Dumper;
 use PPIx::Regexp::Tokenizer;
 
-my @legal;
-
-BEGIN {
-    @legal = qw{ 
-	encoding=s failures! ignore=s include! ordinal!
-	recurse! significant! tokens! verbose+
-    };
-
-    eval {
-	require Archive::Any;
-	unshift @legal, 'archive!';
-    };
-}
+our $VERSION = '0.041_01';
 
 my %opt = (
     verbose	=> 0,
@@ -36,16 +24,16 @@ our $BASE = getcwd();
 our @PREFIX;
 
 GetOptions( \%opt,
-    help => sub { pod2usage ( {
-		-exitval	=> 0,
-		-verbose	=> 2,
-		-output		=> \*STDOUT,
-	    } ) },
-    @legal ) or pod2usage( {
-	-exitval	=> 2,
-	-verbose	=> 1,
-	-output		=> \*STDERR,
-    } );
+    qw{
+	archive! encoding=s failures! ignore=s include! ordinal!
+	recurse! significant! tokens! verbose+
+    },
+    help => sub { pod2usage( { -verbose => 2 } ) },
+) or pod2usage( { -verbose => 0 } );
+
+if ( $opt{archive} ) {
+    require Archive::Any;
+}
 
 my @ignore;
 if ( $opt{ignore} ) {

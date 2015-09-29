@@ -1,11 +1,21 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
 
 use File::Find;
+use Getopt::Long 2.33 qw{ :config auto_version };
+use Pod::Usage;
 use Scalar::Util qw{ looks_like_number };
 use Text::Wrap;
+
+our $VERSION = '0.041_01';
+
+my %opt;
+
+GetOptions( \%opt,
+    help => sub { pod2usage( { -verbose => 2 } ) },
+) or pod2usage( { -verbose => 0 } );
 
 local $Text::Wrap::columns = 72;
 
@@ -199,7 +209,7 @@ Thomas R. Wyant, III F<wyant at cpan dot org>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2009-2014 by Thomas R. Wyant, III
+Copyright (C) 2009-2015 by Thomas R. Wyant, III
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl 5.10.0. For more details, see the full text
