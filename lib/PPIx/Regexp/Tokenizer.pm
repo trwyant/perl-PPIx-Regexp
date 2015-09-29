@@ -368,15 +368,15 @@ sub get_token {
 
     caller eq __PACKAGE__ or $self->{cursor_curr} > $self->{cursor_orig}
 	or confess 'Programming error - get_token() called without ',
-	    'first calling make_token(). ',
-	    "cursor_curr = $self->{cursor_curr}; ",
-	    "cursor_limit = $self->{cursor_limit}; ",
-	    "length( content ) = ", length $self->{content};
+	    'first calling make_token()';
 
     my $handler = '__PPIX_TOKENIZER__' . $self->{mode};
 
     __PACKAGE__->can( $handler )
-	or confess( "Getting token in mode '$self->{mode}'" );
+	or confess "Getting token in mode '$self->{mode}'. ",
+	    "cursor_curr = $self->{cursor_curr}; ",
+	    "cursor_limit = $self->{cursor_limit}; ",
+	    "length( content ) = ", length $self->{content};
 
     my $character = substr(
 	$self->{content},
@@ -489,7 +489,7 @@ sub next_token {
 	    $self->{cursor_limit} >= length $self->{content}
 		and return;
 	    $self->{mode} eq 'finish' and return;
-	    $self->{mode} = 'finish';
+	    $self->_set_mode( 'finish' );
 	    $self->{cursor_limit}++;
 	}
 
@@ -561,12 +561,28 @@ sub _remainder {
     return;
 }
 
+sub _make_final_token {
+    my ( $self, $len, $class, $arg ) = @_;
+    my $token = $self->make_token( $len, $class, $arg );
+    $self->_set_mode( 'kaput' );
+    return $token;
+}
+
+sub _set_mode {
+    my ( $self, $mode ) = @_;
+    $self->{mode} = $mode;
+    if ( 'kaput' eq $mode ) {
+	$self->{cursor_curr} = $self->{cursor_limit} =
+	    length $self->{content};
+    }
+    return;
+}
+
 sub __PPIX_TOKENIZER__init {
     my ( $class, $tokenizer, $character ) = @_;
 
-    $tokenizer->{mode} = 'kaput';
     $tokenizer->{content} =~ m/ \A \s* ( qr | m | s )? ( \s* ) ( [^\w\s] ) /smx
-	or return $tokenizer->make_token(
+	or return $tokenizer->_make_final_token(
 	    length( $tokenizer->{content} ), TOKEN_UNKNOWN, {
 		error	=> 'Tokenizer found illegal first characters',
 	    },
@@ -626,8 +642,8 @@ sub __PPIX_TOKENIZER__init {
 		    and warn "Tokenizer found replacement end delimiter at @{[
 			$tokenizer->{cursor_curr} + $s_off ]}\n";
 	    } else {
-		local $tokenizer->{cursor_curr} = 0;
-		return $tokenizer->make_token(
+		$tokenizer->{cursor_curr} = 0;
+		return $tokenizer->_make_final_token(
 		    length( $tokenizer->{content} ), TOKEN_UNKNOWN, {
 			error	=> 'Tokenizer found mismatched replacement delimiters',
 		    },
@@ -638,8 +654,8 @@ sub __PPIX_TOKENIZER__init {
 	}
 	$tokenizer->{cursor_limit} = $cursor_limit;
     } else {
-	local $tokenizer->{cursor_curr} = 0;
-	return $tokenizer->make_token(
+	$tokenizer->{cursor_curr} = 0;
+	return $tokenizer->_make_final_token(
 	    length( $tokenizer->{content} ), TOKEN_UNKNOWN, {
 		error	=> 'Tokenizer found mismatched regexp delimiters',
 	    },
@@ -685,7 +701,7 @@ sub __PPIX_TOKENIZER__init {
     push @tokens, $tokenizer->make_token( 1,
 	'PPIx::Regexp::Token::Delimiter' );
 
-    $tokenizer->{mode} = 'regexp';
+    $tokenizer->_set_mode( 'regexp' );
 
     return @tokens;
 }
@@ -764,10 +780,9 @@ sub __PPIX_TOKENIZER__finish {
 	# We are out of string. Add the trailing tokens (created when we
 	# did the initial bracket scan) and close up shop.
 
-	$tokenizer->{cursor_curr} = $tokenizer->{cursor_limit} = length $tokenizer->{content};
 	push @tokens, @{ delete $tokenizer->{trailing_tokens} };
 
-	$tokenizer->{mode} = 'kaput';
+	$tokenizer->_set_mode( 'kaput' );
 
     } else {
 
@@ -807,14 +822,12 @@ sub __PPIX_TOKENIZER__finish {
 	    );
 	    $tokenizer->{cursor_limit} = length $tokenizer->{content};
 	    push @tokens, $tokenizer->make_token( 1,
-		'PPIx::Regexp::Token::Delimiter' );
-	    push @tokens, $tokenizer->make_token(
-		$tokenizer->{cursor_limit} - $tokenizer->{cursor_curr},
-		'PPIx::Regexp::Token::Modifier' );
-	    $tokenizer->{mode} = 'kaput';
+		'PPIx::Regexp::Token::Delimiter' ),
+		@{ delete $tokenizer->{trailing_tokens} };
+	    $tokenizer->_set_mode( 'kaput' );
 	} else {
 	    # Put our mode to replacement.
-	    $tokenizer->{mode} = 'repl';
+	    $tokenizer->_set_mode( 'repl' );
 	}
 
     }
