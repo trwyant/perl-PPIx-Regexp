@@ -27,12 +27,14 @@ our @EXPORT_OK = qw{
     done_testing
     dump_result
     error
+    fail
     false
     finis
     equals
     navigate
     note
     parse
+    pass
     plan
     ppi
     result
@@ -43,6 +45,8 @@ our @EXPORT_OK = qw{
 };
 
 our @EXPORT = @EXPORT_OK;	## no critic (ProhibitAutomaticExportation)
+
+push @EXPORT_OK, qw{ __quote };
 
 my (
     $initial_class,	# For static methods; set by parse() or tokenize()
@@ -237,7 +241,7 @@ sub finis {		## no critic (RequireArgUnpacking)
 		}
 	    }
 	}
-	$nav = _safe( @nav );
+	$nav = __quote( @nav );
 	$nav =~ s/ ' ( \w+ ) ' , /$1 =>/smxg;
 	$nav =~ s/ \[ \s+ \] /[]/smxg;
 	$result = $obj;
@@ -394,7 +398,7 @@ sub _pause {
 }
 
 # quote a string.
-sub _safe {
+sub __quote {
     my @args = @_;
     my @rslt;
     foreach my $item ( @args ) {
@@ -404,7 +408,7 @@ sub _safe {
 	if ( ! defined $item ) {
 	    push @rslt, 'undef';
 	} elsif ( ref $item eq 'ARRAY' ) {
-	    push @rslt, join( ' ', '[', _safe( @{ $item } ), ']' );
+	    push @rslt, join( ' ', '[', __quote( @{ $item } ), ']' );
 	} elsif ( looks_like_number( $item ) ) {
 	    push @rslt, $item;
 	} else {
