@@ -192,11 +192,7 @@ our $VERSION = '0.041_02';
 
 	$self->{content} = $self->decode( $self->{content} );
 
-	if ( $self->{content} =~ m/ \s+ \z /smx ) {
-	    $self->{cursor_limit} = $-[0];
-	} else {
-	    $self->{cursor_limit} = length $self->{content};
-	}
+	$self->{cursor_limit} = length $self->{content};
 
 	$self->{trace}
 	    and warn "\ntokenizing '$self->{content}'\n";
