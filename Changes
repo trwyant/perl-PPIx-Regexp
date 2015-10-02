@@ -1,3 +1,7 @@
+0.041_03	2015-10-01	T. R. Wyant
+  Report error rather than failing when parsing a string consisting
+    wholly of white space.
+
 0.041_02	2015-09-29	T. R. Wyant
   Group types were not being recognized if they contained the delimiter
     character for the regexp (e.g. in qr<(?\<foo)> the look-behind
@@ -12,7 +16,8 @@
     its end delimiter.
 
 0.041_01	2015-09-28	T. R. Wyant
-  RT 107331 Produce parse error in the presence of trailing cruft
+  RT 107331 Produce parse error in the presence of trailing cruft.
+    Thanks to Klaus Rindfrey for catching this.
     The tokenizer now does a preliminary scan for delimiting brackets
     and modifiers. Anything after the modifiers except for white space
     is now made into a PPIx::Regexp::Token::Unknown, resulting in a
@@ -20,7 +25,6 @@
     assumed a valid expression, and in the case of the expression in the
     ticket blithely mismatched the delimiters and returned a parse
     without failures, but which was manifestly bogus.
-    Thanks to Klaus Rindfrey for catching this.
   Tweak documentation in PPIx::Regexp.
 
 0.041		2015-07-02	T. R. Wyant

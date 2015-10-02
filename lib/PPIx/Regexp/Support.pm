@@ -37,7 +37,7 @@ use warnings;
 
 use PPIx::Regexp::Util qw{ __instance };
 
-our $VERSION = '0.041_02';
+our $VERSION = '0.041_03';
 
 =head2 close_bracket
 
