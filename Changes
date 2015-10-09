@@ -1,3 +1,6 @@
+0.042		2015-10-09	T. R. Wyant
+  No changes since 0.041_03.
+
 0.041_03	2015-10-01	T. R. Wyant
   Report error rather than failing when parsing a string consisting
     wholly of white space.

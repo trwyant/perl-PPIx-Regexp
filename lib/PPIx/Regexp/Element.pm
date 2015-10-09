@@ -42,7 +42,7 @@ use Scalar::Util qw{ refaddr weaken };
 
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL TOKEN_UNKNOWN };
 
-our $VERSION = '0.041_03';
+our $VERSION = '0.042';
 
 =head2 ancestor_of
 
