@@ -74,6 +74,32 @@ and any functionality relating to such features B<will be removed>. The
 issue here is the potential re-use (with different semantics) of syntax
 that did not make it into the production release.
 
+From time to time the Perl regular expression engine changes in ways
+that change the parse of a given regular expression. When these changes
+occur, C<PPIx::Regexp> will be changed to produce the more modern parse.
+Known examples of this include:
+
+=over
+
+=item C<$(> no longer interpolates as of Perl 5.005, per
+C<perl5005delta>.  Newer Perls seem to parse this as C<qr{$}> (i.e. and
+end-of-string or newline assertion) followed by an open parenthesis, and
+that is what C<PPIx::Regexp> does.
+
+=item C<$)> and C<$|> also seem to parse as the C<$> assertion followed
+by the relevant meta-character, though I have no documentation reference
+for this.
+
+=item C<@+> and C<@-> no longer interpolate as of perl 5.9.4, per
+C<perl594delta>. Subsequent Perls treat C<@+> as a quantified literal
+and C<@-> as two literals, and that is what C<PPIx::Regexp> does.
+
+=back
+
+There are very probably other examples of this. When they come to light
+they will be documented as producing the modern parse, and the code
+modified to produce this parse if necessary.
+
 =head1 METHODS
 
 This class provides the following public methods. Methods not documented
