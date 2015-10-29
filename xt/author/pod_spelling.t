@@ -40,6 +40,7 @@ repl
 schild
 schildren
 subclasses
+subscripted
 TODO
 tokenization
 Tokenize

@@ -92,7 +92,9 @@ for this.
 
 =item C<@+> and C<@-> no longer interpolate as of perl 5.9.4, per
 C<perl594delta>. Subsequent Perls treat C<@+> as a quantified literal
-and C<@-> as two literals, and that is what C<PPIx::Regexp> does.
+and C<@-> as two literals, and that is what C<PPIx::Regexp> does. Note
+that subscripted references to these arrays B<do> interpolate, and are
+so parsed by C<PPIx::Regexp>.
 
 =back
 
