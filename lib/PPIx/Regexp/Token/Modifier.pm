@@ -65,9 +65,6 @@ C<< $elem->asserted( 'd' ) >> would return true, since in the absence of
 an explicit C<l> or C<u> this class considers the C<^> to explicitly
 assert C<d>.
 
-B<Note> that if this is retracted before Perl 5.14 is released, this
-support will disappear. See L<PPIx::Regexp/NOTICE> for some explanation.
-
 =head1 METHODS
 
 This class provides the following public methods. Methods not documented
