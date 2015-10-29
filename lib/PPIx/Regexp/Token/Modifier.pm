@@ -312,7 +312,20 @@ sub __aggregate_modifiers {
 	# distinguish between s/.../.../e and s/.../.../ee. But the
 	# modifiers can be randomized (that is, /eie is the same as
 	# /eei), so we reorder the content first.
-	$content = join '', sort split qr{}smx, $content;
+
+	# The following line is WRONG because it ignores the
+	# significance of '-'. This bug was introduced in version 0.035,
+	# specifically by the change that handled multi-character
+	# modifiers.
+	# $content = join '', sort split qr{}smx, $content;
+	# The following is better because it re-orders the modifiers
+	# separately. It does not recognize multiple dashes as
+	# representing an error (though it could!), and modifiers that
+	# are both asserted and negated (e.g. '(?i-i:foo)') are simply
+	# considered to be negated (as Perl does as of 5.20.0).
+	$content = join '-',
+	    map { join '', sort split qr{}smx }
+	    split qr{-}smx, $content;
 	my $value = 1;
 	while ( $content =~ m/ ( ( [[:alpha:]-] ) \2* ) /smxg ) {
 	    if ( '-' eq $1 ) {
