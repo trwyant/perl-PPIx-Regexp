@@ -1,3 +1,12 @@
+0.042_01	2015-10-29	T. R. Wyant
+  Beginning with version 0.035, PPIx::Regexp was incorrectly reporting
+    the sense of modifiers when the same token both asserted and negated
+    modifiers (e.g. '(?x-i:...)'). This release should correct the
+    problem.
+  Document policy when Perl changes in such a way that the proper parse
+    for a regular expression changes. In this case the more modern parse
+    is preferred.
+
 0.042		2015-10-09	T. R. Wyant
   No changes since 0.041_03.
 

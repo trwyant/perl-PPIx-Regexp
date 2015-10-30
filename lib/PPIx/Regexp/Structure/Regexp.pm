@@ -36,7 +36,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Structure::Main };
 
-our $VERSION = '0.042';
+our $VERSION = '0.042_01';
 
 sub can_be_quantified { return; }
 
