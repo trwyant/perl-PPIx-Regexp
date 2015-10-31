@@ -1549,6 +1549,44 @@ choose  ( 'modifier' => [] );
 class   ( 'PPIx::Regexp::Token::Modifier' );
 content ( '' );
 
+# As of Perl 5.23.4, only space and horizontal tab can be parsed as
+# whitespace inside a bracketed character class inside an extended
+# bracketed character class.
+tokenize( "/(?[ [\f] ])/" );
+count   ( 11 );
+choose  ( 0 );
+class   ( 'PPIx::Regexp::Token::Structure' );
+content ( '' );
+choose  ( 1 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '/' );
+choose  ( 2 );
+class   ( 'PPIx::Regexp::Token::Structure' );
+content ( '(?[' );
+choose  ( 3 );
+class   ( 'PPIx::Regexp::Token::Whitespace' );
+content ( ' ' );
+choose  ( 4 );
+class   ( 'PPIx::Regexp::Token::Structure' );
+content ( '[' );
+choose  ( 5 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( "\f" );
+choose  ( 6 );
+class   ( 'PPIx::Regexp::Token::Structure' );
+content ( ']' );
+choose  ( 7 );
+class   ( 'PPIx::Regexp::Token::Whitespace' );
+content ( ' ' );
+choose  ( 8 );
+class   ( 'PPIx::Regexp::Token::Structure' );
+content ( '])' );
+choose  ( 9 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '/' );
+choose  ( 10 );
+class   ( 'PPIx::Regexp::Token::Modifier' );
+content ( '' );
 
 # Make sure we record the correct number of captures in the presence of
 # the /n qualifier.

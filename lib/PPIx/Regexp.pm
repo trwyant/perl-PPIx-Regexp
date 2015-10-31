@@ -81,20 +81,30 @@ Known examples of this include:
 
 =over
 
-=item C<$(> no longer interpolates as of Perl 5.005, per
-C<perl5005delta>.  Newer Perls seem to parse this as C<qr{$}> (i.e. and
-end-of-string or newline assertion) followed by an open parenthesis, and
-that is what C<PPIx::Regexp> does.
+=item C<$(> no longer interpolates as of Perl 5.005, per C<perl5005delta>.
 
-=item C<$)> and C<$|> also seem to parse as the C<$> assertion followed
-by the relevant meta-character, though I have no documentation reference
-for this.
+Newer Perls seem to parse this as C<qr{$}> (i.e. and end-of-string or
+newline assertion) followed by an open parenthesis, and that is what
+C<PPIx::Regexp> does.
 
-=item C<@+> and C<@-> no longer interpolate as of perl 5.9.4, per
-C<perl594delta>. Subsequent Perls treat C<@+> as a quantified literal
-and C<@-> as two literals, and that is what C<PPIx::Regexp> does. Note
-that subscripted references to these arrays B<do> interpolate, and are
-so parsed by C<PPIx::Regexp>.
+=item C<$)> and C<$|> also seem to parse as the C<$> assertion
+
+followed by the relevant meta-character, though I have no documentation
+reference for this.
+
+=item C<@+> and C<@-> no longer interpolate as of Perl 5.9.4
+
+per C<perl594delta>. Subsequent Perls treat C<@+> as a quantified
+literal and C<@-> as two literals, and that is what C<PPIx::Regexp>
+does. Note that subscripted references to these arrays B<do>
+interpolate, and are so parsed by C<PPIx::Regexp>.
+
+=item Only space and horizontal tab are whitespace as of Perl 5.23.4
+
+when inside a bracketed character class inside an extended bracketed
+character class, per C<perl5234delta>. Formerly any white space
+character parsed as whitespace. This change in C<PPIx::Regexp> will be
+reverted if the change in Perl does not make it into Perl 5.24.0.
 
 =back
 

@@ -134,7 +134,14 @@ sub __PPIX_TOKENIZER__regexp {
 
 	my $accept;
 
-	$accept = $tokenizer->find_regexp( $white_space_re )
+	# As of 5.23.4, only space and horizontal tab are legal white
+	# space inside a bracketed class inside an extended character
+	# class
+	$accept = $tokenizer->find_regexp(
+	    $tokenizer->cookie( COOKIE_CLASS ) ?
+		qr{ \A [ \t] }smx :
+		$white_space_re
+	)
 	    and return $tokenizer->make_token(
 		$accept, 'PPIx::Regexp::Token::Whitespace' );
 
