@@ -11,7 +11,7 @@ use PPI::Document;
 use PPIx::Regexp::Dumper;
 use Scalar::Util qw{ refaddr };
 
-our $VERSION = '0.042_01';
+our $VERSION = '0.042_02';
 
 my %opt = (
     default_modifiers => [],
