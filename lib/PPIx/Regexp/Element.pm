@@ -462,9 +462,6 @@ sub __impose_defaults {
 # Bless into TOKEN_UNKNOWN, record error message, return 1.
 sub __error {
     my ( $self, $msg ) = @_;
-    $self->isa( 'PPIx::Token::Node' )
-	and confess 'Programming error - __error() must be overridden',
-	    ' for class ', ref $self;
     defined $msg
 	or $msg = 'Was ' . ref $self;
     $self->{error} = $msg;

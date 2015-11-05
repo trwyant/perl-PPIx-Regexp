@@ -36,6 +36,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Element };
 
+use Carp;
 use List::Util qw{ max };
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 use PPIx::Regexp::Util qw{ __instance };
@@ -402,6 +403,13 @@ sub _nav {
 
     return ( $method => [ $inx ] );
 }
+
+sub __error {
+    my ( $self ) = @_;	# second argument unused
+    confess 'Programming error - __error() must be overridden',
+	' for class ', ref $self;
+}
+
 
 # Called by the lexer once it has done its worst to all the tokens.
 # Called as a method with no arguments. The return is the number of
