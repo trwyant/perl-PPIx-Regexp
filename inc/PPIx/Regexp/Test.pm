@@ -367,10 +367,11 @@ sub _method_result {		## no critic (RequireArgUnpacking)
     my $safe;
     if ( defined $result ) {
 	($safe = $result) =~ s/([\\'])/\\$1/smxg;
+	$safe = "'$safe'";
     } else {
 	$safe = 'undef';
     }
-    @_ = ( $result, $expect, "$kind $nav $method '$safe'" );
+    @_ = ( $result, $expect, "$kind $nav $method $safe" );
     goto &is;
 }
 
