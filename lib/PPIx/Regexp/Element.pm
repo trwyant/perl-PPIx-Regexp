@@ -478,6 +478,13 @@ sub __PPIX_LEXER__record_capture_number {
     return $number;
 }
 
+# Called by the lexer to rebless
+sub __PPIX_LEXER__rebless {
+    my ( $self, $class ) = @_;
+    bless $self, $class;
+    return;
+}
+
 sub DESTROY {
     $_[0]->_parent( undef );
     return;

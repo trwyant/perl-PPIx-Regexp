@@ -293,7 +293,7 @@ sub _finalize {
 
 		    # If the close bracket is not a parenthesis, it becomes
 		    # a literal.
-		    bless $token, TOKEN_LITERAL;
+		    $token->__PPIX_LEXER__rebless( TOKEN_LITERAL );
 		    push @{ $rslt[-1] }, $token;
 
 		} elsif ( $content eq ')'
@@ -307,7 +307,8 @@ sub _finalize {
 
 		    # Unmatched close with no recovery.
 		    $self->{failures}++;
-		    bless $token, 'PPIx::Regexp::Token::Unmatched';
+		    $token->__PPIX_LEXER__rebless(
+			'PPIx::Regexp::Token::Unmatched' );
 		    push @{ $rslt[-1] }, $token;
 		}
 
@@ -403,7 +404,7 @@ sub _curly {
 	# If there is a right curly but it is not a quantifier,
 	# make both curlys into literals.
 	foreach my $inx ( 0, -1 ) {
-	    bless $args->[$inx], TOKEN_LITERAL;
+	    $args->[$inx]->__PPIX_LEXER__rebless( TOKEN_LITERAL );
 	}
 
 	# Try to recover possible quantifiers not recognized because we
@@ -431,7 +432,7 @@ sub _recover_curly {
     shift @content;
 
     # Rebless the left curly to a literal.
-    bless $content[0], TOKEN_LITERAL;
+    $content[0]->__PPIX_LEXER__rebless( TOKEN_LITERAL );
 
     # Try to recover possible quantifiers not recognized because we
     # thought this was a structure.
@@ -470,13 +471,15 @@ sub _recover_curly_quantifiers {
 	&& PPIx::Regexp::Token::Quantifier->could_be_quantifier(
 	$args->[1]->content() )
     ) {
-	bless $args->[1], 'PPIx::Regexp::Token::Quantifier';
+	$args->[1]->__PPIX_LEXER__rebless(
+	    'PPIx::Regexp::Token::Quantifier' );
 
 	if ( __instance( $args->[2], TOKEN_UNKNOWN )
 	    && PPIx::Regexp::Token::Greediness->could_be_greediness(
 		$args->[2]->content() )
 	) {
-	    bless $args->[2], 'PPIx::Regexp::Token::Greediness';
+	    $args->[2]->__PPIX_LEXER__rebless(
+		'PPIx::Regexp::Token::Greediness' );
 	}
 
     }
