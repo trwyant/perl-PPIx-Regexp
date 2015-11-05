@@ -213,8 +213,7 @@ sub lex {
 	    'PPIx::Regexp::Token::Backreference' ) || [] } ) {
 	    # Rebless them as needed, recording any errors found.
 	    $self->{failures} +=
-		$elem->__PPIX_ELEM__rebless(
-		    undef,
+		$elem->__PPIX_LEXER__rebless(
 		    capture_name	=> $capture_name,
 		    max_capture		=> $max_capture,
 		);
