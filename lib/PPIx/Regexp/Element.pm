@@ -484,7 +484,8 @@ sub __PPIX_LEXER__record_capture_number {
 
 # Called by the lexer to rebless
 sub __PPIX_ELEM__rebless {
-    my ( $self, $class, %arg ) = @_;
+    my ( $class, $self, %arg ) = @_;
+    $self ||= {};
     bless $self, $class;
     $self->__impose_defaults( \%arg, { error => undef } );
     defined $self->{error}
