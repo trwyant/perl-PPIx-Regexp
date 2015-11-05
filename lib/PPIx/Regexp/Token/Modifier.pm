@@ -360,7 +360,8 @@ sub __PPIX_TOKEN__recognize {
 # After the token is made, figure out what it asserts or negates.
 
 sub __PPIX_TOKEN__post_make {
-    my ( $self, $tokenizer ) = @_;
+    my ( $self, $tokenizer, $arg ) = @_;
+    $self->__impose_defaults( $arg );
     defined $tokenizer
 	and $tokenizer->modifier_modify( $self->modifiers() );
     return;

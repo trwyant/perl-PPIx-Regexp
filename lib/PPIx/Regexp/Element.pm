@@ -444,7 +444,14 @@ sub nav {
 # defaults for attributes. It returns nothing.
 #
 # The arguments are hash references, which are taken in left-to-right
-# order, with the, with the first extant value being used.
+# order, with the, with the first extant value being used. Arguments
+# which are not hash references are ignored.
+#
+# With version [%% next_version %%], this is also the preferred place to
+# validate an object, and needs to be called from both
+# __PPIX_ELEM__rebless() and __PPIX_TOKEN__post_make(). All overrides of
+# this should call SUPER:: unless they REALLY know what they are doing,
+# and document what is going on.
 
 sub __impose_defaults {
     my ( $self, @args ) = @_;
@@ -479,13 +486,11 @@ sub __PPIX_LEXER__record_capture_number {
 sub __PPIX_ELEM__rebless {
     my ( $self, $class, %arg ) = @_;
     bless $self, $class;
-    if ( defined $arg{error} ) {
-	$self->{error} = $arg{error};
-	return 1;
-    } else {
-	delete $self->{error};
-	return 0;
-    }
+    $self->__impose_defaults( \%arg, { error => undef } );
+    defined $self->{error}
+	and return 1;
+    delete $self->{error};
+    return 0;
 }
 
 sub DESTROY {

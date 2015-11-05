@@ -68,7 +68,8 @@ sub perl_version_introduced {
 }
 
 sub __PPIX_TOKEN__post_make {
-    my ( $self, $tokenizer ) = @_;
+    my ( $self, $tokenizer, $arg ) = @_;
+    $self->__impose_defaults( $arg );
     if ( $tokenizer ) {
 	foreach my $name ( $tokenizer->capture() ) {
 	    defined $name or next;

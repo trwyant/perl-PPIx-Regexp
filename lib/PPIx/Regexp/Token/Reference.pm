@@ -131,6 +131,27 @@ sub __PPIX_LEXER__record_capture_number {
     return $number;
 }
 
+sub __impose_defaults {
+    my ( $self, @arg ) = @_;
+    $self->SUPER::__impose_defaults( @arg );
+
+    my $capture = delete $self->{capture};
+
+    if ( $self->{is_named} ) {
+	$self->{absolute} = undef;
+	$self->{is_relative} = undef;
+	$self->{name} = $capture;
+    } elsif ( $capture !~ m/ \A [-+] /smx ) {
+	$self->{absolute} = $self->{number} = $capture;
+	$self->{is_relative} = undef;
+    } else {
+	$self->{number} = $capture;
+	$self->{is_relative} = 1;
+    }
+
+    return;
+}
+
 # Called after the token is manufactured. The calling sequence is
 # $token->__PPIX_TOKEN__post_make( $tokenizer, $arg );
 # For the sake of reblessing into this class, we are expected to deal
@@ -166,22 +187,18 @@ sub __PPIX_TOKEN__post_make {
 	or confess q{Programming error - reference '},
 	    $self->content(), q{' of unknown form};
 
+=begin comment
+
     foreach my $key ( keys %{ $arg } ) {
 	$key eq 'capture' and next;
 	$self->{$key} = $arg->{$key};
     }
 
-    if ( $arg->{is_named} ) {
-	$self->{absolute} = undef;
-	$self->{is_relative} = undef;
-	$self->{name} = $capture;
-    } elsif ( $capture !~ m/ \A [-+] /smx ) {
-	$self->{absolute} = $self->{number} = $capture;
-	$self->{is_relative} = undef;
-    } else {
-	$self->{number} = $capture;
-	$self->{is_relative} = 1;
-    }
+=end comment
+
+=cut
+
+    $self->__impose_defaults( { capture => $capture }, $arg );
 
     return;
 };

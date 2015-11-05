@@ -56,15 +56,19 @@ sub ordinal {
     return ord $self->content();
 }
 
+sub __impose_defaults {
+    my ( $self, @args ) = @_;
+    $self->SUPER::__impose_defaults( @args );
+    unless ( defined $self->{error} ) {
+	Carp::cluck( 'Making unknown token with no error message' );
+	$self->{error} = 'Unspecified error';
+    }
+    return;
+}
+
 sub __PPIX_TOKEN__post_make {
     my ( $self, $tokenizer, $arg ) = @_;
-    my $msg = $arg->{error};
-    use Carp;
-    defined $msg
-	or Carp::cluck( 'Making unknown token with no error message' );
-    defined $msg
-	or $msg = 'Unspecified error';
-    $self->{error} = $msg;
+    $self->__impose_defaults( $arg );
     return;
 }
 

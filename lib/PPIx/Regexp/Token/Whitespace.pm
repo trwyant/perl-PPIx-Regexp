@@ -78,7 +78,7 @@ sub __PPIX_TOKENIZER__regexp {
 sub __PPIX_TOKEN__post_make {
     my ( $self, $tokenizer, $arg ) = @_;
 
-    $self->{perl_version_introduced} = MINIMUM_PERL;
+#   $self->{perl_version_introduced} = MINIMUM_PERL;
 
     # RT #91798.
     # TODO the above needs to be replaced by the following (suitably
@@ -101,10 +101,17 @@ sub __PPIX_TOKEN__post_make {
 
     # The extended white space characters came back in Perl 5.21.1
 
-    $self->{perl_version_introduced} =
+    my $perl_version_introduced =
 	( grep { 127 < ord } split qr{}, $self->content() )
 	? '5.021001'
 	: MINIMUM_PERL;
+
+    $self->__impose_defaults(
+	$arg,
+	{
+	    perl_version_introduced	=> $perl_version_introduced,
+	},
+    );
 
     return;
 }
