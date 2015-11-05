@@ -42,7 +42,7 @@ use Scalar::Util qw{ refaddr weaken };
 
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL TOKEN_UNKNOWN };
 
-our $VERSION = '0.042_02';
+our $VERSION = '0.042_03';
 
 =head2 ancestor_of
 
@@ -447,7 +447,7 @@ sub nav {
 # order, with the, with the first extant value being used. Arguments
 # which are not hash references are ignored.
 #
-# With version [%% next_version %%], this is also the preferred place to
+# With version 0.042_03, this is also the preferred place to
 # validate an object, and needs to be called from both
 # __PPIX_ELEM__rebless() and __PPIX_TOKEN__post_make(). All overrides of
 # this should call SUPER:: unless they REALLY know what they are doing,

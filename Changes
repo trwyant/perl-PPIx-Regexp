@@ -1,3 +1,8 @@
+0.042_03	2015-11-05	T. R. Wyant
+  Clear error when lexer identifies unknown token. Those who peruse the
+    changes in this release will see that a bunch of refactoring was
+    done as part of this.
+
 0.042_02	2015-10-31	T. R. Wyant
   Parse white space inside bracketed character classes inside extended
     bracketed character classes (whew!) as literals, except for the

@@ -39,7 +39,7 @@ use PPIx::Regexp::Constant qw{
     COOKIE_CLASS MINIMUM_PERL TOKEN_LITERAL TOKEN_UNKNOWN
 };
 
-our $VERSION = '0.042_02';
+our $VERSION = '0.042_03';
 
 ##=head2 is_case_sensitive
 ##
