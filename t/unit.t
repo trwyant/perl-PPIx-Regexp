@@ -1588,6 +1588,19 @@ choose  ( 10 );
 class   ( 'PPIx::Regexp::Token::Modifier' );
 content ( '' );
 
+# Ensure that the error gets cleared when a PPIx::Regexp::Token::Unknown
+# gets reblessed into something useful.
+
+parse   ( '/{?+}/' );
+choose  ( child => 1, child => 1 );
+class   ( 'PPIx::Regexp::Token::Quantifier' );
+content ( '?' );
+error   ( undef );
+choose  ( child => 1, child => 2 );
+class   ( 'PPIx::Regexp::Token::Greediness' );
+content ( '+' );
+error   ( undef );
+
 # Make sure we record the correct number of captures in the presence of
 # the /n qualifier.
 note	'Correct number of captures in presence of /n qualifier';

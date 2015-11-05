@@ -487,7 +487,8 @@ sub __PPIX_ELEM__rebless {
     my ( $class, $self, %arg ) = @_;
     $self ||= {};
     bless $self, $class;
-    $self->__impose_defaults( \%arg, { error => undef } );
+    delete $self->{error};
+    $self->__impose_defaults( \%arg );
     defined $self->{error}
 	and return 1;
     delete $self->{error};
