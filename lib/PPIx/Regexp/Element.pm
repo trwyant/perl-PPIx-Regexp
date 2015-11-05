@@ -479,10 +479,16 @@ sub __PPIX_LEXER__record_capture_number {
 }
 
 # Called by the lexer to rebless
-sub __PPIX_LEXER__rebless {
-    my ( $self, $class ) = @_;
+sub __PPIX_ELEM__rebless {
+    my ( $self, $class, %arg ) = @_;
     bless $self, $class;
-    return;
+    if ( defined $arg{error} ) {
+	$self->{error} = $arg{error};
+	return 1;
+    } else {
+	delete $self->{error};
+	return 0;
+    }
 }
 
 sub DESTROY {

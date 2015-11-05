@@ -126,8 +126,11 @@ sub __PPIX_TOKENIZER__repl {
 # whatever. We have to return the number of tokens reblessed to
 # TOKEN_UNKNOWN (i.e. either 0 or 1) because we get called after the
 # parse is finalized.
-sub __PPIX_LEXER__rebless {
-    my ( $self, %arg ) = @_;
+sub __PPIX_ELEM__rebless {
+    my ( $self, $class, %arg ) = @_;
+
+    defined $class
+	and return $self->__PPIX_ELEM__rebless( $class, %arg );
 
     # Handle named back references
     if ( $self->is_named() ) {

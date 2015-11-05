@@ -68,13 +68,6 @@ sub __PPIX_TOKEN__post_make {
     return;
 }
 
-
-sub __PPIX_LEXER__rebless {
-    my ( $self, $class ) = @_;
-    delete $self->{error};
-    return $self->SUPER::__PPIX_LEXER__rebless( $class );
-}
-
 # Since the lexer does not count these on the way in (because it needs
 # the liberty to rebless them into a known class if it figures out what
 # is going on) we count them as failures at the finalization step.
