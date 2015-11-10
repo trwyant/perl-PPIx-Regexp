@@ -52,7 +52,7 @@ use PPIx::Regexp::Constant qw{ STRUCTURE_UNKNOWN };
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };
 
-our $VERSION = '0.042_03';
+our $VERSION = '0.042_04';
 
 sub _new {
     my ( $class, @args ) = @_;

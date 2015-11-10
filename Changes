@@ -1,3 +1,8 @@
+0.042_04	2015-11-10	T. R. Wyant
+  Parse \U and friends as meta-characters inside \Q...\E
+    This turns out to be what Perl itself does, as shown by
+    $ perl -E 'say qr{\Q\Ufoo}'
+
 0.042_03	2015-11-05	T. R. Wyant
   Clear error when lexer identifies unknown token. Those who peruse the
     changes in this release will see that a bunch of refactoring was
