@@ -1601,6 +1601,38 @@ class   ( 'PPIx::Regexp::Token::Greediness' );
 content ( '+' );
 error   ( undef );
 
+# \U and friends are still metacharacters inside \Q
+
+tokenize( '/\\Q\\Ux\\Ey/' );
+count   ( 9 );
+choose  ( 0 );
+class   ( 'PPIx::Regexp::Token::Structure' );
+content ( '' );
+choose  ( 1 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '/' );
+choose  ( 2 );
+class   ( 'PPIx::Regexp::Token::Control' );
+content ( '\\Q' );
+choose  ( 3 );
+class   ( 'PPIx::Regexp::Token::Control' );
+content ( '\\U' );
+choose  ( 4 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'x' );
+choose  ( 5 );
+class   ( 'PPIx::Regexp::Token::Control' );
+content ( '\\E' );
+choose  ( 6 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'y' );
+choose  ( 7 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '/' );
+choose  ( 8 );
+class   ( 'PPIx::Regexp::Token::Modifier' );
+content ( '' );
+
 # Make sure we record the correct number of captures in the presence of
 # the /n qualifier.
 note	'Correct number of captures in presence of /n qualifier';

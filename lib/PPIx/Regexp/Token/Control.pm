@@ -100,9 +100,6 @@ sub __PPIX_TOKENIZER__regexp {
     # We reject any escapes that do not represent controls.
     $is_control{$control} or return $reject->( 2 );
 
-    # If we are quoting, we reject anything but an end quote.
-    $in_quote and $control ne 'E' and return $reject->( 2 );
-
     # Anything left gets made into a token now, to avoid its processing
     # by the cookie we may make.
     my $token = $tokenizer->make_token( 2 );
