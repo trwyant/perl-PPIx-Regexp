@@ -380,6 +380,9 @@ sub get_token {
 	1
     );
 
+    $self->{trace}
+	and warn "get_token() got '$character' from $self->{cursor_curr}\n";
+
     return ( __PACKAGE__->$handler( $self, $character ) );
 }
 

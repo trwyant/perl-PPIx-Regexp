@@ -120,6 +120,8 @@ sub is_quantifier {
 	if ( $tokenizer->cookie( COOKIE_CLASS ) ) {
 	    $character eq ']'
 		or return $tokenizer->make_token( 1, TOKEN_LITERAL );
+	    $tokenizer->cookie( COOKIE_CLASS, undef );
+	    return 1;
 	}
 
 	# Open parentheses have various interesting possibilities ...
