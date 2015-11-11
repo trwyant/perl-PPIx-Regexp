@@ -50,7 +50,7 @@ use PPI::Document;
 use PPIx::Regexp::Constant qw{ COOKIE_REGEX_SET };
 use PPIx::Regexp::Util qw{ __instance };
 
-our $VERSION = '0.042_04';
+our $VERSION = '0.042_05';
 
 sub _new {
     my ( $class, $content ) = @_;

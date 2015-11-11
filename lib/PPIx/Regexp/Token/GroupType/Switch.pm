@@ -35,7 +35,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token::GroupType };
 
-our $VERSION = '0.042_04';
+our $VERSION = '0.042_05';
 
 sub perl_version_introduced {
 #   my ( $self ) = @_;

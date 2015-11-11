@@ -1,3 +1,15 @@
+0.042_05	2015-11-11	T. R. Wyant
+  Do not end regex set prematurely on finding '])'
+    The problem is that '])' can occur within an extended bracketed
+    character class if it contains grouping parentheses and the last
+    item in a group is a regular bracketed character class and there is
+    no white space between the end of the character class and the end of
+    the group.
+  Record parse failure if switch condition is unknown
+    The structure was being reblessed to
+    PPIx::Regexp::Structure::Unknown, but the number of parse failures
+    was not being incremented.
+
 0.042_04	2015-11-10	T. R. Wyant
   Parse \U and friends as meta-characters inside \Q...\E
     This turns out to be what Perl itself does, as shown by
