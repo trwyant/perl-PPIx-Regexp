@@ -68,7 +68,6 @@ sub __PPIX_LEXER__finalize {
 	    $kid->content() eq '|' or next;
 	    --$alternations >= 0 and next;
 	    $kid->__error( 'Too many alternatives for switch' );
-	    $rslt++;
 	}
     } else {
 	# If we could not figure out how many alternations were allowed,
@@ -80,7 +79,7 @@ sub __PPIX_LEXER__finalize {
 
     # Delegate to the superclass to finalize our children, now that we
     # have finished messing with them.
-    $rslt = $self->SUPER::__PPIX_LEXER__finalize();
+    $rslt += $self->SUPER::__PPIX_LEXER__finalize();
 
     return $rslt;
 }
