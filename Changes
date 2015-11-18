@@ -1,3 +1,6 @@
+0.043		2015-11-18	T. R. Wyant
+  No changes since 0.042_05.
+
 0.042_05	2015-11-11	T. R. Wyant
   Do not end regex set prematurely on finding '])'
     The problem is that '])' can occur within an extended bracketed
