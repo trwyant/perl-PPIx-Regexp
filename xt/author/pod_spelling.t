@@ -23,6 +23,7 @@ __DATA__
 charnames
 errstr
 indices
+infeasible
 instantiation
 lexed
 lexes

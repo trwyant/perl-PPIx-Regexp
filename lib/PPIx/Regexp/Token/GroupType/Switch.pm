@@ -37,6 +37,17 @@ use base qw{ PPIx::Regexp::Token::GroupType };
 
 our $VERSION = '0.043';
 
+{
+
+    my %explanation = (
+	'?'	=> q<Match one of the following '|'-delimited alternatives>,
+    );
+
+    sub __explanation {
+	return \%explanation;
+    }
+}
+
 sub perl_version_introduced {
 #   my ( $self ) = @_;
     return '5.005';

@@ -62,6 +62,10 @@ sub capture_names {
     return ( sort keys %name );
 }
 
+sub explain {
+    return 'Regular expression';
+}
+
 =head2 max_capture_number
 
  print "Highest used capture number ",

@@ -50,6 +50,13 @@ sub _new {
     return $class->SUPER::_new( \%brkt, @args );
 }
 
+sub explain {
+    my ( $self ) = @_;
+    $self->negated()
+	and return 'Inverted character class';
+    return 'Character class';
+}
+
 =head2 negated
 
  $class->negated() and print "Class is negated\n";

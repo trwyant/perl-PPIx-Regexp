@@ -49,6 +49,20 @@ our $VERSION = '0.043';
 # sub can_be_quantified { return };
 
 {
+
+    my %explanation = (
+	'??'	=> 'Evaluate code, use as regexp at this point',
+	'?p'	=> 'Evaluate code, use as regexp at this point (removed in 5.9.5)',
+	'?'		=> 'Evaluate code. Always matches.',
+    );
+
+    sub __explanation {
+	return \%explanation;
+    }
+
+}
+
+{
     my %perl_version_introduced = (
 	'?'	=> '5.005',
 	'?p'	=> '5.005',	# Presumed. I can find no documentation.

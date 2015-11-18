@@ -42,6 +42,19 @@ our $VERSION = '0.043';
 # Return true if the token can be quantified, and false otherwise
 sub can_be_quantified { return };
 
+{
+
+    my %explanation = (
+	'+'	=> 'match longest string and give nothing back',
+	'?'	=> 'match shortest string first',
+    );
+
+    sub __explanation {
+	return \%explanation;
+    }
+
+}
+
 my %greediness = (
     '?' => MINIMUM_PERL,
     '+' => '5.009005',

@@ -72,6 +72,37 @@ sub perl_version_introduced {
 
 {
 
+    my %explanation = (
+	'[:alnum:]'	=> 'Any alphanumeric character',
+	'[:alpha:]'	=> 'Match alphabetic',
+	'[:ascii:]'	=> 'Any character in the ASCII character set',
+	'[:blank:]'	=> 'A GNU extension, equal to a space or a horizontal tab ("\\t")',
+	'[:cntrl:]'	=> 'Any control character',
+	'[:digit:]'	=> 'Any decimal digit ("[0-9]")',
+	'[:graph:]'	=> 'Any printable character, excluding a space',
+	'[:lower:]'	=> 'Any lowercase character',
+	'[:print:]'	=> 'Any printable character',
+	'[:punct:]'	=> 'Any graphical character excluding "word" characters',
+	'[:space:]'	=> 'Any whitespace character',
+	'[:upper:]'	=> 'Any uppercase character',
+	'[:word:]'	=> 'A Perl extension, equivalent to "\\w"',
+	'[:xdigit:]'	=> 'Any hexadecimal digit',
+    );
+
+    sub __explanation {
+	return \%explanation;
+    }
+
+    sub __no_explanation {
+	my ( $self ) = @_;
+	my $msg = sprintf q<Unknown POSIX character class>;
+	return $msg;
+    }
+
+}
+
+{
+
     my %class = (
 	':' => __PACKAGE__,
     );

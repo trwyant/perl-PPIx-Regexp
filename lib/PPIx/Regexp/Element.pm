@@ -121,6 +121,51 @@ sub descendant_of {
     return $node->ancestor_of( $self );
 }
 
+=head2 explain
+
+This method returns a brief explanation of what the element does. The
+return will be either a string or C<undef> in scalar context, but may be
+multiple values or an empty array in list context.
+
+This method should be considered experimental. What it returns may
+change without notice as my understanding of what all the pieces/parts
+of a Perl regular expression evolves. The worst case is that it will
+prove entirely infeasible to implement satisfactorily, in which case it
+will be put through a deprecation cycle and retracted.
+
+=cut
+
+sub explain {
+    my ( $self ) = @_;
+    my $explanation = $self->__explanation();
+    my $content = $self->content();
+    if ( my $main = $self->main_structure() ) {
+	my $delim = $main->delimiters();
+	$delim = qr{ \\ (?= [\Q$delim\E] ) }smx;
+	$content =~ s/$delim//smxg;
+    }
+    if ( defined( my $splain = $explanation->{$content} ) ) {
+	return $splain;
+    }
+    return $self->__no_explanation();
+}
+
+# Return explanation hash
+sub __explanation {
+    $PPIx::Regexp::NO_EXPLANATION_FATAL
+	and confess 'Neither explain() nor __explanation() overridden';
+    return {};
+}
+
+# Called if no explanation available
+sub __no_explanation {
+    my ( $self ) = @_;
+    my $msg = sprintf q<No explanation>;
+    $PPIx::Regexp::NO_EXPLANATION_FATAL
+	and confess $msg;
+    return $msg;
+}
+
 =head2 error
 
  say $token->error();
@@ -136,6 +181,26 @@ sub error {
     return $self->{error};
 }
 
+=head2 in_regex_set
+
+This method returns a true value if the invocant is contained in an
+extended bracketed character class (also known as a regex set), and a
+false value otherwise. This method returns true if the invocant is a
+L<PPIx::Regexp::Structure::RegexSet|PPIx::Regexp::Structure::RegexSet>.
+
+=cut
+
+sub in_regex_set {
+    my ( $self ) = @_;
+    my $ele = $self;
+    while ( 1 ) {
+	$ele->isa( 'PPIx::Regexp::Structure::RegexSet' )
+	    and return 1;
+	$ele = $ele->parent()
+	    or last;
+    }
+    return 0;
+}
 
 =head2 is_quantifier
 
@@ -150,6 +215,28 @@ greediness token is possible.
 =cut
 
 sub is_quantifier { return; }
+
+=head2 main_structure
+
+This method returns the
+L<PPIx::Regexp::Structure::Main|PPIx::Regexp::Structure::Main> that
+contains the element. In practice this will be a
+L<PPIx::Regexp::Structure::Regexp|PPIx::Regexp::Structure::Regexp> or a
+L<PPIx::Regexp::Structure::Replacement|PPIx::Regexp::Structure::Replacement>,
+
+If the element is not contained in any such structure, C<undef> is
+returned. This will happen if the element is a
+L<PPIx::Regexp|PPIx::Regexp> or one of its immediate children.
+
+=cut
+
+sub main_structure {
+    my ( $self ) = @_;
+    while ( $self = $self->parent()
+	    and not $self->isa( 'PPIx::Regexp::Structure::Main' ) ) {
+    }
+    return $self;
+}
 
 =head2 modifier_asserted
 

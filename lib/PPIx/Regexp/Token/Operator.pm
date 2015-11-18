@@ -35,13 +35,57 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
-use PPIx::Regexp::Constant qw{ TOKEN_LITERAL };
+use PPIx::Regexp::Constant qw{
+    COOKIE_CLASS COOKIE_REGEX_SET
+    TOKEN_LITERAL
+};
 use PPIx::Regexp::Util qw{ __instance };
 
 our $VERSION = '0.043';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
+
+sub explain {
+    my ( $self ) = @_;
+    my $expl = ucfirst "$self->{operation} operator";
+    $expl =~ s/ _ / /smxg;
+    return $expl;
+}
+
+=head2 operation
+
+This method returns the name of the operation performed by the operator.
+This depends not only on the operator itself but its context:
+
+=over
+
+=item In a bracketed character class
+
+    '-' => 'range',
+    '^' => 'inversion',
+
+=item In an extended bracketed character class
+
+    '&' => 'intersection',
+    '+' => 'union',
+    '|' => 'union',
+    '-' => 'subtraction',
+    '^' => 'symmetric_difference',
+    '!' => 'complement',
+
+=item Outside any sort of bracketed character class
+
+    '|' => 'alternation',
+
+=back
+
+=cut
+
+sub operation {
+    my ( $self ) = @_;
+    return $self->{operation};
+}
 
 # These will be intercepted by PPIx::Regexp::Token::Literal if they are
 # really literals, so here we may process them unconditionally.
@@ -55,6 +99,46 @@ sub _treat_as_literal {
     my ( $token ) = @_;
     return __instance( $token, 'PPIx::Regexp::Token::Literal' ) ||
 	__instance( $token, 'PPIx::Regexp::Token::Interpolation' );
+}
+
+{
+
+    my %operation = (
+	COOKIE_CLASS()	=> {
+	    '-'	=> 'range',
+	    '^'	=> 'inversion',
+	},
+	COOKIE_REGEX_SET()		=> {
+	    '&'	=> 'intersection',
+	    '+'	=> 'union',
+	    '|'	=> 'union',
+	    '-'	=> 'subtraction',
+	    '^'	=> 'symmetric_difference',
+	    '!'	=> 'complement',
+	},
+	''	=> {
+	    '|'	=> 'alternation',
+	},
+    );
+
+    sub __PPIX_TOKEN__post_make {
+	my ( $self, $tokenizer ) = @_;
+
+	my $content = $self->content();
+
+	if ( $tokenizer->cookie( COOKIE_CLASS ) ) {
+	    $self->{operation} = $operation{ COOKIE_CLASS() }{$content};
+	} elsif ( $tokenizer->cookie( COOKIE_REGEX_SET ) ) {
+	    $self->{operation} = $operation{ COOKIE_REGEX_SET() }{$content};
+	} else {
+	    $self->{operation} = $operation{''}{$content};
+	}
+	defined $self->{operation}
+	    or $self->{operation} = 'unknown';
+	return;
+    }
+
+
 }
 
 sub __PPIX_TOKENIZER__regexp {

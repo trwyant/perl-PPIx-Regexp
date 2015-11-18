@@ -79,6 +79,10 @@ sub content {
     }
 }
 
+sub explain {
+    return 'Perl expression';
+}
+
 sub perl_version_introduced {
     my ( $self ) = @_;
     return $self->{perl_version_introduced};

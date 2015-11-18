@@ -37,6 +37,16 @@ use base qw{ PPIx::Regexp::Node };
 
 our $VERSION = '0.043';
 
+sub explain {
+    my ( $self ) = @_;
+    my $first = $self->schild( 0 )
+	or return $self->__no_explanation();
+    my $last = $self->schild( -1 )
+	or return $self->__no_explanation();
+    return sprintf q<Characters between '%s' and '%s' inclusive>,
+	$first->content(), $last->content();
+}
+
 1;
 
 __END__

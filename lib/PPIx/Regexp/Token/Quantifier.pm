@@ -59,6 +59,20 @@ sub could_be_quantifier {
     return $quantifier{$string};
 }
 
+{
+
+    my %explanation = (
+	'*'	=> 'match zero or more times',
+	'+'	=> 'match one or more times',
+	'?'	=> 'match zero or one time',
+    );
+
+    sub __explanation {
+	return \%explanation;
+    }
+
+}
+
 sub __PPIX_TOKENIZER__regexp {
     my ( $class, $tokenizer, $character ) = @_;
 

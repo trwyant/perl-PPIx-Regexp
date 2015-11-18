@@ -76,6 +76,11 @@ specified, it is passed through to
 L<< PPIx::Regexp->new()|PPIx::Regexp/new >>. It also causes an
 C<Encode::encode> to be done on any parse content dumped.
 
+=item explain boolean
+
+If true, this option causes the C<explain()> output of each object to be
+dumped.
+
 =item indent number
 
 This argument is the number of additional spaces to indent each level of
@@ -154,6 +159,7 @@ ignored.
 {
 
     my %default = (
+	explain	=> 0,
 	indent	=> 2,
 	margin	=> 0,
 	ordinal	=> 0,
@@ -382,6 +388,23 @@ sub _tokens_test {
     return @rslt;
 }
 
+sub PPIx::Regexp::Element::__PPIX_DUMPER__dump_explanation {
+    my ( $self, $dumper, $line ) = @_;
+    my @expl = $self->explain()
+	or return $line;
+    1 == @expl
+	and return "$line\t$expl[0]";
+    wantarray
+	or return sprintf "%s\t%s", $line, join '; ', @expl;
+    ( my $blank = $line ) =~ s/\S/ /smxg;
+    my @rslt;
+    foreach my $splain ( @expl ) {
+	push @rslt, "$line\t$splain";
+	$line = $blank;
+    }
+    return @rslt;
+}
+
 sub PPIx::Regexp::__PPIX_DUMPER__test {
     my ( $self, $dumper ) = @_;
 
@@ -420,6 +443,10 @@ sub PPIx::Regexp::Node::__PPIX_DUMPER__dump {
 	    : sprintf "\tfailures=%d", $self->failures();
     $dumper->{perl_version}
 	and $rslt[-1] .= "\t" . $dumper->_perl_version( $self );
+    $dumper->{explain}
+	and push @rslt, $self->__PPIX_DUMPER__dump_explanation(
+	    $dumper, pop @rslt );
+
     my $indent = ' ' x $dumper->{indent};
     foreach my $elem ( $self->children() ) {
 	push @rslt, map { $indent . $_ } $elem->__PPIX_DUMPER__dump( $dumper );
@@ -508,6 +535,10 @@ sub _format_value {
 		push @rslt, $err;
 	    }
 	}
+	@rslt = ( join "\t", @rslt );
+	$dumper->{explain}
+	    and push @rslt, $self->__PPIX_DUMPER__dump_explanation(
+		$dumper, pop @rslt );
 
 	@rslt = ( join( "\t", @rslt ) );
 	my $indent = ' ' x $dumper->{indent};
@@ -573,13 +604,15 @@ sub PPIx::Regexp::Tokenizer::__PPIX_DUMPER__test {
 sub PPIx::Regexp::Token::__PPIX_DUMPER__dump {
     my ( $self, $dumper ) = @_;
 
-    not $dumper->{significant} or $self->significant() or return;
+    not $dumper->{significant}
+	or $self->significant()
+	or return;
 
     my @rslt = ( ref $self, $dumper->_safe( $self ) );
 
     if ( defined( my $err = $self->error() ) ) {
 
-	push @rslt, $err;
+	return join "\t", @rslt, $err;
 
     } else {
 
@@ -618,8 +651,14 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__dump {
 	    }
 
 	}
+
+	@rslt = ( join "\t", @rslt );
+
+	$dumper->{explain}
+	    and push @rslt, $self->__PPIX_DUMPER__dump_explanation(
+		$dumper, pop @rslt );
+	return @rslt;
     }
-    return join( "\t", @rslt );
 }
 
 sub PPIx::Regexp::Token::__PPIX_DUMPER__test {

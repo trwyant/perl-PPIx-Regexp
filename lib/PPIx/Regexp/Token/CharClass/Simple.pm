@@ -41,6 +41,47 @@ use PPIx::Regexp::Constant qw{
 
 our $VERSION = '0.043';
 
+{
+
+    my %kind_of_match = (
+	p	=> 'with',
+	P	=> 'without',
+    );
+
+    my %explanation = (
+	'.'	=> 'Match any character',
+	'\\C'	=> 'Match a single octet (removed in 5.23.0)',
+	'\\D'	=> 'Match any character but a decimal digit',
+	'\\H'	=> 'Match a non-horizontal-white-space character',
+	'\\N'	=> 'Match any character but a new-line character',
+	'\\R'	=> 'Match a generic new-line character',
+	'\\S'	=> 'Match non-white-space character',
+	'\\V'	=> 'Match a non-vertical-white-space character',
+	'\\W'	=> 'Match non-word character',
+	'\\X'	=> 'Match a Unicode extended grapheme cluster',
+	'\\d'	=> 'Match decimal digit',
+	'\\h'	=> 'Match a horizontal-white-space character',
+	'\\s'	=> 'Match white-space character',
+	'\\v'	=> 'Match a vertical-white-space character',
+	'\\w'	=> 'Match word character',
+    );
+
+    sub __explanation {
+	return \%explanation;
+    }
+
+    sub explain {
+	my ( $self ) = @_;
+	if ( $self->content() =~ m/ \A \\ ( [Pp] ) [{] ( .* ) [}] \z /smx ) {
+	    return sprintf
+		q<Match character %s Unicode or custom property '%s'>,
+		$kind_of_match{$1}, $2;
+	}
+	return $self->SUPER::explain();
+    }
+
+}
+
 ##=head2 is_case_sensitive
 ##
 ##This override of the superclass method returns true for Unicode

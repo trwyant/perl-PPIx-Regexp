@@ -43,6 +43,10 @@ our $VERSION = '0.043';
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 
+sub explain {
+    return 'Literal character';
+}
+
 sub perl_version_introduced {
     my ( $self ) = @_;
     exists $self->{perl_version_introduced}

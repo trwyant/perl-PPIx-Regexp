@@ -51,6 +51,24 @@ our $VERSION = '0.043';
 # sub can_be_quantified { return };
 
 {
+
+    my %explanation = (
+	'\\E'	=> 'End of interpolation control',
+	'\\F'	=> 'Fold case until \\E',
+	'\\L'	=> 'Lowercase until \\E',
+	'\\Q'	=> 'Quote metacharacters until \\E',
+	'\\U'	=> 'Uppercase until \\E',
+	'\\l'	=> 'Lowercase next character',
+	'\\u'	=> 'Uppercase next character',
+    );
+
+    sub __explanation {
+	return \%explanation;
+    }
+
+}
+
+{
     my %version_introduced = (
 	'\\F'	=> '5.015008',
     );

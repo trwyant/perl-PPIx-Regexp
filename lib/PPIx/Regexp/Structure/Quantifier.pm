@@ -40,6 +40,24 @@ sub can_be_quantified {
     return;
 }
 
+sub explain {
+    my ( $self ) = @_;
+    my $content = $self->content();
+    if ( $content =~ m/ \A [{] ( .*? ) [}] \z /smx ) {
+	my $quant = $1;
+	my ( $lo, $hi ) = split qr{ , }smx, $quant;
+	defined $hi
+	    and '' ne $hi
+	    and return "match $lo to $hi times";
+	$quant =~ m/ , \z /smx
+	    and return "match $lo or more times";
+	$lo =~ m/ [^0-9] /smx
+	    and return "match $lo times";
+	return "match exactly $lo times";
+    }
+    return $self->SUPER::explain();
+}
+
 sub is_quantifier {
     return 1;
 }

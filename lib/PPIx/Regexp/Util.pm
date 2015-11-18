@@ -10,7 +10,7 @@ use Scalar::Util qw{ blessed };
 
 use base qw{ Exporter };
 
-our @EXPORT_OK = qw{ __instance };
+our @EXPORT_OK = qw{ __instance __to_ordinal_en };
 
 our $VERSION = '0.043';
 
@@ -18,6 +18,18 @@ sub __instance {
     my ( $object, $class ) = @_;
     blessed( $object ) or return;
     return $object->isa( $class );
+}
+
+sub __to_ordinal_en {
+    my ( $num ) = @_;
+    $num += 0;
+    1 == $num % 10
+	and return "${num}st";
+    2 == $num % 10
+	and return "${num}nd";
+    3 == $num % 10
+	and return "${num}rd";
+    return "${num}th";
 }
 
 1;
@@ -61,6 +73,16 @@ This module can export the following subroutines:
 This subroutine returns true if its first argument is an instance of the
 class specified by its second argument. Unlike C<UNIVERSAL::isa>, the
 result is always false unless the first argument is a reference.
+
+=head2 __to_ordinal_en
+
+This subroutine takes as its argument an integer and returns a string
+representing its ordinal in English. For example
+
+ say __to_ordinal_en( 17 );
+ # 17th
+
+=cut
 
 
 =head1 SEE ALSO

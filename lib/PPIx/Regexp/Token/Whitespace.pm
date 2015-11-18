@@ -41,6 +41,23 @@ use PPIx::Regexp::Constant qw{ COOKIE_REGEX_SET MINIMUM_PERL };
 
 our $VERSION = '0.043';
 
+sub explain {
+    my ( $self ) = @_;
+    my $parent;
+    if (
+	$parent = $self->parent()
+	    and $parent->isa( 'PPIx::Regexp' )
+    ) {
+	    return 'Not significant';
+    } elsif ( $self->in_regex_set() ) {
+	return q<Not significant in extended character class>;
+    } elsif ( $self->modifier_asserted( 'x' ) ) {
+	return q<Not significant under /x>;
+    } else {
+	return 'Not significant';
+    }
+}
+
 sub perl_version_introduced {
     my ( $self ) = @_;
     return $self->{perl_version_introduced};

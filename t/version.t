@@ -61,7 +61,7 @@ our $REPORT;	# True to report rather than test.
 
 # Trailing empty fields are removed.
 
-use PPIx::Regexp::Constant qw{ COOKIE_REGEX_SET MINIMUM_PERL };
+use PPIx::Regexp::Constant qw{ COOKIE_CLASS COOKIE_REGEX_SET MINIMUM_PERL };
 use PPIx::Regexp::Tokenizer;
 
 sub class (@);
@@ -540,13 +540,13 @@ method	perl_version_introduced	=> '5.013010', note => 'perl51310delta';
 method	perl_version_removed	=> undef;
 
 class	'PPIx::Regexp::Token::Operator', note => 'Operator';
-token	'|', note => 'Alternation (outside character class)';
+token	'|', cookie => 'none', note => 'Alternation (outside character class)';
 method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'^', note => 'Character class inversion';
+token	'^', cookie => COOKIE_CLASS, note => 'Character class inversion';
 method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
-token	'-', note => 'Character range (inside character class)';
+token	'-', cookie => COOKIE_REGEX_SET, note => 'Character range (inside character class)';
 method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
 

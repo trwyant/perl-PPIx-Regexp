@@ -39,6 +39,16 @@ our $VERSION = '0.043';
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 
+{
+    my %explanation = (
+	'?|'	=> 'Re-use capture group numbers',
+    );
+
+    sub __explanation {
+	return \%explanation;
+    }
+}
+
 sub perl_version_introduced {
     return '5.009005';
 }

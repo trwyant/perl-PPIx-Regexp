@@ -88,6 +88,32 @@ sub perl_version_introduced {
 
 }
 
+{
+    my %explanation = (
+	'$'	=> 'Assert position is at end of string or newline',
+	'\\A'	=> 'Assert position is at beginning of string',
+	'\\B'	=> 'Assert position is not at word/nonword boundary',
+	'\\B{gcb}'	=> 'Assert position is not at grapheme cluster boundary',
+	'\\B{g}'	=> 'Assert position is not at grapheme cluster boundary',
+	'\\B{sb}'	=> 'Assert position is not at sentence boundary',
+	'\\B{wb}'	=> 'Assert position is not at word boundary',
+	'\\G'	=> 'Assert position is at pos()',
+	'\\K'	=> 'In s///, keep everything before the \\K',
+	'\\Z'	=> 'Assert position is at end of string, or newline before end',
+	'\\b'	=> 'Assert position is at word/nonword boundary',
+	'\\b{gcb}'	=> 'Assert position is at grapheme cluster boundary',
+	'\\b{g}'	=> 'Assert position is at grapheme cluster boundary',
+	'\\b{sb}'	=> 'Assert position is at sentence boundary',
+	'\\b{wb}'	=> 'Assert position is at word boundary',
+	'\\z'	=> 'Assert position is at end of string',
+	'^'	=> 'Assert position is at beginning of string or after newline',
+    );
+
+    sub __explanation {
+	return \%explanation;
+    }
+}
+
 # By logic we should handle '$' here. But
 # PPIx::Regexp::Token::Interpolation needs to process it to see if it is
 # a sigil. If it is not, that module is expected to make it into an

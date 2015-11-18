@@ -43,6 +43,12 @@ use base qw{ PPIx::Regexp::Structure::Capture };
 
 our $VERSION = '0.043';
 
+sub explain {
+    my ( $self ) = @_;
+    return sprintf q<Named capture group '%s' (number %d)>,
+	$self->name(), $self->number();
+}
+
 =head2 name
 
  my $name = $element->name();

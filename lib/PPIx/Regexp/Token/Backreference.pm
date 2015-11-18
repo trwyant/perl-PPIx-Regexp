@@ -39,11 +39,26 @@ use PPIx::Regexp::Constant qw{
     MINIMUM_PERL RE_CAPTURE_NAME
     TOKEN_LITERAL TOKEN_UNKNOWN
 };
+use PPIx::Regexp::Util qw{ __to_ordinal_en };
 
 our $VERSION = '0.043';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
+
+sub explain {
+    my ( $self ) = @_;
+    $self->is_named()
+	and return sprintf q<Back reference to capture group '%s'>,
+	    $self->name();
+    $self->is_relative()
+	and return sprintf
+	    q<Back reference to %s previous capture group (%d in this regexp)>,
+	    __to_ordinal_en( - $self->number() ),
+	    $self->absolute();
+    return sprintf q<Back reference to capture group %d>,
+	$self->absolute();
+}
 
 {
 

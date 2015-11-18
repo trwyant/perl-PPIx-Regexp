@@ -160,6 +160,51 @@ sub __asserts {
 
 sub can_be_quantified { return };
 
+{
+    my %explanation = (
+	'm'	=> 'm: ^ and $ match within string',
+	'-m'	=> '-m: ^ and $ match only at ends of string',
+	's'	=> 's: . can match newline',
+	'-s'	=> '-s: . can not match newline',
+	'i'	=> 'i: do case-insensitive matching',
+	'-i'	=> '-i: do case-sensitive matching',
+	'x'	=> 'x: ignore whitespace and comments',
+	'-x'	=> '-x: regard whitespace as literal',
+	'p'	=> 'p: provide ${^PREMATCH} etc (pre 5.20)',
+	'-p'	=> '-p: no ${^PREMATCH} etc (pre 5.20)',
+	'a'	=> 'a: restrict non-Unicode classes to ASCII',
+	'aa'	=> 'aa: restrict non-Unicode classes & ASCII-Unicode matches',
+	'd'	=> 'd: match using default semantics',
+	'l'	=> 'l: match using locale semantics',
+	'u'	=> 'u: match using Unicode semantics',
+	'n'	=> 'n: parentheses do not capture',
+	'-n'	=> '-n: parentheses capture',
+	'c'	=> 'c: preserve current position on match failure',
+	'g'	=> 'g: match repeatedly',
+	'e'	=> 'e: substitution string is an expression',
+	'ee'	=> 'ee: substitution is expression to eval()',
+	'o'	=> 'o: only interpolate once',
+	'r'	=> 'r: aubstitution returns modified string',
+    );
+
+    sub explain {
+	my ( $self ) = @_;
+	my @rslt;
+	my %mods = $self->modifiers();
+	if ( defined( my $val = delete $mods{match_semantics} ) ) {
+	    push @rslt, $explanation{$val};
+	}
+	foreach my $key ( sort keys %mods ) {
+	    if ( my $val = $mods{$key} ) {
+		push @rslt, $explanation{ $key x $val };
+	    } else {
+		push @rslt, $explanation{ "-$key" };
+	    }
+	}
+	return wantarray ? @rslt : join '; ', @rslt;
+    }
+}
+
 =head2 match_semantics
 
  my $sem = $token->match_semantics();

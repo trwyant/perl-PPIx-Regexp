@@ -52,6 +52,11 @@ use constant NAMED_CAPTURE =>
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 
+sub explain {
+    my ( $self ) = @_;
+    return sprintf q<Capture match into '%s'>, $self->name();
+}
+
 =head2 name
 
 This method returns the name of the capture.

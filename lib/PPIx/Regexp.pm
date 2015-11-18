@@ -395,6 +395,10 @@ attempt succeeded.
 
 # defined above, just after sub new.
 
+sub explain {
+    return;
+}
+
 =head2 failures
 
  print "There were ", $re->failures(), " parse failures\n";

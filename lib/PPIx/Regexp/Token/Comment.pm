@@ -47,6 +47,10 @@ sub comment {
     return 1;
 }
 
+sub explain {
+    return 'Comment';
+}
+
 # This must be implemented by tokens which do not recognize themselves.
 # The return is a list of list references. Each list reference must
 # contain a regular expression that recognizes the token, and optionally

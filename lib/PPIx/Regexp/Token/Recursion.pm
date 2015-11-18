@@ -41,6 +41,29 @@ our $VERSION = '0.043';
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 
+sub explain {
+    my ( $self ) = @_;
+    $self->is_named()
+	and return sprintf q<Recurse into capture group '%s'>,
+	    $self->name();
+    if ( $self->is_relative() ) {
+	my $number = $self->number();
+	$number >= 0
+	    and return sprintf
+		q<Recurse into %s following capture group (%d in this regexp)>,
+		PPIx::Regexp::Util::__to_ordinal_en( $self->number() ),
+		$self->absolute();
+	return sprintf
+	    q<Back reference to %s previous capture group (%d in this regexp)>,
+	    PPIx::Regexp::Util::__to_ordinal_en( - $self->number() ),
+	    $self->absolute();
+    } elsif ( my $number = $self->absolute() ) {
+	return sprintf q<Recurse into capture group %d>, $number;
+    } else {
+	return q<Recurse to beginning of regular expression>;
+    }
+}
+
 sub perl_version_introduced {
     return '5.009005';
 }

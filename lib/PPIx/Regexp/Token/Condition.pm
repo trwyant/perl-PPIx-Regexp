@@ -39,6 +39,39 @@ use PPIx::Regexp::Constant qw{ RE_CAPTURE_NAME };
 
 our $VERSION = '0.043';
 
+{
+
+    my %explanation = (
+	'(DEFINE)'	=> 'Define a group to be recursed into',
+	'(R)'	=> 'True if recursing',
+    );
+
+    sub explain {
+	my ( $self ) = @_;
+	my $content = $self->content();
+	if ( defined( my $expl = $explanation{$content} ) ) {
+	    return $expl;
+	}
+	if ( $content =~ m/ \A [(] R /smx ) {	# )
+	    $self->is_named()
+		and return sprintf
+		q<True if recursing directly inside capture group '%s'>,
+		$self->name();
+	    return sprintf
+		q<True if recursing directly inside capture group %d>,
+		$self->absolute();
+	}
+	$self->is_named()
+	    and return sprintf
+	    q<True if capture group '%s' matched>,
+	    $self->name();
+	return sprintf
+	    q<True if capture group %d matched>,
+	    $self->absolute();
+    }
+
+}
+
 sub perl_version_introduced {
     my ( $self ) = @_;
     $self->content() =~ m/ \A [(] \d+ [)] \z /smx

@@ -131,6 +131,17 @@ sub elements {
     }
 }
 
+sub explain {
+    my ( $self ) = @_;
+    if ( my $type = $self->type() ) {
+	return $type->explain();
+    }
+    if ( my $start = $self->start() ) {
+	return $start->explain();
+    }
+    return $self->__no_explanation();
+}
+
 =head2 finish
 
  my $elem = $struct->finish();

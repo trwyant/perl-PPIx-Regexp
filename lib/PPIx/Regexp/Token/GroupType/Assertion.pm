@@ -39,6 +39,22 @@ use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 our $VERSION = '0.043';
 
 {
+
+    my %explanation = (
+	'?!'	=> 'Negative look-ahead assertion',
+	'?<!'	=> 'Negative look-behind assertion',
+	'?<='	=> 'Positive look-behind assertion',
+	'?='	=> 'Positive look-ahead assertion',
+    );
+
+    sub __explanation {
+	return \%explanation;
+    }
+
+}
+
+{
+
     my %perl_version_introduced = (
 	'?<='	=> '5.005',
 	'?<!'	=> '5.005',

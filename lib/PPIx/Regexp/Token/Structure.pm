@@ -64,6 +64,29 @@ sub can_be_quantified {
     return $quant{ $self->content() };
 };
 
+{
+
+    my %explanation = (
+	''		=> 'Match regexp',
+	'('		=> 'Capture or grouping',
+	'(?['	=> 'Extended character class',
+	')'		=> 'End capture or grouping',
+	'['		=> 'Character class',
+	']'		=> 'End character class',
+	'])'	=> 'End extended character class',
+	'm'		=> 'Match regexp',
+	'qr'	=> 'Regexp object definition',
+	's'	=> 'Replace regexp with string or expression',
+	'{'		=> 'Explicit quantifier',
+	'}'		=> 'End explicit quantifier',
+    );
+
+    sub __explanation {
+	return \%explanation;
+    }
+
+}
+
 sub is_quantifier {
     my ( $self ) = @_;
     ref $self or return;

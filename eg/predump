@@ -27,7 +27,7 @@ GetOptions( \%opt,
     },
     qw{
         default_modifiers|default-modifiers=s@
-	encoding=s files!
+	encoding=s explain! files!
 	indent=i margin=i objectify! ordinal! perl_version!
 	significant!
 	test! tokens! trace+ unescape! verbose+

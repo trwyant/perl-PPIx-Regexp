@@ -42,6 +42,10 @@ our $VERSION = '0.043';
 
 sub can_be_quantified { return; }
 
+sub explain {
+    return 'Replacement string or expression';
+}
+
 1;
 
 __END__
