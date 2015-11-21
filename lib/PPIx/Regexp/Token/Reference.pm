@@ -161,9 +161,9 @@ sub __PPIX_TOKEN__post_make {
 
     my $capture;
     if ( defined $arg ) {
-	$tokenizer
-	    and $capture = first { defined $_ } $tokenizer->capture();
-	defined $capture or $capture = $arg->{capture};
+	$capture = first { defined $_ } $tokenizer->capture();
+	defined $capture
+	    or $capture = $arg->{capture};
     } else {
 	my $content = $self->content();
 	foreach ( $self->__PPIX_TOKEN__recognize() ) {

@@ -121,10 +121,7 @@ sub ppi {
 
 	$self->__impose_defaults( $arg, \%default );
 
-	# If we're manufacturing objects directly (which is UNSUPPORTED,
-	# but used in t/version.t) we may not have a $tokenizer.
-	$tokenizer
-	    and $tokenizer->cookie( COOKIE_REGEX_SET )
+	$tokenizer->cookie( COOKIE_REGEX_SET )
 	    and $self->__error( 'Code token not valid in Regex set' );
 
 	return;

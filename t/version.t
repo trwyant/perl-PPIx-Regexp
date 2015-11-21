@@ -540,7 +540,7 @@ method	perl_version_introduced	=> '5.013010', note => 'perl51310delta';
 method	perl_version_removed	=> undef;
 
 class	'PPIx::Regexp::Token::Operator', note => 'Operator';
-token	'|', cookie => 'none', note => 'Alternation (outside character class)';
+token	'|', note => 'Alternation (outside character class)';
 method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 method	perl_version_removed	=> undef;
 token	'^', cookie => COOKIE_CLASS, note => 'Character class inversion';
@@ -847,10 +847,17 @@ sub token (@) {
 	my $title = "Instantiate $context->{class}{class} with '$content'";
 
 	if ( eval {
-		my $obj = $context->{class}{class}->_new( $content );
-		my $tokenizer;
+		my $class = $context->{class}{class};
+		my $obj = $class->_new( $content );
+		my $tokenizer = PPIx::Regexp::Tokenizer->new( $content );
+		if ( my $code = $class->can( '__make_group_type_matcher' ) ) {
+		    foreach my $matcher ( @{ $code->( $class )->{''} } ) {
+			$tokenizer->find_regexp( $matcher )
+			    and last;
+		    }
+		}
+
 		if ( my $cookie = delete $args{cookie} ) {
-		    $tokenizer = PPIx::Regexp::Tokenizer->new( $content );
 		    $tokenizer->cookie( $cookie => sub { 1 } );
 		}
 		$obj->can( '__PPIX_TOKEN__post_make' )

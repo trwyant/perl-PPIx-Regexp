@@ -45,10 +45,6 @@ use PPIx::Regexp::Constant qw{ RE_CAPTURE_NAME };
 
 our $VERSION = '0.043';
 
-use constant NAMED_CAPTURE =>
-    qr{ \A \\? \? (?: P? < ( @{[ RE_CAPTURE_NAME ]} ) \\? > |
-		\\? ' ( @{[ RE_CAPTURE_NAME ]} ) \\? ' ) }smxo;
-
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 
@@ -75,41 +71,15 @@ sub perl_version_introduced {
 sub __PPIX_TOKEN__post_make {
     my ( $self, $tokenizer, $arg ) = @_;
     $self->__impose_defaults( $arg );
-    if ( $tokenizer ) {
-	foreach my $name ( $tokenizer->capture() ) {
-	    defined $name or next;
-	    $self->{name} = $name;
-	    return;
-	}
-    } else {
-	foreach my $name (
-	    $self->content() =~ m/ @{[ NAMED_CAPTURE ]} /smxo ) {
-	    defined $name or next;
-	    $self->{name} = $name;
-	    return;
-	}
+
+    foreach my $name ( $tokenizer->capture() ) {
+	defined $name or next;
+	$self->{name} = $name;
+	return;
     }
 
     confess 'Programming error - can not figure out capture name';
 }
-
-=begin comment
-
-sub __PPIX_TOKENIZER__regexp {
-    my ( $class, $tokenizer, $character ) = @_;
-
-    # The optional escapes are because any of the non-open-bracket
-    # punctuation characters may be the expression delimiter.
-    if ( my $accept = $tokenizer->find_regexp( NAMED_CAPTURE ) ) {
-	return $accept;
-    }
-
-    return;
-}
-
-=end comment
-
-=cut
 
 sub __make_group_type_matcher {
     return {

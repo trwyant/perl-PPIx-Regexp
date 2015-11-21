@@ -407,8 +407,7 @@ sub __PPIX_TOKEN__recognize {
 sub __PPIX_TOKEN__post_make {
     my ( $self, $tokenizer, $arg ) = @_;
     $self->__impose_defaults( $arg );
-    defined $tokenizer
-	and $tokenizer->modifier_modify( $self->modifiers() );
+    $tokenizer->modifier_modify( $self->modifiers() );
     return;
 }
 

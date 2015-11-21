@@ -319,10 +319,7 @@ sub _square {
     sub __PPIX_TOKEN__post_make {
 	my ( $self, $tokenizer, $arg ) = @_;
 
-	# If we're manufacturing objects directly (which is UNSUPPORTED,
-	# but used in t/version.t) we may not have a $tokenizer.
-	$tokenizer
-	    and $tokenizer->cookie( COOKIE_REGEX_SET )
+	$tokenizer->cookie( COOKIE_REGEX_SET )
 	    and $self->{perl_version_introduced} = '5.017009';
 
 	$self->__impose_defaults( $arg, \%default );
