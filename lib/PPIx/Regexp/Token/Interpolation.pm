@@ -341,7 +341,7 @@ sub __PPIX_TOKENIZER__regexp {
 
     exists $sigil_alternate{$character} or return;
 
-    if ( my $accept = _interpolation( $class, $tokenizer, $character, 1 ) ) {
+    if ( my $accept = $class->_interpolation( $tokenizer, $character, 1 ) ) {
 	return $accept;
     }
 
@@ -356,7 +356,7 @@ sub __PPIX_TOKENIZER__repl {
 
     exists $sigil_alternate{$character} or return;
 
-    if ( my $accept = _interpolation( $class, $tokenizer, $character, 0 ) ) {
+    if ( my $accept = $class->_interpolation( $tokenizer, $character, 0 ) ) {
 	return $accept;
     }
 

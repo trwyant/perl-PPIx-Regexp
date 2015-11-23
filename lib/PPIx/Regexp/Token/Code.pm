@@ -146,7 +146,7 @@ sub ppi {
 }
 
 sub __PPIX_TOKENIZER__regexp {
-    my ( $class, $tokenizer, $character ) = @_;
+    my ( undef, $tokenizer, $character ) = @_;
 
     $character eq '{' or return;
 

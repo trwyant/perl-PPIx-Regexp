@@ -119,9 +119,7 @@ defined $DEFAULT_POSTDEREF
     sub _known_tokenizer_check {
 	my ( $self, @args ) = @_;
 
-	my $mode = $self->{mode};
-
-	my $handler = '__PPIX_TOKENIZER__' . $mode;
+	my $handler = '__PPIX_TOKENIZER__' . $self->{mode};
 	my @found;
 
 	foreach my $class ( @args ) {
@@ -375,7 +373,7 @@ sub get_token {
 
     my $handler = '__PPIX_TOKENIZER__' . $self->{mode};
 
-    __PACKAGE__->can( $handler )
+    my $code = $self->can( $handler )
 	or confess "Getting token in mode '$self->{mode}'. ",
 	    "cursor_curr = $self->{cursor_curr}; ",
 	    "cursor_limit = $self->{cursor_limit}; ",
@@ -390,7 +388,7 @@ sub get_token {
     $self->{trace}
 	and warn "get_token() got '$character' from $self->{cursor_curr}\n";
 
-    return ( __PACKAGE__->$handler( $self, $character ) );
+    return ( $code->( $self, $character ) );
 }
 
 sub interpolates {
@@ -700,11 +698,11 @@ sub _set_mode {
 }
 
 sub __PPIX_TOKENIZER__init {
-    my ( $class, $tokenizer, $character ) = @_;
+    my ( $self, $character ) = @_;
 
-    $tokenizer->{content} =~ m/ \A \s* ( qr | m | s )? ( \s* ) ( [^\w\s] ) /smx
-	or return $tokenizer->_make_final_token(
-	    length( $tokenizer->{content} ), TOKEN_UNKNOWN, {
+    $self->{content} =~ m/ \A \s* ( qr | m | s )? ( \s* ) ( [^\w\s] ) /smx
+	or return $self->_make_final_token(
+	    length( $self->{content} ), TOKEN_UNKNOWN, {
 		error	=> 'Tokenizer found illegal first characters',
 	    },
 	);
@@ -715,133 +713,133 @@ sub __PPIX_TOKENIZER__init {
 	defined $-[3] ? $-[3] : 0;
 
     defined $type or $type = '';
-    $tokenizer->{type} = $type;
+    $self->{type} = $type;
 
     my @tokens;
     $start_pos
-	and push @tokens, $tokenizer->make_token( $start_pos,
+	and push @tokens, $self->make_token( $start_pos,
 	'PPIx::Regexp::Token::Whitespace' );
-    push @tokens, $tokenizer->make_token( length $type,
+    push @tokens, $self->make_token( length $type,
 	'PPIx::Regexp::Token::Structure' );
     length $white > 0
-	and push @tokens, $tokenizer->make_token( length $white,
+	and push @tokens, $self->make_token( length $white,
 	'PPIx::Regexp::Token::Whitespace' );
 
-    $tokenizer->{delimiter_start} = substr
-	$tokenizer->{content},
-	$tokenizer->{cursor_curr},
+    $self->{delimiter_start} = substr
+	$self->{content},
+	$self->{cursor_curr},
 	1;
 
-    $tokenizer->{trace}
-	and warn "Tokenizer found regexp start delimiter '$tokenizer->{delimiter_start}' at $tokenizer->{cursor_curr}\n";
+    $self->{trace}
+	and warn "Tokenizer found regexp start delimiter '$self->{delimiter_start}' at $self->{cursor_curr}\n";
 
-    if ( my $offset = $tokenizer->find_matching_delimiter() ) {
-	my $cursor_limit = $tokenizer->{cursor_curr} + $offset;
-	$tokenizer->{trace}
+    if ( my $offset = $self->find_matching_delimiter() ) {
+	my $cursor_limit = $self->{cursor_curr} + $offset;
+	$self->{trace}
 	    and warn "Tokenizer found regexp end delimiter at $cursor_limit\n";
 	if ( 's' eq $type ) {
-	    if ( $tokenizer->close_bracket(
-		    $tokenizer->{delimiter_start} ) ) {
-		pos $tokenizer->{content} = $tokenizer->{cursor_curr} +
+	    if ( $self->close_bracket(
+		    $self->{delimiter_start} ) ) {
+		pos $self->{content} = $self->{cursor_curr} +
 		$offset + 1;
-		$tokenizer->{content} =~ m/ \s* /smxgc;
+		$self->{content} =~ m/ \s* /smxgc;
 	    } else {
-		pos $tokenizer->{content} = $tokenizer->{cursor_curr} +
+		pos $self->{content} = $self->{cursor_curr} +
 		$offset;
 	    }
-	    local $tokenizer->{cursor_curr} = pos $tokenizer->{content};
-	    local $tokenizer->{delimiter_start} = substr
-		$tokenizer->{content},
-		$tokenizer->{cursor_curr},
+	    local $self->{cursor_curr} = pos $self->{content};
+	    local $self->{delimiter_start} = substr
+		$self->{content},
+		$self->{cursor_curr},
 		1;
-	    $tokenizer->{trace}
-		and warn "Tokenizer found replacemebt start delimiter '$tokenizer->{delimiter_start}' at $tokenizer->{cursor_curr}\n";
-	    if ( my $s_off = $tokenizer->find_matching_delimiter() ) {
-		$tokenizer->{cursor_modifiers} =
-		    $tokenizer->{cursor_curr} + $s_off + 1;
-		$tokenizer->{trace}
+	    $self->{trace}
+		and warn "Tokenizer found replacement start delimiter '$self->{delimiter_start}' at $self->{cursor_curr}\n";
+	    if ( my $s_off = $self->find_matching_delimiter() ) {
+		$self->{cursor_modifiers} =
+		    $self->{cursor_curr} + $s_off + 1;
+		$self->{trace}
 		    and warn "Tokenizer found replacement end delimiter at @{[
-			$tokenizer->{cursor_curr} + $s_off ]}\n";
+			$self->{cursor_curr} + $s_off ]}\n";
 	    } else {
-		$tokenizer->{cursor_curr} = 0;
-		return $tokenizer->_make_final_token(
-		    length( $tokenizer->{content} ), TOKEN_UNKNOWN, {
+		$self->{cursor_curr} = 0;
+		return $self->_make_final_token(
+		    length( $self->{content} ), TOKEN_UNKNOWN, {
 			error	=> 'Tokenizer found mismatched replacement delimiters',
 		    },
 		);
 	    }
 	} else {
-	    $tokenizer->{cursor_modifiers} = $cursor_limit + 1;
+	    $self->{cursor_modifiers} = $cursor_limit + 1;
 	}
-	$tokenizer->{cursor_limit} = $cursor_limit;
+	$self->{cursor_limit} = $cursor_limit;
     } else {
-	$tokenizer->{cursor_curr} = 0;
-	return $tokenizer->_make_final_token(
-	    length( $tokenizer->{content} ), TOKEN_UNKNOWN, {
+	$self->{cursor_curr} = 0;
+	return $self->_make_final_token(
+	    length( $self->{content} ), TOKEN_UNKNOWN, {
 		error	=> 'Tokenizer found mismatched regexp delimiters',
 	    },
 	);
     }
 
     {
-	my @mods = @{ $tokenizer->{default_modifiers} };
-	pos $tokenizer->{content} = $tokenizer->{cursor_modifiers};
-	local $tokenizer->{cursor_curr} = $tokenizer->{cursor_modifiers};
-	local $tokenizer->{cursor_limit} = length $tokenizer->{content};
+	my @mods = @{ $self->{default_modifiers} };
+	pos $self->{content} = $self->{cursor_modifiers};
+	local $self->{cursor_curr} = $self->{cursor_modifiers};
+	local $self->{cursor_limit} = length $self->{content};
 	my @trailing;
 	{
-	    my $len = $tokenizer->find_regexp( qr{ \A [[:lower:]]* }smx );
-	    push @trailing, $tokenizer->make_token( $len,
+	    my $len = $self->find_regexp( qr{ \A [[:lower:]]* }smx );
+	    push @trailing, $self->make_token( $len,
 		'PPIx::Regexp::Token::Modifier' );
 	}
-	if ( my $len = $tokenizer->find_regexp( qr{ \A \s+ }smx ) ) {
-	    push @trailing, $tokenizer->make_token( $len,
+	if ( my $len = $self->find_regexp( qr{ \A \s+ }smx ) ) {
+	    push @trailing, $self->make_token( $len,
 		'PPIx::Regexp::Token::Whitespace' );
 	}
-	if ( my $len = $tokenizer->find_regexp( qr{ \A .+ }smx ) ) {
-	    push @trailing, $tokenizer->make_token( $len, TOKEN_UNKNOWN, {
+	if ( my $len = $self->find_regexp( qr{ \A .+ }smx ) ) {
+	    push @trailing, $self->make_token( $len, TOKEN_UNKNOWN, {
 		    error	=> 'Trailing characters after expression',
 		} );
 	}
-	$tokenizer->{trailing_tokens} = \@trailing;
+	$self->{trailing_tokens} = \@trailing;
 	push @mods, $trailing[0]->content();
-	$tokenizer->{effective_modifiers} =
+	$self->{effective_modifiers} =
 	    PPIx::Regexp::Token::Modifier::__aggregate_modifiers (
 		@mods );
-	$tokenizer->{modifiers} = [
-	    { %{ $tokenizer->{effective_modifiers} } },
+	$self->{modifiers} = [
+	    { %{ $self->{effective_modifiers} } },
 	];
     }
 
-    $tokenizer->{delimiter_finish} = substr
-	$tokenizer->{content},
-	$tokenizer->{cursor_limit},
+    $self->{delimiter_finish} = substr
+	$self->{content},
+	$self->{cursor_limit},
 	1;
-    $tokenizer->{delimiter_re} = undef;
+    $self->{delimiter_re} = undef;
 
-    push @tokens, $tokenizer->make_token( 1,
+    push @tokens, $self->make_token( 1,
 	'PPIx::Regexp::Token::Delimiter' );
 
-    $tokenizer->_set_mode( 'regexp' );
+    $self->_set_mode( 'regexp' );
 
     return @tokens;
 }
 
 sub __PPIX_TOKENIZER__regexp {
-    my ( $class, $tokenizer, $character ) = @_;
+    my ( $self, $character ) = @_;
 
-    my $mode = $tokenizer->{mode};
+    my $mode = $self->{mode};
     my $handler = '__PPIX_TOKENIZER__' . $mode;
 
-    $tokenizer->{cursor_orig} = $tokenizer->{cursor_curr};
-    foreach my $class( $tokenizer->_known_tokenizers() ) {
-	my @tokens = grep { $_ } $class->$handler( $tokenizer, $character );
-	$tokenizer->{trace}
-	    and warn $class, "->$handler( \$tokenizer, '$character' )",
+    $self->{cursor_orig} = $self->{cursor_curr};
+    foreach my $class ( $self->_known_tokenizers() ) {
+	my @tokens = grep { $_ } $class->$handler( $self, $character );
+	$self->{trace}
+	    and warn $class, "->$handler( \$self, '$character' )",
 		" => (@tokens)\n";
 	@tokens
 	    and return ( map {
-		ref $_ ? $_ : $tokenizer->make_token( $_,
+		ref $_ ? $_ : $self->make_token( $_,
 		    $class ) } @tokens );
     }
 
@@ -849,106 +847,106 @@ sub __PPIX_TOKENIZER__regexp {
     my $fallback = __PACKAGE__->can( '__PPIX_TOKEN_FALLBACK__' . $mode )
 	|| __PACKAGE__->can( '__PPIX_TOKEN_FALLBACK__regexp' )
 	|| confess "Programming error - unable to find fallback for $mode";
-    return $fallback->( $class, $tokenizer, $character );
+    return $fallback->( $self, $character );
 }
 
 *__PPIX_TOKENIZER__repl = \&__PPIX_TOKENIZER__regexp;
 
 sub __PPIX_TOKEN_FALLBACK__regexp {
-    my ( $class, $tokenizer, $character ) = @_;
+    my ( $self, $character ) = @_;
 
     # As a fallback in regexp mode, any escaped character is a literal.
     if ( $character eq '\\'
-	&& $tokenizer->{cursor_limit} - $tokenizer->{cursor_curr} > 1
+	&& $self->{cursor_limit} - $self->{cursor_curr} > 1
     ) {
-	return $tokenizer->make_token( 2, TOKEN_LITERAL );
+	return $self->make_token( 2, TOKEN_LITERAL );
     }
 
     # Any normal character is unknown.
-    return $tokenizer->make_token( 1, TOKEN_UNKNOWN, {
+    return $self->make_token( 1, TOKEN_UNKNOWN, {
 	    error	=> 'Tokenizer found unexpected literal',
 	},
     );
 }
 
 sub __PPIX_TOKEN_FALLBACK__repl {
-    my ( $class, $tokenizer, $character ) = @_;
+    my ( $self, $character ) = @_;
 
     # As a fallback in replacement mode, any escaped character is a literal.
     if ( $character eq '\\'
-	&& defined ( my $next = $tokenizer->peek( 1 ) ) ) {
+	&& defined ( my $next = $self->peek( 1 ) ) ) {
 
-	if ( $tokenizer->interpolates() || $next eq q<'> || $next eq '\\' ) {
-	    return $tokenizer->make_token( 2, TOKEN_LITERAL );
+	if ( $self->interpolates() || $next eq q<'> || $next eq '\\' ) {
+	    return $self->make_token( 2, TOKEN_LITERAL );
 	}
-	return $tokenizer->make_token( 1, TOKEN_LITERAL );
+	return $self->make_token( 1, TOKEN_LITERAL );
     }
 
     # So is any normal character.
-    return $tokenizer->make_token( 1, TOKEN_LITERAL );
+    return $self->make_token( 1, TOKEN_LITERAL );
 }
 
 sub __PPIX_TOKENIZER__finish {
-    my ( $class, $tokenizer, $character ) = @_;
+    my ( $self, $character ) = @_;
 
-    $tokenizer->{cursor_limit} > length $tokenizer->{content}
+    $self->{cursor_limit} > length $self->{content}
 	and confess "Programming error - ran off string";
-    my @tokens = $tokenizer->make_token( 1,
+    my @tokens = $self->make_token( 1,
 	'PPIx::Regexp::Token::Delimiter' );
 
-    if ( $tokenizer->{cursor_curr} == $tokenizer->{cursor_modifiers} ) {
+    if ( $self->{cursor_curr} == $self->{cursor_modifiers} ) {
 
 	# We are out of string. Add the trailing tokens (created when we
 	# did the initial bracket scan) and close up shop.
 
-	push @tokens, @{ delete $tokenizer->{trailing_tokens} };
+	push @tokens, @{ delete $self->{trailing_tokens} };
 
-	$tokenizer->_set_mode( 'kaput' );
+	$self->_set_mode( 'kaput' );
 
     } else {
 
 	# Clear the cookies, because we are going around again.
-	$tokenizer->{cookie} = {};
+	$self->{cookie} = {};
 
 	# Move the cursor limit to just before the modifiers.
-	$tokenizer->{cursor_limit} = $tokenizer->{cursor_modifiers} - 1;
+	$self->{cursor_limit} = $self->{cursor_modifiers} - 1;
 
 	# If the preceding regular expression was bracketed, we need to
 	# consume possible whitespace and find another delimiter.
 
-	if ( $tokenizer->close_bracket( $tokenizer->{delimiter_start} ) ) {
+	if ( $self->close_bracket( $self->{delimiter_start} ) ) {
 	    my $accept;
-	    $accept = $tokenizer->find_regexp( qr{ \A \s+ }smx )
-		and push @tokens, $tokenizer->make_token(
+	    $accept = $self->find_regexp( qr{ \A \s+ }smx )
+		and push @tokens, $self->make_token(
 		$accept, 'PPIx::Regexp::Token::Whitespace' );
-	    my $character = $tokenizer->peek();
-	    $tokenizer->{delimiter_start} = $character;
-	    push @tokens, $tokenizer->make_token(
+	    my $character = $self->peek();
+	    $self->{delimiter_start} = $character;
+	    push @tokens, $self->make_token(
 		1, 'PPIx::Regexp::Token::Delimiter' );
-	    $tokenizer->{delimiter_finish} = substr
-		$tokenizer->{content},
-		$tokenizer->{cursor_limit} - 1,
+	    $self->{delimiter_finish} = substr
+		$self->{content},
+		$self->{cursor_limit} - 1,
 		1;
-	    $tokenizer->{delimiter_re} = undef;
+	    $self->{delimiter_re} = undef;
 	}
 
-	if ( $tokenizer->modifier( 'e*' ) ) {
+	if ( $self->modifier( 'e*' ) ) {
 	    # With /e or /ee, the replacement portion is code. We make
 	    # it all into one big PPIx::Regexp::Token::Code, slap on the
 	    # trailing delimiter and modifiers, and return it all.
-	    push @tokens, $tokenizer->make_token(
-		$tokenizer->{cursor_limit} - $tokenizer->{cursor_curr},
+	    push @tokens, $self->make_token(
+		$self->{cursor_limit} - $self->{cursor_curr},
 		'PPIx::Regexp::Token::Code',
 		{ perl_version_introduced => MINIMUM_PERL },
 	    );
-	    $tokenizer->{cursor_limit} = length $tokenizer->{content};
-	    push @tokens, $tokenizer->make_token( 1,
+	    $self->{cursor_limit} = length $self->{content};
+	    push @tokens, $self->make_token( 1,
 		'PPIx::Regexp::Token::Delimiter' ),
-		@{ delete $tokenizer->{trailing_tokens} };
-	    $tokenizer->_set_mode( 'kaput' );
+		@{ delete $self->{trailing_tokens} };
+	    $self->_set_mode( 'kaput' );
 	} else {
 	    # Put our mode to replacement.
-	    $tokenizer->_set_mode( 'repl' );
+	    $self->_set_mode( 'repl' );
 	}
 
     }

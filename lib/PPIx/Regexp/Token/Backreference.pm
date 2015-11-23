@@ -111,7 +111,7 @@ sub __PPIX_TOKEN__recognize {
 }
 
 sub __PPIX_TOKENIZER__regexp {
-    my ( $class, $tokenizer, $character ) = @_;
+    my ( undef, $tokenizer, $character ) = @_;
 
     # PCRE/Python back references are handled in
     # PPIx::Regexp::Token::Structure, because they are parenthesized.
@@ -130,7 +130,7 @@ sub __PPIX_TOKENIZER__regexp {
 }
 
 sub __PPIX_TOKENIZER__repl {
-    my ( $class, $tokenizer, $character ) = @_;
+    my ( undef, $tokenizer, $character ) = @_;
 
     $tokenizer->interpolates() and goto &__PPIX_TOKENIZER__regexp;
 

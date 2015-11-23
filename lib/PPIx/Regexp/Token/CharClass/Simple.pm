@@ -181,7 +181,7 @@ our $VERSION = '0.043';
 }
 
 sub __PPIX_TOKENIZER__regexp {
-    my ( $class, $tokenizer, $character ) = @_;
+    my ( undef, $tokenizer, $character ) = @_;
 
     my $in_class = $tokenizer->cookie( COOKIE_CLASS );
 

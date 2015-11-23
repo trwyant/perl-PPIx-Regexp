@@ -89,7 +89,7 @@ my %cookie = (
 );
 
 sub __PPIX_TOKENIZER__regexp {
-    my ( $class, $tokenizer, $character ) = @_;
+    my ( undef, $tokenizer, $character ) = @_;
 
     # If we are inside a quote sequence, we want to make literals out of
     # all the characters we reject; otherwise we just want to return
@@ -131,7 +131,7 @@ sub __PPIX_TOKENIZER__regexp {
 }
 
 sub __PPIX_TOKENIZER__repl {
-    my ( $class, $tokenizer, $character ) = @_;
+    my ( undef, $tokenizer, $character ) = @_;
 
     $tokenizer->interpolates() and goto &__PPIX_TOKENIZER__regexp;
 

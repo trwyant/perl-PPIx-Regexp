@@ -108,7 +108,7 @@ sub perl_version_introduced {
     );
 
     sub __PPIX_TOKENIZER__regexp {
-	my ( $class, $tokenizer, $character ) = @_;
+	my ( undef, $tokenizer, $character ) = @_;
 
 	$tokenizer->cookie( COOKIE_CLASS )
 	    or $tokenizer->cookie( COOKIE_REGEX_SET )

@@ -133,7 +133,7 @@ sub is_quantifier {
     ;
 
     sub __PPIX_TOKENIZER__regexp {
-	my ( $class, $tokenizer, $character ) = @_;
+	my ( undef, $tokenizer, $character ) = @_;
 
 	# We are not interested in anything but delimiters.
 	$delim{$character} or return;

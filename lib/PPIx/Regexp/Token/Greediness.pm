@@ -80,7 +80,7 @@ sub perl_version_introduced {
 }
 
 sub __PPIX_TOKENIZER__regexp {
-    my ( $class, $tokenizer, $character, $char_type ) = @_;
+    my ( undef, $tokenizer, $character, $char_type ) = @_;
 
     $tokenizer->prior( 'is_quantifier' ) or return;
 

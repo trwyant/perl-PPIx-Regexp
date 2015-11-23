@@ -127,7 +127,7 @@ my %assertion = map { $_ => 1 } qw{ ^ };
 my %escaped = map { $_ => 1 } qw{ b B A Z z G K };
 
 sub __PPIX_TOKENIZER__regexp {
-    my ( $class, $tokenizer, $character ) = @_;
+    my ( undef, $tokenizer, $character ) = @_;
 
     # Inside a character class, these are all literals.
     my $make = $tokenizer->cookie( COOKIE_CLASS ) ?

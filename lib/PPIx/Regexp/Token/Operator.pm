@@ -142,7 +142,7 @@ sub _treat_as_literal {
 }
 
 sub __PPIX_TOKENIZER__regexp {
-    my ( $class, $tokenizer, $character ) = @_;
+    my ( undef, $tokenizer, $character ) = @_;
 
     # We only receive the '-' if we are inside a character class. But it
     # is only an operator if it is preceded and followed by literals. We
