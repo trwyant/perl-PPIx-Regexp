@@ -161,21 +161,6 @@ sub _interpolation {
 	    ) or return;
 	    push @accum, $next;
 	} elsif ( $next->isa( 'PPI::Structure::Block' ) ) {
-
-=begin comment
-
-	    local $_ = $next->content();
-	    if ( m< \A { / } >smx ) {
-		push @accum, 3;	# Number of characters to accept.
-	    } else {
-##		$allow_subscript = $accum[-1]->content() ne '$#';
-		push @accum, $next;
-	    }
-
-=end comment
-
-=cut
-
 	    push @accum, $next;
 	} else {
 	    return;
@@ -205,6 +190,13 @@ sub _interpolation {
 	    $next->content() eq '->' or last;
 	    push @subscr, $next;
 	    $next = $next->next_sibling() or last;
+
+	    # postderef was introduced in 5.19.5, per perl5195delta.
+	    if ( my $deref = $tokenizer->__recognize_postderef(
+		    __PACKAGE__, $next ) ) {
+		push @accum, @subscr, $deref;
+		last;
+	    }
 	}
 
 	# Accept only a subscript
@@ -234,6 +226,16 @@ sub _interpolation {
 	$length += ref $_ ? length $_->content() : $_;
     }
     return $length;
+}
+
+{
+    no warnings qw{ qw };	## no critic (ProhibitNoWarnings)
+
+    my %accept = map { $_ => 1 } qw{ $ $# @ };
+
+    sub __postderef_accept_cast {
+	return \%accept;
+    }
 }
 
 {
@@ -310,23 +312,21 @@ sub _square {
     return;
 }
 
-{
+sub __PPIX_TOKEN__post_make {
+    my ( $self, $tokenizer, $arg ) = @_;
 
-    my %default = (
-	perl_version_introduced	=> MINIMUM_PERL,
+    my $perl_version_introduced =
+	$tokenizer->__recognize_postderef( $self ) ?  '5.019005' :
+	$tokenizer->cookie( COOKIE_REGEX_SET ) ? '5.017009' :
+	MINIMUM_PERL;
+
+    $self->__impose_defaults( $arg,
+	{
+	    perl_version_introduced	=> $perl_version_introduced,
+	},
     );
 
-    sub __PPIX_TOKEN__post_make {
-	my ( $self, $tokenizer, $arg ) = @_;
-
-	$tokenizer->cookie( COOKIE_REGEX_SET )
-	    and $self->{perl_version_introduced} = '5.017009';
-
-	$self->__impose_defaults( $arg, \%default );
-
-	return;
-    }
-
+    return;
 }
 
 # Alternate classes for the sigils, depending on whether we are in a

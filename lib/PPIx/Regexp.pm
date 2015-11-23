@@ -188,6 +188,21 @@ string before it tokenizes it. For example:
      encoding => 'iso-8859-1',
  );
 
+=item postderef boolean
+
+This option is passed on to the tokenizer, where it specifies whether
+postfix dereferences are recognized in interpolations and code. This
+experimental feature was introduced in Perl 5.19.5. The default is the
+value of C<$PPIx::Regexp::Tokenizer::DEFAULT_POSTDEREF>, which is false
+by default.
+
+If postfix dereferencing becomes mainstream, the default value of
+C<$PPIx::Regexp::Tokenizer::DEFAULT_POSTDEREF> will become true.
+
+Note that if L<PPI|PPI> starts unconditionally recognizing postfix
+dereferences, this argument will immediately become ignored, and will be
+put through a deprecation cycle and removed.
+
 =item trace number
 
 If greater than zero, this option causes trace output from the parse.

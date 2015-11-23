@@ -1854,6 +1854,34 @@ value   ( perl_version_removed => [], 5.021001 );
 parse   ( 'm?foo?' );
 value   ( perl_version_removed => [], undef );
 
+# postderef
+note	'postderef was added experimentally in 5.19.5';
+tokenize( '/$x->$*foo/', postderef => 1 );
+count   ( 8 );
+choose  ( 2 );
+class   ( 'PPIx::Regexp::Token::Interpolation' );
+content ( '$x->$*' );
+tokenize( '/$x->$#*foo/', postderef => 1 );
+count   ( 8 );
+choose  ( 2 );
+class   ( 'PPIx::Regexp::Token::Interpolation' );
+content ( '$x->$#*' );
+tokenize( '/$x->@*foo/', postderef => 1 );
+count   ( 8 );
+choose  ( 2 );
+class   ( 'PPIx::Regexp::Token::Interpolation' );
+content ( '$x->@*' );
+tokenize( '/$x->@[1,2]/', postderef => 1 );
+count   ( 5 );
+choose  ( 2 );
+class   ( 'PPIx::Regexp::Token::Interpolation' );
+content ( '$x->@[1,2]' );
+tokenize( 's/x/$x->%{foo,bar}/e', postderef => 1 );
+count   ( 7 );
+choose  ( 4 );
+class   ( 'PPIx::Regexp::Token::Code' );
+content ( '$x->%{foo,bar}' );
+
 SKIP: {
     $is_ascii
 	or skip(

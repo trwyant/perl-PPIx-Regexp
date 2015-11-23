@@ -44,6 +44,10 @@ use Scalar::Util qw{ looks_like_number };
 
 our $VERSION = '0.043';
 
+our $DEFAULT_POSTDEREF;
+defined $DEFAULT_POSTDEREF
+    or $DEFAULT_POSTDEREF = 0;
+
 {
     # Names of classes containing tokenization machinery. There are few
     # known ordering requirements, since each class recognizes its own,
@@ -173,6 +177,9 @@ our $VERSION = '0.043';
 	    mode => 'init',	# Initialize
 	    modifiers => [{}],	# Modifier hash.
 	    pending => [],	# Tokens made but not returned.
+	    postderef => defined $args{postderef} ?
+		$args{postderef} :
+		$DEFAULT_POSTDEREF,
 	    prior => TOKEN_UNKNOWN,	# Prior significant token.
 	    source => $re,	# The object we were initialized with.
 	    trace => __PACKAGE__->_defined_or(
@@ -529,6 +536,121 @@ sub prior {
 	    ( ref $self->{prior} || $self->{prior} ),
 	    ' does not support method ', $method;
     return $self->{prior}->$method( @args );
+}
+
+# my $length = $token->__recognize_postderef( $tokenizer, $iterator ).
+#
+# This method is private to the PPIx-Regexp package, and may be changed
+# or retracted without warning. What it does is to recognize postfix
+# dereferences. It returns the length in characters of the first postfix
+# dereference found, or a false value if none is found. This returns
+# false immediately unless the tokenizer was instantiated with the
+# C<postderef> argument true, or if it was not specified and
+# C<$DEFAULT_POSTDEREF> was true when the tokenizer was instantiated.
+#
+# The optional $iterator argument can be one of the following:
+#   - A code reference, which will be called to provide PPI::Element
+#     objects to be checked to see if they represent a postfix
+#     dereference.
+#   - A PPI::Element, which is checked to see if it is a postfix
+#     dereference.
+#   - Undef, or omitted, in which case ppi() is called on the invocant,
+#     and everything that follows the '->' operator is checked to see if
+#     it is a postfix dereference.
+#   - Anything else results in an exception and stack trace.
+
+{
+    # %* &* **
+    my %magic_var = map { $_ => 1 } qw{ @* $* };
+    my %magic_oper = map { $_ => 1 } qw{ & ** % };
+    my %sliceable = map { $_ => 1 } qw{ @ % };
+    my %post_slice = map { $_ => 1 } qw< { [ >;	# ] }
+
+    sub __recognize_postderef {
+	my ( $self, $token, $iterator ) = @_;
+	$self->{postderef}
+	    or return;
+	# Note that if ppi() gets called I have to hold a reference to
+	# the returned object until I am done with all its children.
+	my $ppi;
+	if ( ! defined $iterator ) {
+	    $ppi = $token->ppi();
+	    my @ops = grep { '->' eq $_->content() } @{
+		$ppi->find( 'PPI::Token::Operator' ) || [] };
+	    $iterator = sub {
+		my $op = shift @ops
+		    or return;
+		return $op->snext_sibling();
+	    };
+	} elsif ( $iterator->isa( 'PPI::Element' ) ) {
+	    my @eles = ( $iterator );
+	    $iterator = sub {
+		return shift @eles;
+	    };
+	} elsif ( 'CODE' ne ref $iterator ) {
+	    confess 'Programming error - Iterator not understood';
+	}
+
+	my $accept = $token->__postderef_accept_cast();
+
+	while ( my $elem = $iterator->() ) {
+
+	    my $content = $elem->content();
+	    $content =~ m/ \A ( . \#? ) /smx
+		and $accept->{$1}
+		or next;
+
+	    my $length = length $content;
+
+	    # PPI parses '$x->@*' as containing magic variable '@*'.
+	    # Similarly for '$*' and '$#*'. I think this is a bug, and
+	    # they should be parsed as casts, but ...
+	    if ( $elem->isa( 'PPI::Token::Magic' ) ) {
+		$magic_var{$content}
+		    and return $length;
+		if ( '$#' eq $content ) {
+		    my $next = $elem->snext_sibling()
+			or return $length;
+		    '*' eq substr $next->content(), 0, 1
+			and return $length + 1;
+		}
+	    }
+
+	    # PPI parses '%*' as a cast of '%' followed by a splat, but
+	    # I think it is likely that if it ever supports postderef
+	    # operators that they will be casts. It currently parses
+	    # '**' as an operator and '&*' as two operators, but the
+	    # logic is pretty much the same as for a cast, so they get
+	    # handled here too.
+	    if ( $elem->isa( 'PPI::Token::Cast' ) || $elem->isa(
+		    'PPI::Token::Operator' ) && $magic_oper{$content} ) {
+		# Maybe PPI will eventually parse something like '$*' as
+		# a cast, so ...
+		$content =~ m/ [*] \z /smx
+		    and return $length;
+		# Or maybe it will parse the asterisk separately, but I
+		# have no idea what its class will be.
+		my $next = $elem->snext_sibling()
+		    or return;
+		my $next_content = $next->content();
+		my $next_char = substr $next_content, 0, 1;
+		'*' eq $next_char
+		    and return $length + 1;
+		# We may still have a slice.
+		$sliceable{$content}
+		    and $post_slice{$next_char}
+		    and return $length + length $next_content;
+		# TODO maybe PPI will do something completely
+		# unanticipated with postderef.
+	    }
+
+	    # Otherwise, we're not a postfix dereference; try the next
+	    # iteration.
+	}
+
+	# No postfix dereference found.
+	return;
+    }
 }
 
 sub significant {
@@ -891,6 +1013,14 @@ the details.
 This option specifies the encoding of the string to be tokenized. If
 specified, an C<Encode::decode> is done on the string (or the C<content>
 of the PPI class) before it is tokenized.
+
+=item postderef boolean
+
+This option specifies whether the tokenizer recognizes postfix
+dereferencing. See the L<PPIx::Regexp|PPIx::Regexp>
+L<new()|PPIx::Regexp/new> documentation for the details.
+
+C<$PPIx::Regexp::Tokenizer::DEFAULT_POSTDEREF> is not exported.
 
 =item trace number
 

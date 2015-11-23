@@ -33,6 +33,8 @@ navigational
 perlrecharclass
 perluniprops
 POSIX
+postderef
+postfix
 PPI
 ppi
 PPI's

@@ -46,6 +46,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
+use Carp qw{ confess };
 use PPI::Document;
 use PPIx::Regexp::Constant qw{ COOKIE_REGEX_SET };
 use PPIx::Regexp::Util qw{ __instance };
@@ -119,7 +120,10 @@ sub ppi {
     sub __PPIX_TOKEN__post_make {
 	my ( $self, $tokenizer, $arg ) = @_;
 
-	$self->__impose_defaults( $arg, \%default );
+	my %override;
+	$tokenizer->__recognize_postderef( $self )
+	    and $override{perl_version_introduced} = '5.019005';
+	$self->__impose_defaults( \%override, $arg, \%default );
 
 	$tokenizer->cookie( COOKIE_REGEX_SET )
 	    and $self->__error( 'Code token not valid in Regex set' );
@@ -127,6 +131,18 @@ sub ppi {
 	return;
     }
 
+}
+
+{
+    no warnings qw{ qw };	## no critic (ProhibitNoWarnings)
+
+    my %accept = map { $_ => 1 } qw{ $ $# @ % & * };
+
+    # Say what casts are accepted, since not all are in am
+    # interpolation.
+    sub __postderef_accept_cast {
+	return \%accept;
+    }
 }
 
 sub __PPIX_TOKENIZER__regexp {

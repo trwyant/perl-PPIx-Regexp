@@ -234,8 +234,14 @@ method	perl_version_introduced => '5.011', note => 'perl5110delta';
 method	perl_version_removed	=> undef;
 
 class	'PPIx::Regexp::Token::Code', note => 'Code', report => 0;
-token	'{foo}';
+token	'{foo}', note => 'Code';
 method	perl_version_introduced	=> '5.005';	# see ::GroupType::Code
+method	perl_version_removed	=> undef;
+token   '$x->&*', postderef => 1, note => 'Code with postderef';
+method	perl_version_introduced	=> '5.019005', note => 'perl5195delta';
+method	perl_version_removed	=> undef;
+token   '$x->%{foo,bar}', postderef => 1, note => 'Code with postderef slice';
+method	perl_version_introduced	=> '5.019005', note => 'perl5195delta';
 method	perl_version_removed	=> undef;
 # The interesting version functionality is on
 # PPIx::Regexp::Token::GroupType::Code.
@@ -406,6 +412,12 @@ method	perl_version_removed	=> undef;
 token	'$foo', cookie => COOKIE_REGEX_SET,
     note => 'Interpolation in regex set';
 method	perl_version_introduced	=> '5.017009', note => 'perl5179delta';
+method	perl_version_removed	=> undef;
+token	'$x->@*', postderef => 1, note => 'Postfix deref';
+method	perl_version_introduced => '5.019005', note => 'perl5195delta';
+method	perl_version_removed	=> undef;
+token	'$x->@[1,2]', postderef => 1, note => 'Postfix deref slice';
+method	perl_version_introduced => '5.019005', note => 'perl5195delta';
 method	perl_version_removed	=> undef;
 
 class	'PPIx::Regexp::Token::Literal', note => 'Literal';
@@ -849,7 +861,10 @@ sub token (@) {
 	if ( eval {
 		my $class = $context->{class}{class};
 		my $obj = $class->_new( $content );
-		my $tokenizer = PPIx::Regexp::Tokenizer->new( $content );
+		my $tokenizer = PPIx::Regexp::Tokenizer->new(
+		    $content,
+		    postderef	=> $args{postderef},
+		);
 		if ( my $code = $class->can( '__make_group_type_matcher' ) ) {
 		    foreach my $matcher ( @{ $code->( $class )->{''} } ) {
 			$tokenizer->find_regexp( $matcher )

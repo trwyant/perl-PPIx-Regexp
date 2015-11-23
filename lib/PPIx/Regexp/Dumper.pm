@@ -108,6 +108,11 @@ If true, this option causes the C<perl_version_introduced> and
 C<perl_version_removed> values associated with each object dumped to be
 displayed.
 
+=item postderef boolean
+
+If true, postfix dereferences are recognized in code and interpolations.
+See the tokenizer's L<new()|PPIx::Regexp::Tokenizer/new> for details.
+
 =item significant boolean
 
 If true, this option causes only significant elements to be dumped.
@@ -181,8 +186,10 @@ ignored.
 	    source => $re,
 	};
 
-	exists $args{default_modifiers}
-	    and $self->{default_modifiers} = $args{default_modifiers};
+	foreach my $key ( qw{ default_modifiers postderef } ) {
+	    exists $args{$key}
+		and $self->{$key} = $args{$key};
+	}
 
 	foreach my $key ( keys %default ) {
 	    $self->{$key} = exists $args{$key} ?
@@ -346,11 +353,16 @@ sub _tokens_dump {
 
 sub _format_default_modifiers {
     my ( $self, $subr, $elem ) = @_;
-    my $default_modifiers = $self->{default_modifiers} || [];
-    @{ $default_modifiers }
-	or return sprintf '%-8s( %s );', $subr, $self->_safe( $elem );
-    return sprintf '%-8s( %s, default_modifiers => %s );', $subr,
-	$self->_safe( $elem ), $self->_safe( $default_modifiers );
+    my @arg = $self->_safe( $elem );
+    foreach my $attr ( qw{ default_modifiers postderef } ) {
+	defined ( my $val = $self->{$attr} )
+	    or next;
+	'ARRAY' eq ref $val
+	    and not @{ $val }
+	    and next;
+	push @arg, "$attr => @{[ $self->_safe( $val ) ]}";
+    }
+    return sprintf '%-8s( %s );', $subr, join ', ', @arg;
 }
 
 sub _format_modifiers_dump {
