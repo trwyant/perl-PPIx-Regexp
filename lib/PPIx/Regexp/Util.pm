@@ -12,7 +12,7 @@ use base qw{ Exporter };
 
 our @EXPORT_OK = qw{ __instance __to_ordinal_en };
 
-our $VERSION = '0.043';
+our $VERSION = '0.043_01';
 
 sub __instance {
     my ( $object, $class ) = @_;

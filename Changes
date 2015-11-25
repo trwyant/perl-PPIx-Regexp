@@ -1,3 +1,12 @@
+0.043_01	2015-11-25	T. R. Wyant
+  Recognize postfix dereference if desired. This is controlled by the
+    Boolean argument 'postderef' passed to PPIx::Regexp->new(). The
+    default is false, but will become true if postfix dereference
+    becomes mainstream Perl 5.
+  Add explain() and supporting methods main_structure() and
+    in_regex_set(). The explain() method returns a brief explanation of
+    what the element does.
+
 0.043		2015-11-18	T. R. Wyant
   No changes since 0.042_05.
 
