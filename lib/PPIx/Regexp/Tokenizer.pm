@@ -700,29 +700,28 @@ sub _set_mode {
 sub __PPIX_TOKENIZER__init {
     my ( $self, $character ) = @_;
 
-    $self->{content} =~ m/ \A \s* ( qr | m | s )? ( \s* ) ( [^\w\s] ) /smx
+    $self->find_regexp(
+	qr{ \A ( \s* ) ( qr | m | s )? ( \s* ) (?: [^\w\s] ) }smx )
 	or return $self->_make_final_token(
 	    length( $self->{content} ), TOKEN_UNKNOWN, {
 		error	=> 'Tokenizer found illegal first characters',
 	    },
 	);
-#   my ( $type, $white, $delim ) = ( $1, $2, $3 );
-    my ( $type, $white ) = ( $1, $2 );
-    my $start_pos = defined $-[1] ? $-[1] :
-	defined $-[2] ? $-[2] :
-	defined $-[3] ? $-[3] : 0;
 
-    defined $type or $type = '';
-    $self->{type} = $type;
+    my ( $leading_white, $type, $next_white ) = $self->capture();
+
+    defined $type
+	or $type = '';
 
     my @tokens;
-    $start_pos
-	and push @tokens, $self->make_token( $start_pos,
+
+    '' ne $leading_white
+	and push @tokens, $self->make_token( length $leading_white,
 	'PPIx::Regexp::Token::Whitespace' );
     push @tokens, $self->make_token( length $type,
 	'PPIx::Regexp::Token::Structure' );
-    length $white > 0
-	and push @tokens, $self->make_token( length $white,
+    '' ne $next_white
+	and push @tokens, $self->make_token( length $next_white,
 	'PPIx::Regexp::Token::Whitespace' );
 
     $self->{delimiter_start} = substr
