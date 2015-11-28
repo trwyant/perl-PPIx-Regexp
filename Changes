@@ -1,3 +1,8 @@
+0.043_02	2015-11-28	T. R. Wyant
+  Restrict recognition of back references in replacement strings to
+    \number form, since Perl itself does not recognize \g{...} or
+    \k{...} there.
+
 0.043_01	2015-11-25	T. R. Wyant
   Recognize postfix dereference if desired. This is controlled by the
     Boolean argument 'postderef' passed to PPIx::Regexp->new(). The
