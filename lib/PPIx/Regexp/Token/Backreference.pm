@@ -82,7 +82,7 @@ my @external = (	# Recognition used externally
 	],
 );
 
-my @recognize = (	# recognition used internally
+my @recognize_regexp = (	# recognition used internally
     [
 	qr{ \A \\ (?:		# numbered (including relative)
 	    ( \d+ )	|
@@ -98,6 +98,13 @@ my @recognize = (	# recognition used internally
 	}smxo, { is_named => 1 }, ],
 );
 
+my %recognize = (
+    regexp	=> \@recognize_regexp,
+    repl	=> [
+	[ qr{ \A \\ ( \d+ ) }smx, { is_named => 0 } ],
+    ],
+);
+
 # This must be implemented by tokens which do not recognize themselves.
 # The return is a list of list references. Each list reference must
 # contain a regular expression that recognizes the token, and optionally
@@ -106,7 +113,7 @@ my @recognize = (	# recognition used internally
 # the string.
 sub __PPIX_TOKEN__recognize {
     return __PACKAGE__->isa( scalar caller ) ?
-	( @external, @recognize ) :
+	( @external, @recognize_regexp ) :
 	( @external );
 }
 
@@ -120,7 +127,7 @@ sub __PPIX_TOKENIZER__regexp {
     $character eq '\\'
 	or return;
 
-    foreach ( @recognize ) {
+    foreach ( @{ $recognize{$tokenizer->get_mode()} } ) {
 	my ( $re, $arg ) = @{ $_ };
 	my $accept = $tokenizer->find_regexp( $re ) or next;
 	return $tokenizer->make_token( $accept, __PACKAGE__, $arg );
@@ -132,9 +139,10 @@ sub __PPIX_TOKENIZER__regexp {
 sub __PPIX_TOKENIZER__repl {
     my ( undef, $tokenizer, $character ) = @_;
 
-    $tokenizer->interpolates() and goto &__PPIX_TOKENIZER__regexp;
+    $tokenizer->interpolates()
+	or return;
 
-    return;
+    goto &__PPIX_TOKENIZER__regexp;
 }
 
 # Called by the lexer to disambiguate between captures, literals, and

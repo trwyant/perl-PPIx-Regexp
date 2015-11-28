@@ -359,6 +359,11 @@ sub find_regexp {
     return wantarray ? ( $-[0] + 0, $+[0] + 0 ) : $+[0] + 0;
 }
 
+sub get_mode {
+    my ( $self ) = @_;
+    return $self->{mode};
+}
+
 sub get_start_delimiter {
     my ( $self ) = @_;
     return $self->{delimiter_start};
@@ -1224,6 +1229,10 @@ demonstrates.
 This method returns the offset from the current position in the content
 string to the matching delimiter (which will always be positive), or
 undef if no match can be found.
+
+=head2 get_mode
+
+This method returns the name of the current mode of the tokenizer.
 
 =head2 get_start_delimiter
 
