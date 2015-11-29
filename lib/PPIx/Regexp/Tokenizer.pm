@@ -163,7 +163,6 @@ defined $DEFAULT_POSTDEREF
 	    cursor_modifiers => undef,	# Position of modifiers.
 	    default_modifiers => $args{default_modifiers} || [],
 	    delimiter_finish => undef,	# Finishing delimiter of regexp.
-	    delimiter_re =>	undef,	# Recognize finishing delimiter.
 	    delimiter_start => undef,	# Starting delimiter of regexp.
 	    encoding => $args{encoding}, # Character encoding.
 	    expect => undef,	# Extra classes to expect.
@@ -819,7 +818,6 @@ sub __PPIX_TOKENIZER__init {
 	$self->{content},
 	$self->{cursor_limit},
 	1;
-    $self->{delimiter_re} = undef;
 
     push @tokens, $self->make_token( 1,
 	'PPIx::Regexp::Token::Delimiter' );
@@ -931,7 +929,6 @@ sub __PPIX_TOKENIZER__finish {
 		$self->{content},
 		$self->{cursor_limit} - 1,
 		1;
-	    $self->{delimiter_re} = undef;
 	}
 
 	if ( $self->modifier( 'e*' ) ) {
