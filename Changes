@@ -1,3 +1,11 @@
+0.043_03	2015-12-01	T. R. Wyant
+  Allow nesting of \Q with \U, \L, and \F
+    The perlop docs say these nest with each other. Playing with Perl
+    suggests that \U, \L and \F supersede each other, but thet they as a
+    group nest with \Q in either order, so that if you specify \Q and
+    one of the \U, \L, \F group you need two \Es to turn them all back
+    off.
+
 0.043_02	2015-11-28	T. R. Wyant
   Restrict recognition of back references in replacement strings to
     \number form, since Perl itself does not recognize \g{...} or

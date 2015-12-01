@@ -44,7 +44,7 @@ use PPIx::Regexp;
 use PPIx::Regexp::Tokenizer;
 use PPIx::Regexp::Util qw{ __instance };
 
-our $VERSION = '0.043_02';
+our $VERSION = '0.043_03';
 
 =head2 new
 
