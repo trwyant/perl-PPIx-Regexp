@@ -1882,6 +1882,14 @@ choose  ( 4 );
 class   ( 'PPIx::Regexp::Token::Code' );
 content ( '$x->%{foo,bar}' );
 
+note	'Make sure \Q stacks with \U, \L and \F';
+tokenize( '/\\Qx\\Uy\\E\\w\\E/' );
+count   ( 11 );
+choose  ( 7 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( '\\w' );
+
+
 SKIP: {
     $is_ascii
 	or skip(

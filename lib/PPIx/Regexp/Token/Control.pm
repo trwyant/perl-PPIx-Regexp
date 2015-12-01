@@ -83,9 +83,21 @@ our $VERSION = '0.043_02';
 }
 
 my %is_control = map { $_ => 1 } qw{ l u L U Q E F };
-my %cookie = (
-    Q	=> sub { return 1; },
-    E	=> undef,
+
+my %cookie_slot = (
+    Q	=> 'quote',
+    E	=> 'end',
+    U	=> 'case',
+    L	=> 'case',
+    F	=> 'case',
+);
+
+use constant CONTROL_MASK_QUOTE	=> 1 << 1;
+
+my %cookie_mask = (
+    case	=> 1 << 0,
+    end		=> 0,		# must be 0.
+    quote	=> CONTROL_MASK_QUOTE,
 );
 
 sub __PPIX_TOKENIZER__regexp {
@@ -94,14 +106,12 @@ sub __PPIX_TOKENIZER__regexp {
     # If we are inside a quote sequence, we want to make literals out of
     # all the characters we reject; otherwise we just want to return
     # nothing.
-    my $in_quote = $tokenizer->cookie( COOKIE_QUOTE );
-    my $reject = $in_quote ?
-	sub {
-	    my ( $size, $class ) = @_;
-	    return $tokenizer->make_token( $size, $class || TOKEN_LITERAL );
-	} : sub {
-	    return;
-	};
+    my $in_quote = $tokenizer->cookie( COOKIE_QUOTE ) || do {
+	my @stack = ( { mask => 0, reject => sub { return; } } );
+	$tokenizer->cookie( COOKIE_QUOTE, sub { return \@stack } );
+    };
+    my $cookie_stack = $in_quote->( $tokenizer );
+    my $reject = $cookie_stack->[-1]{reject};
 
     # We are not interested in anything that is not escaped.
     $character eq '\\' or return $reject->( 1 );
@@ -122,9 +132,32 @@ sub __PPIX_TOKENIZER__regexp {
     # by the cookie we may make.
     my $token = $tokenizer->make_token( 2 );
 
-    # \Q and \E make and destroy cookies respectively; do those things.
-    exists $cookie{$control}
-	and $tokenizer->cookie( COOKIE_QUOTE, $cookie{$control} );
+    # \U, \L, and \F supersede each other, but they stack with \Q. So we
+    # need to track that behavior, so that we know what to do when we
+    # hit a \E.
+    # TODO if we wanted we could actually track which (if any) of \U, \L
+    # and \F is in effect, and make that an attribute of any literals
+    # made.
+    if ( my $slot = $cookie_slot{$control} ) {
+	if ( my $mask = $cookie_mask{$slot} ) {
+	    unless ( $mask & $cookie_stack->[-1]{mask} ) {
+		$mask |= $cookie_stack->[-1]{mask};
+		push @{ $cookie_stack }, {
+		    mask	=> $mask,
+		    reject	=> ( $mask & CONTROL_MASK_QUOTE ) ?
+		    sub {
+			my ( $size, $class ) = @_;
+			return $tokenizer->make_token(
+			    $size, $class || TOKEN_LITERAL );
+		    } : $cookie_stack->[0]{reject},
+		};
+	    }
+	} else {
+	    # \E - pop data, but don't leave empty.
+	    @{ $cookie_stack } > 1
+		and pop @{ $cookie_stack };
+	}
+    }
 
     # Return our token.
     return $token;
