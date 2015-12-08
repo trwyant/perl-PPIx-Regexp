@@ -41,7 +41,7 @@ use PPIx::Regexp::Constant qw{
 };
 use PPIx::Regexp::Util qw{ __instance };
 
-our $VERSION = '0.043_03';
+our $VERSION = '0.044';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };

@@ -86,7 +86,7 @@ use PPIx::Regexp::Constant qw{
     MODIFIER_GROUP_MATCH_SEMANTICS
 };
 
-our $VERSION = '0.043_03';
+our $VERSION = '0.044';
 
 # Define modifiers that are to be aggregated internally for ease of
 # computation.
