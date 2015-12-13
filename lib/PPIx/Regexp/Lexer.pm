@@ -59,7 +59,7 @@ use PPIx::Regexp::Structure::Switch			();
 use PPIx::Regexp::Structure::Unknown			();
 use PPIx::Regexp::Token::Unmatched			();
 use PPIx::Regexp::Tokenizer				();
-use PPIx::Regexp::Util qw{ __instance };
+use PPIx::Regexp::Util qw{ __choose_tokenizer_class __instance };
 
 our $VERSION = '0.044';
 
@@ -82,12 +82,19 @@ tokenizer, which interprets them or not as the case may be.
 	my ( $class, $tokenizer, %args ) = @_;
 	ref $class and $class = ref $class;
 
-	__instance( $tokenizer, 'PPIx::Regexp::Tokenizer' )
-	    or $tokenizer = PPIx::Regexp::Tokenizer->new( $tokenizer, %args )
-	    or do {
-		$errstr = PPIx::Regexp::Tokenizer->errstr();
-		return;
-	    };
+	unless ( __instance( $tokenizer, 'PPIx::Regexp::Tokenizer' ) ) {
+	    my $tokenizer_class = __choose_tokenizer_class(
+		$tokenizer, \%args )
+		or do {
+		    $errstr = 'Data not supported';
+		    return;
+		};
+	    $tokenizer = $tokenizer_class->new( $tokenizer, %args )
+		or do {
+		    $errstr = $tokenizer_class->errstr();
+		    return;
+		};
+	}
 
 	my $self = {
 	    deferred => [],	# Deferred tokens
@@ -159,13 +166,15 @@ sub lex {
 	$self->_unget_token( $token );
     }
 
+    my ( $part_0_class, $part_1_class ) =
+	$self->{tokenizer}->__part_classes();
+
     # Accept the first delimited structure.
-    push @content, ( my $regexp = $self->_get_delimited(
-	    'PPIx::Regexp::Structure::Regexp' ) );
+    push @content, ( my $part_0 = $self->_get_delimited(
+	    $part_0_class ) );
 
     # If we are a substitution ...
-#   if ( $content[0]->content() eq 's' ) {
-    if ( $kind && 's' eq $kind->content() ) {
+    if ( defined $part_1_class ) {
 
 	# Accept any insignificant stuff.
 	while ( my $token = $self->_get_token() ) {
@@ -179,11 +188,11 @@ sub lex {
 
 	# Figure out if we should expect an opening bracket.
 	my $expect_open_bracket = $self->close_bracket(
-	    $regexp->start( 0 ) ) || 0;
+	    $part_0->start( 0 ) ) || 0;
 
 	# Accept the next delimited structure.
 	push @content, $self->_get_delimited(
-		'PPIx::Regexp::Structure::Replacement',
+		$part_1_class,
 		$expect_open_bracket,
 	);
     }
@@ -198,18 +207,29 @@ sub lex {
     $self->_finalize( @content );
 
     # If we found a regular expression (and we should have done so) ...
-    if ( $regexp ) {
+    if ( $part_0 && $part_0->can( 'max_capture_number' ) ) {
+	# TODO the above line is really ugly. I'm wondering about
+	# string implementations like:
+	# * return a $part_0_class of undef (but that complicates the
+	#   lexing of the structure itself);
+	# * hang this logic on the tokenizer somehow (where it seems out
+	#   of place)
+	# * hang this logic on PPIx::Regexp::Structure::Regexp and
+	#   ::Replacement.
+	# I also need to figure out how to make \n backreferences come
+	# out as literals. Maybe that is a job best done by the
+	# tokenizer.
 
 	# Retrieve the maximum capture group.
-	my $max_capture = $regexp->max_capture_number();
+	my $max_capture = $part_0->max_capture_number();
 
 	# Hashify the known capture names
 	my $capture_name = {
-	    map { $_ => 1 } $regexp->capture_names(),
+	    map { $_ => 1 } $part_0->capture_names(),
 	};
 
 	# For all the backreferences found
-	foreach my $elem ( @{ $regexp->find(
+	foreach my $elem ( @{ $part_0->find(
 	    'PPIx::Regexp::Token::Backreference' ) || [] } ) {
 	    # Rebless them as needed, recording any errors found.
 	    $self->{failures} +=

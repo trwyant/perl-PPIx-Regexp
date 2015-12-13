@@ -176,7 +176,7 @@ sub __PPIX_LEXER__rebless {
     # Note that we can't rebless single-digit numbers, since they can't
     # be octal literals.
     my $content = $self->content();
-    if ( $content =~ m/ \A \\ \d{2,} \z /smx && $content !~ m/ [89] /smx ) {
+    if ( $content =~ m/ \A \\ [0-7]{2,} \z /smx ) {
 	bless $self, TOKEN_LITERAL;
 	return 0;
     }

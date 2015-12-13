@@ -112,6 +112,15 @@ There are very probably other examples of this. When they come to light
 they will be documented as producing the modern parse, and the code
 modified to produce this parse if necessary.
 
+The functionality that parses string literals (the C<parse> argument to
+C<new()>) was introduced in version [%% next_version $$], and should be
+considered experimental. It is a bit of a kluge in any case, especially
+in the appropriateness of class names to this use. But the actual
+parsing of a Perl string literal is not too different than the parsing
+of an C<s///> replacement string, so I thought that if someone wanted
+a string literal parse badly enough to deal with the kluginess I could
+provide it fairly easily.
+
 =head1 METHODS
 
 This class provides the following public methods. Methods not documented
@@ -128,8 +137,10 @@ use warnings;
 use base qw{ PPIx::Regexp::Node };
 
 use PPIx::Regexp::Lexer ();
+use PPIx::Regexp::StringTokenizer;
 use PPIx::Regexp::Token::Modifier ();	# For its modifier manipulations.
-use PPIx::Regexp::Util qw{ __instance };
+use PPIx::Regexp::Tokenizer;
+use PPIx::Regexp::Util qw{ __choose_tokenizer_class __instance };
 use Scalar::Util qw{ refaddr };
 
 our $VERSION = '0.044';
@@ -188,6 +199,40 @@ string before it tokenizes it. For example:
      encoding => 'iso-8859-1',
  );
 
+=item parse parse_type
+
+This option specifies what kind of parse is to be done. Possible values
+are C<'regex'>, C<'string'>, or C<'guess'>. Any value but C<'regex'> is
+experimental.
+
+If C<'regex'> is specified, the first argument is expected to be a valid
+regex, and parsed as though it were.
+
+If C<'string'> is specified, the first argument is expected to be a
+valid string literal and parsed as such. The return is still a
+C<PPIx::Regexp> object, but the
+L<regular_expression()|/regular_expression> and L<modifier()|/modifier>
+methods return nothing, and the L<replacement()|/replacement> method
+returns the content of the string.
+
+If C<'guess'> is specified, this method will try to guess what the first
+argument is. If the first argument is a L<PPI::Element|PPI::Element>,
+the guess will reflect the PPI parse. But the guess can be wrong if the
+first argument is a string representing an unusually-delimited regex.
+For example, C<'guess'> will parse C<"foo"> as a string, but Perl will
+parse it as a regex if preceded by a regex binding operator (e.g. C<$x
+=~ "foo">), as shown by
+
+ perl -MO=Deparse -e '$x =~ "foo"'
+
+which prints
+
+ $x =~ /foo/u
+
+under Perl 5.22.0.
+
+The default is C<'regex'>.
+
 =item postderef boolean
 
 This option is passed on to the tokenizer, where it specifies whether
@@ -226,7 +271,15 @@ is it supported.
 
 	$errstr = undef;
 
-	my $tokenizer = PPIx::Regexp::Tokenizer->new(
+	my $tokenizer_class = __choose_tokenizer_class( $content, \%args )
+	    or do {
+	    $errstr = ref $content ?
+		sprintf '%s not supported', ref $content :
+		"Unknown parse type '$args{parse}'";
+	    return;
+	};
+
+	my $tokenizer = $tokenizer_class->new(
 	    $content, %args ) or do {
 	    $errstr = PPIx::Regexp::Tokenizer->errstr();
 	    return;

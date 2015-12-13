@@ -39,7 +39,7 @@ use PPIx::Regexp::Token::Recursion		();
 use PPIx::Regexp::Token::Structure		();
 use PPIx::Regexp::Token::Unknown		();
 use PPIx::Regexp::Token::Whitespace		();
-use PPIx::Regexp::Util qw{ __instance };
+use PPIx::Regexp::Util qw{ __choose_tokenizer_class __instance };
 use Scalar::Util qw{ looks_like_number };
 
 our $VERSION = '0.044';
@@ -60,7 +60,7 @@ defined $DEFAULT_POSTDEREF
 	'PPIx::Regexp::Token::Interpolation',
 	'PPIx::Regexp::Token::Control',			# Note 1
 	'PPIx::Regexp::Token::CharClass::Simple',	# Note 2
-        'PPIx::Regexp::Token::Quantifier',
+	'PPIx::Regexp::Token::Quantifier',
 	'PPIx::Regexp::Token::Greediness',
 	'PPIx::Regexp::Token::CharClass::POSIX',	# Note 3
 	'PPIx::Regexp::Token::Structure',
@@ -92,44 +92,9 @@ defined $DEFAULT_POSTDEREF
     #		operators, and Control making them literals if quoting,
     #		so it must come after both.
 
-    sub _known_tokenizers {
-	my ( $self ) = @_;
-
-	my $mode = $self->{mode};
-
-	my @expect;
-	if ( $self->{expect_next} ) {
-	    $self->{expect} = $self->{expect_next};
-	    $self->{expect_next} = undef;
-	}
-	if ( $self->{expect} ) {
-	    @expect = $self->_known_tokenizer_check(
-		@{ $self->{expect} } );
-	}
-
-	exists $self->{known}{$mode} and return (
-	    @expect, @{ $self->{known}{$mode} } );
-
-	my @found = $self->_known_tokenizer_check( @classes );
-
-	$self->{known}{$mode} = \@found;
-	return (@expect, @found);
-    }
-
-    sub _known_tokenizer_check {
-	my ( $self, @args ) = @_;
-
-	my $handler = '__PPIX_TOKENIZER__' . $self->{mode};
-	my @found;
-
-	foreach my $class ( @args ) {
-
-	    $class->can( $handler ) or next;
-	    push @found, $class;
-
-	}
-
-	return @found;
+    # Return the declared tokenizer classes.
+    sub __tokenizer_classes {
+	return @classes;
     }
 
 }
@@ -184,10 +149,20 @@ defined $DEFAULT_POSTDEREF
 	};
 
 	if ( __instance( $re, 'PPI::Element' ) ) {
-	    $self->{content} = $re->content();
+	    defined( my $tokenizer_class = __choose_tokenizer_class(
+		    $re, { parse => 'guess' } ) )
+		or return __set_errstr( ref $re, 'not supported' );
+	    $class eq $tokenizer_class
+		or return __set_errstr( ref $re, 'not supported by', $class );
+	    # TODO conditionalizstion on PPI class does not really
+	    # belong here, but at the moment I have no other idea of
+	    # where to put it.
+	    $self->{content} = $re->isa( 'PPI::Token::HereDoc' ) ?
+		join( '', $re->content(), "\n", $re->heredoc(),
+		    $re->terminator(), "\n" ) :
+		$re->content();
 	} elsif ( ref $re ) {
-	    $errstr = ref( $re ) . ' not supported';
-	    return;
+	    return __set_errstr( ref $re, 'not supported' );
 	} else {
 	    $self->{content} = $re;
 	}
@@ -202,6 +177,11 @@ defined $DEFAULT_POSTDEREF
 	    and warn "\ntokenizing '$self->{content}'\n";
 
 	return $self;
+    }
+
+    sub __set_errstr {
+	$errstr = join ' ', @_;
+	return;
     }
 
     sub errstr {
@@ -498,7 +478,7 @@ sub next_token {
 		and return;
 	    $self->{mode} eq 'finish' and return;
 	    $self->_set_mode( 'finish' );
-	    $self->{cursor_limit}++;
+	    $self->{cursor_limit} += length $self->{delimiter_finish};
 	}
 
 	if ( my @tokens = $self->get_token() ) {
@@ -659,6 +639,47 @@ sub significant {
     return 1;
 }
 
+sub _known_tokenizers {
+    my ( $self ) = @_;
+
+    my $mode = $self->{mode};
+
+    my @expect;
+    if ( $self->{expect_next} ) {
+	$self->{expect} = $self->{expect_next};
+	$self->{expect_next} = undef;
+    }
+    if ( $self->{expect} ) {
+	@expect = $self->_known_tokenizer_check(
+	    @{ $self->{expect} } );
+    }
+
+    exists $self->{known}{$mode} and return (
+	@expect, @{ $self->{known}{$mode} } );
+
+    my @found = $self->_known_tokenizer_check(
+	$self->__tokenizer_classes() );
+
+    $self->{known}{$mode} = \@found;
+    return (@expect, @found);
+}
+
+sub _known_tokenizer_check {
+    my ( $self, @args ) = @_;
+
+    my $handler = '__PPIX_TOKENIZER__' . $self->{mode};
+    my @found;
+
+    foreach my $class ( @args ) {
+
+	$class->can( $handler ) or next;
+	push @found, $class;
+
+    }
+
+    return @found;
+}
+
 sub tokens {
     my ( $self ) = @_;
 
@@ -701,21 +722,30 @@ sub _set_mode {
     return;
 }
 
+sub __init_error {
+    my ( $self , $err ) = @_;
+    defined $err
+	or $err = 'Tokenizer found illegal first characters';
+    return $self->_make_final_token(
+	length $self->{content}, TOKEN_UNKNOWN, {
+	    error	=> $err,
+	},
+    );
+}
+
 sub __PPIX_TOKENIZER__init {
-    my ( $self, $character ) = @_;
+    my ( $self ) = @_;
 
     $self->find_regexp(
 	qr{ \A ( \s* ) ( qr | m | s )? ( \s* ) (?: [^\w\s] ) }smx )
-	or return $self->_make_final_token(
-	    length( $self->{content} ), TOKEN_UNKNOWN, {
-		error	=> 'Tokenizer found illegal first characters',
-	    },
-	);
+	or return $self->__init_error();
 
     my ( $leading_white, $type, $next_white ) = $self->capture();
 
     defined $type
 	or $type = '';
+
+    $self->{type} = $type;
 
     my @tokens;
 
@@ -740,7 +770,7 @@ sub __PPIX_TOKENIZER__init {
 	my $cursor_limit = $self->{cursor_curr} + $offset;
 	$self->{trace}
 	    and warn "Tokenizer found regexp end delimiter at $cursor_limit\n";
-	if ( 's' eq $type ) {
+	if ( $self->__number_of_extra_parts() ) {
 	    if ( $self->close_bracket(
 		    $self->{delimiter_start} ) ) {
 		pos $self->{content} = $self->{cursor_curr} +
@@ -824,7 +854,67 @@ sub __PPIX_TOKENIZER__init {
 
     $self->_set_mode( 'regexp' );
 
+    $self->{find} = undef;
+
     return @tokens;
+}
+
+# Match the initial part of the regexp including any leading white
+# space. The initial delimiter is the first thing not consumed, though
+# we check it for sanity.
+sub __initial_match {
+    my ( $self ) = @_;
+
+    $self->find_regexp(
+	qr{ \A ( \s* ) ( qr | m | s )? ( \s* ) (?: [^\w\s] ) }smx )
+	or return;
+
+    my ( $leading_white, $type, $next_white ) = $self->capture();
+
+    defined $type
+	or $type = '';
+
+    $self->{type} = $type;
+
+    my @tokens;
+
+    '' ne $leading_white
+	and push @tokens, $self->make_token( length $leading_white,
+	'PPIx::Regexp::Token::Whitespace' );
+    push @tokens, $self->make_token( length $type,
+	'PPIx::Regexp::Token::Structure' );
+    '' ne $next_white
+	and push @tokens, $self->make_token( length $next_white,
+	'PPIx::Regexp::Token::Whitespace' );
+
+    return @tokens;
+}
+
+{
+    my %extra_parts = (
+	s	=> 1,
+    );
+
+    # Return the number of extra delimited parts. This will be 0 except
+    # for s///, which will be 1.
+    sub __number_of_extra_parts {
+	my ( $self ) = @_;
+	return $extra_parts{$self->{type}} || 0;
+    }
+}
+
+{
+    my @part_class = qw{
+	PPIx::Regexp::Structure::Regexp
+	PPIx::Regexp::Structure::Replacement
+    };
+
+    # Return the classes for the parts of the expression.
+    sub __part_classes {
+	my ( $self ) = @_;
+	my $max = $self->__number_of_extra_parts();
+	return @part_class[ 0 .. $max ];
+    }
 }
 
 sub __PPIX_TOKENIZER__regexp {
@@ -893,7 +983,8 @@ sub __PPIX_TOKENIZER__finish {
 
     $self->{cursor_limit} > length $self->{content}
 	and confess "Programming error - ran off string";
-    my @tokens = $self->make_token( 1,
+
+    my @tokens = $self->make_token( length $self->{delimiter_finish},
 	'PPIx::Regexp::Token::Delimiter' );
 
     if ( $self->{cursor_curr} == $self->{cursor_modifiers} ) {

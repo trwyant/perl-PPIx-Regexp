@@ -10,9 +10,64 @@ use Scalar::Util qw{ blessed };
 
 use base qw{ Exporter };
 
-our @EXPORT_OK = qw{ __instance __to_ordinal_en };
+our @EXPORT_OK = qw{ __choose_tokenizer_class __instance __to_ordinal_en };
 
 our $VERSION = '0.044';
+
+{
+
+    my @ppi_zoo = (
+	[ 'PPI::Token::Regexp::Transliterate' ],
+
+	[ 'PPI::Token::Regexp', 'PPIx::Regexp::Tokenizer' ],
+	[ 'PPI::Token::QuoteLike::Regexp', 'PPIx::Regexp::Tokenizer' ],
+
+	[ 'PPI::Token::Quote',
+	    'PPIx::Regexp::StringTokenizer' ],
+	[ 'PPI::Token::QuoteLike::Command',
+	    'PPIx::Regexp::StringTokenizer' ],
+	[ 'PPI::Token::QuoteLike::BackTick',
+	    'PPIx::Regexp::StringTokenizer' ],
+	[ 'PPI::Token::HereDoc',
+	    'PPIx::Regexp::StringTokenizer' ],
+    );
+
+    my %parse_type = (
+	guess	=> sub {
+	    my ( $content ) = @_;
+	    if ( __instance( $content, 'PPI::Element' ) ) {
+		foreach ( @ppi_zoo ) {
+		    $content->isa( $_->[0] )
+			and return $_->[1];
+		}
+		return;
+	    } elsif ( ref $content ) {
+		return;
+	    } else {
+		return $content =~ m/ \A \s*
+		(?: ["'`] | << | (?: (?: qq | q | qx ) \b ) ) /smx ?
+		'PPIx::Regexp::StringTokenizer' :
+		'PPIx::Regexp::Tokenizer';
+	    }
+	},
+	regex	=> sub {
+	    return 'PPIx::Regexp::Tokenizer';
+	},
+	string	=> sub {
+	    return 'PPIx::Regexp::StringTokenizer';
+	},
+    );
+
+    sub __choose_tokenizer_class {
+	my ( $content, $arg ) = @_;
+	my $parse = defined $arg->{parse} ? $arg->{parse} : 'regex';
+	my $code = $parse_type{$parse}
+	    or return PPIx::Regexp::Tokenizer->__set_errstr(
+	    "Unknown parse type '$parse'" );
+	return $code->( $content );
+    }
+
+}
 
 sub __instance {
     my ( $object, $class ) = @_;

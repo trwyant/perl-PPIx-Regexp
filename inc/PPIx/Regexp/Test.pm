@@ -284,9 +284,11 @@ sub result {
 sub tokenize {		## no critic (RequireArgUnpacking)
     my ( $opt, $regexp, @args ) = _parse_constructor_args(
 	{ test => 1, tokens => 1 }, @_ );
-    $initial_class = 'PPIx::Regexp::Tokenizer';
+    my %args = @args;
+    $initial_class = ( defined $args{parse} && $args{parse} eq 'string') ?
+	'PPIx::Regexp::StringTokenizer' : 'PPIx::Regexp::Tokenizer';
     $kind = 'token';
-    $obj = PPIx::Regexp::Tokenizer->new( $regexp, @args );
+    $obj = $initial_class->new( $regexp, @args );
     if ( $obj && $opt->{tokens} ) {
 	$parse = [ $obj->tokens() ];
     } else {

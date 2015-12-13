@@ -42,7 +42,7 @@ use Scalar::Util qw{ blessed looks_like_number };
 
 use PPIx::Regexp;
 use PPIx::Regexp::Tokenizer;
-use PPIx::Regexp::Util qw{ __instance };
+use PPIx::Regexp::Util qw{ __choose_tokenizer_class __instance };
 
 our $VERSION = '0.044';
 
@@ -186,7 +186,7 @@ ignored.
 	    source => $re,
 	};
 
-	foreach my $key ( qw{ default_modifiers postderef } ) {
+	foreach my $key ( qw{ default_modifiers parse postderef } ) {
 	    exists $args{$key}
 		and $self->{$key} = $args{$key};
 	}
@@ -209,9 +209,11 @@ ignored.
 	} elsif ( ref $re && ! __instance( $re, 'PPI::Element' ) ) {
 	    croak "Do not know how to dump ", ref $re;
 	} elsif ( $self->{tokens} ) {
+	    my $tokenizer_class = __choose_tokenizer_class( $re, \%args )
+		or croak 'Unsupported data type';
 	    $self->{object} =
-		PPIx::Regexp::Tokenizer->new( $re, %args )
-		    or Carp::croak( PPIx::Regexp::Tokenizer->errstr() );
+		$tokenizer_class->new( $re, %args )
+		    or Carp::croak( $tokenizer_class->errstr() );
 	} else {
 	    $self->{object} =
 		PPIx::Regexp->new( $re, %args )
@@ -354,7 +356,7 @@ sub _tokens_dump {
 sub _format_default_modifiers {
     my ( $self, $subr, $elem ) = @_;
     my @arg = $self->_safe( $elem );
-    foreach my $attr ( qw{ default_modifiers postderef } ) {
+    foreach my $attr ( qw{ default_modifiers parse postderef } ) {
 	defined ( my $val = $self->{$attr} )
 	    or next;
 	'ARRAY' eq ref $val

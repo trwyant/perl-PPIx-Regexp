@@ -25,6 +25,7 @@ errstr
 indices
 infeasible
 instantiation
+kluginess
 lexed
 lexes
 merchantability

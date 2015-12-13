@@ -15,6 +15,7 @@ lib/PPIx/Regexp/Element.pm
 lib/PPIx/Regexp/Lexer.pm
 lib/PPIx/Regexp/Node.pm
 lib/PPIx/Regexp/Node/Range.pm
+lib/PPIx/Regexp/StringTokenizer.pm
 lib/PPIx/Regexp/Structure.pm
 lib/PPIx/Regexp/Structure/Assertion.pm
 lib/PPIx/Regexp/Structure/BranchReset.pm
@@ -77,6 +78,8 @@ README
 t/basic.t
 t/fuzz.t
 t/parse.t
+t/string.t
+t/string_unit.t
 t/unit.t
 t/version.t
 t/xplain.t
