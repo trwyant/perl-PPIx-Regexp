@@ -140,18 +140,26 @@ sub __PPIX_TOKENIZER__regexp {
     # made.
     if ( my $slot = $cookie_slot{$control} ) {
 	if ( my $mask = $cookie_mask{$slot} ) {
+	    # We need another stack entry only if the current slot
+	    # ('case' or 'quote') is not occupied
 	    unless ( $mask & $cookie_stack->[-1]{mask} ) {
-		$mask |= $cookie_stack->[-1]{mask};
-		push @{ $cookie_stack }, {
-		    mask	=> $mask,
-		    reject	=> ( $mask & CONTROL_MASK_QUOTE ) ?
+		# Clone the previous entry.
+		push @{ $cookie_stack }, { %{ $cookie_stack->[-1] } };
+		# Set the mask to show this slot is occupied
+		$cookie_stack->[-1]{mask} |= $mask;
+		# Code to call when this tokenizer rejects a token
+		$cookie_stack->[-1]{reject} =
+		    ( $mask & CONTROL_MASK_QUOTE ) ?
 		    sub {
 			my ( $size, $class ) = @_;
 			return $tokenizer->make_token(
 			    $size, $class || TOKEN_LITERAL );
-		    } : $cookie_stack->[0]{reject},
-		};
+		    } : $cookie_stack->[0]{reject};
 	    }
+	    # TODO if I want to try to track what controls are in effect
+	    # where.
+	    # Record the specific content of the current slot
+	    # $cookie_stack->[-1]{$slot} = $control;
 	} else {
 	    # \E - pop data, but don't leave empty.
 	    @{ $cookie_stack } > 1
