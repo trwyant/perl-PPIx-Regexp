@@ -3,7 +3,11 @@ package main;
 use strict;
 use warnings;
 
+use lib qw{ inc };
+
 use Test::More 0.88;
+
+require_ok( 'PPIx::Regexp::Mock_Tokenizer' ) or BAIL_OUT;
 
 require_ok( 'PPI::Document' )
     or BAIL_OUT(
@@ -133,10 +137,10 @@ isa_ok( PPIx::Regexp::Token::CharClass::Simple->__new( 'xyzzy' ),
 
 require_ok( 'PPIx::Regexp::Token::Code' );
 class_isa_ok( 'PPIx::Regexp::Token::Code', 'PPIx::Regexp::Token' );
-# The following not done because as of [%% next_version %%]
-# instantiation requires a valid tokenizer argument.
-# isa_ok( PPIx::Regexp::Token::Code->__new( 'xyzzy' ),
-#     'PPIx::Regexp::Token::Code' );
+isa_ok( PPIx::Regexp::Token::Code->__new( 'xyzzy',
+	tokenizer => PPIx::Regexp::Mock_Tokenizer->new(),
+    ),
+    'PPIx::Regexp::Token::Code' );
 
 require_ok( 'PPIx::Regexp::Token::Comment' );
 class_isa_ok( 'PPIx::Regexp::Token::Comment', 'PPIx::Regexp::Token' );
@@ -187,28 +191,30 @@ isa_ok( PPIx::Regexp::Token::GroupType::BranchReset->__new( 'xyzzy' ),
 require_ok( 'PPIx::Regexp::Token::GroupType::Code' );
 class_isa_ok( 'PPIx::Regexp::Token::GroupType::Code',
     'PPIx::Regexp::Token::GroupType' );
-# The following not done because as of [%% next_version %%]
-# instantiation requires a valid tokenizer argument.
-# isa_ok( PPIx::Regexp::Token::GroupType::Code->__new( 'xyzzy' ),
-#     'PPIx::Regexp::Token::GroupType::Code' );
+isa_ok( PPIx::Regexp::Token::GroupType::Code->__new( 'xyzzy',
+	tokenizer => PPIx::Regexp::Mock_Tokenizer->new(),
+    ),
+    'PPIx::Regexp::Token::GroupType::Code' );
 
 require_ok( 'PPIx::Regexp::Token::GroupType::Modifier' );
 class_isa_ok( 'PPIx::Regexp::Token::GroupType::Modifier',
     'PPIx::Regexp::Token::GroupType' );
 class_isa_ok( 'PPIx::Regexp::Token::GroupType::Modifier',
     'PPIx::Regexp::Token::Modifier' );
-# The following not done because as of [%% next_version %%]
-# instantiation requires a valid tokenizer argument.
-# isa_ok( PPIx::Regexp::Token::GroupType::Modifier->__new( 'xyzzy' ),
-#     'PPIx::Regexp::Token::GroupType::Modifier' );
+isa_ok( PPIx::Regexp::Token::GroupType::Modifier->__new( 'xyzzy',
+	tokenizer => PPIx::Regexp::Mock_Tokenizer->new(),
+    ),
+    'PPIx::Regexp::Token::GroupType::Modifier' );
 
 require_ok( 'PPIx::Regexp::Token::GroupType::NamedCapture' );
 class_isa_ok( 'PPIx::Regexp::Token::GroupType::NamedCapture',
     'PPIx::Regexp::Token::GroupType' );
-# The following not done because as of [%% next_version %%]
-# instantiation requires a valid tokenizer argument.
-# isa_ok( PPIx::Regexp::Token::GroupType::NamedCapture->__new( 'xyzzy' ),
-#     'PPIx::Regexp::Token::GroupType::NamedCapture' );
+isa_ok( PPIx::Regexp::Token::GroupType::NamedCapture->__new( 'xyzzy',
+	tokenizer => PPIx::Regexp::Mock_Tokenizer->new(
+	    capture => [ 'foo' ],
+	),
+     ),
+    'PPIx::Regexp::Token::GroupType::NamedCapture' );
 
 require_ok( 'PPIx::Regexp::Token::GroupType::Subexpression' );
 class_isa_ok( 'PPIx::Regexp::Token::GroupType::Subexpression',
@@ -225,10 +231,10 @@ isa_ok( PPIx::Regexp::Token::GroupType::Switch->__new( 'xyzzy' ),
 require_ok( 'PPIx::Regexp::Token::Interpolation' );
 class_isa_ok( 'PPIx::Regexp::Token::Interpolation',
     'PPIx::Regexp::Token::Code' );
-# The following not done because as of [%% next_version %%]
-# instantiation requires a valid tokenizer argument.
-# isa_ok( PPIx::Regexp::Token::Interpolation->__new( 'xyzzy' ),
-#     'PPIx::Regexp::Token::Interpolation' );
+isa_ok( PPIx::Regexp::Token::Interpolation->__new( 'xyzzy',
+	tokenizer => PPIx::Regexp::Mock_Tokenizer->new(),
+    ),
+    'PPIx::Regexp::Token::Interpolation' );
 
 require_ok( 'PPIx::Regexp::Token::Literal' );
 class_isa_ok( 'PPIx::Regexp::Token::Literal', 'PPIx::Regexp::Token' );
@@ -237,17 +243,17 @@ isa_ok( PPIx::Regexp::Token::Literal->__new( 'xyzzy' ),
 
 require_ok( 'PPIx::Regexp::Token::Modifier' );
 class_isa_ok( 'PPIx::Regexp::Token::Modifier', 'PPIx::Regexp::Token' );
-# The following not done because as of [%% next_version %%]
-# instantiation requires a valid tokenizer argument.
-# isa_ok( PPIx::Regexp::Token::Modifier->__new( 'xyzzy' ),
-#     'PPIx::Regexp::Token::Modifier' );
+isa_ok( PPIx::Regexp::Token::Modifier->__new( 'xyzzy',
+	tokenizer => PPIx::Regexp::Mock_Tokenizer->new(),
+    ),
+    'PPIx::Regexp::Token::Modifier' );
 
 require_ok( 'PPIx::Regexp::Token::Operator' );
 class_isa_ok( 'PPIx::Regexp::Token::Operator', 'PPIx::Regexp::Token' );
-# The following not done because as of [%% next_version %%]
-# instantiation requires a valid tokenizer argument.
-# isa_ok( PPIx::Regexp::Token::Operator->__new( 'xyzzy' ),
-#     'PPIx::Regexp::Token::Operator' );
+isa_ok( PPIx::Regexp::Token::Operator->__new( 'xyzzy',
+	tokenizer => PPIx::Regexp::Mock_Tokenizer->new(),
+    ),
+    'PPIx::Regexp::Token::Operator' );
 
 require_ok( 'PPIx::Regexp::Token::Quantifier' );
 class_isa_ok( 'PPIx::Regexp::Token::Quantifier', 'PPIx::Regexp::Token'
