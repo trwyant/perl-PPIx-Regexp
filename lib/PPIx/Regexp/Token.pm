@@ -50,17 +50,30 @@ use warnings;
 
 use base qw{PPIx::Regexp::Element};
 
+use Carp qw{ confess };
+use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
+
 our $VERSION = '0.044';
 
-sub _new {
-    my ( $class, $content ) = @_;
-    ref $class and $class = ref $class;
+use constant TOKENIZER_ARGUMENT_REQUIRED => 0;
+
+sub __new {
+    my ( $class, $content, %arg ) = @_;
+
+    not $class->TOKENIZER_ARGUMENT_REQUIRED()
+	or $arg{tokenizer}
+	or confess 'Programming error - tokenizer not provided';
 
     my $self = {
 	content => $content,
     };
 
-    bless $self, $class;
+    foreach my $key ( qw{ perl_version_introduced } ) {
+	defined $arg{$key}
+	    and $self->{$key} = $arg{$key};
+    }
+
+    bless $self, ref $class || $class;
     return $self;
 }
 
@@ -69,17 +82,19 @@ sub content {
     return $self->{content};
 }
 
+sub perl_version_introduced {
+    my ( $self ) = @_;
+    return defined $self->{perl_version_introduced} ?
+    $self->{perl_version_introduced} :
+    MINIMUM_PERL;
+}
+
 sub unescaped_content {
     my ( $self ) = @_;
     my $content = $self->content();
     $content =~ s/ \\ (?= . ) //smxg;
     return $content;
 }
-
-
-# Called after the token is manufactured. The calling sequence is
-# $token->__PPIX_TOKEN__post_make( $tokenizer );
-sub __PPIX_TOKEN__post_make { return };
 
 # Called by the lexer once it has done its worst to all the tokens.
 # Called as a method with no arguments. The return is the number of

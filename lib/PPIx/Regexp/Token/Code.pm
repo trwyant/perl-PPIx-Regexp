@@ -46,26 +46,36 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
-use Carp qw{ confess };
 use PPI::Document;
 use PPIx::Regexp::Constant qw{ COOKIE_REGEX_SET };
 use PPIx::Regexp::Util qw{ __instance };
 
 our $VERSION = '0.044';
 
-sub _new {
-    my ( $class, $content ) = @_;
-    ref $class and $class = ref $class;
+use constant TOKENIZER_ARGUMENT_REQUIRED => 1;
+use constant VERSION_WHEN_IN_REGEX_SET => undef;
 
-    my $self = {};
-    if ( __instance( $content, 'PPI::Document' ) ) {
-	$self->{ppi} = $content;
-    } elsif ( ref $content ) {
-	return;
-    } else {
-	$self->{content} = $content;
+sub __new {
+    my ( $class, $content, %arg ) = @_;
+
+    defined $arg{perl_version_introduced}
+	or $arg{perl_version_introduced} = '5.005';
+
+    my $self = $class->SUPER::__new( $content, %arg );
+
+    # TODO sort this out, since Token::Interpolation is a subclass, and
+    # those are legal in regex sets
+    if ( $arg{tokenizer}->cookie( COOKIE_REGEX_SET ) ) {
+	my $ver = $self->VERSION_WHEN_IN_REGEX_SET()
+	    or return $self->__error( 'Code token not valid in Regex set' );
+	$self->{perl_version_introduced} < $ver
+	    and $self->{perl_version_introduced} = $ver;
     }
-    bless $self, $class;
+
+    $arg{tokenizer}->__recognize_postderef( $self )
+	and $self->{perl_version_introduced} < 5.019005
+	and $self->{perl_version_introduced} = '5.019005';
+
     return $self;
 }
 
@@ -82,11 +92,6 @@ sub content {
 
 sub explain {
     return 'Perl expression';
-}
-
-sub perl_version_introduced {
-    my ( $self ) = @_;
-    return $self->{perl_version_introduced};
 }
 
 =head2 ppi
@@ -110,28 +115,6 @@ sub ppi {
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
-
-{
-
-    my %default = (
-	perl_version_introduced	=> '5.005',	# When (?{...}) introduced.
-    );
-
-    sub __PPIX_TOKEN__post_make {
-	my ( $self, $tokenizer, $arg ) = @_;
-
-	my %override;
-	$tokenizer->__recognize_postderef( $self )
-	    and $override{perl_version_introduced} = '5.019005';
-	$self->__impose_defaults( \%override, $arg, \%default );
-
-	$tokenizer->cookie( COOKIE_REGEX_SET )
-	    and $self->__error( 'Code token not valid in Regex set' );
-
-	return;
-    }
-
-}
 
 {
     no warnings qw{ qw };	## no critic (ProhibitNoWarnings)

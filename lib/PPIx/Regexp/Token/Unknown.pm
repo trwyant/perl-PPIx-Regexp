@@ -37,7 +37,24 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
+use Carp qw{ confess };
+
 our $VERSION = '0.044';
+
+sub __new {
+    my ( $class, $content, %arg ) = @_;
+
+    defined $arg{error}
+	or confess 'Programming error - error argument required';
+
+    my $self = $class->SUPER::__new( $content, %arg )
+	or return;
+
+    $self->{error} = $arg{error};
+
+    return $self;
+}
+
 
 # Return true if the token can be quantified, and false otherwise
 sub can_be_quantified { return };
@@ -56,20 +73,15 @@ sub ordinal {
     return ord $self->content();
 }
 
-sub __impose_defaults {
-    my ( $self, @args ) = @_;
-    $self->SUPER::__impose_defaults( @args );
-    unless ( defined $self->{error} ) {
+sub __PPIX_ELEM__rebless {
+    my ( $class, $self, %arg ) = @_;
+    my $rslt = $class->SUPER::__PPIX_ELEM__rebless( $self, %arg );
+    unless ( defined( $self->{error} = $arg{error} ) ) {
 	Carp::cluck( 'Making unknown token with no error message' );
 	$self->{error} = 'Unspecified error';
+	$rslt++;
     }
-    return;
-}
-
-sub __PPIX_TOKEN__post_make {
-    my ( $self, $tokenizer, $arg ) = @_;
-    $self->__impose_defaults( $arg );
-    return;
+    return $rslt;
 }
 
 # Since the lexer does not count these on the way in (because it needs

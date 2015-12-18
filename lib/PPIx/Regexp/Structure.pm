@@ -271,12 +271,13 @@ sub _check_for_interpolated_match {
 	&& $args->[2]->content() eq ':' ) {
 
 	# Rebless the '?' as a GroupType::Modifier.
-	bless $args->[0], 'PPIx::Regexp::Token::GroupType::Modifier';
-	# Note that we do _not_ want __PPIX_TOKEN__post_make here.
+	PPIx::Regexp::Token::GroupType::Modifier->__PPIX_ELEM__rebless(
+	    $args->[0] );
 
 	# Rebless the ':' as a GroupType, just so it does not look like
 	# something to match against.
-	bless $args->[2], 'PPIx::Regexp::Token::GroupType';
+	PPIx::Regexp::Token::GroupType->__PPIX_ELEM__rebless(
+	    $args->[2] );
 
 	# Shove our three significant tokens into the type.
 	push @{ $brkt->{type} }, splice @{ $args }, 0, 3;
@@ -304,13 +305,15 @@ sub _check_for_interpolated_match {
 	    && $args->[4]->content() eq ':' ) {
 
 	    # Rebless the '?' as a GroupType::Modifier.
-	    bless $args->[0], 'PPIx::Regexp::Token::GroupType::Modifier';
-	    # Note that we do _not_ want __PPIX_TOKEN__post_make here.
+	    PPIx::Regexp::Token::GroupType::Modifier->__PPIX_ELEM__rebless(
+		$args->[0] );
 
 	    # Rebless the '-' and ':' as GroupType, just so they do not
 	    # look like something to match against.
-	    bless $args->[2], 'PPIx::Regexp::Token::GroupType';
-	    bless $args->[4], 'PPIx::Regexp::Token::GroupType';
+	    PPIx::Regexp::Token::GroupType->__PPIX_ELEM__rebless(
+		$args->[2] );
+	    PPIx::Regexp::Token::GroupType->__PPIX_ELEM__rebless(
+		$args->[4] );
 
 	    # Shove our five significant tokens into the type.
 	    push @{ $brkt->{type} }, splice @{ $args }, 0, 5;
@@ -334,8 +337,8 @@ sub _check_for_interpolated_match {
     }
 
     # Rebless the '?' as a GroupType::Modifier.
-    bless $args->[0], 'PPIx::Regexp::Token::GroupType::Modifier';
-    # Note that we do _not_ want __PPIX_TOKEN__post_make here.
+    PPIx::Regexp::Token::GroupType::Modifier->__PPIX_ELEM__rebless(
+	$args->[0] );
 
     # Shove all the contents of $args into type, using splice to leave
     # @{ $args } empty after we do this.

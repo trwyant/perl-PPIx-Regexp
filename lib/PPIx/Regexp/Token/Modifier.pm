@@ -102,6 +102,19 @@ foreach my $value ( values %aggregate ) {
     $de_aggregate{$value}++;
 }
 
+use constant TOKENIZER_ARGUMENT_REQUIRED => 1;
+
+sub __new {
+    my ( $class, $content, %arg ) = @_;
+
+    my $self = $class->SUPER::__new( $content, %arg )
+	or return;
+
+    $arg{tokenizer}->modifier_modify( $self->modifiers() );
+
+    return $self;
+}
+
 =head2 asserts
 
  $token->asserts( 'i' ) and print "token asserts i";
@@ -400,15 +413,6 @@ sub __PPIX_TOKEN__recognize {
 	[ qr{ \A [(] [?] [[:lower:]]* -? [[:lower:]]* [)] }smx ],
 	[ qr{ \A [(] [?] \^ [[:lower:]]* [)] }smx ],
     );
-}
-
-# After the token is made, figure out what it asserts or negates.
-
-sub __PPIX_TOKEN__post_make {
-    my ( $self, $tokenizer, $arg ) = @_;
-    $self->__impose_defaults( $arg );
-    $tokenizer->modifier_modify( $self->modifiers() );
-    return;
 }
 
 {

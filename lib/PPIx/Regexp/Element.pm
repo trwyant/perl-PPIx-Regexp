@@ -525,34 +525,6 @@ sub nav {
 
 }
 
-# $self->__impose_defaults( $arg, \%default );
-#
-# This method can be called in __PPIX_TOKEN__post_make() to supply
-# defaults for attributes. It returns nothing.
-#
-# The arguments are hash references, which are taken in left-to-right
-# order, with the, with the first extant value being used. Arguments
-# which are not hash references are ignored.
-#
-# With version 0.042_03, this is also the preferred place to
-# validate an object, and needs to be called from both
-# __PPIX_ELEM__rebless() and __PPIX_TOKEN__post_make(). All overrides of
-# this should call SUPER:: unless they REALLY know what they are doing,
-# and document what is going on.
-
-sub __impose_defaults {
-    my ( $self, @args ) = @_;
-    foreach my $arg ( @args ) {
-	ref $arg eq 'HASH'
-	    or next;
-	foreach my $key ( keys %{ $arg } ) {
-	    exists $self->{$key}
-		or $self->{$key} = $arg->{$key};
-	}
-    }
-    return;
-}
-
 # Bless into TOKEN_UNKNOWN, record error message, return 1.
 sub __error {
     my ( $self, $msg ) = @_;
@@ -575,7 +547,6 @@ sub __PPIX_ELEM__rebless {
     $self ||= {};
     bless $self, $class;
     delete $self->{error};
-    $self->__impose_defaults( \%arg );
     defined $self->{error}
 	and return 1;
     delete $self->{error};

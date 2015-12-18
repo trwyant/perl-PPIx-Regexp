@@ -45,6 +45,25 @@ use PPIx::Regexp::Constant qw{ RE_CAPTURE_NAME };
 
 our $VERSION = '0.044';
 
+use constant TOKENIZER_ARGUMENT_REQUIRED => 1;
+
+sub __new {
+    my ( $class, $content, %arg ) = @_;
+
+    defined $arg{perl_version_introduced}
+	or $arg{perl_version_introduced} = '5.009005';
+
+    my $self = $class->SUPER::__new( $content, %arg );
+
+    foreach my $name ( $arg{tokenizer}->capture() ) {
+	defined $name or next;
+	$self->{name} = $name;
+	return $self;
+    }
+
+    confess 'Programming error - can not figure out capture name';
+}
+
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 
@@ -62,23 +81,6 @@ This method returns the name of the capture.
 sub name {
     my ( $self ) = @_;
     return $self->{name};
-}
-
-sub perl_version_introduced {
-    return '5.009005';
-}
-
-sub __PPIX_TOKEN__post_make {
-    my ( $self, $tokenizer, $arg ) = @_;
-    $self->__impose_defaults( $arg );
-
-    foreach my $name ( $tokenizer->capture() ) {
-	defined $name or next;
-	$self->{name} = $name;
-	return;
-    }
-
-    confess 'Programming error - can not figure out capture name';
 }
 
 sub __make_group_type_matcher {

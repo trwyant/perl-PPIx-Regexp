@@ -43,6 +43,20 @@ use PPIx::Regexp::Util qw{ __instance };
 
 our $VERSION = '0.044';
 
+use constant TOKENIZER_ARGUMENT_REQUIRED => 1;
+
+sub __new {
+    my ( $class, $content, %arg ) = @_;
+
+    my $self = $class->SUPER::__new( $content, %arg )
+	or return;
+
+    $self->{operation} = $self->_compute_operation_name(
+	$arg{tokenizer} ) || 'unknown';
+
+    return $self;
+}
+
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 
@@ -121,21 +135,18 @@ sub _treat_as_literal {
 	},
     );
 
-    sub __PPIX_TOKEN__post_make {
+    sub _compute_operation_name {
 	my ( $self, $tokenizer ) = @_;
 
 	my $content = $self->content();
 
 	if ( $tokenizer->cookie( COOKIE_CLASS ) ) {
-	    $self->{operation} = $operation{ COOKIE_CLASS() }{$content};
+	    return $operation{ COOKIE_CLASS() }{$content};
 	} elsif ( $tokenizer->cookie( COOKIE_REGEX_SET ) ) {
-	    $self->{operation} = $operation{ COOKIE_REGEX_SET() }{$content};
+	    return $operation{ COOKIE_REGEX_SET() }{$content};
 	} else {
-	    $self->{operation} = $operation{''}{$content};
+	    return $operation{''}{$content};
 	}
-	defined $self->{operation}
-	    or $self->{operation} = 'unknown';
-	return;
     }
 
 

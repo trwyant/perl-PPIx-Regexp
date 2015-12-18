@@ -860,7 +860,6 @@ sub token (@) {
 
 	if ( eval {
 		my $class = $context->{class}{class};
-		my $obj = $class->_new( $content );
 		my $tokenizer = PPIx::Regexp::Tokenizer->new(
 		    $content,
 		    postderef	=> $args{postderef},
@@ -875,8 +874,10 @@ sub token (@) {
 		if ( my $cookie = delete $args{cookie} ) {
 		    $tokenizer->cookie( $cookie => sub { 1 } );
 		}
-		$obj->can( '__PPIX_TOKEN__post_make' )
-		    and $obj->__PPIX_TOKEN__post_make( $tokenizer );
+		my $obj = $class->__new(
+		    $content,
+		    tokenizer => $tokenizer,
+		);
 		$context->{object} = $obj;
 	    } ) {
 	    while ( my ( $name, $val ) = each %args ) {

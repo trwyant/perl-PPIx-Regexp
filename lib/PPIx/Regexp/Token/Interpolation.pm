@@ -34,12 +34,26 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token::Code };
 
+use Carp qw{ confess };
 use PPI::Document;
 use PPIx::Regexp::Constant qw{
     COOKIE_CLASS COOKIE_REGEX_SET TOKEN_LITERAL MINIMUM_PERL
 };
 
 our $VERSION = '0.044';
+
+use constant VERSION_WHEN_IN_REGEX_SET => '5.017009';
+
+sub __new {
+    my ( $class, $content, %arg ) = @_;
+
+    defined $arg{perl_version_introduced}
+	or $arg{perl_version_introduced} = MINIMUM_PERL;
+
+    my $self = $class->SUPER::__new( $content, %arg );
+
+    return $self;
+}
 
 # Return true if the token can be quantified, and false otherwise
 # This can be quantified because it might interpolate a quantifiable
@@ -309,23 +323,6 @@ sub _square {
     $kids[0]->isa( 'PPI::Token::Symbol' ) and return 1;
 
     # Anything else is rejected.
-    return;
-}
-
-sub __PPIX_TOKEN__post_make {
-    my ( $self, $tokenizer, $arg ) = @_;
-
-    my $perl_version_introduced =
-	$tokenizer->__recognize_postderef( $self ) ?  '5.019005' :
-	$tokenizer->cookie( COOKIE_REGEX_SET ) ? '5.017009' :
-	MINIMUM_PERL;
-
-    $self->__impose_defaults( $arg,
-	{
-	    perl_version_introduced	=> $perl_version_introduced,
-	},
-    );
-
     return;
 }
 

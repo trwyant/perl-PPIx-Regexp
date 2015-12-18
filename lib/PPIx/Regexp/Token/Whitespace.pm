@@ -41,6 +41,18 @@ use PPIx::Regexp::Constant qw{ COOKIE_REGEX_SET MINIMUM_PERL };
 
 our $VERSION = '0.044';
 
+sub __new {
+    my ( $class, $content, %arg ) = @_;
+
+    defined $arg{perl_version_introduced}
+	or $arg{perl_version_introduced} = 
+	( grep { 127 < ord } split qr{}, $content )
+	? '5.021001'
+	: MINIMUM_PERL;
+
+    return $class->SUPER::__new( $content, %arg );
+}
+
 sub explain {
     my ( $self ) = @_;
     my $parent;
@@ -78,60 +90,13 @@ sub can_be_quantified { return };
 # (when scanning for delimiters) or by PPIx::Regexp::Token::Literal (if
 # it hits a match for \s and finds the regular expression has the /x
 # modifier asserted.
-
-=begin comment
-
-sub __PPIX_TOKENIZER__regexp {
-    my ( $class, $tokenizer, $character ) = @_;
-
-    return scalar $tokenizer->find_regexp( qr{ \A \s+ }smx );
-
-}
-
-=end comment
-
-=cut
-
-sub __PPIX_TOKEN__post_make {
-    my ( $self, $tokenizer, $arg ) = @_;
-
-#   $self->{perl_version_introduced} = MINIMUM_PERL;
-
-    # RT #91798.
-    # TODO the above needs to be replaced by the following (suitably
-    # modified) when the non-ASCII white space characters are finally
-    # recognized by Perl.
-
-=begin comment
-
-    if ( ord $self->content() < 128 ) {
-	$self->{perl_version_introduced} = MINIMUM_PERL;
-    } elsif ( $tokenizer && $tokenizer->cookie( COOKIE_REGEX_SET ) ) {
-	$self->{perl_version_introduced} = '5.017008';
-    } else {
-	$self->{perl_version_introduced} = '5.017009';
-    }
-
-=end comment
-
-=cut
-
-    # The extended white space characters came back in Perl 5.21.1
-
-    my $perl_version_introduced =
-	( grep { 127 < ord } split qr{}, $self->content() )
-	? '5.021001'
-	: MINIMUM_PERL;
-
-    $self->__impose_defaults(
-	$arg,
-	{
-	    perl_version_introduced	=> $perl_version_introduced,
-	},
-    );
-
-    return;
-}
+#
+# sub __PPIX_TOKENIZER__regexp {
+#     my ( $class, $tokenizer, $character ) = @_;
+#
+#     return scalar $tokenizer->find_regexp( qr{ \A \s+ }smx );
+#
+# }
 
 1;
 

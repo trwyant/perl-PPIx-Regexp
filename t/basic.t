@@ -93,187 +93,203 @@ require_ok( 'PPIx::Regexp::Support' );
 
 require_ok( 'PPIx::Regexp::Token' );
 class_isa_ok( 'PPIx::Regexp::Token', 'PPIx::Regexp::Element' );
-isa_ok( PPIx::Regexp::Token->_new( 'xyzzy' ), 'PPIx::Regexp::Token' );
+isa_ok( PPIx::Regexp::Token->__new( 'xyzzy' ), 'PPIx::Regexp::Token' );
 
 require_ok( 'PPIx::Regexp::Token::Assertion' );
 class_isa_ok( 'PPIx::Regexp::Token::Assertion', 'PPIx::Regexp::Token'
     );
-isa_ok( PPIx::Regexp::Token::Assertion->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::Assertion->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::Assertion' );
 
 require_ok( 'PPIx::Regexp::Token::Backreference' );
 class_isa_ok( 'PPIx::Regexp::Token::Backreference',
     'PPIx::Regexp::Token::Reference' );
-isa_ok( PPIx::Regexp::Token::Backreference->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::Backreference->__new( '\\1' ),
     'PPIx::Regexp::Token::Backreference' );
 
 require_ok( 'PPIx::Regexp::Token::Backtrack' );
 class_isa_ok( 'PPIx::Regexp::Token::Backtrack', 'PPIx::Regexp::Token'
     );
-isa_ok( PPIx::Regexp::Token::Backtrack->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::Backtrack->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::Backtrack' );
 
 require_ok( 'PPIx::Regexp::Token::CharClass' );
 class_isa_ok( 'PPIx::Regexp::Token::CharClass', 'PPIx::Regexp::Token'
     );
-isa_ok( PPIx::Regexp::Token::CharClass->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::CharClass->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::CharClass' );
 
 require_ok( 'PPIx::Regexp::Token::CharClass::POSIX' );
 class_isa_ok( 'PPIx::Regexp::Token::CharClass::POSIX',
     'PPIx::Regexp::Token::CharClass' );
-isa_ok( PPIx::Regexp::Token::CharClass::POSIX->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::CharClass::POSIX->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::CharClass::POSIX' );
 
 require_ok( 'PPIx::Regexp::Token::CharClass::Simple' );
 class_isa_ok( 'PPIx::Regexp::Token::CharClass::Simple',
     'PPIx::Regexp::Token::CharClass' );
-isa_ok( PPIx::Regexp::Token::CharClass::Simple->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::CharClass::Simple->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::CharClass::Simple' );
 
 require_ok( 'PPIx::Regexp::Token::Code' );
 class_isa_ok( 'PPIx::Regexp::Token::Code', 'PPIx::Regexp::Token' );
-isa_ok( PPIx::Regexp::Token::Code->_new( 'xyzzy' ),
-    'PPIx::Regexp::Token::Code' );
+# The following not done because as of [%% next_version %%]
+# instantiation requires a valid tokenizer argument.
+# isa_ok( PPIx::Regexp::Token::Code->__new( 'xyzzy' ),
+#     'PPIx::Regexp::Token::Code' );
 
 require_ok( 'PPIx::Regexp::Token::Comment' );
 class_isa_ok( 'PPIx::Regexp::Token::Comment', 'PPIx::Regexp::Token' );
-isa_ok( PPIx::Regexp::Token::Comment->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::Comment->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::Comment' );
 
 require_ok( 'PPIx::Regexp::Token::Condition' );
 class_isa_ok( 'PPIx::Regexp::Token::Condition',
     'PPIx::Regexp::Token::Reference' );
-isa_ok( PPIx::Regexp::Token::Condition->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::Condition->__new( '(1)' ),
     'PPIx::Regexp::Token::Condition' );
 
 require_ok( 'PPIx::Regexp::Token::Control' );
 class_isa_ok( 'PPIx::Regexp::Token::Control', 'PPIx::Regexp::Token' );
-isa_ok( PPIx::Regexp::Token::Control->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::Control->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::Control' );
 
 require_ok( 'PPIx::Regexp::Token::Delimiter' );
 class_isa_ok( 'PPIx::Regexp::Token::Delimiter', 'PPIx::Regexp::Token'
     );
-isa_ok( PPIx::Regexp::Token::Delimiter->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::Delimiter->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::Delimiter' );
 
 require_ok( 'PPIx::Regexp::Token::Greediness' );
 class_isa_ok( 'PPIx::Regexp::Token::Greediness', 'PPIx::Regexp::Token'
     );
-isa_ok( PPIx::Regexp::Token::Greediness->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::Greediness->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::Greediness' );
 
 require_ok( 'PPIx::Regexp::Token::GroupType' );
 class_isa_ok( 'PPIx::Regexp::Token::GroupType', 'PPIx::Regexp::Token'
     );
-isa_ok( PPIx::Regexp::Token::GroupType->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::GroupType->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::GroupType' );
 
 require_ok( 'PPIx::Regexp::Token::GroupType::Assertion' );
 class_isa_ok( 'PPIx::Regexp::Token::GroupType::Assertion',
     'PPIx::Regexp::Token::GroupType' );
-isa_ok( PPIx::Regexp::Token::GroupType::Assertion->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::GroupType::Assertion->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::GroupType::Assertion' );
 
 require_ok( 'PPIx::Regexp::Token::GroupType::BranchReset' );
 class_isa_ok( 'PPIx::Regexp::Token::GroupType::BranchReset',
     'PPIx::Regexp::Token::GroupType' );
-isa_ok( PPIx::Regexp::Token::GroupType::BranchReset->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::GroupType::BranchReset->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::GroupType::BranchReset' );
 
 require_ok( 'PPIx::Regexp::Token::GroupType::Code' );
 class_isa_ok( 'PPIx::Regexp::Token::GroupType::Code',
     'PPIx::Regexp::Token::GroupType' );
-isa_ok( PPIx::Regexp::Token::GroupType::Code->_new( 'xyzzy' ),
-    'PPIx::Regexp::Token::GroupType::Code' );
+# The following not done because as of [%% next_version %%]
+# instantiation requires a valid tokenizer argument.
+# isa_ok( PPIx::Regexp::Token::GroupType::Code->__new( 'xyzzy' ),
+#     'PPIx::Regexp::Token::GroupType::Code' );
 
 require_ok( 'PPIx::Regexp::Token::GroupType::Modifier' );
 class_isa_ok( 'PPIx::Regexp::Token::GroupType::Modifier',
     'PPIx::Regexp::Token::GroupType' );
 class_isa_ok( 'PPIx::Regexp::Token::GroupType::Modifier',
     'PPIx::Regexp::Token::Modifier' );
-isa_ok( PPIx::Regexp::Token::GroupType::Modifier->_new( 'xyzzy' ),
-    'PPIx::Regexp::Token::GroupType::Modifier' );
+# The following not done because as of [%% next_version %%]
+# instantiation requires a valid tokenizer argument.
+# isa_ok( PPIx::Regexp::Token::GroupType::Modifier->__new( 'xyzzy' ),
+#     'PPIx::Regexp::Token::GroupType::Modifier' );
 
 require_ok( 'PPIx::Regexp::Token::GroupType::NamedCapture' );
 class_isa_ok( 'PPIx::Regexp::Token::GroupType::NamedCapture',
     'PPIx::Regexp::Token::GroupType' );
-isa_ok( PPIx::Regexp::Token::GroupType::NamedCapture->_new( 'xyzzy' ),
-    'PPIx::Regexp::Token::GroupType::NamedCapture' );
+# The following not done because as of [%% next_version %%]
+# instantiation requires a valid tokenizer argument.
+# isa_ok( PPIx::Regexp::Token::GroupType::NamedCapture->__new( 'xyzzy' ),
+#     'PPIx::Regexp::Token::GroupType::NamedCapture' );
 
 require_ok( 'PPIx::Regexp::Token::GroupType::Subexpression' );
 class_isa_ok( 'PPIx::Regexp::Token::GroupType::Subexpression',
     'PPIx::Regexp::Token::GroupType' );
-isa_ok( PPIx::Regexp::Token::GroupType::Subexpression->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::GroupType::Subexpression->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::GroupType::Subexpression' );
 
 require_ok( 'PPIx::Regexp::Token::GroupType::Switch' );
 class_isa_ok( 'PPIx::Regexp::Token::GroupType::Switch',
     'PPIx::Regexp::Token::GroupType' );
-isa_ok( PPIx::Regexp::Token::GroupType::Switch->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::GroupType::Switch->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::GroupType::Switch' );
 
 require_ok( 'PPIx::Regexp::Token::Interpolation' );
 class_isa_ok( 'PPIx::Regexp::Token::Interpolation',
     'PPIx::Regexp::Token::Code' );
-isa_ok( PPIx::Regexp::Token::Interpolation->_new( 'xyzzy' ),
-    'PPIx::Regexp::Token::Interpolation' );
+# The following not done because as of [%% next_version %%]
+# instantiation requires a valid tokenizer argument.
+# isa_ok( PPIx::Regexp::Token::Interpolation->__new( 'xyzzy' ),
+#     'PPIx::Regexp::Token::Interpolation' );
 
 require_ok( 'PPIx::Regexp::Token::Literal' );
 class_isa_ok( 'PPIx::Regexp::Token::Literal', 'PPIx::Regexp::Token' );
-isa_ok( PPIx::Regexp::Token::Literal->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::Literal->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::Literal' );
 
 require_ok( 'PPIx::Regexp::Token::Modifier' );
 class_isa_ok( 'PPIx::Regexp::Token::Modifier', 'PPIx::Regexp::Token' );
-isa_ok( PPIx::Regexp::Token::Modifier->_new( 'xyzzy' ),
-    'PPIx::Regexp::Token::Modifier' );
+# The following not done because as of [%% next_version %%]
+# instantiation requires a valid tokenizer argument.
+# isa_ok( PPIx::Regexp::Token::Modifier->__new( 'xyzzy' ),
+#     'PPIx::Regexp::Token::Modifier' );
 
 require_ok( 'PPIx::Regexp::Token::Operator' );
 class_isa_ok( 'PPIx::Regexp::Token::Operator', 'PPIx::Regexp::Token' );
-isa_ok( PPIx::Regexp::Token::Operator->_new( 'xyzzy' ),
-    'PPIx::Regexp::Token::Operator' );
+# The following not done because as of [%% next_version %%]
+# instantiation requires a valid tokenizer argument.
+# isa_ok( PPIx::Regexp::Token::Operator->__new( 'xyzzy' ),
+#     'PPIx::Regexp::Token::Operator' );
 
 require_ok( 'PPIx::Regexp::Token::Quantifier' );
 class_isa_ok( 'PPIx::Regexp::Token::Quantifier', 'PPIx::Regexp::Token'
     );
-isa_ok( PPIx::Regexp::Token::Quantifier->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::Quantifier->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::Quantifier' );
 
 require_ok( 'PPIx::Regexp::Token::Recursion' );
 class_isa_ok( 'PPIx::Regexp::Token::Recursion',
     'PPIx::Regexp::Token::Reference' );
-isa_ok( PPIx::Regexp::Token::Recursion->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::Recursion->__new( '(?1)' ),
     'PPIx::Regexp::Token::Recursion' );
 
 require_ok( 'PPIx::Regexp::Token::Reference' );
 class_isa_ok( 'PPIx::Regexp::Token::Reference', 'PPIx::Regexp::Token'
     );
-isa_ok( PPIx::Regexp::Token::Reference->_new( 'xyzzy' ),
-    'PPIx::Regexp::Token::Reference' );
+# This is an abstract class and should never be instantiated in the
+# first place.
+# isa_ok( PPIx::Regexp::Token::Reference->__new( 'xyzzy' ),
+#     'PPIx::Regexp::Token::Reference' );
 
 require_ok( 'PPIx::Regexp::Token::Structure' );
 class_isa_ok( 'PPIx::Regexp::Token::Structure', 'PPIx::Regexp::Token'
     );
-isa_ok( PPIx::Regexp::Token::Structure->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::Structure->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::Structure' );
 
 require_ok( 'PPIx::Regexp::Token::Unknown' );
 class_isa_ok( 'PPIx::Regexp::Token::Unknown', 'PPIx::Regexp::Token' );
-isa_ok( PPIx::Regexp::Token::Unknown->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::Unknown->__new( 'xyzzy', error => 'bogus' ),
     'PPIx::Regexp::Token::Unknown' );
 
 require_ok( 'PPIx::Regexp::Token::Unmatched' );
 class_isa_ok( 'PPIx::Regexp::Token::Unmatched', 'PPIx::Regexp::Token'
     );
-isa_ok( PPIx::Regexp::Token::Unmatched->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::Unmatched->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::Unmatched' );
 
 require_ok( 'PPIx::Regexp::Token::Whitespace' );
 class_isa_ok( 'PPIx::Regexp::Token::Whitespace', 'PPIx::Regexp::Token'
     );
-isa_ok( PPIx::Regexp::Token::Whitespace->_new( 'xyzzy' ),
+isa_ok( PPIx::Regexp::Token::Whitespace->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::Whitespace' );
 
 require_ok( 'PPIx::Regexp::Tokenizer' );

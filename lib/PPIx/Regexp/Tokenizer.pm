@@ -401,9 +401,13 @@ sub make_token {
     $self->{trace} > 1
 	and warn "    make_token: cursor_curr = $self->{cursor_curr}; ",
 	    "cursor_limit = $self->{cursor_limit}\n";
-    my $token = $class->_new( $content ) or return;
-    $token->significant() and $self->{expect} = undef;
-    $token->__PPIX_TOKEN__post_make( $self, $arg );
+    my $token = $class->__new( $content,
+	tokenizer	=> $self,
+	%{ $arg || {} } )
+	or return;
+
+    $token->significant()
+	and $self->{expect} = undef;
 
     $token->isa( TOKEN_UNKNOWN ) and $self->{failures}++;
 

@@ -130,7 +130,8 @@ sub __PPIX_TOKENIZER__regexp {
     foreach ( @{ $recognize{$tokenizer->get_mode()} } ) {
 	my ( $re, $arg ) = @{ $_ };
 	my $accept = $tokenizer->find_regexp( $re ) or next;
-	return $tokenizer->make_token( $accept, __PACKAGE__, $arg );
+	my %arg = ( %{ $arg }, tokenizer => $tokenizer );
+	return $tokenizer->make_token( $accept, __PACKAGE__, \%arg );
     }
 
     return;
