@@ -50,7 +50,7 @@ use PPI::Document;
 use PPIx::Regexp::Constant qw{ COOKIE_REGEX_SET };
 use PPIx::Regexp::Util qw{ __instance };
 
-our $VERSION = '0.044';
+our $VERSION = '0.044_01';
 
 use constant TOKENIZER_ARGUMENT_REQUIRED => 1;
 use constant VERSION_WHEN_IN_REGEX_SET => undef;

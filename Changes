@@ -1,3 +1,15 @@
+0.044_01	2015-12-23	T. R. Wyant
+
+  Deprecate tokenizer method prior() in favor of
+    prior_significant_token(). This is not part of the public interface,
+    so I suppose I could have just slam-dunked it, but ...
+
+  Add ability to parse strings as well as regexes
+    The new functionality is controlled by the new new() argument
+    'parse', whose permitted values are 'regex' (the default), 'string',
+    or 'guess'.  String parsing, and the 'string' and 'guess' values of
+    'parse', are experimental.
+
 0.044		2015-12-08	T. R. Wyant
   No changes since 0.043_03.
 
