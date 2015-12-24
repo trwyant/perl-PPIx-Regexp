@@ -82,7 +82,8 @@ sub perl_version_introduced {
 sub __PPIX_TOKENIZER__regexp {
     my ( undef, $tokenizer, $character, $char_type ) = @_;
 
-    $tokenizer->prior( 'is_quantifier' ) or return;
+    $tokenizer->prior_significant_token( 'is_quantifier' )
+	or return;
 
     $greediness{$character} or return;
 

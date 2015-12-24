@@ -5,7 +5,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Support };
 
-use Carp qw{ confess };
+use Carp qw{ carp croak confess };
 use PPIx::Regexp::Constant qw{
     MINIMUM_PERL
     TOKEN_LITERAL
@@ -516,6 +516,18 @@ sub ppi_document {
 
 sub prior {
     my ( $self, $method, @args ) = @_;
+    $self->_deprecation_notice( method => 'prior',
+	'prior_significant_token()' );
+    defined $method or return $self->{prior};
+    $self->{prior}->can( $method )
+	or confess 'Programming error - ',
+	    ( ref $self->{prior} || $self->{prior} ),
+	    ' does not support method ', $method;
+    return $self->{prior}->$method( @args );
+}
+
+sub prior_significant_token {
+    my ( $self, $method, @args ) = @_;
     defined $method or return $self->{prior};
     $self->{prior}->can( $method )
 	or confess 'Programming error - ',
@@ -693,6 +705,62 @@ sub tokens {
     }
 
     return @rslt;
+}
+
+#	$self->_deprecation_notice( $type, $name );
+#
+#	This method centralizes deprecation. Type is 'attribute' or
+#	'method'. Deprecation is driven of the %deprecate hash. Values
+#	are:
+#	    false - no warning
+#	    1 - warn on first use
+#	    2 - warn on each use
+#	    3 - die on each use.
+#
+#	$self->_deprecation_in_progress( $type, $name )
+#
+#	This method returns true if the deprecation is in progress. In
+#	fact it returns the deprecation level.
+
+{
+
+    my %deprecate = (
+	attribute => {
+	},
+	method => {
+	    prior	=> 0,
+	},
+    );
+
+    sub _deprecation_notice {
+	my ( $self, $type, $name, $repl ) = @_;
+	$deprecate{$type} or return;
+	$deprecate{$type}{$name} or return;
+	my $msg = sprintf 'The %s %s is %s', $name, $type,
+	    $deprecate{$type}{$name} > 2 ? 'removed' : 'deprecated';
+	defined $repl
+	    and $msg .= "; use $repl instead";
+	$deprecate{$type}{$name} >= 3
+	    and croak $msg;
+	warnings::enabled( 'deprecated' )
+	    and carp $msg;
+	$deprecate{$type}{$name} == 1
+	    and $deprecate{$type}{$name} = 0;
+	return;
+    }
+
+=begin comment
+
+    sub _deprecation_in_progress {
+	my ( $self, $type, $name ) = @_;
+	$deprecate{$type} or return;
+	return $deprecate{$type}{$name};
+    }
+
+=end comment
+
+=cut
+
 }
 
 sub _remainder {
@@ -1442,12 +1510,39 @@ returns it.
  $tokenizer->prior( 'can_be_quantified' )
     and print "The prior token can be quantified.\n";
 
+This method is deprecated in favor of
+L<prior_significant_tokrn()|/prior_significant_token>. Six months after
+the release of version [%% next_version %%] it will start warning on the
+first use. Six months after that it will warn on every use. Six months
+after that a fatal exception will be thrown when it is called. I am not
+sure I need to put this though a deprecation cycle, given that this
+method is documented as not being part of the public interface, but I
+choose to err on the side of caution.
+
 This method calls the named method on the most-recently-instantiated
 significant token, and returns the result. Any arguments subsequent to
 the method name will be passed to the method.
 
 Because this method is designed to be used within the tokenizing system,
 it will die horribly if the named method does not exist.
+
+If called with no arguments at all the most-recently-instantiated
+significant token is returned.
+
+=head2 prior_significant_token
+
+ $tokenizer->prior_significant_token( 'can_be_quantified' )
+    and print "The prior token can be quantified.\n";
+
+This method calls the named method on the most-recently-instantiated
+significant token, and returns the result. Any arguments subsequent to
+the method name will be passed to the method.
+
+Because this method is designed to be used within the tokenizing system,
+it will die horribly if the named method does not exist.
+
+If called with no arguments at all the most-recently-instantiated
+significant token is returned.
 
 =head1 ENVIRONMENT VARIABLES
 

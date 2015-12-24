@@ -209,7 +209,7 @@ sub is_quantifier {
 
 	    # If the prior token can not be quantified, all this is
 	    # unnecessary.
-	    $tokenizer->prior( 'can_be_quantified' )
+	    $tokenizer->prior_significant_token( 'can_be_quantified' )
 		or return 1;
 
 	    # We make our token now, before setting the cookie. Otherwise
@@ -229,7 +229,8 @@ sub is_quantifier {
 			my $character = $token->content();
 			if ( $character eq ',' ) {
 			    $commas++ and return;
-			    return $tokenizer->prior( 'content' ) ne '{';
+			    return $tokenizer->prior_significant_token(
+				'content' ) ne '{';
 			}
 			return $character =~ m/ \A \d \z /smx;
 		    }
@@ -254,7 +255,7 @@ sub is_quantifier {
 	if ( $character eq '}' ) {
 	    $tokenizer->cookie( COOKIE_QUANT, undef )
 		or return 1;
-	    $tokenizer->prior( 'class' )->isa( __PACKAGE__ )
+	    $tokenizer->prior_significant_token( 'class' )->isa( __PACKAGE__ )
 		and return 1;
 	    my $token = $tokenizer->make_token( 1 );
 	    $token->{is_quantifier} = 1;

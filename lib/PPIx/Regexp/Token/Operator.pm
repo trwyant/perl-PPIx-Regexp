@@ -161,7 +161,7 @@ sub __PPIX_TOKENIZER__regexp {
     # character class.
     if ( $character eq '-' ) {
 
-	_treat_as_literal( $tokenizer->prior() )
+	_treat_as_literal( $tokenizer->prior_significant_token() )
 	    or return $tokenizer->make_token( 1, TOKEN_LITERAL );
 	
 	my @tokens = ( $tokenizer->make_token( 1 ) );
