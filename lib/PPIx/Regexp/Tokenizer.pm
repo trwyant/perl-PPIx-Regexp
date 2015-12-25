@@ -426,7 +426,7 @@ sub make_token {
     # do this after processing cookies, so that the cookies have access
     # to the old token if they want.
     $token->significant()
-	and $self->{prior} = $token;
+	and $self->{prior_significant_token} = $token;
 
     return $token;
 }
@@ -518,22 +518,24 @@ sub prior {
     my ( $self, $method, @args ) = @_;
     $self->_deprecation_notice( method => 'prior',
 	'prior_significant_token()' );
-    defined $method or return $self->{prior};
-    $self->{prior}->can( $method )
+    defined $method or return $self->{prior_significant_token};
+    $self->{prior_significant_token}->can( $method )
 	or confess 'Programming error - ',
-	    ( ref $self->{prior} || $self->{prior} ),
+	    ( ref $self->{prior_significant_token} ||
+		$self->{prior_significant_token} ),
 	    ' does not support method ', $method;
-    return $self->{prior}->$method( @args );
+    return $self->{prior_significant_token}->$method( @args );
 }
 
 sub prior_significant_token {
     my ( $self, $method, @args ) = @_;
-    defined $method or return $self->{prior};
-    $self->{prior}->can( $method )
+    defined $method or return $self->{prior_significant_token};
+    $self->{prior_significant_token}->can( $method )
 	or confess 'Programming error - ',
-	    ( ref $self->{prior} || $self->{prior} ),
+	    ( ref $self->{prior_significant_token} ||
+		$self->{prior_significant_token} ),
 	    ' does not support method ', $method;
-    return $self->{prior}->$method( @args );
+    return $self->{prior_significant_token}->$method( @args );
 }
 
 # my $length = $token->__recognize_postderef( $tokenizer, $iterator ).
