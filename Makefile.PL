@@ -22,19 +22,8 @@ my %args = (
 
 $mmv >= 6.31 and $args{LICENSE} = 'perl';
 
-$mmv >= 6.4501 and $args{META_ADD} = {
-    no_index => {
-	directory => [ qw{ inc t xt } ],
-    },
-};
-
-$mmv >= 6.4501 and $args{META_MERGE} = {
-    dynamic_config => 1,
-    resources => {
-	bugtracker => 'https://rt.cpan.org/Public/Dist/Display.html?Name=PPIx-Regexp',
-	license => 'http://dev.perl.org/licenses/',
-    },
-};
+$mmv >= 6.4501
+    and $args{META_MERGE} = $meta->meta_merge();
 
 $mmv >= 6.4701 and $args{MIN_PERL_VERSION} = $meta->requires_perl();
 

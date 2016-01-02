@@ -21,18 +21,11 @@ my %args = (
     requires => $meta->requires(
 	perl => $meta->requires_perl(),
     ),
-    dynamic_config => 1,
     license => 'perl',
 );
 
-$mbv >= 0.28 and $args{meta_merge} = {
-    no_index => {
-	directory => [qw{ inc t xt }],
-    },
-    resources => {
-	bugtracker => 'https://rt.cpan.org/Public/Dist/Display.html?Name=PPIx-Regexp',
-    },
-};
+$mbv >= 0.28
+    and $args{meta_merge} = $meta->meta_merge();
 
 # Don't require Module::Build when building distribution, because user
 # can use ExtUtils::MakeMaker.
