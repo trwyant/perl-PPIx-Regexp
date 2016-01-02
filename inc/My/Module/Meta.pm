@@ -1,4 +1,4 @@
-package PPIx::Regexp::Meta;
+package My::Module::Meta;
 
 use 5.006;
 
@@ -53,13 +53,13 @@ __END__
 
 =head1 NAME
 
-PPIx::Regexp::Meta - Information needed to build PPIx::Regexp
+My::Module::Meta - Information needed to build PPIx::Regexp
 
 =head1 SYNOPSIS
 
  use lib qw{ inc };
- use PPIx::Regexp::Meta;
- my $meta = PPIx::Regexp::Meta->new();
+ use My::Module::Meta;
+ my $meta = My::Module::Meta->new();
  use YAML;
  print "Required modules:\n", Dump(
      $meta->requires() );

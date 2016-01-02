@@ -5,10 +5,10 @@ eg/predump
 eg/prenav
 eg/preslurp
 eg/README
-inc/PPIx/Regexp/Build.pm
-inc/PPIx/Regexp/Meta.pm
-inc/PPIx/Regexp/Mock_Tokenizer.pm
-inc/PPIx/Regexp/Test.pm
+inc/My/Module/Build.pm
+inc/My/Module/Meta.pm
+inc/My/Module/Mock_Tokenizer.pm
+inc/My/Module/Test.pm
 lib/PPIx/Regexp.pm
 lib/PPIx/Regexp/Constant.pm
 lib/PPIx/Regexp/Dumper.pm

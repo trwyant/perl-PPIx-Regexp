@@ -1,4 +1,4 @@
-package PPIx::Regexp::Test;
+package My::Module::Test;
 
 use strict;
 use warnings;
@@ -428,12 +428,12 @@ __END__
 
 =head1 NAME
 
-PPIx::Regexp::Test - support for testing PPIx::Regexp
+My::Module::Test - support for testing PPIx::Regexp
 
 =head1 SYNOPSIS
 
  use lib qw{ inc };
- use PPIx::Regexp::Test;
+ use My::Module::Test;
 
  parse   ( '/foo/' );
  value   ( failures => [], 0 );

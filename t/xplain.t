@@ -6,7 +6,7 @@ use strict;
 use warnings;
 
 use lib qw{ inc };
-use PPIx::Regexp::Test;
+use My::Module::Test;
 
 use Test::More 0.88;	# Because of done_testing();
 

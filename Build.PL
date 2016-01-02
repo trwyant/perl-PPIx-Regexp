@@ -6,12 +6,12 @@ use warnings;
 use lib qw{ inc };
 
 use Module::Build;
-use PPIx::Regexp::Build;
-use PPIx::Regexp::Meta;
+use My::Module::Build;
+use My::Module::Meta;
 
 (my $mbv = Module::Build->VERSION()) =~ s/_//g;
 
-my $meta = PPIx::Regexp::Meta->new();
+my $meta = My::Module::Meta->new();
 
 my %args = (
     dist_author => 'Tom Wyant (wyant at cpan dot org)',
@@ -39,7 +39,7 @@ $mbv >= 0.28 and $args{meta_merge} = {
 $mbv >= 0.34
     and $args{auto_configure_requires} = !$meta->distribution();
 
-my $bldr = PPIx::Regexp::Build->new (%args);
+my $bldr = My::Module::Build->new (%args);
 
 $bldr->create_build_script ();
 

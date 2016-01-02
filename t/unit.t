@@ -6,7 +6,7 @@ use warnings;
 use lib qw{ inc };
 
 use PPI::Document;
-use PPIx::Regexp::Test;
+use My::Module::Test;
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 use Scalar::Util qw{ refaddr };
 

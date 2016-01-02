@@ -1,4 +1,4 @@
-package PPIx::Regexp::Mock_Tokenizer;
+package My::Module::Mock_Tokenizer;
 
 use 5.006;
 
@@ -39,15 +39,15 @@ __END__
 
 =head1 NAME
 
-PPIx::Regexp::Mock_Tokenizer - Mock tokenizer for t/*.t
+My::Module::Mock_Tokenizer - Mock tokenizer for t/*.t
 
 =head1 SYNOPSIS
 
  use lib qw{ inc };
  
- use PPIx::Regexp::Mock_Tokenizer;
+ use My::Module::Mock_Tokenizer;
  
- my $tokenizer = PPIx::Regexp::Mock_Tokenizer->new();
+ my $tokenizer = My::Module::Mock_Tokenizer->new();
 
 =head1 DESCRIPTION
 
@@ -64,7 +64,7 @@ This class supports the following public methods:
 
 =head2 new
 
- my $tokenizer = PPIx::Regexp::Mock_Tokenizer->new();
+ my $tokenizer = My::Module::Mock_Tokenizer->new();
 
 This static method instantiates the tokenizer. In addition to the
 invocant it takes arbitrary name/value pairs of arguments. These

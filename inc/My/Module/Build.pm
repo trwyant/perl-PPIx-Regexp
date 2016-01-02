@@ -1,4 +1,4 @@
-package PPIx::Regexp::Build;
+package My::Module::Build;
 
 use strict;
 use warnings;
@@ -28,7 +28,7 @@ __END__
 
 =head1 NAME
 
-PPIx::Regexp::Build - Extend Module::Build for PPIx::Regexp
+My::Module::Build - Extend Module::Build for PPIx::Regexp
 
 =head1 SYNOPSIS
 

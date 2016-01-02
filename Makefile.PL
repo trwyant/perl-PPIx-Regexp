@@ -4,11 +4,11 @@ use warnings;
 use lib qw{ inc };
 
 use ExtUtils::MakeMaker;
-use PPIx::Regexp::Meta;
+use My::Module::Meta;
 
 (my $mmv = ExtUtils::MakeMaker->VERSION) =~ s/_//g;
 
-my $meta = PPIx::Regexp::Meta->new();
+my $meta = My::Module::Meta->new();
 
 my %args = (
     NAME => 'PPIx::Regexp',

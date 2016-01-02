@@ -7,8 +7,8 @@ use warnings;
 
 use lib qw{ inc };
 
-use PPIx::Regexp::Test;
-use PPIx::Regexp::Test qw{ __quote };
+use My::Module::Test;
+use My::Module::Test qw{ __quote };
 
 note <<'EOD';
 Obviously this is not a true fuzz test, just a collection of

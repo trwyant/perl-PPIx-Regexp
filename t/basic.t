@@ -7,7 +7,7 @@ use lib qw{ inc };
 
 use Test::More 0.88;
 
-require_ok( 'PPIx::Regexp::Mock_Tokenizer' ) or BAIL_OUT;
+require_ok( 'My::Module::Mock_Tokenizer' ) or BAIL_OUT;
 
 require_ok( 'PPI::Document' )
     or BAIL_OUT(
@@ -138,7 +138,7 @@ isa_ok( PPIx::Regexp::Token::CharClass::Simple->__new( 'xyzzy' ),
 require_ok( 'PPIx::Regexp::Token::Code' );
 class_isa_ok( 'PPIx::Regexp::Token::Code', 'PPIx::Regexp::Token' );
 isa_ok( PPIx::Regexp::Token::Code->__new( 'xyzzy',
-	tokenizer => PPIx::Regexp::Mock_Tokenizer->new(),
+	tokenizer => My::Module::Mock_Tokenizer->new(),
     ),
     'PPIx::Regexp::Token::Code' );
 
@@ -192,7 +192,7 @@ require_ok( 'PPIx::Regexp::Token::GroupType::Code' );
 class_isa_ok( 'PPIx::Regexp::Token::GroupType::Code',
     'PPIx::Regexp::Token::GroupType' );
 isa_ok( PPIx::Regexp::Token::GroupType::Code->__new( 'xyzzy',
-	tokenizer => PPIx::Regexp::Mock_Tokenizer->new(),
+	tokenizer => My::Module::Mock_Tokenizer->new(),
     ),
     'PPIx::Regexp::Token::GroupType::Code' );
 
@@ -202,7 +202,7 @@ class_isa_ok( 'PPIx::Regexp::Token::GroupType::Modifier',
 class_isa_ok( 'PPIx::Regexp::Token::GroupType::Modifier',
     'PPIx::Regexp::Token::Modifier' );
 isa_ok( PPIx::Regexp::Token::GroupType::Modifier->__new( 'xyzzy',
-	tokenizer => PPIx::Regexp::Mock_Tokenizer->new(),
+	tokenizer => My::Module::Mock_Tokenizer->new(),
     ),
     'PPIx::Regexp::Token::GroupType::Modifier' );
 
@@ -210,7 +210,7 @@ require_ok( 'PPIx::Regexp::Token::GroupType::NamedCapture' );
 class_isa_ok( 'PPIx::Regexp::Token::GroupType::NamedCapture',
     'PPIx::Regexp::Token::GroupType' );
 isa_ok( PPIx::Regexp::Token::GroupType::NamedCapture->__new( 'xyzzy',
-	tokenizer => PPIx::Regexp::Mock_Tokenizer->new(
+	tokenizer => My::Module::Mock_Tokenizer->new(
 	    capture => [ 'foo' ],
 	),
      ),
@@ -232,7 +232,7 @@ require_ok( 'PPIx::Regexp::Token::Interpolation' );
 class_isa_ok( 'PPIx::Regexp::Token::Interpolation',
     'PPIx::Regexp::Token::Code' );
 isa_ok( PPIx::Regexp::Token::Interpolation->__new( 'xyzzy',
-	tokenizer => PPIx::Regexp::Mock_Tokenizer->new(),
+	tokenizer => My::Module::Mock_Tokenizer->new(),
     ),
     'PPIx::Regexp::Token::Interpolation' );
 
@@ -244,14 +244,14 @@ isa_ok( PPIx::Regexp::Token::Literal->__new( 'xyzzy' ),
 require_ok( 'PPIx::Regexp::Token::Modifier' );
 class_isa_ok( 'PPIx::Regexp::Token::Modifier', 'PPIx::Regexp::Token' );
 isa_ok( PPIx::Regexp::Token::Modifier->__new( 'xyzzy',
-	tokenizer => PPIx::Regexp::Mock_Tokenizer->new(),
+	tokenizer => My::Module::Mock_Tokenizer->new(),
     ),
     'PPIx::Regexp::Token::Modifier' );
 
 require_ok( 'PPIx::Regexp::Token::Operator' );
 class_isa_ok( 'PPIx::Regexp::Token::Operator', 'PPIx::Regexp::Token' );
 isa_ok( PPIx::Regexp::Token::Operator->__new( 'xyzzy',
-	tokenizer => PPIx::Regexp::Mock_Tokenizer->new(),
+	tokenizer => My::Module::Mock_Tokenizer->new(),
     ),
     'PPIx::Regexp::Token::Operator' );
 
