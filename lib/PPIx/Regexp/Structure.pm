@@ -251,7 +251,7 @@ sub type {
 
 # Check for things like (?$foo:...) or (?$foo)
 sub _check_for_interpolated_match {
-    my ( $class, $brkt, $args ) = @_;
+    my ( undef, $brkt, $args ) = @_;	# Invocant unused
 
     # Everything we are interested in begins with a literal '?' followed
     # by an interpolation.

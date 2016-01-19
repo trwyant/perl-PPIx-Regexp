@@ -149,7 +149,7 @@ sub __match_setup {
 my %matcher;
 
 sub __PPIX_TOKENIZER__regexp {
-    my ( $class, $tokenizer, $character ) = @_;
+    my ( $class, $tokenizer ) = @_;	# $character unused
 
     my $mtch = $matcher{$class} ||= $class->__make_group_type_matcher();
 

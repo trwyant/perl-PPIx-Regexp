@@ -107,7 +107,7 @@ sub __PPIX_TOKEN__recognize {
 # sub can_be_quantified { return };
 
 sub __PPIX_TOKENIZER__regexp {
-    my ( undef, $tokenizer, $character ) = @_;
+    my ( undef, $tokenizer ) = @_;	# Invocant, $character unused
 
     foreach ( @recognize ) {
 	my ( $re, $arg ) = @{ $_ };

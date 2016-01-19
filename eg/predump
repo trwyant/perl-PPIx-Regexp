@@ -79,7 +79,7 @@ foreach my $re ( process_args( \%opt, @ARGV ) ) {
 		    or die "Can not make PPI::Document from file '$datum'\n";
 		$doc->index_locations();
 		push @docs, $doc;
-		push @rslt, extract_res( $doc );
+		push @rslt, extract_res( $doc, $opt );
 		$file{ refaddr( $doc ) } = {
 		    name	=> $datum,
 		};
@@ -94,7 +94,7 @@ foreach my $re ( process_args( \%opt, @ARGV ) ) {
 		    my $doc = PPI::Document->new( \$datum )
 			or die "Can not make PPI::Document from '$datum'\n";
 		    push @docs, $doc;
-		    push @rslt, extract_res( $doc );
+		    push @rslt, extract_res( $doc, $opt );
 
 		} else {
 
@@ -128,15 +128,36 @@ foreach my $re ( process_args( \%opt, @ARGV ) ) {
     }
 }
 
-sub extract_res {
-    my ( $doc ) = @_;
-    return (
-	map { @{ $doc->find( $_ ) || [] } } qw{
-		PPI::Token::QuoteLike::Regexp
-		PPI::Token::Regexp::Match
-		PPI::Token::Regexp::Substitute
-	    }
+{
+    my ( %classes, @regex, @string );
+
+    BEGIN {
+	@regex = qw{
+	    PPI::Token::QuoteLike::Regexp
+	    PPI::Token::Regexp::Match
+	    PPI::Token::Regexp::Substitute
+	};
+	@string = qw{
+	    PPI::Token::Quote
+	    PPI::Token::QuoteLike::Command
+	    PPI::Token::QuoteLike::BackTick
+	    PPI::Token::HereDoc
+	};
+	%classes = (
+	    guess	=> [ @regex, @string ],
+	    regex	=> \@regex,
+	    string	=> \@string,
 	);
+    }
+
+    sub extract_res {
+	my ( $doc, $opt ) = @_;
+	my $parse = $opt->{parse} || 'regex';
+	return (
+	    map { @{ $doc->find( $_ ) || [] } } @{
+	    $classes{$parse} || $classes{regex} }
+	);
+    }
 }
 
 sub set_parse {

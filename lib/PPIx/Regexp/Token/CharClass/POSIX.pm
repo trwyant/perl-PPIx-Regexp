@@ -94,7 +94,7 @@ sub perl_version_introduced {
     }
 
     sub __no_explanation {
-	my ( $self ) = @_;
+##	my ( $self ) = @_;		# Invocant unused
 	my $msg = sprintf q<Unknown POSIX character class>;
 	return $msg;
     }
@@ -108,7 +108,7 @@ sub perl_version_introduced {
     );
 
     sub __PPIX_TOKENIZER__regexp {
-	my ( undef, $tokenizer, $character ) = @_;
+	my ( undef, $tokenizer ) = @_;	# Invocant, $character unused
 
 	$tokenizer->cookie( COOKIE_CLASS )
 	    or $tokenizer->cookie( COOKIE_REGEX_SET )

@@ -73,7 +73,7 @@ sub negated {
 
 # Called by the lexer to record the capture number.
 sub __PPIX_LEXER__record_capture_number {
-    my ( $self, $number ) = @_;
+    my ( undef, $number ) = @_;		# Invocant unused
     return $number;
 }
 

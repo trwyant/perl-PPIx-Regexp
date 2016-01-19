@@ -52,7 +52,7 @@ our $VERSION = '0.046';
 }
 
 sub perl_version_introduced {
-    my ( $self ) = @_;
+##  my ( $self ) = @_;		# Invocant unused
     return '5.005';
 }
 

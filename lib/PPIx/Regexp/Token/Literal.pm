@@ -126,7 +126,7 @@ $white_space_re = eval $white_space_re;  ## no critic (ProhibitStringyEval)
 my %regex_pass_on = map { $_ => 1 } qw{ [ ] ( ) $ \ };
 
 sub __PPIX_TOKENIZER__regexp {
-    my ( undef, $tokenizer, $character, $char_type ) = @_;
+    my ( undef, $tokenizer, $character ) = @_;	# Invocant, $char_type unused
 
     if ( $tokenizer->cookie( COOKIE_REGEX_SET ) ) {
 	# If we're inside a regex set no literals are allowed, but not

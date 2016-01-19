@@ -301,7 +301,7 @@ sub _safe {
 }
 
 sub _safe_version {
-    my ( $self, $version ) = @_;
+    my ( undef, $version ) = @_;	# Invocant unused
     return defined $version ? "'$version'" : 'undef';
 }
 
@@ -315,7 +315,7 @@ sub _nav {
 }
 
 sub _perl_version {
-    my ( $self, $elem ) = @_;
+    my ( undef, $elem ) = @_;		# Invocant unused
 
     my $rslt = $elem->perl_version_introduced() . ' <= $]';
     if ( my $max = $elem->perl_version_removed() ) {
@@ -368,7 +368,7 @@ sub _format_default_modifiers {
 }
 
 sub _format_modifiers_dump {
-    my ( $self, $elem ) = @_;
+    my ( undef, $elem ) = @_;		# Invocant unused
     my %mods = $elem->modifiers();
     my @accum;
     $mods{match_semantics}
@@ -403,7 +403,7 @@ sub _tokens_test {
 }
 
 sub PPIx::Regexp::Element::__PPIX_DUMPER__dump_explanation {
-    my ( $self, $dumper, $line ) = @_;
+    my ( $self, undef, $line ) = @_;	# $dumper unused
     my @expl = $self->explain()
 	or return $line;
     1 == @expl

@@ -70,7 +70,7 @@ indicator; that is, if it is '+' or '?'.
 =cut
 
 sub could_be_greediness {
-    my ( $class, $string ) = @_;
+    my ( undef, $string ) = @_;		# Invocant unused
     return $greediness{$string};
 }
 
@@ -80,7 +80,7 @@ sub perl_version_introduced {
 }
 
 sub __PPIX_TOKENIZER__regexp {
-    my ( undef, $tokenizer, $character, $char_type ) = @_;
+    my ( undef, $tokenizer, $character ) = @_;	# Invocant, $char_type unused
 
     $tokenizer->prior_significant_token( 'is_quantifier' )
 	or return;

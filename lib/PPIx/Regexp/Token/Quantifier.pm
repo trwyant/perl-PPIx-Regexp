@@ -55,7 +55,7 @@ is, if it is '*', '+', or '?'.
 =cut
 
 sub could_be_quantifier {
-    my ( $class, $string ) = @_;
+    my ( undef, $string ) = @_;		# Invocant unused
     return $quantifier{$string};
 }
 

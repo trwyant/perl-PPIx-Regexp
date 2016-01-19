@@ -735,7 +735,7 @@ sub tokens {
     );
 
     sub _deprecation_notice {
-	my ( $self, $type, $name, $repl ) = @_;
+	my ( undef, $type, $name, $repl ) = @_;		# Invocant unused
 	$deprecate{$type} or return;
 	$deprecate{$type}{$name} or return;
 	my $msg = sprintf 'The %s %s is %s', $name, $type,
@@ -1053,7 +1053,7 @@ sub __PPIX_TOKEN_FALLBACK__repl {
 }
 
 sub __PPIX_TOKENIZER__finish {
-    my ( $self, $character ) = @_;
+    my ( $self ) = @_;		# $character unused
 
     $self->{cursor_limit} > length $self->{content}
 	and confess "Programming error - ran off string";

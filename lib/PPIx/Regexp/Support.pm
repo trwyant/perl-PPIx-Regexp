@@ -57,7 +57,7 @@ brackets: (), {}, [], and <>.
     );
 
     sub close_bracket {
-	my ( $self, $char ) = @_;
+	my ( undef, $char ) = @_;	# Invocant unused
 	defined $char or return;
 	__instance( $char, 'PPIx::Regexp::Element' )
 	    and $char = $char->content();
@@ -119,12 +119,12 @@ loaded.
 
 }
 
-# This method is to be used only by the PPIx::Regexp package. It returns
+# This method is to be used only by the PPIx-Regexp package. It returns
 # the first of its arguments which is defined. It will go away when
 # (or if!) these modules get 'use 5.010;' at the top.
 
 sub _defined_or {
-    my ( $self, @args ) = @_;
+    my ( undef, @args ) = @_;	# Invocant unused
     foreach my $arg ( @args ) {
 	defined $arg and return $arg;
     }

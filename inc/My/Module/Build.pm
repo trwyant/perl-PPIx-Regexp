@@ -11,7 +11,7 @@ use Carp;
 
 
 sub ACTION_authortest {
-    my ( $self, @args ) = @_;
+    my ( $self ) = @_;		# @args unused
 
     local $ENV{AUTHOR_TESTING} = 1;
 

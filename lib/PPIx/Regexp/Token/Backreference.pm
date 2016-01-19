@@ -138,7 +138,7 @@ sub __PPIX_TOKENIZER__regexp {
 }
 
 sub __PPIX_TOKENIZER__repl {
-    my ( undef, $tokenizer, $character ) = @_;
+    my ( undef, $tokenizer ) = @_;	# Invocant, $character unused
 
     $tokenizer->interpolates()
 	or return;

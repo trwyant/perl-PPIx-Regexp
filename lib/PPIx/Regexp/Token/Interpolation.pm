@@ -126,7 +126,7 @@ my %allow_subscript_based_on_cast_symbol = (
 );
 
 sub _interpolation {
-    my ( $class, $tokenizer, $character, $in_regexp ) = @_;
+    my ( $class, $tokenizer, undef, $in_regexp ) = @_;	# $character unused
 
     # If the regexp does not interpolate, bail now.
     $tokenizer->interpolates() or return;
@@ -284,7 +284,7 @@ sub _interpolation {
 # Return true if we think a curly-bracketed subscript is really a
 # subscript, rather than a quantifier.
 sub _curly {
-    my ( $class, @kids ) = @_;
+    my ( undef, @kids ) = @_;		# Invocant unused
 
     # If the first child is a word, and either it is an only child or
     # the next child is the fat comma operator, we accept it as a
@@ -315,7 +315,7 @@ sub _curly {
 # Return true if we think a square-bracketed subscript is really a
 # subscript, rather than a character class.
 sub _square {
-    my ( $class, @kids ) = @_;
+    my ( undef, @kids ) = @_;		# Invocant unused
 
     # We expect to have either a number or a symbol as the first
     # element.

@@ -159,7 +159,7 @@ sub __explanation {
 
 # Called if no explanation available
 sub __no_explanation {
-    my ( $self ) = @_;
+##  my ( $self ) = @_;		# Invocant unused
     my $msg = sprintf q<No explanation>;
     $PPIx::Regexp::NO_EXPLANATION_FATAL
 	and confess $msg;
@@ -537,13 +537,13 @@ sub __error {
 
 # Called by the lexer to record the capture number.
 sub __PPIX_LEXER__record_capture_number {
-    my ( $self, $number ) = @_;
+    my ( undef, $number ) = @_;		# Invocant unused
     return $number;
 }
 
 # Called by the lexer to rebless
 sub __PPIX_ELEM__rebless {
-    my ( $class, $self, %arg ) = @_;
+    my ( $class, $self ) = @_;		# %arg unused
     $self ||= {};
     bless $self, $class;
     delete $self->{error};

@@ -484,7 +484,7 @@ sub _recover_curly {
 }
 
 sub _recover_curly_quantifiers {
-    my ( $self, $args ) = @_;
+    my ( undef, $args ) = @_;	# Invocant unused
 
     if ( __instance( $args->[0], TOKEN_LITERAL )
 	&& __instance( $args->[1], TOKEN_UNKNOWN )
@@ -532,12 +532,12 @@ sub _round {
 }
 
 sub _square {
-    my ( $self, $args ) = @_;
+    my ( undef, $args ) = @_;	# Invocant unused
     return PPIx::Regexp::Structure::CharClass->_new( @{ $args } );
 }
 
 sub _regex_set {
-    my ( $self, $args ) = @_;
+    my ( undef, $args ) = @_;	# Invocant unused
     return PPIx::Regexp::Structure::RegexSet->_new( @{ $args } );
 }
 

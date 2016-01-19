@@ -93,7 +93,7 @@ sub __defining_string {
 }
 
 sub __match_setup {
-    my ( $class, $tokenizer ) = @_;
+    my ( undef, $tokenizer ) = @_;	# Invocant unused
     $tokenizer->expect( qw{ PPIx::Regexp::Token::Condition } );
     return;
 }
