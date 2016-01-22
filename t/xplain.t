@@ -10,8 +10,6 @@ use My::Module::Test;
 
 use Test::More 0.88;	# Because of done_testing();
 
-do 'foo/explain.pl';
-
 note     'PPIx::Regexp::Node::Range';
 
 parse(   '/[a-z]/' );
@@ -22,7 +20,7 @@ xplain(  q<Characters between 'a' and 'z' inclusive> );
 
 note     'PPIx::Regexp::Token::Assertion';
 parse(
-    '/^\\A\\B\\B{gcb}\\B{g}\\B{sb}\\B{wb}\\G\\K\\Z\\b\\b{gcb}\\b{g}\\b{sb}\\b{wb}\\z$/'
+    '/^\\A\\B\\B{gcb}\\B{g}\\B{sb}\\B{wb}\\G\\K\\Z\\b\\b{gcb}\\b{g}\\b{sb}\\b{wb}\B{lb}\b{lb}\\z$/'
 );
 value(   failures => [], 0 );
 choose(  child => 1, child => 0 );
@@ -73,8 +71,14 @@ class(   'PPIx::Regexp::Token::Assertion' );
 xplain(  'Assert position is at word boundary' );
 choose(  child => 1, child => 15 );
 class(   'PPIx::Regexp::Token::Assertion' );
-xplain(  'Assert position is at end of string' );
+xplain(  'Assert position is not at line boundary' );
 choose(  child => 1, child => 16 );
+class(   'PPIx::Regexp::Token::Assertion' );
+xplain(  'Assert position is at line boundary' );
+choose(  child => 1, child => 17 );
+class(   'PPIx::Regexp::Token::Assertion' );
+xplain(  'Assert position is at end of string' );
+choose(  child => 1, child => 18 );
 class(   'PPIx::Regexp::Token::Assertion' );
 xplain(  'Assert position is at end of string or newline' );
 

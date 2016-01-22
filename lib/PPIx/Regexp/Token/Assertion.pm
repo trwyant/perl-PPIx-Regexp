@@ -58,6 +58,7 @@ our $VERSION = '0.046';
 
 my @braced_assertions = (
     [ qr< \\ [bB] [{] (?: g | gcb | wb | sb ) [}] >smx, '5.021009' ],
+    [ qr< \\ [bB] [{] (?: lb ) [}] >smx, '5.023007' ],
     [ qr< \\ [bB] [{] .*? [}] >smx, undef, TOKEN_UNKNOWN,
 	{ error => 'Unknown bound type' },
     ],
@@ -95,6 +96,7 @@ sub perl_version_introduced {
 	'\\B'	=> 'Assert position is not at word/nonword boundary',
 	'\\B{gcb}'	=> 'Assert position is not at grapheme cluster boundary',
 	'\\B{g}'	=> 'Assert position is not at grapheme cluster boundary',
+	'\\B{lb}'	=> 'Assert position is not at line boundary',
 	'\\B{sb}'	=> 'Assert position is not at sentence boundary',
 	'\\B{wb}'	=> 'Assert position is not at word boundary',
 	'\\G'	=> 'Assert position is at pos()',
@@ -103,6 +105,7 @@ sub perl_version_introduced {
 	'\\b'	=> 'Assert position is at word/nonword boundary',
 	'\\b{gcb}'	=> 'Assert position is at grapheme cluster boundary',
 	'\\b{g}'	=> 'Assert position is at grapheme cluster boundary',
+	'\\b{lb}'	=> 'Assert position is at line boundary',
 	'\\b{sb}'	=> 'Assert position is at sentence boundary',
 	'\\b{wb}'	=> 'Assert position is at word boundary',
 	'\\z'	=> 'Assert position is at end of string',
