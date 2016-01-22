@@ -39,7 +39,7 @@ use PPIx::Regexp::Constant qw{
     COOKIE_CLASS MINIMUM_PERL TOKEN_LITERAL TOKEN_UNKNOWN
 };
 
-our $VERSION = '0.046';
+our $VERSION = '0.046_01';
 
 {
 

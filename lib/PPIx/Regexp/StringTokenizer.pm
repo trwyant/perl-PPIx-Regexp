@@ -12,7 +12,7 @@ use PPIx::Regexp::Constant qw{
     TOKEN_UNKNOWN
 };
 
-our $VERSION = '0.046';
+our $VERSION = '0.046_01';
 
 {
     # Names of classes containing tokenization machinery. There are few
