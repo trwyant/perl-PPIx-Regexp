@@ -39,7 +39,7 @@ use base qw{ PPIx::Regexp::Token };
 
 use PPIx::Regexp::Constant qw{ COOKIE_REGEX_SET MINIMUM_PERL };
 
-our $VERSION = '0.046_01';
+our $VERSION = '0.047';
 
 sub __new {
     my ( $class, $content, %arg ) = @_;
