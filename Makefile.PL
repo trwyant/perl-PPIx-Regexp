@@ -16,7 +16,7 @@ my %args = (
     PREREQ_PM => $meta->requires(),
     PL_FILES => {},	# Prevent old MakeMaker from running Build.PL
     'dist' => {COMPRESS => 'gzip', SUFFIX => 'gz'},
-    AUTHOR => 'Tom Wyant (wyant at cpan dot org)',
+    AUTHOR => 'Thomas R. Wyant, III F<wyant at cpan dot org>',
     ABSTRACT => 'Parse regular expressions',
     realclean	=> { FILES => 'cover_db' },
 );
