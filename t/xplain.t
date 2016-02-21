@@ -402,6 +402,14 @@ choose(  child => 2 );
 class(   'PPIx::Regexp::Token::Modifier' );
 xplain(  'a: restrict non-Unicode classes to ASCII; m: ^ and $ match within string; n: parentheses do not capture; s: . can match newline; x: ignore whitespace and comments' );
 
+note	 'PPIx::Regexp::Token::NoOp';
+
+parse   ( '/\\N{}/' );
+value   ( failures => [], 0 );
+choose  ( child => 1, start => 1 );
+class   ( 'PPIx::Regexp::Token::NoOp' );
+xplain  ( 'Not significant' );
+
 note     'PPIx::Regexp::Token::Operator';
 
 parse(   '/(?[(\\w-[[:lower:]])|\\p{Greek}])|[^a-z]/' );

@@ -23,13 +23,13 @@ L<PPIx::Regexp::Token::Greediness|PPIx::Regexp::Token::Greediness>,
 L<PPIx::Regexp::Token::GroupType|PPIx::Regexp::Token::GroupType>,
 L<PPIx::Regexp::Token::Literal|PPIx::Regexp::Token::Literal>,
 L<PPIx::Regexp::Token::Modifier|PPIx::Regexp::Token::Modifier>,
+L<PPIx::Regexp::Token::NoOp|PPIx::Regexp::Token::NoOp>,
 L<PPIx::Regexp::Token::Operator|PPIx::Regexp::Token::Operator>,
 L<PPIx::Regexp::Token::Quantifier|PPIx::Regexp::Token::Quantifier>,
 L<PPIx::Regexp::Token::Reference|PPIx::Regexp::Token::Reference>,
 L<PPIx::Regexp::Token::Structure|PPIx::Regexp::Token::Structure>,
-L<PPIx::Regexp::Token::Unknown|PPIx::Regexp::Token::Unknown>,
-L<PPIx::Regexp::Token::Unmatched|PPIx::Regexp::Token::Unmatched> and
-L<PPIx::Regexp::Token::Whitespace|PPIx::Regexp::Token::Whitespace>.
+L<PPIx::Regexp::Token::Unknown|PPIx::Regexp::Token::Unknown> and
+L<PPIx::Regexp::Token::Unmatched|PPIx::Regexp::Token::Unmatched>.
 
 =head1 DESCRIPTION
 

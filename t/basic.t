@@ -248,6 +248,12 @@ isa_ok( PPIx::Regexp::Token::Modifier->__new( 'xyzzy',
     ),
     'PPIx::Regexp::Token::Modifier' );
 
+require_ok( 'PPIx::Regexp::Token::NoOp' );
+class_isa_ok( 'PPIx::Regexp::Token::NoOp',
+    'PPIx::Regexp::Token' );
+isa_ok( PPIx::Regexp::Token::NoOp->__new( 'xyzzy' ),
+    'PPIx::Regexp::Token::NoOp' );
+
 require_ok( 'PPIx::Regexp::Token::Operator' );
 class_isa_ok( 'PPIx::Regexp::Token::Operator', 'PPIx::Regexp::Token' );
 isa_ok( PPIx::Regexp::Token::Operator->__new( 'xyzzy',
@@ -293,8 +299,8 @@ isa_ok( PPIx::Regexp::Token::Unmatched->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::Unmatched' );
 
 require_ok( 'PPIx::Regexp::Token::Whitespace' );
-class_isa_ok( 'PPIx::Regexp::Token::Whitespace', 'PPIx::Regexp::Token'
-    );
+class_isa_ok( 'PPIx::Regexp::Token::Whitespace',
+    'PPIx::Regexp::Token::NoOp' );
 isa_ok( PPIx::Regexp::Token::Whitespace->__new( 'xyzzy' ),
     'PPIx::Regexp::Token::Whitespace' );
 

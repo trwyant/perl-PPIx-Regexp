@@ -557,6 +557,11 @@ token	'(?aa)', note => 'Embedded /aa';
 method	perl_version_introduced	=> '5.013010', note => 'perl51310delta';
 method	perl_version_removed	=> undef;
 
+class   'PPIx::Regexp::Token::NoOp', note => 'Does nothing';
+token   '\\N{}', note => 'Unicode character with empty name';
+method	perl_version_introduced => MINIMUM_PERL, note => 'perl5238delta (!)';
+method	perl_version_removed	=> undef;
+
 class	'PPIx::Regexp::Token::Operator', note => 'Operator';
 token	'|', note => 'Alternation (outside character class)';
 method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';

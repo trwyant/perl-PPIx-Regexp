@@ -59,6 +59,7 @@ lib/PPIx/Regexp/Token/GroupType/Switch.pm
 lib/PPIx/Regexp/Token/Interpolation.pm
 lib/PPIx/Regexp/Token/Literal.pm
 lib/PPIx/Regexp/Token/Modifier.pm
+lib/PPIx/Regexp/Token/NoOp.pm
 lib/PPIx/Regexp/Token/Operator.pm
 lib/PPIx/Regexp/Token/Quantifier.pm
 lib/PPIx/Regexp/Token/Recursion.pm

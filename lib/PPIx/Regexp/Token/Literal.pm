@@ -227,6 +227,11 @@ The following is from perlop:
 # octal literals too, but we can not disambiguate these from back
 # references until we know how many there are. So the lexer gets another
 # dirty job.
+
+my %special = (
+    '\\N{}'	=> 'PPIx::Regexp::Token::NoOp',
+);
+
 sub _escaped {
     my ( $tokenizer, $character ) = @_;
 
@@ -244,8 +249,12 @@ sub _escaped {
 		o [{] [01234567]+ [}] |	# octal as of 5.13.3
 ##		N (?: \{ (?: [[:alpha:]] [\w\s:()-]* | # must begin w/ alpha
 ##		    U [+] [[:xdigit:]]+ ) \} ) |	# unicode
-		N (?: [{] (?= \D ) [^\}]+ [}] )	# unicode
+		N (?: [{] (?= \D ) [^\}]* [}] )	# unicode
 	    ) >smx ) ) {
+	my $match = $tokenizer->match();
+	my $class;
+	$class = $special{$match}
+	    and return $tokenizer->make_token( $accept, $class );
 	return $accept;
     }
     return;

@@ -11,7 +11,7 @@ PPIx::Regexp::Token::Whitespace - Represent whitespace
 =head1 INHERITANCE
 
 C<PPIx::Regexp::Token::Whitespace> is a
-L<PPIx::Regexp::Token|PPIx::Regexp::Token>.
+L<PPIx::Regexp::NoOp|PPIx::Regexp::NoOp>.
 
 C<PPIx::Regexp::Token::Whitespace> has no descendants.
 
@@ -35,7 +35,7 @@ package PPIx::Regexp::Token::Whitespace;
 use strict;
 use warnings;
 
-use base qw{ PPIx::Regexp::Token };
+use base qw{ PPIx::Regexp::Token::NoOp };
 
 use PPIx::Regexp::Constant qw{ COOKIE_REGEX_SET MINIMUM_PERL };
 
@@ -60,31 +60,19 @@ sub explain {
 	$parent = $self->parent()
 	    and $parent->isa( 'PPIx::Regexp' )
     ) {
-	    return 'Not significant';
+	return $self->SUPER::explain();
     } elsif ( $self->in_regex_set() ) {
 	return q<Not significant in extended character class>;
     } elsif ( $self->modifier_asserted( 'x' ) ) {
 	return q<Not significant under /x>;
     } else {
-	return 'Not significant';
+	return $self->SUPER::explain();
     }
-}
-
-sub perl_version_introduced {
-    my ( $self ) = @_;
-    return $self->{perl_version_introduced};
-}
-
-sub significant {
-    return;
 }
 
 sub whitespace {
     return 1;
 }
-
-# Return true if the token can be quantified, and false otherwise
-sub can_be_quantified { return };
 
 # Objects of this class are generated either by the tokenizer itself
 # (when scanning for delimiters) or by PPIx::Regexp::Token::Literal (if
