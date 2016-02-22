@@ -1,3 +1,61 @@
+0.047_01	2016-02-22	T. R. Wyant
+commit beab304a3ce4e9cc4f7f2363d8e9606ed255336f
+Author: Tom Wyant <wyant@cpan.org>
+Date:   Sun Feb 21 20:10:50 2016 -0500
+
+    Don't dump explanation for structs with error.
+
+commit dda963475758f87237297ddb363045d71d28c1e4
+Author: Tom Wyant <wyant@cpan.org>
+Date:   Sun Feb 21 19:59:43 2016 -0500
+
+    Add option 'strict', like 'use re "strict"'
+    
+    This has its fingers in everything, since the signature of
+    __PPIX_LEXER__finalize() had to include the lexer object so the elements
+    could determine if strict() was in effect. It also meant another new
+    class, PPIx::Regexp::Node::Unknown, since I needed to rebless
+    PPIx::Regexp::Node::Range into something if the end points were not
+    portable and compatible.
+    
+    In the presence of strict(), I opted to set perl_version_introduced to
+    the version of Perl where the construct became an error.
+
+commit 0705b3feada74286d93420ac62649842a4509ca3
+Author: Tom Wyant <wyant@cpan.org>
+Date:   Sun Feb 21 15:57:29 2016 -0500
+
+    Go to preferred form of my name in metadata.
+
+commit 0047183214e66b71067e16ecc45c279a9901069a
+Author: Tom Wyant <wyant@cpan.org>
+Date:   Sun Feb 21 14:26:03 2016 -0500
+
+    Parse '\N{}' as no-op.
+    
+    The previous parse was a character class ('\N') followed by two literals
+    ('{' and '}'). But perl5238delta said that it had been ignored up to
+    that time. Starting with 5.23.8 it is an error if 'use re strict' is in
+    effect.
+    
+    The easiest implementation was to accept it as a literal, but it really
+    isn't. The next easiest was as white space, but it isn't that either.
+    That left making it a whole new class, which got inserted in the
+    hierarchy between PPIx::Regexp::Token and
+    PPIx::Regexp::Token::Whitespace.
+
+commit 2af7c57609ae7f11b41c6b8ba13f01c13a960da8
+Author: Tom Wyant <wyant@cpan.org>
+Date:   Sun Feb 21 09:36:17 2016 -0500
+
+    Quash 'NOT a POSIX class ...' warning under 5.23.8
+
+commit 11b827a64062e64fb9d011bce960367d422b0abf
+Author: Tom Wyant <wyant@cpan.org>
+Date:   Sat Feb 13 17:14:15 2016 -0500
+
+    Add Makefile targets authortest and testcover.
+
 0.047		2016-01-29	T. R. Wyant
   No changes since 0.046_01.
 
