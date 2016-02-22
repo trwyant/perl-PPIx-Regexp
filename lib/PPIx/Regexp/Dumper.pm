@@ -576,8 +576,11 @@ sub _format_value {
 		push @rslt, $err;
 	    }
 	}
+
 	@rslt = ( join "\t", @rslt );
+
 	$dumper->{explain}
+	    and not defined $self->error()
 	    and push @rslt, $self->__PPIX_DUMPER__dump_explanation(
 		$dumper, pop @rslt );
 
