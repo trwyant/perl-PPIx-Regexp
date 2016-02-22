@@ -38,11 +38,13 @@ use base qw{ PPIx::Regexp::Element };
 
 use Carp;
 use List::Util qw{ max };
-use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
+use PPIx::Regexp::Constant qw{ MINIMUM_PERL NODE_UNKNOWN };
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };
 
 our $VERSION = '0.047';
+
+use constant ELEMENT_UNKNOWN	=> NODE_UNKNOWN;
 
 sub _new {
     my ( $class, @children ) = @_;
@@ -289,7 +291,8 @@ supported by this package.
 
 sub perl_version_introduced {
     my ( $self ) = @_;
-    return max( MINIMUM_PERL,
+    return max( grep { defined $_ } MINIMUM_PERL,
+	$self->{perl_version_introduced},
 	map { $_->perl_version_introduced() } $self->elements() );
 }
 
@@ -405,20 +408,26 @@ sub _nav {
 }
 
 sub __error {
-    my ( $self ) = @_;	# second argument unused
-    confess 'Programming error - __error() must be overridden',
-	' for class ', ref $self;
+    my ( $self, $msg, %arg ) = @_;
+    defined $msg
+	or $msg = 'Was class ' . ref $self;
+    $self->{error} = $msg;
+    bless $self, $self->ELEMENT_UNKNOWN();
+    foreach my $key ( keys %arg ) {
+	$self->{$key} = $arg{$key};
+    }
+    return 1;
 }
 
 
 # Called by the lexer once it has done its worst to all the tokens.
-# Called as a method with no arguments. The return is the number of
-# parse failures discovered when finalizing.
+# Called as a method with the lexer as argument. The return is the
+# number of parse failures discovered when finalizing.
 sub __PPIX_LEXER__finalize {
-    my ( $self ) = @_;
+    my ( $self, $lexer ) = @_;
     my $rslt = 0;
     foreach my $elem ( $self->elements() ) {
-	$rslt += $elem->__PPIX_LEXER__finalize();
+	$rslt += $elem->__PPIX_LEXER__finalize( $lexer );
     }
     return $rslt;
 }

@@ -248,6 +248,27 @@ Note that if L<PPI|PPI> starts unconditionally recognizing postfix
 dereferences, this argument will immediately become ignored, and will be
 put through a deprecation cycle and removed.
 
+=item strict boolean
+
+This option is passed on to the tokenizer and lexer, where it specifies
+whether the parse should assume C<use re 'strict'> is in effect.
+
+The C<'strict'> pragma was introduced in Perl 5.22, and its
+documentation says that it is experimental, and that there is no
+commitment to backward compatibility. The same applies to the
+parse produced when this option is asserted. Also, the usual caveat
+applies: if C<use re 'strict'> ends up being retracted, this option and
+all related functionality will be also.
+
+Given the nature of C<use re 'strict'>, you should expect that if you
+assert this option, regular expressions that previously parsed without
+error might no longer do so. If an element ends up being declared an
+error because this option is set, its C<perl_version_introduced()> will
+be the Perl version at which C<use re 'strict'> started rejecting these
+elements.
+
+The default is false.
+
 =item trace number
 
 If greater than zero, this option causes trace output from the parse.

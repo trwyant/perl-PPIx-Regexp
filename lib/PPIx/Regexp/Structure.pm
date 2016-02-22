@@ -54,6 +54,8 @@ use Scalar::Util qw{ refaddr };
 
 our $VERSION = '0.047';
 
+use constant ELEMENT_UNKNOWN => STRUCTURE_UNKNOWN;
+
 sub _new {
     my ( $class, @args ) = @_;
     my %brkt;
@@ -346,15 +348,6 @@ sub _check_for_interpolated_match {
 
     # We have done all the damage we can.
     return;
-}
-
-sub __error {
-    my ( $self, $msg ) = @_;
-    defined $msg
-	or $msg = 'Was class ' . ref $self;
-    $self->{error} = $msg;
-    bless $self, STRUCTURE_UNKNOWN;
-    return 1;
 }
 
 1;

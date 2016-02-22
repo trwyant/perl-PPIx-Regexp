@@ -35,7 +35,9 @@ use warnings;
 use base qw{ PPIx::Regexp::Token };
 
 use PPIx::Regexp::Constant qw{
-    COOKIE_CLASS COOKIE_REGEX_SET MINIMUM_PERL TOKEN_UNKNOWN
+    COOKIE_CLASS COOKIE_REGEX_SET
+    MINIMUM_PERL MSG_PROHIBITED_BY_STRICT
+    TOKEN_UNKNOWN
 };
 
 our $VERSION = '0.047';
@@ -228,36 +230,51 @@ The following is from perlop:
 # references until we know how many there are. So the lexer gets another
 # dirty job.
 
-my %special = (
-    '\\N{}'	=> 'PPIx::Regexp::Token::NoOp',
-);
+{
+    my %special = (
+	'\\N{}'	=> sub {
+	    my ( $tokenizer, $accept ) = @_;
+	    $tokenizer->strict()
+		or return $tokenizer->make_token( $accept,
+		'PPIx::Regexp::Token::NoOp' );
+	    return $tokenizer->make_token( $accept, TOKEN_UNKNOWN, {
+		    error	=> join( ' ',
+			'Empty Unicode character name',
+			MSG_PROHIBITED_BY_STRICT ),
+		    perl_version_introduced	=> '5.023008',
+		},
+	    );
 
-sub _escaped {
-    my ( $tokenizer, $character ) = @_;
+	},
+    );
 
-    $character eq '\\'
-	or return;
+    sub _escaped {
+	my ( $tokenizer, $character ) = @_;
 
-    if ( my $accept = $tokenizer->find_regexp(
-	    qr< \A \\ (?:
-		[^\w\s] |		# delimiters/metas
-		[tnrfae] |		# C-style escapes
-		0 [01234567]{0,2} |	# octal
-#		[01234567]{1,3} |	# made from backref by lexer
-		c [][\@[:alpha:]\\^_?] |	# control characters
-		x (?: \{ [[:xdigit:]]* \} | [[:xdigit:]]{0,2} ) | # hex
-		o [{] [01234567]+ [}] |	# octal as of 5.13.3
-##		N (?: \{ (?: [[:alpha:]] [\w\s:()-]* | # must begin w/ alpha
+	$character eq '\\'
+	    or return;
+
+	if ( my $accept = $tokenizer->find_regexp(
+		qr< \A \\ (?:
+		    [^\w\s] |		# delimiters/metas
+		    [tnrfae] |		# C-style escapes
+		    0 [01234567]{0,2} |	# octal
+#		    [01234567]{1,3} |	# made from backref by lexer
+		    c [][\@[:alpha:]\\^_?] |	# control characters
+		    x (?: \{ [[:xdigit:]]* \} | [[:xdigit:]]{0,2} ) | # hex
+		    o [{] [01234567]+ [}] |	# octal as of 5.13.3
+##		    N (?: \{ (?: [[:alpha:]] [\w\s:()-]* | # must begin w/ alpha
 ##		    U [+] [[:xdigit:]]+ ) \} ) |	# unicode
-		N (?: [{] (?= \D ) [^\}]* [}] )	# unicode
-	    ) >smx ) ) {
-	my $match = $tokenizer->match();
-	my $class;
-	$class = $special{$match}
-	    and return $tokenizer->make_token( $accept, $class );
-	return $accept;
+		    N (?: [{] (?= \D ) [^\}]* [}] )	# unicode
+		) >smx ) ) {
+	    my $match = $tokenizer->match();
+	    my $code;
+	    $code = $special{$match}
+		and return $code->( $tokenizer, $accept );
+	    return $accept;
+	}
+	return;
     }
-    return;
 }
 
 =head2 ordinal

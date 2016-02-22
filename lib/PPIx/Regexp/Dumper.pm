@@ -113,6 +113,18 @@ displayed.
 If true, postfix dereferences are recognized in code and interpolations.
 See the tokenizer's L<new()|PPIx::Regexp::Tokenizer/new> for details.
 
+=item strict boolean
+
+This option is passed on to the parser, where it specifies whether the
+parse should assume C<use re 'strict'> is in effect.
+
+The C<'strict'> pragma was introduced in Perl 5.22, and its
+documentation says that it is experimental, and that there is no
+commitment to backward compatibility. The same applies to the
+parse produced when this option is asserted.
+
+The default is false.
+
 =item significant boolean
 
 If true, this option causes only significant elements to be dumped.
@@ -184,6 +196,7 @@ ignored.
 	    lister => undef,
 	    object => undef,
 	    source => $re,
+	    strict => $args{strict},
 	};
 
 	foreach my $key ( qw{ default_modifiers parse postderef } ) {
@@ -356,7 +369,7 @@ sub _tokens_dump {
 sub _format_default_modifiers {
     my ( $self, $subr, $elem ) = @_;
     my @arg = $self->_safe( $elem );
-    foreach my $attr ( qw{ default_modifiers parse postderef } ) {
+    foreach my $attr ( qw{ default_modifiers parse postderef strict } ) {
 	defined ( my $val = $self->{$attr} )
 	    or next;
 	'ARRAY' eq ref $val
@@ -455,11 +468,17 @@ sub PPIx::Regexp::Node::__PPIX_DUMPER__dump {
 	    ? sprintf "\tfailures=%d\tmax_capture_number=%d",
 		$self->failures(), $self->max_capture_number()
 	    : sprintf "\tfailures=%d", $self->failures();
+
     $dumper->{perl_version}
 	and $rslt[-1] .= "\t" . $dumper->_perl_version( $self );
-    $dumper->{explain}
-	and push @rslt, $self->__PPIX_DUMPER__dump_explanation(
-	    $dumper, pop @rslt );
+
+    if ( defined ( my $err = $self->error() ) ) {
+	$rslt[-1] .= "\t$err";
+    } else {
+	$dumper->{explain}
+	    and push @rslt, $self->__PPIX_DUMPER__dump_explanation(
+		$dumper, pop @rslt );
+    }
 
     my $indent = ' ' x $dumper->{indent};
     foreach my $elem ( $self->children() ) {
@@ -479,6 +498,14 @@ sub PPIx::Regexp::Node::__PPIX_DUMPER__test {
 	'class   ( ' . $dumper->_safe( ref $self ) . ' );',
 	'count   ( ' . scalar $self->children() . ' );',
     );
+
+    if ( defined( my $err = $self->error() ) ) {
+
+	push @rslt,
+	    'error   ( ' . $dumper->_safe( $err ) . ' );';
+
+    }
+
     if ( $dumper->{perl_version} ) {
 	foreach my $method ( qw{
 	    perl_version_introduced
@@ -624,14 +651,14 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__dump {
 
     my @rslt = ( ref $self, $dumper->_safe( $self ) );
 
+    $dumper->{perl_version}
+	and push @rslt, $dumper->_perl_version( $self );
+
     if ( defined( my $err = $self->error() ) ) {
 
 	return join "\t", @rslt, $err;
 
     } else {
-
-	$dumper->{perl_version}
-	    and push @rslt, $dumper->_perl_version( $self );
 
 	if ( $dumper->{ordinal} && $self->can( 'ordinal' )
 	    && defined ( my $ord = $self->ordinal() ) ) {
@@ -671,6 +698,7 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__dump {
 	$dumper->{explain}
 	    and push @rslt, $self->__PPIX_DUMPER__dump_explanation(
 		$dumper, pop @rslt );
+
 	return @rslt;
     }
 }

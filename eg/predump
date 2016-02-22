@@ -32,7 +32,7 @@ GetOptions( \%opt,
         default_modifiers|default-modifiers=s@
 	encoding=s explain! files!
 	indent=i margin=i objectify! ordinal! perl_version!
-	postderef!  significant!
+	postderef!  significant! strict!
 	test! tokens! trace+ unescape! verbose+
     } )
     and @ARGV

@@ -97,8 +97,8 @@ sub unescaped_content {
 }
 
 # Called by the lexer once it has done its worst to all the tokens.
-# Called as a method with no arguments. The return is the number of
-# parse failures discovered when finalizing.
+# Called as a method with the lexer as argument. The return is the
+# number of parse failures discovered when finalizing.
 sub __PPIX_LEXER__finalize {
     return 0;
 }

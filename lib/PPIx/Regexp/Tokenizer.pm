@@ -144,6 +144,7 @@ defined $DEFAULT_POSTDEREF
 		$DEFAULT_POSTDEREF,
 	    prior => TOKEN_UNKNOWN,	# Prior significant token.
 	    source => $re,	# The object we were initialized with.
+	    strict => $args{strict},	# like "use re 'strict';".
 	    trace => __PACKAGE__->_defined_or(
 		$args{trace}, $ENV{PPIX_REGEXP_TOKENIZER_TRACE}, 0 ),
 	};
@@ -655,6 +656,11 @@ sub prior_significant_token {
 
 sub significant {
     return 1;
+}
+
+sub strict {
+    my ( $self ) = @_;
+    return $self->{strict};
 }
 
 sub _known_tokenizers {
@@ -1186,6 +1192,16 @@ L<new()|PPIx::Regexp/new> documentation for the details.
 
 C<$PPIx::Regexp::Tokenizer::DEFAULT_POSTDEREF> is not exported.
 
+=item strict boolean
+
+This option specifies whether tokenization should assume
+C<use re 'strict';> is in effect.
+
+The C<'strict'> pragma was introduced in Perl 5.22, and its
+documentation says that it is experimental, and that there is no
+commitment to backward compatibility. The same applies to the
+tokenization produced when this option is asserted.
+
 =item trace number
 
 Specifying a positive value for this option causes a trace of the
@@ -1545,6 +1561,13 @@ it will die horribly if the named method does not exist.
 
 If called with no arguments at all the most-recently-instantiated
 significant token is returned.
+
+=head2 strict
+
+ say 'Parse is ', $tokenizer->strict() ? 'strict' : 'lenient';
+
+This method simply returns true or false, depending on whether the
+C<'strict'> option to C<new()> was true or false.
 
 =head1 ENVIRONMENT VARIABLES
 

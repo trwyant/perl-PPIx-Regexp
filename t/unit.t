@@ -1889,6 +1889,30 @@ choose  ( 7 );
 class   ( 'PPIx::Regexp::Token::Literal' );
 content ( '\\w' );
 
+note	'use re qw{ strict }';
+
+tokenize( '/\\N{}/', strict => 1 );
+count   ( 5 );
+choose  ( 2 );
+class   ( 'PPIx::Regexp::Token::Unknown' );
+content ( '\\N{}' );
+error   ( 'Empty Unicode character name prohibited by "use re \'strict\'"' );
+value   ( perl_version_introduced => [], '5.023008' );
+value   ( perl_version_removed => [], undef );
+
+parse   ( '/[A-z]/', strict => 1 );
+value   ( failures => [], 1 );
+class   ( 'PPIx::Regexp' );
+count   ( 3 );
+value   ( perl_version_introduced => [], '5.023008' );
+value   ( perl_version_removed => [], undef );
+choose  ( child => 1, child => 0, child => 0 );
+class   ( 'PPIx::Regexp::Node::Unknown' );
+count   ( 3 );
+error   ( 'Non-portable range ends prohibited by "use re \'strict\'"' );
+value   ( perl_version_introduced => [], '5.023008' );
+value   ( perl_version_removed => [], undef );
+
 
 SKIP: {
     $is_ascii

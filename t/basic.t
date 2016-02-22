@@ -34,6 +34,9 @@ class_isa_ok( 'PPIx::Regexp::Node', 'PPIx::Regexp::Element' );
 require_ok( 'PPIx::Regexp::Node::Range' );
 class_isa_ok( 'PPIx::Regexp::Node::Range', 'PPIx::Regexp::Node' );
 
+require_ok( 'PPIx::Regexp::Node::Unknown' );
+class_isa_ok( 'PPIx::Regexp::Node::Unknown', 'PPIx::Regexp::Node' );
+
 require_ok( 'PPIx::Regexp::Structure' );
 class_isa_ok( 'PPIx::Regexp::Structure', 'PPIx::Regexp::Node' );
 

@@ -14,6 +14,8 @@ our @EXPORT_OK = qw{
     COOKIE_REGEX_SET
     MINIMUM_PERL
     MODIFIER_GROUP_MATCH_SEMANTICS
+    MSG_PROHIBITED_BY_STRICT
+    NODE_UNKNOWN
     RE_CAPTURE_NAME
     STRUCTURE_UNKNOWN
     TOKEN_LITERAL
@@ -28,6 +30,11 @@ use constant COOKIE_REGEX_SET	=> '])';
 use constant MINIMUM_PERL	=> '5.000';
 
 use constant MODIFIER_GROUP_MATCH_SEMANTICS => 'match_semantics';
+
+use constant MSG_PROHIBITED_BY_STRICT	=>
+    q<prohibited by "use re 'strict'">;
+
+use constant NODE_UNKNOWN	=> 'PPIx::Regexp::Node::Unknown';
 
 # The perlre for Perl 5.010 says:
 #
@@ -119,6 +126,17 @@ The name of the
 L<PPIx::Regexp::Token::Modifier|PPIx::Regexp::Token::Modifier> group
 used to control match semantics.
 
+=head2 MSG_PROHIBITED_BY_STRICT
+
+An appropriate error message for an unknown entity created because
+C<'strict'> was in effect. This is rank ad-hocery, and more than usually
+subject to being changed, without any notice whatsoever. Caveat user.
+
+=head2 NODE_UNKNOWN
+
+The name of the class that represents an unknown node. That is,
+L<PPIx::Regexp::Node::Unknown|PPIx::Regexp::Node::Unknown>.
+
 =head2 RE_CAPTURE_NAME
 
 A string representation of a regular expression that matches the name of
@@ -126,7 +144,7 @@ a named capture buffer.
 
 =head2 STRUCTURE_UNKNOWN
 
-The name of the class that represents the unknown structure. That is,
+The name of the class that represents an unknown structure. That is,
 L<PPIx::Regexp::Structure::Unknown|PPIx::Regexp::Structure::Unknown>.
 
 =head2 TOKEN_LITERAL

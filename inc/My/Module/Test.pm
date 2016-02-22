@@ -56,7 +56,7 @@ my (
     $obj,		# Current object:
     			#    PPIx::Regexp::Tokenizer if set by tokenize(),
 			#    PPIx::Regexp if set by parse(), or
-			#    PPIx::Regexp::Element is set by navigate().
+			#    PPIx::Regexp::Element if set by navigate().
     $parse,		# Result of parse:
     			#    array ref if set by tokenize(), or
 			#    PPIx::Regexp object if set by parse()

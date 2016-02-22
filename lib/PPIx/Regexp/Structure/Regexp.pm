@@ -82,13 +82,13 @@ sub max_capture_number {
 }
 
 # Called by the lexer once it has done its worst to all the tokens.
-# Called as a method with no arguments. The return is the number of
-# parse failures discovered when finalizing.
+# Called as a method with the lexer as argument. The return is the
+# number of parse failures discovered when finalizing.
 sub __PPIX_LEXER__finalize {
-    my ( $self ) = @_;
+    my ( $self, $lexer ) = @_;
     my $rslt = 0;
     foreach my $elem ( $self->elements() ) {
-	$rslt += $elem->__PPIX_LEXER__finalize();
+	$rslt += $elem->__PPIX_LEXER__finalize( $lexer );
     }
 
     # Calculate the maximum capture group, and number all the other

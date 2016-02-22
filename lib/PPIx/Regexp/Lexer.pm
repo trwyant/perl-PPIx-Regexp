@@ -41,6 +41,7 @@ use base qw{ PPIx::Regexp::Support };
 use Carp qw{ confess };
 use PPIx::Regexp::Constant qw{ TOKEN_LITERAL TOKEN_UNKNOWN };
 use PPIx::Regexp::Node::Range				();
+use PPIx::Regexp::Node::Unknown				();
 use PPIx::Regexp::Structure				();
 use PPIx::Regexp::Structure::Assertion			();
 use PPIx::Regexp::Structure::BranchReset		();
@@ -97,9 +98,10 @@ tokenizer, which interprets them or not as the case may be.
 	}
 
 	my $self = {
-	    deferred => [],	# Deferred tokens
-	    failures => 0,
-	    tokenizer => $tokenizer,
+	    deferred	=> [],	# Deferred tokens
+	    failures	=> 0,
+	    strict	=> $args{strict},
+	    tokenizer	=> $tokenizer,
 	};
 
 	bless $self, $class;
@@ -244,12 +246,24 @@ sub lex {
 
 }
 
+=head2 strict
+
+This method returns true or false based on the value of the C<'strict'>
+argument to C<new()>.
+
+=cut
+
+sub strict {
+    my ( $self ) = @_;
+    return $self->{strict};
+}
+
 # Finalize the content array, updating the parse failures count as we
 # go.
 sub _finalize {
     my ( $self, @content ) = @_;
     foreach my $elem ( @content ) {
-	$self->{failures} += $elem->__PPIX_LEXER__finalize();
+	$self->{failures} += $elem->__PPIX_LEXER__finalize( $self );
     }
     defined wantarray and return @content;
     return;

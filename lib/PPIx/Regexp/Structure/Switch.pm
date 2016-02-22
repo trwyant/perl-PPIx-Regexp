@@ -37,7 +37,7 @@ use base qw{ PPIx::Regexp::Structure };
 our $VERSION = '0.047';
 
 sub __PPIX_LEXER__finalize {
-    my ( $self ) = @_;
+    my ( $self, $lexer ) = @_;
 
     # Assume no errors.
     my $rslt = 0;
@@ -79,7 +79,7 @@ sub __PPIX_LEXER__finalize {
 
     # Delegate to the superclass to finalize our children, now that we
     # have finished messing with them.
-    $rslt += $self->SUPER::__PPIX_LEXER__finalize();
+    $rslt += $self->SUPER::__PPIX_LEXER__finalize( $lexer );
 
     return $rslt;
 }

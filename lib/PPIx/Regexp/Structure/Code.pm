@@ -45,7 +45,7 @@ our $VERSION = '0.047';
 # PPIx::Regexp::Token::Code. Anything else gets turned into the
 # appropriate ::Unknown object.
 sub __PPIX_LEXER__finalize {
-    my ( $self ) = @_;
+    my ( $self ) = @_;		# $lexer unused
 
     my $count;
     my $errors = 0;
