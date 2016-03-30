@@ -123,7 +123,7 @@ loaded.
 # the first of its arguments which is defined. It will go away when
 # (or if!) these modules get 'use 5.010;' at the top.
 
-sub _defined_or {
+sub __defined_or {
     my ( undef, @args ) = @_;	# Invocant unused
     foreach my $arg ( @args ) {
 	defined $arg and return $arg;

@@ -308,7 +308,7 @@ is it supported.
 
 	my $lexer = PPIx::Regexp::Lexer->new( $tokenizer, %args );
 	my @nodes = $lexer->lex();
-	my $self = $class->SUPER::_new( @nodes );
+	my $self = $class->SUPER::__new( @nodes );
 	$self->{source} = $content;
 	$self->{failures} = $lexer->failures();
 	$self->{effective_modifiers} =

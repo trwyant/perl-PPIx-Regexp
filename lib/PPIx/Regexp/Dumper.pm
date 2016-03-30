@@ -318,7 +318,7 @@ sub _safe_version {
     return defined $version ? "'$version'" : 'undef';
 }
 
-sub _nav {
+sub __nav {
     my ( $self, @args ) = @_;
     my $rslt = $self->_safe( @args );
     $rslt =~ s/ ' (\w+) ' , /$1 =>/smxg;
@@ -494,7 +494,7 @@ sub PPIx::Regexp::Node::__PPIX_DUMPER__test {
 
     my @rslt;
     @rslt = (
-	'choose  ( ' . $dumper->_nav( $self->nav() ) . ' );',
+	'choose  ( ' . $dumper->__nav( $self->nav() ) . ' );',
 	'class   ( ' . $dumper->_safe( ref $self ) . ' );',
 	'count   ( ' . scalar $self->children() . ' );',
     );
@@ -602,7 +602,7 @@ sub PPIx::Regexp::Structure::__PPIX_DUMPER__test {
 
     my @nav = $self->nav();
     my @rslt = (
-	'choose  ( ' . $dumper->_nav( @nav ) . ' );',
+	'choose  ( ' . $dumper->__nav( @nav ) . ' );',
 	'class   ( ' . $dumper->_safe( ref $self ) . ' );',
 	'count   ( ' . scalar $self->children() . ' );',
     );
@@ -615,12 +615,12 @@ sub PPIx::Regexp::Structure::__PPIX_DUMPER__test {
     }
     foreach my $method ( qw{ start type finish } ) {
 	my @eles = $self->$method();
-	push @rslt, 'choose  ( ' . $dumper->_nav(
+	push @rslt, 'choose  ( ' . $dumper->__nav(
 	    @nav, $method, [] ) . ' );',
 	    'count   ( ' . scalar @eles . ' );';
 	foreach my $inx ( 0 .. $#eles ) {
 	    my $elem = $eles[$inx];
-	    push @rslt, 'choose  ( ' . $dumper->_nav(
+	    push @rslt, 'choose  ( ' . $dumper->__nav(
 		@nav, $method, $inx ) . ' );',
 		'class   ( ' . $dumper->_safe( ref $elem || $elem ) . ' );',
 		'content ( ' . $dumper->_safe( $elem ) . ' );';
@@ -713,7 +713,7 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__test {
 
     @nav or @nav = $self->nav();
     my @rslt = (
-	'choose  ( ' . join(', ', $dumper->_nav( @nav ) ) . ' );',
+	'choose  ( ' . join(', ', $dumper->__nav( @nav ) ) . ' );',
 	'class   ( ' . $dumper->_safe( ref $self ) . ' );',
 	'content ( ' . $dumper->_safe( $self ) . ' );',
     );

@@ -475,7 +475,7 @@ sub nav {
     # this to return the (possibly) PPI object that initiated us.
     my $parent = $self->_parent() or return;
 
-    return ( $parent->nav(), $parent->_nav( $self ) );
+    return ( $parent->nav(), $parent->__nav( $self ) );
 }
 
 # Find our location and index among the parent's children. If not found,
@@ -519,7 +519,7 @@ sub nav {
 	return $parent{$addr};
     }
 
-    sub _parent_keys {
+    sub __parent_keys {
 	return scalar keys %parent;
     }
 

@@ -357,7 +357,7 @@ sub _finalize {
 	    ) {
 		my @tokens = splice @{ $rslt[-1] }, -3;
 		push @{ $rslt[-1] },
-		    PPIx::Regexp::Node::Range->_new( @tokens );
+		    PPIx::Regexp::Node::Range->__new( @tokens );
 	    }
 	}
 
@@ -374,7 +374,7 @@ sub _finalize {
 	    my @last = @{ pop @rslt };
 	    shift @last;
 	    push @last, $self->_get_token();
-	    return $class->_new( @last );
+	    return $class->__new( @last );
 	} else {
 	    confess "Missing data";
 	}
@@ -417,21 +417,22 @@ sub _get_token {
 	if ( my $method = $handler{ $args[0]->content() } ) {
 	    @node = $self->$method( \@args );
 	}
-	@node or @node = PPIx::Regexp::Structure->_new( @args );
+	@node or @node = PPIx::Regexp::Structure->__new( @args );
 	push @{ $self->{_rslt}[-1] }, @node;
 	return;
     }
 
 }
 
-sub _curly {
+# Called as $self->$method( ... ) in _make_node(), above
+sub _curly {	## no critic (ProhibitUnusedPrivateSubroutines)
     my ( $self, $args ) = @_;
 
     if ( $args->[-1] && $args->[-1]->is_quantifier() ) {
 
 	# If the tokenizer has marked the right curly as a quantifier,
 	# make the whole thing a quantifier structure.
-	return PPIx::Regexp::Structure::Quantifier->_new( @{ $args } );
+	return PPIx::Regexp::Structure::Quantifier->__new( @{ $args } );
 
     } elsif ( $args->[-1] ) {
 
@@ -451,12 +452,13 @@ sub _curly {
 
 	# If there is no right curly, just make a generic structure
 	# TODO maybe this should be something else?
-	return PPIx::Regexp::Structure->_new( @{ $args } );
+	return PPIx::Regexp::Structure->__new( @{ $args } );
     }
 }
 
 # Recover from an unclosed left curly.
-sub _recover_curly {
+# Called as $self->$revover( ... ) in _get_delimited, above
+sub _recover_curly {	## no critic (ProhibitUnusedPrivateSubroutines)
     my ( $self, $token ) = @_;
 
     # Get all the stuff we have accumulated for this curly.
@@ -530,29 +532,32 @@ sub _in_regex_set {
     return 0;
 }
 
-sub _round {
+# Called as $self->$method( ... ) in _make_node(), above
+sub _round {	## no critic (ProhibitUnusedPrivateSubroutines)
     my ( $self, $args ) = @_;
 
     # If we're inside a regex set, parens do not capture.
     $self->_in_regex_set()
-	and return PPIx::Regexp::Structure->_new( @{ $args } );
+	and return PPIx::Regexp::Structure->__new( @{ $args } );
 
     # If /n is asserted, parens do not capture.
     $self->{tokenizer}->modifier( 'n' )
-	and return PPIx::Regexp::Structure->_new( @{ $args } );
+	and return PPIx::Regexp::Structure->__new( @{ $args } );
 
     # The instantiator will rebless based on the first token if need be.
-    return PPIx::Regexp::Structure::Capture->_new( @{ $args } );
+    return PPIx::Regexp::Structure::Capture->__new( @{ $args } );
 }
 
-sub _square {
+# Called as $self->$method( ... ) in _make_node(), above
+sub _square {	## no critic (ProhibitUnusedPrivateSubroutines)
     my ( undef, $args ) = @_;	# Invocant unused
-    return PPIx::Regexp::Structure::CharClass->_new( @{ $args } );
+    return PPIx::Regexp::Structure::CharClass->__new( @{ $args } );
 }
 
-sub _regex_set {
+# Called as $self->$method( ... ) in _make_node(), above
+sub _regex_set {	## no critic (ProhibitUnusedPrivateSubroutines)
     my ( undef, $args ) = @_;	# Invocant unused
-    return PPIx::Regexp::Structure::RegexSet->_new( @{ $args } );
+    return PPIx::Regexp::Structure::RegexSet->__new( @{ $args } );
 }
 
 #	$self->_unget_token( $token );

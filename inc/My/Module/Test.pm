@@ -201,7 +201,7 @@ sub false {		## no critic (RequireArgUnpacking)
 sub finis {		## no critic (RequireArgUnpacking)
     $obj = $parse = $result = undef;
     _pause();
-    $result = PPIx::Regexp::Element->_parent_keys();
+    $result = PPIx::Regexp::Element->__parent_keys();
     @_ = ( $result, 0, 'Should be no leftover objects' );
     goto &is;
 }

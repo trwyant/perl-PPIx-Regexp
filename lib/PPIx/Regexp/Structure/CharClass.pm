@@ -38,7 +38,7 @@ use PPIx::Regexp::Util qw{ __instance };
 
 our $VERSION = '0.048';
 
-sub _new {
+sub __new {
     my ( $class, @args ) = @_;
     ref $class and $class = ref $class;
     my %brkt;
@@ -47,7 +47,7 @@ sub _new {
     __instance( $args[0], 'PPIx::Regexp::Token::Operator' )
 	and $args[0]->content() eq '^'
 	and $brkt{type} = shift @args;
-    return $class->SUPER::_new( \%brkt, @args );
+    return $class->SUPER::__new( \%brkt, @args );
 }
 
 sub explain {

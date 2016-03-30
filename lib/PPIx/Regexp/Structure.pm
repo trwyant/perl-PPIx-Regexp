@@ -56,7 +56,7 @@ our $VERSION = '0.048';
 
 use constant ELEMENT_UNKNOWN => STRUCTURE_UNKNOWN;
 
-sub _new {
+sub __new {
     my ( $class, @args ) = @_;
     my %brkt;
     if ( ref $args[0] eq 'HASH' ) {
@@ -81,7 +81,7 @@ sub _new {
 
     $class->_check_for_interpolated_match( \%brkt, \@args );
 
-    my $self = $class->SUPER::_new( @args )
+    my $self = $class->SUPER::__new( @args )
 	or return;
 
     if ( __instance( $brkt{type}[0], 'PPIx::Regexp::Token::GroupType' ) ) {

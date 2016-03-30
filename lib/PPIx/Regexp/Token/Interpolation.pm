@@ -283,7 +283,8 @@ sub _interpolation {
 
 # Return true if we think a curly-bracketed subscript is really a
 # subscript, rather than a quantifier.
-sub _curly {
+# Called as $class->$handler( ... ) above
+sub _curly {	## no critic (ProhibitUnusedPrivateSubroutines)
     my ( undef, @kids ) = @_;		# Invocant unused
 
     # If the first child is a word, and either it is an only child or
@@ -314,7 +315,8 @@ sub _curly {
 
 # Return true if we think a square-bracketed subscript is really a
 # subscript, rather than a character class.
-sub _square {
+# Called as $class->$handler( ... ) above
+sub _square {	## no critic (ProhibitUnusedPrivateSubroutines)
     my ( undef, @kids ) = @_;		# Invocant unused
 
     # We expect to have either a number or a symbol as the first

@@ -145,7 +145,7 @@ defined $DEFAULT_POSTDEREF
 	    prior => TOKEN_UNKNOWN,	# Prior significant token.
 	    source => $re,	# The object we were initialized with.
 	    strict => $args{strict},	# like "use re 'strict';".
-	    trace => __PACKAGE__->_defined_or(
+	    trace => __PACKAGE__->__defined_or(
 		$args{trace}, $ENV{PPIX_REGEXP_TOKENIZER_TRACE}, 0 ),
 	};
 

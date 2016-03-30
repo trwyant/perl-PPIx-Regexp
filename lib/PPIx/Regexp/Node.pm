@@ -46,7 +46,7 @@ our $VERSION = '0.048';
 
 use constant ELEMENT_UNKNOWN	=> NODE_UNKNOWN;
 
-sub _new {
+sub __new {
     my ( $class, @children ) = @_;
     ref $class and $class = ref $class;
     foreach my $elem ( @children ) {
@@ -397,7 +397,7 @@ sub unescaped_content {
 }
 
 # Help for nav();
-sub _nav {
+sub __nav {
     my ( $self, $child ) = @_;
     refaddr( $child->parent() ) == refaddr( $self )
 	or return;

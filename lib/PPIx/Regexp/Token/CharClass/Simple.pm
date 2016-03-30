@@ -104,38 +104,38 @@ our $VERSION = '0.048';
 ##    return ( $self->{is_case_sensitive} = $self->_is_case_sensitive() );
 ##}
 
-{
-    my %case_sensitive = map { $_ => 1 } qw{
-        generalcategory=lowercaseletter generalcategory=ll
-	    gc=lowercaseletter gc=ll
-        generalcategory=titlecaseletter generalcategory=lt
-	    gc=titlecaseletter gc=lt
-        generalcategory=uppercaseletter generalcategory=lu
-	    gc=uppercaseletter gc=lu
-	lowercaseletter lowercase lower ll
-	titlecaseletter titlecase title lt
-	uppercaseletter uppercase upper lu
-	lowercase=y lower=y lowercase=n lower=n
-	titlecase=y title=y titlecase=n title=n
-	uppercase=y upper=y uppercase=n upper=n
-    };
-
-    sub _is_case_sensitive {
-	my ( $self ) = @_;
-	my $content = $self->content();
-	$content =~ m/ \A \\ p [{] ( .* ) [}] /smxi
-	    or return 0;
-	$content = lc $1;
-	$content =~ s/ \A ^ //smx;
-	$content =~ s/ [\s_-] //smxg;
-	$content =~ s/ \A is //smx;
-	$content =~ s/ : /=/smxg;
-	$content =~ s/ = (?: yes | t | true ) \b /=y/smxg;
-	$content =~ s/ = (?: no | f | false ) \b /=n/smxg;
-	return $case_sensitive{$content} || 0;
-    }
-
-}
+##{
+##    my %case_sensitive = map { $_ => 1 } qw{
+##        generalcategory=lowercaseletter generalcategory=ll
+##	    gc=lowercaseletter gc=ll
+##        generalcategory=titlecaseletter generalcategory=lt
+##	    gc=titlecaseletter gc=lt
+##        generalcategory=uppercaseletter generalcategory=lu
+##	    gc=uppercaseletter gc=lu
+##	lowercaseletter lowercase lower ll
+##	titlecaseletter titlecase title lt
+##	uppercaseletter uppercase upper lu
+##	lowercase=y lower=y lowercase=n lower=n
+##	titlecase=y title=y titlecase=n title=n
+##	uppercase=y upper=y uppercase=n upper=n
+##    };
+##
+##    sub _is_case_sensitive {
+##	my ( $self ) = @_;
+##	my $content = $self->content();
+##	$content =~ m/ \A \\ p [{] ( .* ) [}] /smxi
+##	    or return 0;
+##	$content = lc $1;
+##	$content =~ s/ \A ^ //smx;
+##	$content =~ s/ [\s_-] //smxg;
+##	$content =~ s/ \A is //smx;
+##	$content =~ s/ : /=/smxg;
+##	$content =~ s/ = (?: yes | t | true ) \b /=y/smxg;
+##	$content =~ s/ = (?: no | f | false ) \b /=n/smxg;
+##	return $case_sensitive{$content} || 0;
+##    }
+##
+##}
 
 {
 
