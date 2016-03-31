@@ -358,7 +358,7 @@ any objects specified are removed from the cache.
     our $DISABLE_CACHE;		# Leave this undocumented, at least for
 				# now.
 
-    sub _cache_size {
+    sub __cache_size {
 	return scalar keys %cache;
     }
 

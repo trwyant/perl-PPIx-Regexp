@@ -69,7 +69,7 @@ sub cache_count {		## no critic (RequireArgUnpacking)
     $obj = undef;
     $parse = undef;
     _pause();
-    $result = PPIx::Regexp->_cache_size();
+    $result = PPIx::Regexp->__cache_size();
     @_ = ( $result, $expect,
 	"Should be $expect leftover cache contents" );
     goto &is;
