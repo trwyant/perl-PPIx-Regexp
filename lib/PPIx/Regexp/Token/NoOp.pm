@@ -10,7 +10,7 @@ use base qw{ PPIx::Regexp::Token };
 use Carp;
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 
-our $VERSION = '0.048';
+our $VERSION = '0.048_01';
 
 sub __new {
     my ( $class, $content, %arg ) = @_;

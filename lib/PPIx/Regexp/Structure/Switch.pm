@@ -34,7 +34,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Structure };
 
-our $VERSION = '0.048';
+our $VERSION = '0.048_01';
 
 sub __PPIX_LEXER__finalize {
     my ( $self, $lexer ) = @_;

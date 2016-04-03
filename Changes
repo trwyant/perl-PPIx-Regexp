@@ -1,3 +1,6 @@
+0.048_01	2016-04-03	T. R. Wyant
+  Correct dump of embedded modifiers (eg: (?i:...))
+
 0.048		2016-02-29	T. R. Wyant
   Add option 'strict', like 'use re "strict"'
     In the presence of strict(), I opted to set perl_version_introduced
