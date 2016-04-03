@@ -584,7 +584,6 @@ sub _format_value {
 	    and push @rslt, $self->__PPIX_DUMPER__dump_explanation(
 		$dumper, pop @rslt );
 
-	@rslt = ( join( "\t", @rslt ) );
 	my $indent = ' ' x $dumper->{indent};
 	foreach my $elem ( $self->children() ) {
 	    push @rslt, map { $indent . $_ }
