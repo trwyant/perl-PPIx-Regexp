@@ -596,7 +596,9 @@ sub perl_version_removed {
     defined $v
 	and $v <= 5.021001
 	and return $v;
-    '??' eq $self->delimiters()
+    defined( my $delim = $self->delimiters() )
+	or return $v;
+    '??' eq $delim
 	and '' eq $self->type()->content()
 	and return '5.021001';
     return $v;
