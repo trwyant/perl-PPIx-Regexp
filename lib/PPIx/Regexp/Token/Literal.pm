@@ -40,7 +40,7 @@ use PPIx::Regexp::Constant qw{
     TOKEN_UNKNOWN
 };
 
-our $VERSION = '0.048_01';
+our $VERSION = '0.049';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
