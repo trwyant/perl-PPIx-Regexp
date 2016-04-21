@@ -113,13 +113,13 @@ they will be documented as producing the modern parse, and the code
 modified to produce this parse if necessary.
 
 The functionality that parses string literals (the C<parse> argument to
-C<new()>) was introduced in version [%% next_version $$], and should be
-considered experimental. It is a bit of a kluge in any case, especially
-in the appropriateness of class names to this use. But the actual
-parsing of a Perl string literal is not too different than the parsing
-of an C<s///> replacement string, so I thought that if someone wanted
-a string literal parse badly enough to deal with the kluginess I could
-provide it fairly easily.
+C<new()>) was introduced in version 0.045, and should be considered
+experimental. It is a bit of a kluge in any case, especially in the
+appropriateness of class names to this use. But the actual parsing of a
+Perl string literal is not too different than the parsing of an C<s///>
+replacement string, so I thought that if someone wanted a string literal
+parse badly enough to deal with the kluginess I could provide it fairly
+easily.
 
 =head1 METHODS
 
