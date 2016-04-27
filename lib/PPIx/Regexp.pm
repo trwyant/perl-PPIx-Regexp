@@ -237,12 +237,15 @@ The default is C<'regex'>.
 
 This option is passed on to the tokenizer, where it specifies whether
 postfix dereferences are recognized in interpolations and code. This
-experimental feature was introduced in Perl 5.19.5. The default is the
-value of C<$PPIx::Regexp::Tokenizer::DEFAULT_POSTDEREF>, which is false
-by default.
+experimental feature was introduced in Perl 5.19.5.
 
-If postfix dereferencing becomes mainstream, the default value of
-C<$PPIx::Regexp::Tokenizer::DEFAULT_POSTDEREF> will become true.
+The default is the value of
+C<$PPIx::Regexp::Tokenizer::DEFAULT_POSTDEREF>, which is true. When
+originally introduced this was false, but was documented as becoming
+true when and if postfix dereferencing became mainstream. The  intent to
+mainstream was announced with Perl 5.23.1, and became official (so to
+speak) with Perl 5.24.0, so the default became true with L<PPIx::Regexp>
+[%% next_version %%].
 
 Note that if L<PPI|PPI> starts unconditionally recognizing postfix
 dereferences, this argument will immediately become ignored, and will be

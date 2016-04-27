@@ -46,7 +46,7 @@ our $VERSION = '0.049';
 
 our $DEFAULT_POSTDEREF;
 defined $DEFAULT_POSTDEREF
-    or $DEFAULT_POSTDEREF = 0;
+    or $DEFAULT_POSTDEREF = 1;
 
 {
     # Names of classes containing tokenization machinery. There are few
@@ -359,10 +359,12 @@ sub get_token {
     my $handler = '__PPIX_TOKENIZER__' . $self->{mode};
 
     my $code = $self->can( $handler )
-	or confess "Getting token in mode '$self->{mode}'. ",
+	or confess 'Programming error - ',
+	    "Getting token in mode '$self->{mode}'. ",
 	    "cursor_curr = $self->{cursor_curr}; ",
 	    "cursor_limit = $self->{cursor_limit}; ",
-	    "length( content ) = ", length $self->{content};
+	    "length( content ) = ", length $self->{content},
+	    "; content = '$self->{content}'";
 
     my $character = substr(
 	$self->{content},
@@ -794,6 +796,8 @@ sub _make_final_token {
 
 sub _set_mode {
     my ( $self, $mode ) = @_;
+    $self->{trace}
+	and warn "Tokenizer going from mode $self->{mode} to $mode\n";
     $self->{mode} = $mode;
     if ( 'kaput' eq $mode ) {
 	$self->{cursor_curr} = $self->{cursor_limit} =
@@ -860,8 +864,13 @@ sub __PPIX_TOKENIZER__init {
 		pos $self->{content} = $self->{cursor_curr} +
 		$offset;
 	    }
-	    local $self->{cursor_curr} = pos $self->{content};
-	    local $self->{delimiter_start} = substr
+	    # Localizing cursor_curr and delimiter_start would be
+	    # cleaner, but I don't want the old values restored if a
+	    # parse error occurs.
+	    my $cursor_curr = $self->{cursor_curr};
+	    my $delimiter_start = $self->{delimiter_start};
+	    $self->{cursor_curr} = pos $self->{content};
+	    $self->{delimiter_start} = substr
 		$self->{content},
 		$self->{cursor_curr},
 		1;
@@ -873,12 +882,15 @@ sub __PPIX_TOKENIZER__init {
 		$self->{trace}
 		    and warn "Tokenizer found replacement end delimiter at @{[
 			$self->{cursor_curr} + $s_off ]}\n";
+		$self->{cursor_curr} = $cursor_curr;
+		$self->{delimiter_start} = $delimiter_start;
 	    } else {
+		$self->{trace}
+		    and warn 'Tokenizer failed to find replacement',
+			"end delimiter starting at $self->{cursor_curr}\n";
 		$self->{cursor_curr} = 0;
-		return $self->_make_final_token(
-		    length( $self->{content} ), TOKEN_UNKNOWN, {
-			error	=> 'Tokenizer found mismatched replacement delimiters',
-		    },
+		return $self->__init_error(
+		    'Tokenizer found mismatched replacement delimiters',
 		);
 	    }
 	} else {
