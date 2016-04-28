@@ -1,3 +1,19 @@
+0.049_01	2016-04-27	T. R. Wyant
+  Parse bracketed substitution with embedded comment. This is something
+    like s{foo}
+         #{bar}
+	  {baz}
+    which is equivalent to s/foo/baz/. PPI gets this wrong, and we're
+    not smart enough to fix up the PPI parse, but if given this as text,
+    we now parse it correctly.
+
+  We now recognize postfix dereferences by default, since Perl does
+    beginning with 5.24. In other words, default new() argument
+    'postderef' to true.
+
+  Unterminated substitutions (i.e. 's//') should no longer cause an
+    exception. Instead they parse as an unknown token.
+
 0.049		2016-04-19	T. R. Wyant
   Robustify PPIx::Regexp->perl_version_removed()
     The problem here was that if the expression being parsed was

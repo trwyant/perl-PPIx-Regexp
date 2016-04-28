@@ -143,7 +143,7 @@ use PPIx::Regexp::Tokenizer;
 use PPIx::Regexp::Util qw{ __choose_tokenizer_class __instance };
 use Scalar::Util qw{ refaddr };
 
-our $VERSION = '0.049';
+our $VERSION = '0.049_01';
 
 =head2 new
 
@@ -245,7 +245,7 @@ originally introduced this was false, but was documented as becoming
 true when and if postfix dereferencing became mainstream. The  intent to
 mainstream was announced with Perl 5.23.1, and became official (so to
 speak) with Perl 5.24.0, so the default became true with L<PPIx::Regexp>
-[%% next_version %%].
+0.049_01.
 
 Note that if L<PPI|PPI> starts unconditionally recognizing postfix
 dereferences, this argument will immediately become ignored, and will be
