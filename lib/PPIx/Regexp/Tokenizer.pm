@@ -855,10 +855,20 @@ sub __PPIX_TOKENIZER__init {
 	$self->{trace}
 	    and warn "Tokenizer found regexp end delimiter at $cursor_limit\n";
 	if ( $self->__number_of_extra_parts() ) {
+###	    my $found_embedded_comments;
 	    if ( $self->close_bracket(
 		    $self->{delimiter_start} ) ) {
 		pos $self->{content} = $self->{cursor_curr} +
 		$offset + 1;
+		# If we're bracketed, there may be Perl comments between
+		# the regex and the replacement. PPI gets the parse
+		# wrong as of 1.220, but if we get the handling of the
+		# underlying string right, we will Just Work when PPI
+		# gets it right.
+		while ( $self->{content} =~
+		    m/ \G \s* \n \s* \# [^\n]* /smxgc ) {
+##		    $found_embedded_comments = 1;
+		}
 		$self->{content} =~ m/ \s* /smxgc;
 	    } else {
 		pos $self->{content} = $self->{cursor_curr} +
@@ -889,6 +899,13 @@ sub __PPIX_TOKENIZER__init {
 		    and warn 'Tokenizer failed to find replacement',
 			"end delimiter starting at $self->{cursor_curr}\n";
 		$self->{cursor_curr} = 0;
+		# TODO If I were smart enough here I could check for
+		# PPI mis-parses like s{foo}
+		#                     #{bar}
+		#                      {baz}
+		# here, doing so if $found_embedded_comments (commented
+		# out above) is true. The problem is that there seem to
+		# as many mis-parses as there are possible delimiters.
 		return $self->__init_error(
 		    'Tokenizer found mismatched replacement delimiters',
 		);
@@ -1101,6 +1118,22 @@ sub __PPIX_TOKENIZER__finish {
 
 	if ( $self->close_bracket( $self->{delimiter_start} ) ) {
 	    my $accept;
+	    # If we are bracketed, there can be honest-to-God Perl
+	    # comments between the regexp and the replacement, not just
+	    # regexp comments. As of version 1.220, PPI does not get
+	    # this parse right, but if we can handle this is a string,
+	    # then we will Just Work when PPI gets itself straight.
+	    while ( $self->find_regexp(
+		    qr{ \A ( \s* \n \s* ) ( \# [^\n]* \n ) }smx ) ) {
+		my ( $white_space, $comment ) = $self->capture();
+		push @tokens, $self->make_token(
+		    length $white_space,
+		    'PPIx::Regexp::Token::Whitespace',
+		), $self->make_token(
+		    length $comment,
+		    'PPIx::Regexp::Token::Comment',
+		);
+	    }
 	    $accept = $self->find_regexp( qr{ \A \s+ }smx )
 		and push @tokens, $self->make_token(
 		$accept, 'PPIx::Regexp::Token::Whitespace' );

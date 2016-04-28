@@ -9983,6 +9983,144 @@ choose  ( child => 2 );
 class   ( 'PPIx::Regexp::Token::Modifier' );
 content ( '' );
 
+# Unterminated replacement
+
+tokenize( 's/foo/' );
+count   ( 1 );
+choose  ( 0 );
+class   ( 'PPIx::Regexp::Token::Unknown' );
+content ( 's/foo/' );
+error   ( 'Tokenizer found mismatched replacement delimiters' );
+
+parse   ( 's/foo/' );
+value   ( failures => [], 1 );
+class   ( 'PPIx::Regexp' );
+count   ( 1 );
+choose  ( child => 0 );
+class   ( 'PPIx::Regexp::Token::Unknown' );
+content ( 's/foo/' );
+error   ( 'Tokenizer found mismatched replacement delimiters' );
+
+# bracketed replacement with embedded Perl comment
+
+tokenize( 's{foo}
+#{bar}
+{baz}' );
+count   ( 14 );
+choose  ( 0 );
+class   ( 'PPIx::Regexp::Token::Structure' );
+content ( 's' );
+choose  ( 1 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '{' );
+choose  ( 2 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'f' );
+choose  ( 3 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'o' );
+choose  ( 4 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'o' );
+choose  ( 5 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '}' );
+choose  ( 6 );
+class   ( 'PPIx::Regexp::Token::Whitespace' );
+content ( '
+' );
+choose  ( 7 );
+class   ( 'PPIx::Regexp::Token::Comment' );
+content ( '#{bar}
+' );
+choose  ( 8 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '{' );
+choose  ( 9 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'b' );
+choose  ( 10 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'a' );
+choose  ( 11 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'z' );
+choose  ( 12 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '}' );
+choose  ( 13 );
+class   ( 'PPIx::Regexp::Token::Modifier' );
+content ( '' );
+
+parse   ( 's{foo}
+#{bar}
+{baz}' );
+value   ( failures => [], 0 );
+class   ( 'PPIx::Regexp' );
+count   ( 6 );
+choose  ( child => 0 );
+class   ( 'PPIx::Regexp::Token::Structure' );
+content ( 's' );
+choose  ( child => 1 );
+class   ( 'PPIx::Regexp::Structure::Regexp' );
+count   ( 3 );
+choose  ( child => 1, start => [] );
+count   ( 1 );
+choose  ( child => 1, start => 0 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '{' );
+choose  ( child => 1, type => [] );
+count   ( 0 );
+choose  ( child => 1, finish => [] );
+count   ( 1 );
+choose  ( child => 1, finish => 0 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '}' );
+choose  ( child => 1, child => 0 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'f' );
+choose  ( child => 1, child => 1 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'o' );
+choose  ( child => 1, child => 2 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'o' );
+choose  ( child => 2 );
+class   ( 'PPIx::Regexp::Token::Whitespace' );
+content ( '
+' );
+choose  ( child => 3 );
+class   ( 'PPIx::Regexp::Token::Comment' );
+content ( '#{bar}
+' );
+choose  ( child => 4 );
+class   ( 'PPIx::Regexp::Structure::Replacement' );
+count   ( 3 );
+choose  ( child => 4, start => [] );
+count   ( 1 );
+choose  ( child => 4, start => 0 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '{' );
+choose  ( child => 4, type => [] );
+count   ( 0 );
+choose  ( child => 4, finish => [] );
+count   ( 1 );
+choose  ( child => 4, finish => 0 );
+class   ( 'PPIx::Regexp::Token::Delimiter' );
+content ( '}' );
+choose  ( child => 4, child => 0 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'b' );
+choose  ( child => 4, child => 1 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'a' );
+choose  ( child => 4, child => 2 );
+class   ( 'PPIx::Regexp::Token::Literal' );
+content ( 'z' );
+choose  ( child => 5 );
+class   ( 'PPIx::Regexp::Token::Modifier' );
+content ( '' );
+
 done_testing;
 
 1;
