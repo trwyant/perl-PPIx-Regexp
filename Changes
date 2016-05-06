@@ -1,11 +1,8 @@
-0.049_01	2016-04-27	T. R. Wyant
+0.050		2016-05-06	T. R. Wyant
   Parse bracketed substitution with embedded comment. This is something
-    like s{foo}
-         #{bar}
-	  {baz}
-    which is equivalent to s/foo/baz/. PPI gets this wrong, and we're
-    not smart enough to fix up the PPI parse, but if given this as text,
-    we now parse it correctly.
+    like s{foo}\n#{bar}\n{baz} which is equivalent to s/foo/baz/. PPI
+    gets this wrong, and we're not smart enough to fix up the PPI parse,
+    but if given this as text, we now parse it correctly.
 
   We now recognize postfix dereferences by default, since Perl does
     beginning with 5.24. In other words, default new() argument

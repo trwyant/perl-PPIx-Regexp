@@ -7,7 +7,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Node };
 
-our $VERSION = '0.049_01';
+our $VERSION = '0.050';
 
 
 1;
