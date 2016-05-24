@@ -467,8 +467,17 @@ sub _recover_curly {	## no critic (ProhibitUnusedPrivateSubroutines)
     # Lose the right bracket, which we have already failed to match.
     shift @content;
 
-    # Rebless the left curly to a literal.
-    TOKEN_LITERAL->__PPIX_ELEM__rebless( $content[0] );
+    # Rebless the left curly appropriately
+    if ( $self->{_rslt}[0][-1]->isa( 'PPIx::Regexp::Token::Assertion' )
+	&& q<\b> eq $self->{_rslt}[0][-1]->content() ) {
+	# If following \b, it becomes an unknown.
+	TOKEN_UNKNOWN->__PPIX_ELEM__rebless( $content[0],
+	    error	=> 'Unterminated bound type',
+	);
+    } else {
+	# Rebless the left curly to a literal.
+	TOKEN_LITERAL->__PPIX_ELEM__rebless( $content[0] );
+    }
 
     # Try to recover possible quantifiers not recognized because we
     # thought this was a structure.
