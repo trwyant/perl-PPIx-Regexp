@@ -34,6 +34,10 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Structure };
 
+use PPIx::Regexp::Constant qw{
+    LITERAL_LEFT_CURLY_ALLOWED
+};
+
 our $VERSION = '0.050';
 
 sub can_be_quantified {
@@ -60,6 +64,10 @@ sub explain {
 
 sub is_quantifier {
     return 1;
+}
+
+sub __following_literal_left_curly_disallowed_in {
+    return LITERAL_LEFT_CURLY_ALLOWED;
 }
 
 # Called by the lexer to record the capture number.

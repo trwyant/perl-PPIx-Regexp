@@ -36,6 +36,16 @@ use base qw{ PPIx::Regexp::Structure };
 
 our $VERSION = '0.050';
 
+use PPIx::Regexp::Constant qw{
+    LITERAL_LEFT_CURLY_ALLOWED
+};
+
+# An un-escaped literal left curly bracket can always follow this
+# element.
+sub __following_literal_left_curly_disallowed_in {
+    return LITERAL_LEFT_CURLY_ALLOWED;
+}
+
 1;
 
 __END__

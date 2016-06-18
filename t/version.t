@@ -470,6 +470,56 @@ method	perl_version_removed	=> undef;
 token   '\N{U+32}', note => q{Digit '2', by Unicode code point};
 method  perl_version_introduced => '5.008', note => '5.8.0 charnames';
 method	perl_version_removed	=> undef;
+token	'{', note => 'Initial unescaped literal left curly';
+method	perl_version_introduced => MINIMUM_PERL;
+method	perl_version_removed	=> undef;
+token	'{', note => 'Unescaped literal left curly', previous => 1;
+method	perl_version_introduced => MINIMUM_PERL;
+method	perl_version_removed	=> '5.025001';
+
+token	'\s', class => 'PPIx::Regexp::Token::CharClass::Simple';
+token	'{', previous => 1;
+method	perl_version_introduced => MINIMUM_PERL;
+method	perl_version_removed	=> '5.025001';
+
+token	'.', class => 'PPIx::Regexp::Token::CharClass::Simple';
+token	'{', previous => 1;
+method	perl_version_introduced => MINIMUM_PERL;
+method	perl_version_removed	=> undef;	# Not removed yet
+
+token	'\p{Latin}', class => 'PPIx::Regexp::Token::CharClass::Simple';
+token	'{', previous => 1;
+method	perl_version_introduced => MINIMUM_PERL;
+method	perl_version_removed	=> undef;	# Not removed yet
+
+token	'\P{Latin}', class => 'PPIx::Regexp::Token::CharClass::Simple';
+token	'{', previous => 1;
+method	perl_version_introduced => MINIMUM_PERL;
+method	perl_version_removed	=> undef;	# Not removed yet
+
+token	'^', class => 'PPIx::Regexp::Token::Assertion';
+token	'{', previous => 1;
+method	perl_version_introduced => MINIMUM_PERL;
+method	perl_version_removed	=> undef;
+
+require	PPIx::Regexp::Structure::Assertion;
+token	undef, class => 'PPIx::Regexp::Structure::Assertion';
+token	'{', previous => 1;
+method	perl_version_introduced => MINIMUM_PERL;
+method	perl_version_removed	=> undef;
+
+require	PPIx::Regexp::Structure::CharClass;
+token	undef, class => 'PPIx::Regexp::Structure::CharClass';
+token	'{', previous => 1;
+method	perl_version_introduced => MINIMUM_PERL;
+method	perl_version_removed	=> undef;	# Not removed yet
+
+require	PPIx::Regexp::Structure::RegexSet;
+token	undef, class => 'PPIx::Regexp::Structure::RegexSet';
+token	'{', previous => 1;
+method	perl_version_introduced => MINIMUM_PERL;
+method	perl_version_removed	=> undef;	# Not removed yet
+
 
 class	'PPIx::Regexp::Token::Modifier', note => 'Operator modifiers',
     text => '/%s';
@@ -843,6 +893,9 @@ sub token (@) {
 	defined $context->{class}
 	    or skip 'No class defined', 1;
 
+	my $previous = $context->{object}
+	    or delete $args{previous};
+
 	$context = {
 	    class	=> $context->{class},
 	    token	=> {
@@ -867,12 +920,17 @@ sub token (@) {
 	    and $report
 	    and push @report_info, $context;
 
-	my $title = "Instantiate $context->{class}{class} with '$content'";
+	my $class = defined $args{class} ? $args{class} :
+	    $context->{class}{class};
+	my $title = sprintf 'Instantiate %s with %s', $class,
+	    defined $content ? "'$content'" : '()';
+	$args{previous}
+	    and $title .= sprintf q< preceded by '%s'>,
+		$previous->content();
 
 	if ( eval {
-		my $class = $context->{class}{class};
 		my $tokenizer = PPIx::Regexp::Tokenizer->new(
-		    $content,
+		    $content || '',
 		    postderef	=> $args{postderef},
 		);
 		if ( my $code = $class->can( '__make_group_type_matcher' ) ) {
@@ -886,9 +944,16 @@ sub token (@) {
 		    $tokenizer->cookie( $cookie => sub { 1 } );
 		}
 		my $obj = $class->__new(
-		    $content,
-		    tokenizer => $tokenizer,
+		    defined $content ? $content : (),
+		    $class->isa( 'PPIx::Regexp::Token' ) ?
+			( tokenizer => $tokenizer ) :
+			(),
 		);
+		if ( delete $args{previous} ) {
+		    require PPIx::Regexp::Node;
+		    $context->{parent} = PPIx::Regexp::Node->__new(
+			$previous, $obj );
+		}
 		$context->{object} = $obj;
 	    } ) {
 	    while ( my ( $name, $val ) = each %args ) {

@@ -40,7 +40,10 @@ use List::MoreUtils qw{ firstidx };
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr weaken };
 
-use PPIx::Regexp::Constant qw{ MINIMUM_PERL TOKEN_UNKNOWN };
+use PPIx::Regexp::Constant qw{
+    LITERAL_LEFT_CURLY_REMOVED_PHASE_1
+    MINIMUM_PERL TOKEN_UNKNOWN
+};
 
 our $VERSION = '0.050';
 
@@ -533,6 +536,15 @@ sub __error {
     $self->{error} = $msg;
     bless $self, TOKEN_UNKNOWN;
     return 1;
+}
+
+# This huge kluge is required by
+# https://rt.perl.org/Ticket/Display.html?id=128213 which means the
+# deprecation will be done in at least two separate phases. It exists
+# for the use of PPIx::Regexp::Token::Literal->perl_version_removed, and
+# MUST NOT be called by any other code.
+sub __following_literal_left_curly_disallowed_in {
+    return LITERAL_LEFT_CURLY_REMOVED_PHASE_1;
 }
 
 # Called by the lexer to record the capture number.

@@ -36,7 +36,10 @@ use warnings;
 use base qw{ PPIx::Regexp::Token::CharClass };
 
 use PPIx::Regexp::Constant qw{
-    COOKIE_CLASS MINIMUM_PERL TOKEN_LITERAL TOKEN_UNKNOWN
+    COOKIE_CLASS
+    LITERAL_LEFT_CURLY_REMOVED_PHASE_1
+    LITERAL_LEFT_CURLY_REMOVED_PHASE_2
+    MINIMUM_PERL TOKEN_LITERAL TOKEN_UNKNOWN
 };
 
 our $VERSION = '0.050';
@@ -178,6 +181,20 @@ our $VERSION = '0.050';
 	my ( $self ) = @_;
 	return $removed{ $self->content() };
     }
+}
+
+# This is one of the larger complications of
+# https://rt.perl.org/Public/Bug/Display.html?id=128213
+# where it transpired that un-escaped literal left curlies were not
+# giving warnings/errors in /.{/, /\p{...}{/, and /\P{...}{/, but were
+# for all the others that bin into this class (e.g. /\s{/).
+sub __following_literal_left_curly_disallowed_in {
+    my ( $self ) = @_;
+    q<.> eq ( my $content = $self->content() )
+	and return LITERAL_LEFT_CURLY_REMOVED_PHASE_2;
+    $content =~ m/ \A \\ p \{ /smxi
+	and return LITERAL_LEFT_CURLY_REMOVED_PHASE_2;
+    return LITERAL_LEFT_CURLY_REMOVED_PHASE_1;
 }
 
 sub __PPIX_TOKENIZER__regexp {

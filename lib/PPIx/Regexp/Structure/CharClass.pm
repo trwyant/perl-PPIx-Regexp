@@ -34,6 +34,9 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Structure };
 
+use PPIx::Regexp::Constant qw{
+    LITERAL_LEFT_CURLY_REMOVED_PHASE_2
+};
 use PPIx::Regexp::Util qw{ __instance };
 
 our $VERSION = '0.050';
@@ -69,6 +72,10 @@ if the first token inside the left square bracket is a caret (C<^>).
 sub negated {
     my ( $self ) = @_;
     return $self->type() ? 1 : 0;
+}
+
+sub __following_literal_left_curly_disallowed_in {
+    return LITERAL_LEFT_CURLY_REMOVED_PHASE_2;
 }
 
 # Called by the lexer to record the capture number.

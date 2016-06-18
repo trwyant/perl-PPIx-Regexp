@@ -35,6 +35,10 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
+use PPIx::Regexp::Constant qw{
+    LITERAL_LEFT_CURLY_ALLOWED
+};
+
 our $VERSION = '0.050';
 
 # Return true if the token can be quantified, and false otherwise
@@ -71,6 +75,10 @@ sub could_be_quantifier {
 	return \%explanation;
     }
 
+}
+
+sub __following_literal_left_curly_disallowed_in {
+    return LITERAL_LEFT_CURLY_ALLOWED;
 }
 
 sub __PPIX_TOKENIZER__regexp {

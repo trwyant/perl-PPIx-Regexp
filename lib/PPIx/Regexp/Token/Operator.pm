@@ -37,6 +37,7 @@ use base qw{ PPIx::Regexp::Token };
 
 use PPIx::Regexp::Constant qw{
     COOKIE_CLASS COOKIE_REGEX_SET
+    LITERAL_LEFT_CURLY_ALLOWED
     TOKEN_LITERAL
 };
 use PPIx::Regexp::Util qw{ __instance };
@@ -150,6 +151,20 @@ sub _treat_as_literal {
     }
 
 
+}
+
+{
+    my $removed_in = {
+	'|'	=> LITERAL_LEFT_CURLY_ALLOWED,	# Allowed after alternation
+    };
+
+    sub __following_literal_left_curly_disallowed_in {
+	my ( $self ) = @_;
+	my $content = $self->content();
+	exists $removed_in->{$content}
+	    and return $removed_in->{$content};
+	return $self->SUPER::__following_literal_left_curly_disallowed_in();
+    }
 }
 
 sub __PPIX_TOKENIZER__regexp {

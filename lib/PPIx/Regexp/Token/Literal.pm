@@ -36,6 +36,7 @@ use base qw{ PPIx::Regexp::Token };
 
 use PPIx::Regexp::Constant qw{
     COOKIE_CLASS COOKIE_REGEX_SET
+    LITERAL_LEFT_CURLY_ALLOWED
     MINIMUM_PERL MSG_PROHIBITED_BY_STRICT
     TOKEN_UNKNOWN
 };
@@ -62,6 +63,30 @@ sub perl_version_introduced {
     $content =~ m/ \A \\ N /smx
 	and return ( $self->{perl_version_introduced} = '5.006001' );
     return ( $self->{perl_version_introduced} = MINIMUM_PERL );
+}
+
+{
+    my %removed = (
+	q<{>	=> sub {
+	    my ( $self ) = @_;
+	    # Un-escaped literal left curlys are always allowed when
+	    # they begin the regexp or the group.
+	    my $prev = $self->sprevious_sibling()
+		or return LITERAL_LEFT_CURLY_ALLOWED;
+	    return $prev->__following_literal_left_curly_disallowed_in();
+	},
+    );
+
+    sub perl_version_removed {
+	my ( $self ) = @_;
+	exists $self->{perl_version_removed}
+	    and return $self->{perl_version_removed};
+	my $code;
+	return ( $self->{perl_version_removed} =
+	    ( $code = $removed{$self->content()} ) ?
+	    scalar $code->( $self ) : undef
+	);
+    }
 }
 
 # Some characters may or may not be literals depending on whether we are

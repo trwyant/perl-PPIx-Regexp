@@ -106,6 +106,16 @@ character class, per C<perl5234delta>. Formerly any white space
 character parsed as whitespace. This change in C<PPIx::Regexp> will be
 reverted if the change in Perl does not make it into Perl 5.24.0.
 
+=item Unescaped literal left curly brackets
+
+These are being removed in positions where quantifiers are legal, so
+that they can be used for new functionality. Some of them are gone in
+5.25.1, others will be removed in a future version of Perl. In
+situations where they have been removed,
+L<perl_version_removed()|/perl_version_removed> will return the version
+in which they were removed. When the new functionality appears, the
+parse produced by this software will reflect the new functionality.
+
 =back
 
 There are very probably other examples of this. When they come to light
@@ -113,13 +123,11 @@ they will be documented as producing the modern parse, and the code
 modified to produce this parse if necessary.
 
 The functionality that parses string literals (the C<parse> argument to
-C<new()>) was introduced in version 0.045, and should be considered
-experimental. It is a bit of a kluge in any case, especially in the
-appropriateness of class names to this use. But the actual parsing of a
-Perl string literal is not too different than the parsing of an C<s///>
-replacement string, so I thought that if someone wanted a string literal
-parse badly enough to deal with the kluginess I could provide it fairly
-easily.
+C<new()>) was introduced in version 0.045, but its use is discouraged.
+The preferred package for string literals is
+L<PPIx::QuoteLike|PPIx::QuoteLike>, and once I consider that package to
+be stable the string literal functionality in this package will be put
+through a deprecation cycle and removed.
 
 =head1 METHODS
 

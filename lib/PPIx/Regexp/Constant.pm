@@ -12,6 +12,9 @@ our @EXPORT_OK = qw{
     COOKIE_QUANT
     COOKIE_QUOTE
     COOKIE_REGEX_SET
+    LITERAL_LEFT_CURLY_ALLOWED
+    LITERAL_LEFT_CURLY_REMOVED_PHASE_1
+    LITERAL_LEFT_CURLY_REMOVED_PHASE_2
     MINIMUM_PERL
     MODIFIER_GROUP_MATCH_SEMANTICS
     MSG_PROHIBITED_BY_STRICT
@@ -26,6 +29,10 @@ use constant COOKIE_CLASS	=> ']';
 use constant COOKIE_QUANT	=> '}';
 use constant COOKIE_QUOTE	=> '\\E';
 use constant COOKIE_REGEX_SET	=> '])';
+
+use constant LITERAL_LEFT_CURLY_ALLOWED		=> undef;
+use constant LITERAL_LEFT_CURLY_REMOVED_PHASE_1	=> '5.025001';
+use constant LITERAL_LEFT_CURLY_REMOVED_PHASE_2	=> undef;
 
 use constant MINIMUM_PERL	=> '5.000';
 
@@ -113,6 +120,25 @@ C<\Q> is encountered, and it persists until the next C<\E>.
 =head2 COOKIE_REGEX_SET
 
 The name of the cookie used to control regular expression sets.
+
+=head2 LITERAL_LEFT_CURLY_ALLOWED
+
+The Perl version at which allowed unescaped literal left curly brackets
+were removed. This may make more sense if I mention that its value is
+C<undef>.
+
+=head2 LITERAL_LEFT_CURLY_REMOVED_PHASE_1
+
+The Perl version at which the first phase of unescaped literal left
+curly bracket removal took place. The value of this constant is
+C<'5.025001'>.
+
+=head2 LITERAL_LEFT_CURLY_REMOVED_PHASE_2
+
+The Perl version at which the second phase of unescaped literal left
+curly bracket removal took place. The value of this constant is
+C<undef>, but it will be assigned a value when the timing of the second
+phase is known.
 
 =head2 MINIMUM_PERL
 

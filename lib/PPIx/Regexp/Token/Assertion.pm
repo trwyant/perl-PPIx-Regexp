@@ -47,7 +47,9 @@ use warnings;
 use base qw{ PPIx::Regexp::Token };
 
 use PPIx::Regexp::Constant qw{
-    COOKIE_CLASS MINIMUM_PERL TOKEN_LITERAL TOKEN_UNKNOWN
+    COOKIE_CLASS
+    LITERAL_LEFT_CURLY_ALLOWED
+    MINIMUM_PERL TOKEN_LITERAL TOKEN_UNKNOWN
 };
 
 our $VERSION = '0.050';
@@ -115,6 +117,12 @@ sub perl_version_introduced {
     sub __explanation {
 	return \%explanation;
     }
+}
+
+# An un-escaped literal left curly bracket can always follow this
+# element.
+sub __following_literal_left_curly_disallowed_in {
+    return LITERAL_LEFT_CURLY_ALLOWED;
 }
 
 # By logic we should handle '$' here. But
