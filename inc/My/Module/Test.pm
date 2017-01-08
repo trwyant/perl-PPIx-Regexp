@@ -3,7 +3,7 @@ package My::Module::Test;
 use strict;
 use warnings;
 
-use base qw{ Exporter };
+use Exporter qw{ import };
 
 use PPIx::Regexp;
 use PPIx::Regexp::Dumper;
