@@ -56,11 +56,17 @@ sub requires {
 ##  if ( ! $self->distribution() ) {
 ##  }
     return {
-	'List::MoreUtils'	=> 0,
-	'List::Util'	=> 0,
-	'PPI::Document'	=> 1.117,	# for new( readonly => 1 )
-	'Scalar::Util'	=> 0,
-	'Task::Weaken'	=> 0,
+        'Carp'			=> 0,
+        'Exporter'		=> 0,
+        'List::MoreUtils'	=> 0,
+        'List::Util'		=> 0,
+	'PPI::Document'		=> 1.117,	# for new( readonly => 1 )
+        'Scalar::Util'		=> 0,
+	'Task::Weaken'		=> 0,
+	'base'			=> 0,
+        'constant'		=> 0,
+        'strict'		=> 0,
+        'warnings'		=> 0,
 	@extra,
     };
 }
