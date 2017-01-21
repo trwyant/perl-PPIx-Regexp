@@ -18,10 +18,13 @@ C<PPIx::Regexp::Token::Whitespace> has no descendants.
 =head1 DESCRIPTION
 
 This class represents whitespace. It will appear inside the regular
-expression only if the /x modifier is present, but it may also appear
+expression only if the C</x> modifier is present, but it may also appear
 between the type and the opening delimiter (e.g. C<qr {foo}>) or after
 the regular expression in a bracketed substitution (e.g. C<s{foo}
 {bar}>).
+
+If the C</xx> modifier is present, it can also appear inside bracketed
+character classes. This was introduced in Perl 5.25.9.
 
 =head1 METHODS
 
@@ -63,8 +66,8 @@ sub explain {
 	return $self->SUPER::explain();
     } elsif ( $self->in_regex_set() ) {
 	return q<Not significant in extended character class>;
-    } elsif ( $self->modifier_asserted( 'x' ) ) {
-	return q<Not significant under /x>;
+    } elsif ( my $count = $self->modifier_asserted( 'x*' ) ) {
+	return q<Not significant under /> . ( 'x' x $count );
     } else {
 	return $self->SUPER::explain();
     }

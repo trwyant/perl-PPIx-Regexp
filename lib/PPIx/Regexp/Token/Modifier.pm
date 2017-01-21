@@ -182,6 +182,7 @@ sub can_be_quantified { return };
 	'i'	=> 'i: do case-insensitive matching',
 	'-i'	=> '-i: do case-sensitive matching',
 	'x'	=> 'x: ignore whitespace and comments',
+	'xx'	=> 'xx: ignore whitespace even in bracketed character classes',
 	'-x'	=> '-x: regard whitespace as literal',
 	'p'	=> 'p: provide ${^PREMATCH} etc (pre 5.20)',
 	'-p'	=> '-p: no ${^PREMATCH} etc (pre 5.20)',
@@ -296,6 +297,9 @@ sub _perl_version_introduced {
     my $content = $self->content();
     my $is_statement_modifier = ( $content !~ m/ \A [(]? [?] /smx );
     my $match_semantics = $self->match_semantics();
+
+    $self->asserts( 'xx' )
+	and return '5.025009';
 
     # Disabling capture with /n was introduced in 5.21.8
     $self->asserts( 'n' )

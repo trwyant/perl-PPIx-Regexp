@@ -207,7 +207,7 @@ sub __PPIX_TOKENIZER__regexp {
     # If /x is in effect _and_ we are not inside a character class, \s
     # is whitespace, and '#' introduces a comment. Otherwise they are
     # both literals.
-    if ( $tokenizer->modifier( 'x' ) &&
+    if ( $tokenizer->modifier( 'x*' ) &&
 	! $tokenizer->cookie( COOKIE_CLASS ) ) {
 	my $accept;
 	$accept = $tokenizer->find_regexp( $white_space_re )
@@ -217,6 +217,14 @@ sub __PPIX_TOKENIZER__regexp {
 	    qr{ \A \# [^\n]* (?: \n | \z) }smx )
 	    and return $tokenizer->make_token(
 		$accept, 'PPIx::Regexp::Token::Comment' );
+    } elsif ( $tokenizer->modifier( 'xx' ) &&
+	$tokenizer->cookie( COOKIE_CLASS ) ) {
+	my $accept;
+	$accept = $tokenizer->find_regexp( qr{ \A [ \t] }smx )
+	    and return $tokenizer->make_token(
+		$accept, 'PPIx::Regexp::Token::Whitespace',
+		{ perl_version_introduced => '5.025009' },
+	    );
     } else {
 	( $character eq '#' || $character =~ m/ \A \s \z /smx )
 	    and return 1;
