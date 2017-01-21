@@ -738,7 +738,7 @@ sub tokens {
 	attribute => {
 	},
 	method => {
-	    prior	=> 0,
+	    prior	=> 1,
 	},
     );
 
@@ -1574,13 +1574,13 @@ returns it.
     and print "The prior token can be quantified.\n";
 
 This method is deprecated in favor of
-L<prior_significant_tokrn()|/prior_significant_token>. Six months after
-the release of version 0.044_01 it will start warning on the
-first use. Six months after that it will warn on every use. Six months
-after that a fatal exception will be thrown when it is called. I am not
-sure I need to put this though a deprecation cycle, given that this
-method is documented as not being part of the public interface, but I
-choose to err on the side of caution.
+L<prior_significant_tokrn()|/prior_significant_token>. It will warn on
+the first use. Six months after the release of version [%% next_version
+%%] it will start warning on every use. Six months after that a fatal
+exception will be thrown when it is called. I am not sure I need to put
+this though a deprecation cycle, given that this method is documented as
+not being part of the public interface, but I choose to err on the side
+of caution.
 
 This method calls the named method on the most-recently-instantiated
 significant token, and returns the result. Any arguments subsequent to
