@@ -39,7 +39,7 @@ use base qw{ PPIx::Regexp::Token };
 
 use Carp qw{ confess };
 
-our $VERSION = '0.050_01';
+our $VERSION = '0.051';
 
 sub __new {
     my ( $class, $content, %arg ) = @_;

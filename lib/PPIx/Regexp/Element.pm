@@ -45,7 +45,7 @@ use PPIx::Regexp::Constant qw{
     MINIMUM_PERL TOKEN_UNKNOWN
 };
 
-our $VERSION = '0.050_01';
+our $VERSION = '0.051';
 
 =head2 ancestor_of
 

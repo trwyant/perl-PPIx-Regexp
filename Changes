@@ -1,4 +1,4 @@
-0.050_01	2017-01-21	T. R. Wyant
+0.051		2017-01-29	T. R. Wyant
   Support whitespace inside [] if /xx in effect.
     Starting with Perl 5.25.9, a space or tab appearing inside a bracketed
     character class is not significant if /xx is asserted.
@@ -6,7 +6,6 @@
   Further deprecate tokenizer method prior()
 
   Add 'provides' data to ExtUtils::MakeMaker output
-
 
   SOME unescaped litaral '{' removed in 5.025001.
     After '.', Unicode classes, and bracketed classes (including extended)
