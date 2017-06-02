@@ -543,6 +543,10 @@ sub __error {
 # deprecation will be done in at least two separate phases. It exists
 # for the use of PPIx::Regexp::Token::Literal->perl_version_removed, and
 # MUST NOT be called by any other code.
+# Note that the perldelta for 5.25.1 and 5.26.0 do not acknowledge tha
+# phased deprecation, and pretend that everything was done on the phase
+# 1 schedule. This appears to be deliberate per
+# https://rt.perl.org/Ticket/Display.html?id=131352
 sub __following_literal_left_curly_disallowed_in {
     return LITERAL_LEFT_CURLY_REMOVED_PHASE_1;
 }
