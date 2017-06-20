@@ -269,12 +269,16 @@ The following is from perlop:
 	    my ( $tokenizer, $accept ) = @_;
 	    $tokenizer->strict()
 		or return $tokenizer->make_token( $accept,
-		'PPIx::Regexp::Token::NoOp' );
+		'PPIx::Regexp::Token::NoOp', {
+		    perl_version_removed	=> '5.027001',
+		},
+	    );
 	    return $tokenizer->make_token( $accept, TOKEN_UNKNOWN, {
 		    error	=> join( ' ',
 			'Empty Unicode character name',
 			MSG_PROHIBITED_BY_STRICT ),
 		    perl_version_introduced	=> '5.023008',
+		    perl_version_removed	=> '5.027001',
 		},
 	    );
 

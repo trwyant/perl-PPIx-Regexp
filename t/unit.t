@@ -1898,7 +1898,7 @@ class   ( 'PPIx::Regexp::Token::Unknown' );
 content ( '\\N{}' );
 error   ( 'Empty Unicode character name prohibited by "use re \'strict\'"' );
 value   ( perl_version_introduced => [], '5.023008' );
-value   ( perl_version_removed => [], undef );
+value   ( perl_version_removed => [], '5.027001' );
 
 parse   ( '/[A-z]/', strict => 1 );
 value   ( failures => [], 1 );
