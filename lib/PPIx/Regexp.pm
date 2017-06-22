@@ -116,6 +116,16 @@ L<perl_version_removed()|/perl_version_removed> will return the version
 in which they were removed. When the new functionality appears, the
 parse produced by this software will reflect the new functionality.
 
+B<NOTE> that a literal left curly after a literal character was made an
+error in Perl 5.25.1, but became a warning again in 5.27.1 due to its
+use in GNU Autoconf.  Whether it will ever become illegal again is not
+clear to me based on the contents of F<perl5271delta>. At the moment
+C<PPIx::Regexp> considers this usage to have been removed in 5.25.1, and
+this will not change based on anything in 5.27.x. But if 5.26.1 comes
+out allowing this usage, the removal version will become C<undef>. The
+same will apply to any other usages that were re-allowed in 5.27.1, if I
+can identify them.
+
 =back
 
 There are very probably other examples of this. When they come to light
