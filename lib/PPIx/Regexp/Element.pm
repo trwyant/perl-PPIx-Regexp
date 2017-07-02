@@ -321,8 +321,14 @@ documentation, the results of this method should be viewed with caution,
 if not downright skepticism.
 
 There are also cases which are ambiguous in various ways. For those see
-L<PPIx::Regexp/RESTRICTIONS>, and especially
-L<PPIx::Regexp/Changes in Syntax>.
+the L<PPIx::Regexp|PPIx::Regexp> documentation, particularly
+L<Changes in Syntax|PPIx::Regexp/Changes in Syntax>.
+
+Very occasionally, a construct will be removed and then added back. If
+this happens, this method will return the B<lowest> version in which the
+construct appeared. For the known instances of this, see
+the L<PPIx::Regexp|PPIx::Regexp> documentation, particularly
+L<Equivocation|PPIx::Regexp/Equivocation>.
 
 =cut
 
@@ -339,6 +345,14 @@ All the I<caveats> to
 L<perl_version_introduced()|/perl_version_introduced> apply here also,
 though perhaps less severely since although many features have been
 introduced since 5.0, few have been removed.
+
+Very occasionally, a construct will be removed and then added back. If
+this happens, this method will return the C<undef> if the construct is
+present in the highest-numbered version of Perl (whether production or
+development), or the version after the highest-numbered version in which
+it appeared otherwise. For the known instances of this, see the
+L<PPIx::Regexp|PPIx::Regexp> documentation, particularly
+L<Equivocation|PPIx::Regexp/Equivocation>.
 
 =cut
 

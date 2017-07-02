@@ -745,6 +745,36 @@ to that version of Perl, it was simply parsed as C<v>. So
 prints "yes" under Perl 5.8.9, but "no" under 5.10.0. C<PPIx::Regexp>
 generally assumes the more modern parse in cases like this.
 
+=head2 Equivocation
+
+Very occasionally, a construction will be removed and then added back --
+and then, conceivably, removed again. In this case, the plan is for
+L<perl_version_introduced()|PPIx::Regexp/perl_version_introduced> to
+return the earliest version in which the construction appeared, and
+L<perl_version_removed()> to return the version after the last version
+in which it appeared (whether production or development), or C<undef> if
+it is in the highest-numbered Perl.
+
+The constructions involved in this are:
+
+=head3 Un-escaped literal left curly after literal
+
+That is, something like C<< qr<x{> >>.
+
+This was made an error in C<5.25.1>, and it was an error in C<5.26.0>.
+But it became a warning again in C<5.27.1>. The F<perl5271delta> says it
+was re-instated because the changes broke GNU Autoconf, and the warning
+message says it will be removed in Perl C<5.30>.
+
+Accordingly,
+L<perl_version_introduced()|PPIx::Regexp/perl_version_introduced>
+returns C<5.0>. At the moment
+L<perl_version_removed()|PPIx::Regexp/perl_version_removed> returns
+C<'5.025001'>, but if this construction warns in Perl C<5.26.1> this
+will become C<undef>. This is not quite the same as described above, but
+is consistent with the L<NOTICE|/NOTICE> near the beginning of this
+document.
+
 =head2 Static Parsing
 
 It is well known that Perl can not be statically parsed. That is, you
