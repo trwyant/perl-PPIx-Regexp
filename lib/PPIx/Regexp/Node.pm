@@ -38,7 +38,7 @@ use base qw{ PPIx::Regexp::Element };
 
 use Carp;
 use List::Util qw{ max };
-use PPIx::Regexp::Constant qw{ MINIMUM_PERL NODE_UNKNOWN };
+use PPIx::Regexp::Constant qw{ FALSE MINIMUM_PERL NODE_UNKNOWN TRUE };
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };
 
@@ -60,6 +60,15 @@ sub __new {
 	$elem->_parent( $self );
     }
     return $self;
+}
+
+sub accepts_perl {
+    my ( $self, $version ) = @_;
+    foreach my $elem ( $self->elements() ) {
+	$elem->accepts_perl( $version )
+	    or return FALSE;
+    }
+    return TRUE;
 }
 
 =head2 child

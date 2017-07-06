@@ -1914,6 +1914,18 @@ value   ( perl_version_introduced => [], '5.023008' );
 value   ( perl_version_removed => [], undef );
 
 
+note	'accepts_perl()';
+
+parse	( '/x/' );
+value	( accepts_perl => [ '5.000' ], 1 );
+value	( accepts_perl => [ '5.010001' ], 1 );
+
+parse	( '/x/a' );
+value	( accepts_perl => [ '5.000' ], 0 );
+value	( accepts_perl => [ '5.010001' ], 0 );
+value	( accepts_perl => [ '5.013010' ], 1 );
+value	( accepts_perl => [ '5.014' ], 1 );
+
 SKIP: {
     $is_ascii
 	or skip(

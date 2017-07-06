@@ -41,11 +41,91 @@ use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr weaken };
 
 use PPIx::Regexp::Constant qw{
+    FALSE
     LITERAL_LEFT_CURLY_REMOVED_PHASE_1
-    MINIMUM_PERL TOKEN_UNKNOWN
+    MINIMUM_PERL
+    TOKEN_UNKNOWN
+    TRUE
 };
 
 our $VERSION = '0.051';
+
+=head2 accepts_perl
+
+ $token->accepts_perl( '5.020' )
+     and say 'This works under Perl 5.20';
+
+This method returns a true value if the token is acceptable under the
+specified version of Perl, and a false value otherwise. Unless the token
+(or its contents) have been equivocated on, the result is simply what
+you would expect based on testing the results of
+L<perl_version_introduced()|/perl_version_introduced> and
+L<perl_version_removed()|/perl_version_removed> versus the given Perl
+version number.
+
+L<CPAN::Meta::Requirements|CPAN::Meta::Requirements> is used for the
+heavy lifting.
+
+=cut
+
+sub accepts_perl {
+    my ( $self, $version ) = @_;
+    foreach my $check ( $self->__perl_requirements() ) {
+	$version < $check->{introduced}
+	    and next;
+	defined $check->{removed}
+	    or return $check->{accept};
+	$version < $check->{removed}
+	    and return $check->{accept};
+    }
+    return FALSE;
+}
+
+# Return the Perl requirements, constructing if necessary. The
+# requirements are simply an array of hashes containing keys:
+#   {introduced} - The Perl version introduced;
+#   {removed} - The Perl version removed (or undef)
+#   {accept} - the value to return if the required version is met.
+# The requirements are evaluated by iterating through the array,
+# returning the {accept} value of the first hash whose {requirements}
+# object's accepts_module() method returns true.
+sub __perl_requirements {
+    my ( $self ) = @_;
+    return @{ $self->{perl_requirements} ||=
+	[ $self->__perl_requirements_setup() ] };
+}
+
+# Consruct a single element in the {perl_requirements} array. The
+# arguments are $min, $max (which can be undef) and $accept (which
+# defaults to 0 if undef). The return is a hash as described above.
+sub __perl_requirements_hash {
+    my ( undef, $min, $max, $accept ) = @_;
+    return {
+	introduced	=> $min,
+	removed		=> $max,
+	accept		=> $accept || FALSE,
+    };
+}
+
+# Construct the array returned by __perl_requirements(). It is not
+# necessary for an override to call SUPER::__perl_requirement_setup(),
+# but it may be convenient for the case where a construct went "on
+# hiatus" and then came back to do an override like
+# sub __perl_requirements_setup {
+#     my ( $self ) = @_;
+#     # H_MIN is when the construct went on hiatus
+#     # H_MAX is when the construct came back from hiatus
+#     return ( $self->__perl_requirements_hash( H_MIN, H_MAX, 0 ),
+#         $self->SUPER::__perl_requirements_setup() );
+# }
+sub __perl_requirements_setup {
+    my ( $self ) = @_;
+    return $self->__perl_requirements_hash(
+	$self->perl_version_introduced(),
+	$self->perl_version_removed(),
+	TRUE,
+    );
+}
 
 =head2 ancestor_of
 
