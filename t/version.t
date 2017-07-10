@@ -475,7 +475,9 @@ method	perl_version_introduced => MINIMUM_PERL;
 method	perl_version_removed	=> undef;
 token	'{', note => 'Unescaped literal left curly', previous => 1;
 method	perl_version_introduced => MINIMUM_PERL;
-method	perl_version_removed	=> '5.025001';
+# method	perl_version_removed	=> '5.025001';
+note    '/x{/ removed in 5.025001, re-added in 5.027001';
+method	perl_version_removed	=> undef;
 
 token	'\s', class => 'PPIx::Regexp::Token::CharClass::Simple';
 token	'{', previous => 1;

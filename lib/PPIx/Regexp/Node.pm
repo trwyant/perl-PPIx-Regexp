@@ -71,6 +71,17 @@ sub accepts_perl {
     return TRUE;
 }
 
+# NOTE: this method is to be used ONLY for requirements_for_perl(). See
+# PPIx::Regexp::Element for exposure plans. IF it is exposed, that is
+# where it will be documented.
+sub __structured_requirements_for_perl {
+    my ( $self, $rslt ) = @_;
+    foreach my $elem ( $self->elements() ) {
+	$elem->__structured_requirements_for_perl( $rslt );
+    }
+    return $rslt;
+}
+
 =head2 child
 
  my $kid = $node->child( 0 );

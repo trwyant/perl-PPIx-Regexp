@@ -36,6 +36,7 @@ use warnings;
 use 5.006;
 
 use Carp;
+use List::Util qw{ max min };
 use List::MoreUtils qw{ firstidx };
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr weaken };
@@ -63,8 +64,7 @@ L<perl_version_introduced()|/perl_version_introduced> and
 L<perl_version_removed()|/perl_version_removed> versus the given Perl
 version number.
 
-L<CPAN::Meta::Requirements|CPAN::Meta::Requirements> is used for the
-heavy lifting.
+This method was added in version [%% next_version %%].
 
 =cut
 
@@ -74,9 +74,9 @@ sub accepts_perl {
 	$version < $check->{introduced}
 	    and next;
 	defined $check->{removed}
-	    or return $check->{accept};
-	$version < $check->{removed}
-	    and return $check->{accept};
+	    and $version >= $check->{removed}
+	    and next;
+	return TRUE;
     }
     return FALSE;
 }
@@ -85,46 +85,22 @@ sub accepts_perl {
 # requirements are simply an array of hashes containing keys:
 #   {introduced} - The Perl version introduced;
 #   {removed} - The Perl version removed (or undef)
-#   {accept} - the value to return if the required version is met.
 # The requirements are evaluated by iterating through the array,
-# returning the {accept} value of the first hash whose {requirements}
-# object's accepts_module() method returns true.
+# returning a true value if the version of Perl being tested falls
+# inside any of the half-open (on the right) intervals.
 sub __perl_requirements {
     my ( $self ) = @_;
     return @{ $self->{perl_requirements} ||=
 	[ $self->__perl_requirements_setup() ] };
 }
 
-# Consruct a single element in the {perl_requirements} array. The
-# arguments are $min, $max (which can be undef) and $accept (which
-# defaults to 0 if undef). The return is a hash as described above.
-sub __perl_requirements_hash {
-    my ( undef, $min, $max, $accept ) = @_;
-    return {
-	introduced	=> $min,
-	removed		=> $max,
-	accept		=> $accept || FALSE,
-    };
-}
-
-# Construct the array returned by __perl_requirements(). It is not
-# necessary for an override to call SUPER::__perl_requirement_setup(),
-# but it may be convenient for the case where a construct went "on
-# hiatus" and then came back to do an override like
-# sub __perl_requirements_setup {
-#     my ( $self ) = @_;
-#     # H_MIN is when the construct went on hiatus
-#     # H_MAX is when the construct came back from hiatus
-#     return ( $self->__perl_requirements_hash( H_MIN, H_MAX, 0 ),
-#         $self->SUPER::__perl_requirements_setup() );
-# }
+# Construct the array returned by __perl_requirements().
 sub __perl_requirements_setup {
     my ( $self ) = @_;
-    return $self->__perl_requirements_hash(
-	$self->perl_version_introduced(),
-	$self->perl_version_removed(),
-	TRUE,
-    );
+    return {
+	introduced	=> $self->perl_version_introduced(),
+	removed		=> $self->perl_version_removed(),
+    };
 }
 
 =head2 ancestor_of
@@ -455,6 +431,29 @@ sub previous_sibling {
     return $self->_parent()->$method( $inx - 1 );
 }
 
+=head2 requirements_for_perl
+
+ say $token->requirements_for_perl();
+
+This method returns a string representing the Perl requirements for a
+given module. This should only be used for informational purposes, as
+the format of the string may be subject to change.
+
+This method was added in version [%% next_version %%].
+
+=cut
+
+sub requirements_for_perl {
+    my ( $self ) = @_;
+    my @req;
+    foreach my $r ( @{ $self->__structured_requirements_for_perl( [] ) } ) {
+	push @req, defined $r->{removed} ?
+	"$r->{introduced} <= \$] < $r->{removed}" :
+	"$r->{introduced} <= \$]";
+    }
+    return join ' || ', @req;
+}
+
 =head2 significant
 
 This method returns true if the element is significant and false
@@ -496,6 +495,41 @@ sub sprevious_sibling {
 	$sib->significant() and return $sib;
     }
     return;
+}
+
+# NOTE: This method is to be used ONLY for requirements_for_perl(). I
+# _may_ eventually expose it, but at the moment I do not consider it
+# stable. The exposure would be
+# sub structured_requirements_for_perl {
+#     my ( $self ) = @_;
+#     return $self->__structured_requirements_for_perl( [] );
+# }
+sub __structured_requirements_for_perl {
+    my ( $self, $rslt ) = @_;
+    if ( @{ $rslt } ) {
+	my @merged;
+	foreach my $left ( $self->__perl_requirements() ) {
+	    foreach my $right ( @{ $rslt } ) {
+		my $min = max( $left->{introduced}, $right->{introduced} );
+		my $max = defined $left->{removed} ?
+		    defined $right->{removed} ?
+			min( $left->{removed}, $right->{removed} ) :
+			$left->{removed} :
+		    $right->{removed};
+		defined $max
+		    and $max <= $min
+		    and next;
+		push @merged, {
+		    introduced	=> $min,
+		    removed		=> $max,
+		};
+	    }
+	}
+	@{ $rslt } = @merged;
+    } else {
+	@{ $rslt } = $self->__perl_requirements();
+    }
+    return $rslt;
 }
 
 =head2 tokens
