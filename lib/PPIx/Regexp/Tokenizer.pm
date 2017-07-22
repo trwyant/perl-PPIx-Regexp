@@ -738,7 +738,7 @@ sub tokens {
 	attribute => {
 	},
 	method => {
-	    prior	=> 1,
+	    prior	=> 2,
 	},
     );
 
