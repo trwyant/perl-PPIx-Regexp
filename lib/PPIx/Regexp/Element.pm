@@ -49,7 +49,7 @@ use PPIx::Regexp::Constant qw{
     TRUE
 };
 
-our $VERSION = '0.051';
+our $VERSION = '0.051_01';
 
 =head2 accepts_perl
 
@@ -64,7 +64,7 @@ L<perl_version_introduced()|/perl_version_introduced> and
 L<perl_version_removed()|/perl_version_removed> versus the given Perl
 version number.
 
-This method was added in version [%% next_version %%].
+This method was added in version 0.051_01.
 
 =cut
 
@@ -439,7 +439,7 @@ This method returns a string representing the Perl requirements for a
 given module. This should only be used for informational purposes, as
 the format of the string may be subject to change.
 
-This method was added in version [%% next_version %%].
+This method was added in version 0.051_01.
 
 =cut
 
