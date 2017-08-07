@@ -222,9 +222,9 @@ This convenience method takes the same arguments as C<find>, but instead
 of the found objects themselves returns their parents. No parent will
 appear more than once in the output.
 
-The return is a reference to the array of parents if any were found. If
-none were found the return is false but defined. If an error occurred
-the return is C<undef>.
+This method returns a reference to the array of parents if any were
+found. If no parents were found the return is false but defined. If an
+error occurred the return is C<undef>.
 
 =cut
 
