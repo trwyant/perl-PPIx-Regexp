@@ -53,7 +53,7 @@ use base qw{PPIx::Regexp::Element};
 use Carp qw{ confess };
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL };
 
-our $VERSION = '0.051_01';
+our $VERSION = '0.051_02';
 
 use constant TOKENIZER_ARGUMENT_REQUIRED => 0;
 
