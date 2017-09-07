@@ -1,8 +1,7 @@
-0.051_02	2017-08-07	T. R. Wyant
+0.052		2017-09-07	T. R. Wyant
     RT 122715: Clarify Node->find_parents() documentation. Thanks to
     Salvatore Bonaccorso for letting me know about this problem..
 
-0.051_01	2017-07-29	T. R. Wyant
     Further deprecate tokenizer method prior() in favor of
     prior_significant_token().
 
