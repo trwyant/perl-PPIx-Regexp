@@ -237,7 +237,8 @@ C<PPIx::Regexp::StringTokenizer> has no descendants.
 
 =head1 DESCRIPTION
 
-This class provides tokenization of string literals.
+This class provides tokenization of string literals. It is deprecated in
+favor of the use of L<PPIx::QuoteLike|PPIx::QuoteLike>.
 
 =head1 METHODS
 
