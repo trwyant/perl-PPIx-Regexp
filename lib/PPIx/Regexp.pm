@@ -55,8 +55,9 @@ for little tangible gain.
 
 =head1 NOTICE
 
-The use of this class to parse non-regexp quote-like strings is
-deprecated in favor of L<PPIx::QuoteLike|PPIx::QuoteLike>. Six months
+The use of this class to parse non-regexp quote-like strings was an
+experiment that I consider failed. Therefore this use is
+B<deprecated> in favor of L<PPIx::QuoteLike|PPIx::QuoteLike>. Six months
 after the release of version 0.053, the first use of the C<parse>
 argument to L<new()|/new> will result in a warning. Six months after
 that, all uses of the C<parse> argument will result in a warning. After
