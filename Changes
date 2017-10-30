@@ -1,5 +1,5 @@
-0.052_01	2017-10-23	T. R. Wyant
-    Recognize \\p. as Unicode char class. At least, when the . is C, L,
+0.053		2017-10-30	T. R. Wyant
+    Recognize \px as Unicode char class. At least, when the x is C, L,
     M, N, P, S or Z.
 
     The 'parse' argument to new() is now deprecated.
