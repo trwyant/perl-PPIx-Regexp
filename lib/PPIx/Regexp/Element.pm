@@ -454,6 +454,27 @@ sub requirements_for_perl {
     return join ' || ', @req;
 }
 
+=head2 scontent
+
+This method returns the significant content of the element. That is, if
+called on the parse of C<'/ f u b a r /x'>, it returns C<'/fubar/x'>. If
+the invocant contains no insignificant elements, it is the same as
+L<content()|/content>. If called on an insignificant element, it returns
+nothing -- that is, C<undef> in scalar context, and an empty list in
+list context.
+
+This method was inspired by jb's question on Perl Monks about stripping
+comments and white space from a regular expression:
+L<http://www.perlmonks.org/?node_id=1207556>
+
+This method was added in version [%% next_version %%]
+
+=cut
+
+sub scontent {
+    return;
+}
+
 =head2 significant
 
 This method returns true if the element is significant and false

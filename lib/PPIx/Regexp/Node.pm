@@ -406,6 +406,20 @@ sub schildren {
     }
 }
 
+sub scontent {
+    my ( $self ) = @_;
+    # As of the invention of this method all nodes are significant, so
+    # the following statement is pure paranoia on my part. -- TRW
+    $self->significant()
+	or return;
+    # This needs to be elements(), not children() or schildren() -- or
+    # selements() if that is ever invented. Not children() or
+    # schildren() because those ignore the delimiters. Not selements()
+    # (if that ever comes to pass) because scontent() has to make the
+    # significance check, so selements() would be wasted effort.
+    return join( '', map{ $_->scontent() } $self->elements() );
+}
+
 sub tokens {
     my ( $self ) = @_;
     return ( map { $_->tokens() } $self->elements() );
