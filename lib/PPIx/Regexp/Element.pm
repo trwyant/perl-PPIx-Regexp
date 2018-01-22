@@ -49,7 +49,7 @@ use PPIx::Regexp::Constant qw{
     TRUE
 };
 
-our $VERSION = '0.053';
+our $VERSION = '0.053_01';
 
 =head2 accepts_perl
 
@@ -467,7 +467,7 @@ This method was inspired by jb's question on Perl Monks about stripping
 comments and white space from a regular expression:
 L<http://www.perlmonks.org/?node_id=1207556>
 
-This method was added in version [%% next_version %%]
+This method was added in version 0.053_01
 
 =cut
 

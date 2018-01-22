@@ -11,7 +11,7 @@ use base qw{ PPIx::Regexp::Token::GroupType };
 
 use Carp;
 
-our $VERSION = '0.053';
+our $VERSION = '0.053_01';
 
 sub __explanation {
     return {

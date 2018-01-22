@@ -40,7 +40,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Structure };
 
-our $VERSION = '0.053';
+our $VERSION = '0.053_01';
 
 =head2 delimiters
 
