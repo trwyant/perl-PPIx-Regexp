@@ -188,6 +188,7 @@ sub is_quantifier {
 		'PPIx::Regexp::Token::GroupType::BranchReset',
 		'PPIx::Regexp::Token::GroupType::Subexpression',
 		'PPIx::Regexp::Token::GroupType::Switch',
+		'PPIx::Regexp::Token::GroupType::Script_Run',
 	    );
 
 	    # Accept the parenthesis.

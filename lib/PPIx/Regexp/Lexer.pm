@@ -56,6 +56,7 @@ use PPIx::Regexp::Structure::Quantifier			();
 use PPIx::Regexp::Structure::Regexp			();
 use PPIx::Regexp::Structure::RegexSet			();
 use PPIx::Regexp::Structure::Replacement		();
+use PPIx::Regexp::Structure::Script_Run			();
 use PPIx::Regexp::Structure::Switch			();
 use PPIx::Regexp::Structure::Unknown			();
 use PPIx::Regexp::Token::Unmatched			();

@@ -28,6 +28,7 @@ use PPIx::Regexp::Token::GroupType::BranchReset	();
 use PPIx::Regexp::Token::GroupType::Code	();
 use PPIx::Regexp::Token::GroupType::Modifier	();
 use PPIx::Regexp::Token::GroupType::NamedCapture	();
+use PPIx::Regexp::Token::GroupType::Script_Run	();
 use PPIx::Regexp::Token::GroupType::Subexpression	();
 use PPIx::Regexp::Token::GroupType::Switch	();
 use PPIx::Regexp::Token::Interpolation		();
