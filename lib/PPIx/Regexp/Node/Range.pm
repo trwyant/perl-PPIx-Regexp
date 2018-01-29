@@ -37,7 +37,7 @@ use base qw{ PPIx::Regexp::Node };
 
 use PPIx::Regexp::Constant qw{ MSG_PROHIBITED_BY_STRICT };
 
-our $VERSION = '0.053_01';
+our $VERSION = '0.054';
 
 sub explain {
     my ( $self ) = @_;

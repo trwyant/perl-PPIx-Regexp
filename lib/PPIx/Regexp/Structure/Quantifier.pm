@@ -38,7 +38,7 @@ use PPIx::Regexp::Constant qw{
     LITERAL_LEFT_CURLY_ALLOWED
 };
 
-our $VERSION = '0.053_01';
+our $VERSION = '0.054';
 
 sub can_be_quantified {
     return;
