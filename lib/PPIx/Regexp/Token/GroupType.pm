@@ -19,6 +19,7 @@ L<PPIx::Regexp::Token::GroupType::BranchReset|PPIx::Regexp::Token::GroupType::Br
 L<PPIx::Regexp::Token::GroupType::Code|PPIx::Regexp::Token::GroupType::Code>,
 L<PPIx::Regexp::Token::GroupType::Modifier|PPIx::Regexp::Token::GroupType::Modifier>,
 L<PPIx::Regexp::Token::GroupType::NamedCapture|PPIx::Regexp::Token::GroupType::NamedCapture>,
+L<PPIx::Regexp::Token::GroupType::Script_Run|PPIx::Regexp::Token::GroupType::Script_Run>,
 L<PPIx::Regexp::Token::GroupType::Subexpression|PPIx::Regexp::Token::GroupType::Subexpression>
 and
 L<PPIx::Regexp::Token::GroupType::Switch|PPIx::Regexp::Token::GroupType::Switch>.
