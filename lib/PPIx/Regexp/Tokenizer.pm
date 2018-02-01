@@ -739,7 +739,7 @@ sub tokens {
 	attribute => {
 	},
 	method => {
-	    prior	=> 2,
+	    prior	=> 3,
 	},
     );
 
@@ -1575,10 +1575,9 @@ returns it.
     and print "The prior token can be quantified.\n";
 
 This method is deprecated in favor of
-L<prior_significant_tokrn()|/prior_significant_token>. It will warn on
-the first use. Six months after the release of version 0.050_01
-it will start warning on every use. Six months after that a fatal
-exception will be thrown when it is called. I am not sure I need to put
+L<prior_significant_tokrn()|/prior_significant_token>. As of version [%%
+next_version %%] it is a fatal error to call it. Six months after the
+release of this version it will be removed.  I am not sure I need to put
 this though a deprecation cycle, given that this method is documented as
 not being part of the public interface, but I choose to err on the side
 of caution.
