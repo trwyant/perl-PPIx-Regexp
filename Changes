@@ -1,4 +1,4 @@
-0.054_01	2018-02-01	T. R. Wyant
+0.055		2018-02-08	T. R. Wyant
     Tokenizer method prior() is now fatal. This was documented as
     package-private, but as it WAS documented, I am putting it through a
     deprecation cycle anyway. Six months from now it will be removed.
