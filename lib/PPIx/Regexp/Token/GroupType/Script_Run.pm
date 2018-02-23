@@ -16,15 +16,43 @@ our $VERSION = '0.055';
 sub __explanation {
     return {
 	'+script_run:'	=> 'All characters must be in same script',
+	'*script_run:'	=> 'All characters must be in same script',
+	'*sr:'		=> 'All characters must be in same script',
     };
 }
 
 sub perl_version_introduced {
-    return '5.027008';
+    return( $_[0]->{_perl_version_introduced} ||=
+	$_[0]->_perl_version_introduced() );
 }
 
-sub __defining_string {
-    return '+script_run:';
+sub _perl_version_introduced {
+    my ( $self ) = @_;
+    my $content = $self->content();
+    $content =~ m/ \A [+] /smx
+	and return '5.027008';
+    return '5.027009';
+}
+
+sub perl_version_removed {
+    return( $_[0]->{_perl_version_removed} ||=
+	$_[0]->_perl_version_removed() );
+}
+
+sub _perl_version_removed {
+    my ( $self ) = @_;
+    my $content = $self->content();
+    $content =~ m/ \A [+] /smx
+	and return '5.027009';
+    return;
+}
+
+{
+    my @defs = sort keys %{ __explanation() };
+
+    sub __defining_string {
+	return @defs;
+    }
 }
 
 1;

@@ -738,6 +738,12 @@ class	'PPIx::Regexp::Token::GroupType::Script_Run',
 note	=> 'All characters must be in same script';
 token	'+script_run:';
 method	perl_version_introduced	=> '5.027008', note => 'perl5278delta';
+method	perl_version_removed	=> '5.027009';
+token	'*script_run:';
+method	perl_version_introduced	=> '5.027009', note => 'perl5279delta';
+method	perl_version_removed	=> undef;
+token	'*sr:';
+method	perl_version_introduced	=> '5.027009', note => 'perl5279delta';
 method	perl_version_removed	=> undef;
 
 finis;

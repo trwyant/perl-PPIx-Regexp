@@ -109,8 +109,11 @@ sub perl_version_introduced {
 # a reference to a hash to pass to make_token as the class-specific
 # arguments. The regular expression MUST be anchored to the beginning of
 # the string.
+# Note that we have to require a non-lowercase letter after the asterisk
+# to avoid grabbing the so-caled alpha_assertions introduced with
+# 5.27.9.
 sub __PPIX_TOKEN__recognize {
-    return ( [ qr{ \A \( \* [^\)]* \) }smx ] );
+    return ( [ qr{ \A \( \* (?! [[:lower:]] ) [^\)]* \) }smx ] );
 }
 
 # This class gets recognized by PPIx::Regexp::Token::Structure as part
