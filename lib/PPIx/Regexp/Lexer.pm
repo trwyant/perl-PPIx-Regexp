@@ -44,6 +44,7 @@ use PPIx::Regexp::Node::Range				();
 use PPIx::Regexp::Node::Unknown				();
 use PPIx::Regexp::Structure				();
 use PPIx::Regexp::Structure::Assertion			();
+use PPIx::Regexp::Structure::Atomic_Script_Run		();
 use PPIx::Regexp::Structure::BranchReset		();
 use PPIx::Regexp::Structure::Code			();
 use PPIx::Regexp::Structure::Capture			();

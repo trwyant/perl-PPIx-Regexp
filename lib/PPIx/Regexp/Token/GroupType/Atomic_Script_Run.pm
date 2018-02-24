@@ -1,6 +1,6 @@
 # Cargo cult to try to prevent CPAN from indexing
 package
-PPIx::Regexp::Token::GroupType::Script_Run;
+PPIx::Regexp::Token::GroupType::Atomic_Script_Run;
 
 use 5.006;
 
@@ -14,19 +14,14 @@ use Carp;
 our $VERSION = '0.055';
 
 {
-    my $expl = 'All characters must be in same script';
+    my $expl = 'All characters must be in same script, atomic version';
 
     __PACKAGE__->__setup_class( {
-	    '+script_run:'	=> {
-		expl	=> $expl,
-		intro	=> '5.027008',
-		remov	=> '5.027009',
-	    },
-	    '*script_run:'	=> {
+	    '*atomic_script_run:'	=> {
 		expl	=> $expl,
 		intro	=> '5.027009',
 	    },
-	    '*sr:'	=> {
+	    '*asr:'	=> {
 		expl	=> $expl,
 		intro	=> '5.027009',
 	    },
@@ -40,28 +35,26 @@ __END__
 
 =head1 NAME
 
-PPIx::Regexp::Token::GroupType::Script_Run - Represent a script run specifier
+PPIx::Regexp::Token::GroupType::Atomic_Script_Run - Represent an atomic script run specifier
 
 =head1 SYNOPSIS
 
  use PPIx::Regexp::Dumper;
- PPIx::Regexp::Dumper->new( 'qr{(*script_run:\d)}' )
+ PPIx::Regexp::Dumper->new( 'qr{(*atomic_script_run:\d)}' )
      ->print();
 
 =head1 INHERITANCE
 
-C<PPIx::Regexp::Token::GroupType::Script_Run> is a
+C<PPIx::Regexp::Token::GroupType::Atomic_Script_Run> is a
 L<PPIx::Regexp::Token::GroupType|PPIx::Regexp::Token::GroupType>.
 
-C<PPIx::Regexp::Token::GroupType::Script_Run> has no descendants.
+C<PPIx::Regexp::Token::GroupType::Atomic_Script_Run> has no descendants.
 
 =head1 DESCRIPTION
 
-This token represents the specifier for a script run - namely the
-C<'+script_run:'>, C<'*script_run:'>, or C<'*sr:'> that comes after the
-left parenthesis. The first form was added in Perl 5.27.8 but retracted
-in favor of the second ant third forms (which are equivalent) in Perl
-5.27.9.
+This token represents the specifier for an atomic script run - namely
+the C<'*atomic_script_run:'> or C<'*asr:'> that comes after the left
+parenthesis. This is new with Perl 5.27.9.
 
 If this construction does not make it into Perl 5.28, this class will be
 retracted.
