@@ -439,6 +439,20 @@ This method returns a string representing the Perl requirements for a
 given module. This should only be used for informational purposes, as
 the format of the string may be subject to change.
 
+At the moment, the returns may be:
+
+ version <= $]
+ version <= $] < version
+ two or more of the above joined by '||'
+ ! $]
+
+The last means that, although all the components of the regular
+expression can be compiled by B<some> version of Perl, there is no
+version that will compile all of them.
+
+I reiterate: the returned string may be subject to change, maybe without
+warning.
+
 This method was added in version 0.051_01.
 
 =cut
@@ -446,11 +460,13 @@ This method was added in version 0.051_01.
 sub requirements_for_perl {
     my ( $self ) = @_;
     my @req;
-    foreach my $r ( @{ $self->__structured_requirements_for_perl( [] ) } ) {
+    foreach my $r ( @{ $self->__structured_requirements_for_perl() || [] } ) {
 	push @req, defined $r->{removed} ?
 	"$r->{introduced} <= \$] < $r->{removed}" :
 	"$r->{introduced} <= \$]";
     }
+    @req
+	or return '! $]';
     return join ' || ', @req;
 }
 
@@ -523,34 +539,49 @@ sub sprevious_sibling {
 # stable. The exposure would be
 # sub structured_requirements_for_perl {
 #     my ( $self ) = @_;
-#     return $self->__structured_requirements_for_perl( [] );
+#     return $self->__structured_requirements_for_perl();
 # }
+# The return ia a reference to an array of hashes. Each hash contains
+# key {introduced} (the version the element was introduced) and MAYBE
+# key {removed} (the version the element was removed). There may be more
+# than one such, and their ranges will not overlap.
 sub __structured_requirements_for_perl {
     my ( $self, $rslt ) = @_;
-    if ( @{ $rslt } ) {
-	my @merged;
-	foreach my $left ( $self->__perl_requirements() ) {
-	    foreach my $right ( @{ $rslt } ) {
-		my $min = max( $left->{introduced}, $right->{introduced} );
-		my $max = defined $left->{removed} ?
-		    defined $right->{removed} ?
-			min( $left->{removed}, $right->{removed} ) :
-			$left->{removed} :
-		    $right->{removed};
-		defined $max
-		    and $max <= $min
-		    and next;
-		push @merged, {
-		    introduced	=> $min,
-		    removed		=> $max,
-		};
-	    }
+    $rslt ||= $self->__structured_requirements_for_any_perl();
+
+    my @merged;
+    foreach my $left ( $self->__perl_requirements() ) {
+	foreach my $right ( @{ $rslt } ) {
+	    my $min = max( $left->{introduced}, $right->{introduced} );
+	    my $max = defined $left->{removed} ?
+		defined $right->{removed} ?
+		    min( $left->{removed}, $right->{removed} ) :
+		    $left->{removed} :
+		$right->{removed};
+	    defined $max
+		and $max <= $min
+		and next;
+	    push @merged, {
+		introduced	=> $min,
+		removed		=> $max,
+	    };
 	}
-	@{ $rslt } = @merged;
-    } else {
-	@{ $rslt } = $self->__perl_requirements();
     }
+    @{ $rslt } = @merged;
+
     return $rslt;
+}
+
+# NOTE: This method is to be used ONLY to initialize
+# __structured_requirements_for_perl(). It returns a structure that
+# matches any Perl.
+sub __structured_requirements_for_any_perl {
+    return [
+	{
+	    introduced	=> MINIMUM_PERL,
+	    removed	=> undef,
+	},
+    ];
 }
 
 =head2 tokens

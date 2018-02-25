@@ -76,6 +76,8 @@ sub accepts_perl {
 # where it will be documented.
 sub __structured_requirements_for_perl {
     my ( $self, $rslt ) = @_;
+    $rslt ||= $self->__structured_requirements_for_any_perl();
+
     foreach my $elem ( $self->elements() ) {
 	$elem->__structured_requirements_for_perl( $rslt );
     }
