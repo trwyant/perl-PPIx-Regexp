@@ -148,7 +148,7 @@ C<PPIx::Regexp::Node> proper, it is the same as C<children()>.
 
 {
     no warnings qw{ once };
-    *elements = \&children;
+    *elements = \&children;	# sub slements
 }
 
 =head2 find

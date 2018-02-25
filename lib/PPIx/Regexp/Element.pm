@@ -338,6 +338,24 @@ sub modifier_asserted {
     return;
 }
 
+=head2 next_element
+
+This method returns the next element, or nothing if there is none.
+
+Unlike L<next_sibling()|/next_sibling>, this will cross from the content
+of a structure into the elements that define the structure, or vice
+versa.
+
+=cut
+
+sub next_element {
+    my ( $self ) = @_;
+    my $parent = $self->_parent()
+	or return;
+    my $inx = $self->__my_inx();
+    return ( $parent->elements() )[ $inx + 1 ];
+}
+
 =head2 next_sibling
 
 This method returns the element's next sibling, or nothing if there is
@@ -416,10 +434,33 @@ sub perl_version_removed {
     return undef;	## no critic (ProhibitExplicitReturnUndef)
 }
 
+=head2 previous_element
+
+This method returns the previous element, or nothing if there is none.
+
+Unlike L<previous_sibling()|/previous_sibling>, this will cross from
+the content of a structure into the elements that define the structure,
+or vice versa.
+
+=cut
+
+sub previous_element {
+    my ( $self ) = @_;
+    my $parent = $self->_parent()
+	or return;
+    my $inx = $self->__my_inx()
+	or return;
+    return ( $parent->elements() )[ $inx - 1 ];
+}
+
 =head2 previous_sibling
 
 This method returns the element's previous sibling, or nothing if there
 is none.
+
+This method is analogous to the same-named L<PPI::Element|PPI::Element>
+method, in that it will not cross from the content of a structure into
+the elements that define the structure.
 
 =cut
 
@@ -502,10 +543,41 @@ sub significant {
     return 1;
 }
 
+=head2 snext_element
+
+This method returns the next significant element, or nothing if
+there is none.
+
+Unlike L<snext_sibling()|/snext_sibling>, this will cross from
+the content of a structure into the elements that define the structure,
+or vice versa.
+
+=cut
+
+sub snext_element {
+    my ( $self ) = @_;
+    my $inx = $self->__my_inx();
+    my $parent = $self->_parent()
+	or return;
+    my @elem = $parent->elements();
+    while ( 1 ) {
+	$inx++;
+	$elem[$inx]
+	    or last;
+	$elem[$inx]->significant()
+	    and return $elem[$inx];
+    }
+    return;
+}
+
 =head2 snext_sibling
 
 This method returns the element's next significant sibling, or nothing
 if there is none.
+
+This method is analogous to the same-named L<PPI::Element|PPI::Element>
+method, in that it will not cross from the content of a structure into
+the elements that define the structure.
 
 =cut
 
@@ -518,10 +590,39 @@ sub snext_sibling {
     return;
 }
 
+=head2 sprevious_element
+
+This method returns the previous significant element, or nothing if
+there is none.
+
+Unlike L<sprevious_sibling()|/sprevious_sibling>, this will cross from
+the content of a structure into the elements that define the structure,
+or vice versa.
+
+=cut
+
+sub sprevious_element {
+    my ( $self ) = @_;
+    my $inx = $self->__my_inx()
+	or return;
+    my $parent = $self->_parent()
+	or return;
+    my @elem = $parent->elements();
+    while ( $inx ) {
+	$elem[--$inx]->significant()
+	    and return $elem[$inx];
+    }
+    return;
+}
+
 =head2 sprevious_sibling
 
 This method returns the element's previous significant sibling, or
 nothing if there is none.
+
+This method is analogous to the same-named L<PPI::Element|PPI::Element>
+method, in that it will not cross from the content of a structure into
+the elements that define the structure.
 
 =cut
 
@@ -661,6 +762,21 @@ sub nav {
     return ( $parent->nav(), $parent->__nav( $self ) );
 }
 
+# Find our index among the parents children. If not found, just return.
+# Unlike __my_nav(), this just returns an index, which is appropriate
+# for ->element( $inx ), or would be if element() existed.
+
+sub __my_inx {
+    my ( $self ) = @_;
+    my $parent = $self->_parent() or return;
+    my $addr = refaddr( $self );
+    my $inx = firstidx { refaddr $_ == $addr } $parent->elements();
+    $inx < 0
+	and return;
+    return $inx;
+}
+
+
 # Find our location and index among the parent's children. If not found,
 # just returns.
 
@@ -668,6 +784,7 @@ sub nav {
     my %method_map = (
 	children => 'child',
     );
+
     sub __my_nav {
 	my ( $self ) = @_;
 	my $parent = $self->_parent() or return;
