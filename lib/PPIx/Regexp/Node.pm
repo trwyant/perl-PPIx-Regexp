@@ -437,7 +437,7 @@ sub __nav {
     my ( $self, $child ) = @_;
     refaddr( $child->parent() ) == refaddr( $self )
 	or return;
-    my ( $method, $inx ) = $child->_my_inx()
+    my ( $method, $inx ) = $child->__my_nav()
 	or return;
 
     return ( $method => [ $inx ] );

@@ -347,7 +347,7 @@ none.
 
 sub next_sibling {
     my ( $self ) = @_;
-    my ( $method, $inx ) = $self->_my_inx()
+    my ( $method, $inx ) = $self->__my_nav()
 	or return;
     return $self->_parent()->$method( $inx + 1 );
 }
@@ -425,7 +425,7 @@ is none.
 
 sub previous_sibling {
     my ( $self ) = @_;
-    my ( $method, $inx ) = $self->_my_inx()
+    my ( $method, $inx ) = $self->__my_nav()
 	or return;
     $inx or return;
     return $self->_parent()->$method( $inx - 1 );
@@ -668,7 +668,7 @@ sub nav {
     my %method_map = (
 	children => 'child',
     );
-    sub _my_inx {
+    sub __my_nav {
 	my ( $self ) = @_;
 	my $parent = $self->_parent() or return;
 	my $addr = refaddr( $self );
