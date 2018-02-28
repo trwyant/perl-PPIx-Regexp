@@ -35,7 +35,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token::GroupType };
 
-our $VERSION = '0.055';
+our $VERSION = '0.055_01';
 
 sub __match_setup {
     my ( undef, $tokenizer ) = @_;	# Invocant unused
