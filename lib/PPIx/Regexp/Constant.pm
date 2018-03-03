@@ -160,6 +160,13 @@ curly bracket removal took place. The value of this constant is
 C<undef>, but it will be assigned a value when the timing of the second
 phase is known.
 
+=head2 LITERAL_LEFT_CURLY_REMOVED_PHASE_3
+
+The Perl version at which the third phase of unescaped literal left
+curly bracket removal took place. This is the removal of curly brackets
+after a left parenthesis. The value of this constant is C<undef>, but it
+will be assigned a value when the timing of the second phase is known.
+
 =head2 MINIMUM_PERL
 
 The minimum version of Perl understood by this parser, as a float. It is
