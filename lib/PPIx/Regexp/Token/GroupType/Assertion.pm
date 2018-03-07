@@ -34,7 +34,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token::GroupType };
 
-our $VERSION = '0.055_01';
+our $VERSION = '0.056';
 
 {
 	my $expl_nla	= 'Negative look-ahead assertion';

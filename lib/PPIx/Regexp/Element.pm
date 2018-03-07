@@ -49,7 +49,7 @@ use PPIx::Regexp::Constant qw{
     TRUE
 };
 
-our $VERSION = '0.055_01';
+our $VERSION = '0.056';
 
 =head2 accepts_perl
 
