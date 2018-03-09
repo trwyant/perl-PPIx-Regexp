@@ -7,7 +7,11 @@ use base qw{ PPIx::Regexp::Support };
 
 use Carp qw{ carp croak confess };
 use PPIx::Regexp::Constant qw{
+    ARRAY_REF
+    CODE_REF
+    HASH_REF
     MINIMUM_PERL
+    REGEXP_REF
     TOKEN_LITERAL
     TOKEN_UNKNOWN
 };
@@ -111,7 +115,7 @@ defined $DEFAULT_POSTDEREF
 	$errstr = undef;
 
 	exists $args{default_modifiers}
-	    and 'ARRAY' ne ref $args{default_modifiers}
+	    and ARRAY_REF ne ref $args{default_modifiers}
 	    and do {
 		$errstr = 'default_modifiers must be an array reference';
 		return;
@@ -211,7 +215,7 @@ sub cookie {
 	or confess "Programming error - undefined cookie name";
     @args or return $self->{cookie}{$name};
     my $cookie = shift @args;
-    if ( ref $cookie eq 'CODE' ) {
+    if ( CODE_REF eq ref $cookie ) {
 	return ( $self->{cookie}{$name} = $cookie );
     } elsif ( defined $cookie ) {
 	confess "Programming error - cookie must be CODE ref or undef";
@@ -227,7 +231,7 @@ sub default_modifiers {
 
 sub __effective_modifiers {
     my ( $self ) = @_;
-    'HASH' eq ref $self->{effective_modifiers}
+    HASH_REF eq ref $self->{effective_modifiers}
 	or return {};
     return { %{ $self->{effective_modifiers} } };
 }
@@ -307,7 +311,7 @@ sub find_matching_delimiter {
 sub find_regexp {
     my ( $self, $regexp ) = @_;
 
-    ref $regexp eq 'Regexp'
+    REGEXP_REF eq ref $regexp
 	or confess
 	'Argument is a ', ( ref $regexp || 'scalar' ), ' not a Regexp';
 
@@ -592,7 +596,7 @@ sub prior_significant_token {
 	    $iterator = sub {
 		return shift @eles;
 	    };
-	} elsif ( 'CODE' ne ref $iterator ) {
+	} elsif ( CODE_REF ne ref $iterator ) {
 	    confess 'Programming error - Iterator not understood';
 	}
 
