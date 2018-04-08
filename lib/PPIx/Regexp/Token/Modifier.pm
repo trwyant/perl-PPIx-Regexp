@@ -360,7 +360,7 @@ sub __aggregate_modifiers {
     my ( @mods ) = @_;
     my %present;
     foreach my $content ( @mods ) {
-	$content =~ s{ [?/]+ }{}smxg;
+	$content =~ s{ \A [?/()]+ }{}smxg;
 	if ( $content =~ m/ \A \^ /smx ) {
 	    @present{ MODIFIER_GROUP_MATCH_SEMANTICS(), qw{ i s m x } }
 		= qw{ d 0 0 0 0 };
@@ -377,6 +377,7 @@ sub __aggregate_modifiers {
 	# specifically by the change that handled multi-character
 	# modifiers.
 	# $content = join '', sort split qr{}smx, $content;
+
 	# The following is better because it re-orders the modifiers
 	# separately. It does not recognize multiple dashes as
 	# representing an error (though it could!), and modifiers that
