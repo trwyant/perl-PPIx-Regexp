@@ -1,3 +1,6 @@
+0.056_02	2018-04-09	T. R. Wyant
+    Explain grouping structure as 'Grouping', not 'Capture or grouping'.
+
 0.056_01	2018-04-08	T. R. Wyant
     Caret modifier was not turning off /n. This was complicated by the
     fact that (?^) was introduced in 5.13.6, but (?n) was not introduced

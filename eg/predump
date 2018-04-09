@@ -13,7 +13,7 @@ use Scalar::Util qw{ refaddr };
 
 use vars qw{ $VERSION };
 
-$VERSION = '0.056_01';
+$VERSION = '0.056_02';
 
 my %opt = (
     default_modifiers => [],
