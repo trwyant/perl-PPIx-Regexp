@@ -146,15 +146,25 @@ sub elements {
     }
 }
 
-sub explain {
-    my ( $self ) = @_;
-    if ( my $type = $self->type() ) {
-	return $type->explain();
+{
+    my %explanation = (
+	q<(>	=> 'Grouping',	# )
+    );
+
+    sub explain {
+	my ( $self ) = @_;
+	if ( my $type = $self->type() ) {
+	    return $type->explain();
+	}
+	if ( my $start = $self->start() ) {
+	    # The check for a left parenthesis before returning
+	    # 'Grouping' is probably superflous, since it appears that
+	    # this method is overridden in all other cases where we
+	    # might get here (i.e.  '[...]', '{...}'). But I'm paranoid.
+	    return $explanation{ $start->content() } || $start->explain();
+	}
+	return $self->__no_explanation();
     }
-    if ( my $start = $self->start() ) {
-	return $start->explain();
-    }
-    return $self->__no_explanation();
 }
 
 =head2 finish
