@@ -61,9 +61,27 @@ for C<d-imsx>, and that it the way this class handles it.
 
 For example, given C<PPIx::Regexp::Token::Modifier> C<$elem>
 representing regular expression fragment C<(?^i)>,
-C<< $elem->asserted( 'd' ) >> would return true, since in the absence of
+C<< $elem->asserts( 'd' ) >> would return true, since in the absence of
 an explicit C<l> or C<u> this class considers the C<^> to explicitly
 assert C<d>.
+
+The caret handling is complicated by the fact that the C<'n'> modifier
+was introduced in 5.21.8, at which point the caret became equivalent to
+C<d-imnsx>. I did not feel I could unconditionally add the C<-n> to the
+expansion of the caret, because that would produce confusing output from
+methods like L<explain()|PPIx::Regexp::Element/explain>. Nor could I
+make it conditional on the minimum perl version, because that
+information is not available early enough in the parse. What I did was
+to expand the caret into C<d-imnsx> if and only if C<'n'> was in effect
+at some point in the scope in which the modifier was parsed.
+
+Continuing the above example, C<< $elem->asserts( 'n' ) >> and
+C<< $elem->modifier_asserted( 'n' ) >> would both return false, but
+C<< $elem->negates( 'n' ) >> would return true if and only if the C</m>
+modifier has been asserted somewhere before and in-scope from this
+token. The
+L<modifier_asserted( 'n' )|PPIx::Regexp::Element/modifier_asserted>
+method is inherited from L<PPIx::Regexp::Element|PPIx::Regexp::Element>.
 
 =head1 METHODS
 
@@ -102,6 +120,10 @@ foreach my $value ( values %aggregate ) {
     $de_aggregate{$value}++;
 }
 
+# Note that we do NOT want the /o modifier on regexen that make use of
+# this, because it is already compiled.
+my $capture_group_leader = qr{ [?/(] }smx;	# );
+
 use constant TOKENIZER_ARGUMENT_REQUIRED => 1;
 
 sub __new {
@@ -109,6 +131,10 @@ sub __new {
 
     my $self = $class->SUPER::__new( $content, %arg )
 	or return;
+
+    $content =~ m{ \A $capture_group_leader* \^ }smx	# no /o!
+	and defined $arg{tokenizer}->modifier_seen( 'n' )
+	and $self->{__caret_undoes_n} = 1;
 
     $arg{tokenizer}->modifier_modify( $self->modifiers() );
 
@@ -360,7 +386,7 @@ sub __aggregate_modifiers {
     my ( @mods ) = @_;
     my %present;
     foreach my $content ( @mods ) {
-	$content =~ s{ \A [?/()]+ }{}smxg;
+	$content =~ s{ \A $capture_group_leader+ }{}smxg;	# no /o!
 	if ( $content =~ m/ \A \^ /smx ) {
 	    @present{ MODIFIER_GROUP_MATCH_SEMANTICS(), qw{ i s m x } }
 		= qw{ d 0 0 0 0 };
@@ -446,7 +472,10 @@ sub __PPIX_TOKEN__recognize {
     # Decode modifiers from the content of the token.
     sub _decode {
 	my ( $self ) = @_;
-	return __aggregate_modifiers( $self->content() );
+	my $mod = __aggregate_modifiers( $self->content() );
+	$self->{__caret_undoes_n}
+	    and $mod->{n} = 0;
+	return $mod;
     }
 }
 
