@@ -154,8 +154,7 @@ Starting with version 0.036_01, if the argument is a
 single-character modifier followed by an asterisk (intended as a wild
 card character), the return is the number of times that modifier
 appears. In this case an exception will be thrown if you specify a
-multi-character modifier (e.g.  C<'ee*'>), or if you specify one of the
-match semantics modifiers (e.g.  C<'a*'>).
+multi-character modifier (e.g.  C<'ee*'>).
 
 If called without an argument, or with an undef argument, all modifiers
 explicitly asserted by this token are returned.
@@ -182,14 +181,21 @@ sub asserts {
 
 sub __asserts {
     my ( $present, $modifier ) = @_;
+    my $wild = $modifier =~ s/ [*] \z //smx;
+    not $wild
+	or 1 == length $modifier
+	or croak "Can not use wild card on multi-character modifier '$modifier*'";
     if ( my $bin = $aggregate{$modifier} ) {
-	return defined $present->{$bin} && $modifier eq $present->{$bin};
+	my $aggr = $present->{$bin};
+	$wild
+	    or return ( defined $aggr && $modifier eq $aggr );
+	defined $aggr
+	    or return 0;
+	$aggr =~ m/ \A ( (?: \Q$modifier\E )* ) \z /smx
+	    or return 0;
+	return length $1;
     }
-    if ( $modifier =~ s/ [*] \z //smx ) {
-	$aggregate{$modifier}
-	    and croak "Can not use wild card on modifier '$modifier*'";
-	1 == length $modifier
-	    or croak "Can not use wild card on multi-character modifier '$modifier*'";
+    if ( $wild ) {
 	return $present->{$modifier} || 0;
     }
     my $len = length $modifier;
