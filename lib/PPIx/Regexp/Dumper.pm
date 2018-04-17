@@ -326,7 +326,7 @@ sub __nav {
     my $rslt = $self->_safe( @args );
     $rslt =~ s/ ' (\w+) ' , /$1 =>/smxg;
     $rslt =~ s/ \[ \s+ \] /[]/smxg;
-    $rslt =~ s/ \[ \s* ( \d+ ) \s* \] /$1/smxg;
+    $rslt =~ s/ \[ \s* ( [0-9]+ ) \s* \] /$1/smxg;
     return $rslt;
 }
 

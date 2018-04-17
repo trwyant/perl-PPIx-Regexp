@@ -74,13 +74,13 @@ our $VERSION = '0.057_01';
 
 sub perl_version_introduced {
     my ( $self ) = @_;
-    $self->content() =~ m/ \A [(] \d+ [)] \z /smx
+    $self->content() =~ m/ \A [(] [0-9]+ [)] \z /smx
 	and return '5.005';
     return '5.009005';
 }
 
 my @recognize = (
-    [ qr{ \A \( (?: ( \d+ ) | R (\d+) ) \) }smx,
+    [ qr{ \A \( (?: ( [0-9]+ ) | R ( [0-9]+ ) ) \) }smx,
 	{ is_named => 0 } ],
     [ qr{ \A \( R \) }smx,
 	{ is_named => 0, capture => '0' } ],
