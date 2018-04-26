@@ -1,8 +1,7 @@
-0.057_02	2018-04-18	T. R. Wyant
+0.058		2018-04-26	T. R. Wyant
     Prefer /[0-9]/ over /\d/ for numeric checks. The latter can match
     non-ASCII digits.
 
-0.057_01	2018-04-17	T. R. Wyant
     Explain the negated POSIX character classes. Also tweak some of the
     asserted explanations -- mostly for readability and parallel
     construction with the negated explanations, but it turns out
