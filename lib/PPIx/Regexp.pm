@@ -162,6 +162,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Node };
 
+use PPIx::Regexp::Constant qw{ @CARP_NOT };
 use PPIx::Regexp::Lexer ();
 use PPIx::Regexp::StringTokenizer;
 use PPIx::Regexp::Token::Modifier ();	# For its modifier manipulations.

@@ -44,6 +44,7 @@ use PPIx::Regexp::Constant qw{
     MINIMUM_PERL
     NODE_UNKNOWN
     TRUE
+    @CARP_NOT
 };
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };

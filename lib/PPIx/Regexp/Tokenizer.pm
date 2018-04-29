@@ -14,6 +14,7 @@ use PPIx::Regexp::Constant qw{
     REGEXP_REF
     TOKEN_LITERAL
     TOKEN_UNKNOWN
+    @CARP_NOT
 };
 use PPIx::Regexp::Token::Assertion		();
 use PPIx::Regexp::Token::Backreference		();

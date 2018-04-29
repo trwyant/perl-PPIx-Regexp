@@ -6,6 +6,7 @@ use strict;
 use warnings;
 
 use Carp;
+use PPIx::Regexp::Constant qw{ @CARP_NOT };
 use Scalar::Util qw{ blessed };
 
 use base qw{ Exporter };

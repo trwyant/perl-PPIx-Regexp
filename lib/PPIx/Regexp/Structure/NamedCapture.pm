@@ -41,6 +41,8 @@ use Carp;
 
 use base qw{ PPIx::Regexp::Structure::Capture };
 
+use PPIx::Regexp::Constant qw{ @CARP_NOT };
+
 our $VERSION = '0.058';
 
 sub explain {

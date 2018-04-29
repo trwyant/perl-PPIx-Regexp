@@ -39,6 +39,7 @@ use PPIx::Regexp::Constant qw{
     COOKIE_CLASS COOKIE_REGEX_SET
     LITERAL_LEFT_CURLY_ALLOWED
     TOKEN_LITERAL
+    @CARP_NOT
 };
 use PPIx::Regexp::Util qw{ __instance };
 

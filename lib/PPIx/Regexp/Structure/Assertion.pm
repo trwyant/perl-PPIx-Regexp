@@ -38,6 +38,7 @@ our $VERSION = '0.058';
 
 use PPIx::Regexp::Constant qw{
     LITERAL_LEFT_CURLY_ALLOWED
+    @CARP_NOT
 };
 
 # An un-escaped literal left curly bracket can always follow this

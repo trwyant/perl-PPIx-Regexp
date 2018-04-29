@@ -53,6 +53,7 @@ use PPIx::Regexp::Constant qw{
     ARRAY_REF
     HASH_REF
     STRUCTURE_UNKNOWN
+    @CARP_NOT
 };
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };

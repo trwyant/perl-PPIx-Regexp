@@ -42,7 +42,11 @@ use warnings;
 use base qw{ PPIx::Regexp::Token };
 
 use PPIx::Regexp::Constant qw{
-    COOKIE_QUOTE MINIMUM_PERL TOKEN_LITERAL TOKEN_UNKNOWN
+    COOKIE_QUOTE
+    MINIMUM_PERL
+    TOKEN_LITERAL
+    TOKEN_UNKNOWN
+    @CARP_NOT
 };
 
 our $VERSION = '0.058';

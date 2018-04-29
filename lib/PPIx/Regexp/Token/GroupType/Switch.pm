@@ -35,6 +35,8 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token::GroupType };
 
+use PPIx::Regexp::Constant qw{ @CARP_NOT };
+
 our $VERSION = '0.058';
 
 sub __match_setup {

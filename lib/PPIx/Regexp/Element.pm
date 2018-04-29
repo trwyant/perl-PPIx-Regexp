@@ -47,6 +47,7 @@ use PPIx::Regexp::Constant qw{
     MINIMUM_PERL
     TOKEN_UNKNOWN
     TRUE
+    @CARP_NOT
 };
 
 our $VERSION = '0.058';

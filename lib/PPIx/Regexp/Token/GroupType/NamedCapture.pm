@@ -41,7 +41,7 @@ use base qw{ PPIx::Regexp::Token::GroupType };
 
 use Carp qw{ confess };
 
-use PPIx::Regexp::Constant qw{ RE_CAPTURE_NAME };
+use PPIx::Regexp::Constant qw{ RE_CAPTURE_NAME @CARP_NOT };
 
 our $VERSION = '0.058';
 

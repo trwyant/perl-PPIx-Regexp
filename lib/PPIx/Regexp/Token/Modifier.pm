@@ -102,6 +102,7 @@ use Carp;
 use PPIx::Regexp::Constant qw{
     MINIMUM_PERL
     MODIFIER_GROUP_MATCH_SEMANTICS
+    @CARP_NOT
 };
 
 our $VERSION = '0.058';

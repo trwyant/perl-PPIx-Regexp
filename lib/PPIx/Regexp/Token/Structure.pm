@@ -43,6 +43,7 @@ use PPIx::Regexp::Constant qw{
     COOKIE_REGEX_SET
     MINIMUM_PERL
     TOKEN_LITERAL
+    @CARP_NOT
 };
 
 # Tokens we are responsible for making, under at least some

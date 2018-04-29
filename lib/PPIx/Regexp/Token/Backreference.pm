@@ -36,8 +36,11 @@ use base qw{ PPIx::Regexp::Token::Reference };
 
 use Carp qw{ confess };
 use PPIx::Regexp::Constant qw{
-    MINIMUM_PERL RE_CAPTURE_NAME
-    TOKEN_LITERAL TOKEN_UNKNOWN
+    MINIMUM_PERL
+    RE_CAPTURE_NAME
+    TOKEN_LITERAL
+    TOKEN_UNKNOWN
+    @CARP_NOT
 };
 use PPIx::Regexp::Util qw{ __to_ordinal_en };
 

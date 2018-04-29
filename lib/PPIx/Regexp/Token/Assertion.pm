@@ -49,7 +49,10 @@ use base qw{ PPIx::Regexp::Token };
 use PPIx::Regexp::Constant qw{
     COOKIE_CLASS
     LITERAL_LEFT_CURLY_ALLOWED
-    MINIMUM_PERL TOKEN_LITERAL TOKEN_UNKNOWN
+    MINIMUM_PERL
+    TOKEN_LITERAL
+    TOKEN_UNKNOWN
+    @CARP_NOT
 };
 
 our $VERSION = '0.058';

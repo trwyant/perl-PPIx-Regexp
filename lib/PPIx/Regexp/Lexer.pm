@@ -43,6 +43,7 @@ use PPIx::Regexp::Constant qw{
     ARRAY_REF
     TOKEN_LITERAL
     TOKEN_UNKNOWN
+    @CARP_NOT
 };
 use PPIx::Regexp::Node::Range				();
 use PPIx::Regexp::Node::Unknown				();

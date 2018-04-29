@@ -37,6 +37,7 @@ use base qw{ PPIx::Regexp::Token };
 
 use PPIx::Regexp::Constant qw{
     LITERAL_LEFT_CURLY_ALLOWED
+    @CARP_NOT
 };
 
 our $VERSION = '0.058';

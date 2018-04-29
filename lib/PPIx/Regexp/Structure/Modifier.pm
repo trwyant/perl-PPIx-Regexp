@@ -35,6 +35,8 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Structure };
 
+use PPIx::Regexp::Constant qw{ @CARP_NOT };
+
 our $VERSION = '0.058';
 
 # This is a kluge for both determining whether the object asserts

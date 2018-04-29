@@ -7,6 +7,7 @@ use base qw{ PPIx::Regexp::Structure };
 
 use PPIx::Regexp::Constant qw{
     LITERAL_LEFT_CURLY_REMOVED_PHASE_2
+    @CARP_NOT
 };
 
 our $VERSION = '0.058';

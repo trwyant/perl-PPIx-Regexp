@@ -41,6 +41,7 @@ use base qw{ PPIx::Regexp::Token };
 
 use Carp qw{ confess };
 use List::Util qw{ first };
+use PPIx::Regexp::Constant qw{ @CARP_NOT };
 
 our $VERSION = '0.058';
 

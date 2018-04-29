@@ -35,7 +35,10 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Node };
 
-use PPIx::Regexp::Constant qw{ MSG_PROHIBITED_BY_STRICT };
+use PPIx::Regexp::Constant qw{
+    MSG_PROHIBITED_BY_STRICT
+    @CARP_NOT
+};
 
 our $VERSION = '0.058';
 
