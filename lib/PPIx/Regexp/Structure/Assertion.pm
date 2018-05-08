@@ -34,7 +34,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Structure };
 
-our $VERSION = '0.058_01';
+our $VERSION = '0.059';
 
 use PPIx::Regexp::Constant qw{
     LITERAL_LEFT_CURLY_ALLOWED
