@@ -222,6 +222,12 @@ sub last_element {
     return;
 }
 
+sub remove_insignificant {
+    my ( $self ) = @_;
+    return $self->__new(
+	map { $_->remove_insignificant() } $self->elements() );
+}
+
 =head2 start
 
  my $elem = $struct->start();
