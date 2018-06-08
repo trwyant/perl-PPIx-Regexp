@@ -53,12 +53,21 @@ sub __new {
 
     $self->{error} = $arg{error};
 
+    $self->{explanation} = defined $arg{explanation} ?
+	$arg{explanation} :
+	$arg{error};
+
     return $self;
 }
 
 
 # Return true if the token can be quantified, and false otherwise
 sub can_be_quantified { return };
+
+sub explain {
+    my ( $self ) = @_;
+    return $self->{explanation};
+}
 
 =head2 ordinal
 
@@ -82,6 +91,9 @@ sub __PPIX_ELEM__rebless {
 	$self->{error} = 'Unspecified error';
 	$rslt++;
     }
+    $self->{explanation} = defined $arg{explanation} ?
+	$arg{explanation} :
+	$arg{error};
     return $rslt;
 }
 

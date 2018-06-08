@@ -291,6 +291,9 @@ The following is from perlop:
     my %special = (
 	'\\N{}'	=> sub {
 	    my ( $tokenizer, $accept ) = @_;
+
+=begin comment
+
 	    $tokenizer->strict()
 		or return $tokenizer->make_token( $accept,
 		'PPIx::Regexp::Token::NoOp', {
@@ -306,6 +309,16 @@ The following is from perlop:
 		},
 	    );
 
+=end comment
+
+=cut
+
+	    return $tokenizer->make_token( $accept, TOKEN_UNKNOWN, {
+		    error	=> 'Empty Unicode character name',
+		    perl_version_introduced	=> '5.023008',
+		    perl_version_removed	=> '5.027001',
+		},
+	    );
 	},
     );
 
