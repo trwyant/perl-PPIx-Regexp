@@ -1,4 +1,4 @@
-0.059_01	2018-06-09	T. R. Wyant
+0.060		2018-06-16	T. R. Wyant
     \N{} now parses as the unknown token, not NoOp, regardless of the
     setting of 'use re qw< strict >;'. \N{} became unconditionally fatal
     in 5.28.0 (5.27.1, actually). The policy when the parse changes is

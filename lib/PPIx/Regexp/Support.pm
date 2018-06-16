@@ -38,7 +38,7 @@ use warnings;
 use PPIx::Regexp::Constant qw{ @CARP_NOT };
 use PPIx::Regexp::Util qw{ __instance };
 
-our $VERSION = '0.059_01';
+our $VERSION = '0.060';
 
 =head2 close_bracket
 
