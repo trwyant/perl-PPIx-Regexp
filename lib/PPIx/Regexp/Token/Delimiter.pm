@@ -46,6 +46,34 @@ sub explain {
     return 'Regular expression or replacement string delimiter';
 }
 
+=head2 perl_version_removed
+
+Perl 5.29.0 made fatal the use of non-standalone graphemes as regular
+expression delimiters. Because non-characters and permanently unassigned
+code points are still allowed per F<perldeprecation>, I take this to
+mean characters that match C</\p{Mark}/> (i.e. combining diacritical
+marks).  But this regular expression does not compile under Perl 5.6.
+
+So:
+
+This method returns C<'5.029'> for such delimiters B<provided> the
+requisite regular expression compiles. Otherwise it return C<undef>.
+
+=cut
+
+use constant MARK_RE => eval 'qr< \p{Mark} >smx'; ## no critic (ProhibitStringyEval,RequireCheckingReturnValueOfEval)
+
+sub perl_version_removed {
+    my ( $self ) = @_;
+    MARK_RE
+	and $self->content() =~ MARK_RE
+	and return '5.029';
+    # I respectfully disagree with Perl Best Practices on the
+    # following. When this method is called in list context is MUST
+    # return undef if that's the right answer, NOT an empty list.
+    return undef;	## no critic (ProhibitExplicitReturnUndef)
+}
+
 1;
 
 __END__

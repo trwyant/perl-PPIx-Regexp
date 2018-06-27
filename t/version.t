@@ -14,7 +14,19 @@ use 5.006;
 use strict;
 use warnings;
 
+use PPIx::Regexp::Constant qw{ SUFFICIENT_UTF8_SUPPORT };
+
+BEGIN {
+    if ( SUFFICIENT_UTF8_SUPPORT ) {
+	# Have to prevent Perl from parsing 'open' as 'CORE::open'.
+	require 'open.pm';
+	'open'->import( qw{ :std :encoding(utf-8) } );
+    }
+}
+
 use Test::More 0.88;
+
+use charnames qw{ :full };
 
 our $REPORT;	# True to report rather than test.
 
@@ -311,6 +323,15 @@ method	perl_version_removed	=> undef;
 class	'PPIx::Regexp::Token::Delimiter', note => 'Delimiter', report => 0;
 token	'/';
 method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
+method	perl_version_removed	=> undef;
+SKIP: {
+    '5.008' le $]
+	or skip 'Weird delimiters test requires Perl 5.8 or above', 43;
+
+    token	"\N{COMBINING CIRCUMFLEX ACCENT}";
+    method	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
+    method	perl_version_removed	=> '5.029';
+}
 
 class	'PPIx::Regexp::Token::Greediness', note => 'Greediness';
 token	'?', note => 'Match shortest string first';
@@ -739,7 +760,10 @@ method	perl_version_removed	=> undef;
 # eventually.
 # The non-ASCII white space was finally introduced in 5.21.1.
 
-if ( $] >= 5.008 ) {
+SKIP: {
+    SUFFICIENT_UTF8_SUPPORT
+	or skip 'Weird delimiters test requires Perl 5.8.1 or above', 3;
+
     # The following eval is to hide the construct from Perl 5.6, which
     # does not understand \N{...}.
     token	eval q<" \\N{U+0085}">,	## no critic (ProhibitStringyEval)

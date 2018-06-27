@@ -5,6 +5,14 @@ use 5.006;
 use strict;
 use warnings;
 
+BEGIN {
+    if ( '5.008' le $] ) {
+	# Have to prevent Perl from parsing 'open' as 'CORE::open'.
+	require 'open.pm';
+	'open'->import( qw{ :std :encoding(utf-8) } );
+    }
+}
+
 use Getopt::Long 2.33;
 use Pod::Usage;
 use PPI::Document;
