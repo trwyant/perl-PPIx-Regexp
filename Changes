@@ -1,3 +1,15 @@
+0.060_01	2018-06-28	T. R. Wyant
+    Only standalone grapheme delimiters allowed starting w/ 5.29.0.
+
+    This actually means significantly expanding the delimiters allowed, and
+    then having perl_version_removed() return '5.029' if the delimiter
+    matches /\p{Mark}/. This code does not operate under Perl 5.6 because it
+    can not compile the regular expression.
+
+    Collateral with this, accept word characters as delimiters, but only
+    with at least one space between the operator and the expression -- that
+    is, 'qr xyxx' is OK, but 'qrxyxx' is not.
+
 0.060		2018-06-16	T. R. Wyant
     \N{} now parses as the unknown token, not NoOp, regardless of the
     setting of 'use re qw< strict >;'. \N{} became unconditionally fatal

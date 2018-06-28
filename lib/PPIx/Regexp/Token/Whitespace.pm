@@ -46,7 +46,7 @@ use PPIx::Regexp::Constant qw{
     @CARP_NOT
 };
 
-our $VERSION = '0.060';
+our $VERSION = '0.060_01';
 
 sub __new {
     my ( $class, $content, %arg ) = @_;
