@@ -274,6 +274,10 @@ This method simply prints the result of L</string> to standard out.
 
 sub print : method {	## no critic (ProhibitBuiltinHomonyms)
     my ( $self ) = @_;
+    # Non-characters and Non-Unicode code points are explicitly allowed
+    # as delimiters, at least as of 5.29.0, which is where unassigned
+    # and combining code points became illegal.
+    no warnings qw{ nonchar non_unicode };	## no critic (ProhibitNoWarnings)
     print $self->string();
     return;
 }

@@ -11607,6 +11607,169 @@ SKIP: {
     choose  ( child => 3 );
     class   ( 'PPIx::Regexp::Token::Modifier' );
     content ( '' );
+
+}
+
+SKIP: {
+    SUFFICIENT_UTF8_SUPPORT
+	or skip 'Truly weird delimiters test requires Perl 5.8.1 or above', 114;
+
+    $ENV{AUTHOR_TESTING}
+	or skip 'Truly weird delimiters are noisy, therefore author tests', 114;
+
+    my $delim = "\N{U+FFFE}";	# Permanent noncharacter
+
+    tokenize( "qr ${delim}x$delim" );
+    count   ( 6 );
+    choose  ( 0 );
+    class   ( 'PPIx::Regexp::Token::Structure' );
+    content ( 'qr' );
+    value   ( perl_version_introduced => [], '5.005' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( 1 );
+    class   ( 'PPIx::Regexp::Token::Whitespace' );
+    content ( ' ' );
+    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( 2 );
+    class   ( 'PPIx::Regexp::Token::Delimiter' );
+    content ( $delim );
+    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( 3 );
+    class   ( 'PPIx::Regexp::Token::Literal' );
+    content ( 'x' );
+    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( 4 );
+    class   ( 'PPIx::Regexp::Token::Delimiter' );
+    content ( $delim );
+    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( 5 );
+    class   ( 'PPIx::Regexp::Token::Modifier' );
+    content ( '' );
+    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_removed => [], undef );
+
+    parse   ( "qr ${delim}x$delim" );
+    value   ( failures => [], 0 );
+    class   ( 'PPIx::Regexp' );
+    count   ( 4 );
+    value   ( perl_version_introduced => [], '5.005' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( child => 0 );
+    class   ( 'PPIx::Regexp::Token::Structure' );
+    content ( 'qr' );
+    value   ( perl_version_introduced => [], '5.005' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( child => 1 );
+    class   ( 'PPIx::Regexp::Token::Whitespace' );
+    content ( ' ' );
+    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( child => 2 );
+    class   ( 'PPIx::Regexp::Structure::Regexp' );
+    count   ( 1 );
+    choose  ( child => 2, start => [] );
+    count   ( 1 );
+    choose  ( child => 2, start => 0 );
+    class   ( 'PPIx::Regexp::Token::Delimiter' );
+    content ( $delim );
+    choose  ( child => 2, type => [] );
+    count   ( 0 );
+    choose  ( child => 2, finish => [] );
+    count   ( 1 );
+    choose  ( child => 2, finish => 0 );
+    class   ( 'PPIx::Regexp::Token::Delimiter' );
+    content ( $delim );
+    choose  ( child => 2, child => 0 );
+    class   ( 'PPIx::Regexp::Token::Literal' );
+    content ( 'x' );
+    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( child => 3 );
+    class   ( 'PPIx::Regexp::Token::Modifier' );
+    content ( '' );
+    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_removed => [], undef );
+
+    $delim = "\N{U+11FFFF}";	# Illegal character
+
+    tokenize( "qr ${delim}x$delim" );
+    count   ( 6 );
+    choose  ( 0 );
+    class   ( 'PPIx::Regexp::Token::Structure' );
+    content ( 'qr' );
+    value   ( perl_version_introduced => [], '5.005' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( 1 );
+    class   ( 'PPIx::Regexp::Token::Whitespace' );
+    content ( ' ' );
+    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( 2 );
+    class   ( 'PPIx::Regexp::Token::Delimiter' );
+    content ( $delim );
+    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( 3 );
+    class   ( 'PPIx::Regexp::Token::Literal' );
+    content ( 'x' );
+    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( 4 );
+    class   ( 'PPIx::Regexp::Token::Delimiter' );
+    content ( $delim );
+    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( 5 );
+    class   ( 'PPIx::Regexp::Token::Modifier' );
+    content ( '' );
+    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_removed => [], undef );
+
+    parse   ( "qr ${delim}x$delim" );
+    value   ( failures => [], 0 );
+    class   ( 'PPIx::Regexp' );
+    count   ( 4 );
+    value   ( perl_version_introduced => [], '5.005' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( child => 0 );
+    class   ( 'PPIx::Regexp::Token::Structure' );
+    content ( 'qr' );
+    value   ( perl_version_introduced => [], '5.005' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( child => 1 );
+    class   ( 'PPIx::Regexp::Token::Whitespace' );
+    content ( ' ' );
+    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( child => 2 );
+    class   ( 'PPIx::Regexp::Structure::Regexp' );
+    count   ( 1 );
+    choose  ( child => 2, start => [] );
+    count   ( 1 );
+    choose  ( child => 2, start => 0 );
+    class   ( 'PPIx::Regexp::Token::Delimiter' );
+    content ( $delim );
+    choose  ( child => 2, type => [] );
+    count   ( 0 );
+    choose  ( child => 2, finish => [] );
+    count   ( 1 );
+    choose  ( child => 2, finish => 0 );
+    class   ( 'PPIx::Regexp::Token::Delimiter' );
+    content ( $delim );
+    choose  ( child => 2, child => 0 );
+    class   ( 'PPIx::Regexp::Token::Literal' );
+    content ( 'x' );
+    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_removed => [], undef );
+    choose  ( child => 3 );
+    class   ( 'PPIx::Regexp::Token::Modifier' );
+    content ( '' );
+    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_removed => [], undef );
 }
 
 done_testing;
