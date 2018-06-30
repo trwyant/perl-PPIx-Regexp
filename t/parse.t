@@ -11617,6 +11617,8 @@ SKIP: {
     $ENV{AUTHOR_TESTING}
 	or skip 'Truly weird delimiters are noisy, therefore author tests', 114;
 
+    no warnings qw{ utf8 };
+
     my $delim = "\N{U+FFFE}";	# Permanent noncharacter
 
     tokenize( "qr ${delim}x$delim" );
