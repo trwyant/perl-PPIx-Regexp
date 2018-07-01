@@ -13,7 +13,7 @@ use PPIx::Regexp::Constant qw{
     @CARP_NOT
 };
 
-our $VERSION = '0.060_02';
+our $VERSION = '0.060_03';
 
 {
     # Names of classes containing tokenization machinery. There are few

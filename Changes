@@ -1,3 +1,6 @@
+0.060_03	2018-06-30	T. R. Wyant
+    Silence test warnings under older Perls (I hope).
+
 0.060_02	2018-06-29	T. R. Wyant
     Perl 5.29.0 also prohibits unassigned code points while explicitly
     allowing non-characters (permanently unassigned code points) and
