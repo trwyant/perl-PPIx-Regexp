@@ -3,10 +3,10 @@ package main;
 use strict;
 use warnings;
 
-use PPIx::Regexp::Constant qw{ SUFFICIENT_UTF8_SUPPORT };
+use PPIx::Regexp::Constant qw{ SUFFICIENT_UTF8_SUPPORT_FOR_WEIRD_DELIMITERS };
 
 BEGIN {
-    if ( SUFFICIENT_UTF8_SUPPORT ) {
+    if ( SUFFICIENT_UTF8_SUPPORT_FOR_WEIRD_DELIMITERS ) {
 	# Have to prevent Perl from parsing 'open' as 'CORE::open'.
 	require 'open.pm';
 	'open'->import( qw{ :std :encoding(utf-8) } );
@@ -11538,8 +11538,8 @@ class   ( 'PPIx::Regexp::Token::Modifier' );
 content ( 'n' );
 
 SKIP: {
-    SUFFICIENT_UTF8_SUPPORT
-	or skip 'Weird delimiters test requires Perl 5.8.1 or above', 43;
+    SUFFICIENT_UTF8_SUPPORT_FOR_WEIRD_DELIMITERS
+	or skip 'Weird delimiters test requires Perl 5.8.3 or above', 43;
 
     my $delim = "\N{COMBINING CIRCUMFLEX ACCENT}";
 
@@ -11611,8 +11611,8 @@ SKIP: {
 }
 
 SKIP: {
-    SUFFICIENT_UTF8_SUPPORT
-	or skip 'Truly weird delimiters test requires Perl 5.8.1 or above', 114;
+    SUFFICIENT_UTF8_SUPPORT_FOR_WEIRD_DELIMITERS
+	or skip 'Truly weird delimiters test requires Perl 5.8.3 or above', 114;
 
     $ENV{AUTHOR_TESTING}
 	or skip 'Truly weird delimiters are noisy, therefore author tests', 114;
@@ -11636,7 +11636,7 @@ SKIP: {
     choose  ( 2 );
     class   ( 'PPIx::Regexp::Token::Delimiter' );
     content ( $delim );
-    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_introduced => [], '5.008003' );
     value   ( perl_version_removed => [], undef );
     choose  ( 3 );
     class   ( 'PPIx::Regexp::Token::Literal' );
@@ -11646,7 +11646,7 @@ SKIP: {
     choose  ( 4 );
     class   ( 'PPIx::Regexp::Token::Delimiter' );
     content ( $delim );
-    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_introduced => [], '5.008003' );
     value   ( perl_version_removed => [], undef );
     choose  ( 5 );
     class   ( 'PPIx::Regexp::Token::Modifier' );
@@ -11658,7 +11658,7 @@ SKIP: {
     value   ( failures => [], 0 );
     class   ( 'PPIx::Regexp' );
     count   ( 4 );
-    value   ( perl_version_introduced => [], '5.005' );
+    value   ( perl_version_introduced => [], '5.008003' );
     value   ( perl_version_removed => [], undef );
     choose  ( child => 0 );
     class   ( 'PPIx::Regexp::Token::Structure' );
@@ -11713,7 +11713,7 @@ SKIP: {
     choose  ( 2 );
     class   ( 'PPIx::Regexp::Token::Delimiter' );
     content ( $delim );
-    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_introduced => [], '5.008003' );
     value   ( perl_version_removed => [], undef );
     choose  ( 3 );
     class   ( 'PPIx::Regexp::Token::Literal' );
@@ -11723,7 +11723,7 @@ SKIP: {
     choose  ( 4 );
     class   ( 'PPIx::Regexp::Token::Delimiter' );
     content ( $delim );
-    value   ( perl_version_introduced => [], '5.000' );
+    value   ( perl_version_introduced => [], '5.008003' );
     value   ( perl_version_removed => [], undef );
     choose  ( 5 );
     class   ( 'PPIx::Regexp::Token::Modifier' );
@@ -11735,7 +11735,7 @@ SKIP: {
     value   ( failures => [], 0 );
     class   ( 'PPIx::Regexp' );
     count   ( 4 );
-    value   ( perl_version_introduced => [], '5.005' );
+    value   ( perl_version_introduced => [], '5.008003' );
     value   ( perl_version_removed => [], undef );
     choose  ( child => 0 );
     class   ( 'PPIx::Regexp::Token::Structure' );

@@ -35,7 +35,7 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token::Structure };
 
-use PPIx::Regexp::Constant qw{ @CARP_NOT };
+use PPIx::Regexp::Constant qw{ MINIMUM_PERL @CARP_NOT };
 
 our $VERSION = '0.060_03';
 
@@ -44,6 +44,20 @@ our $VERSION = '0.060_03';
 
 sub explain {
     return 'Regular expression or replacement string delimiter';
+}
+
+=head2 perl_version_introduced
+
+Experimentation with weird delimiters shows that they did not actually
+work until Perl 5.8.3, so we return C<'5.008003'> for such delimiters.
+
+=cut
+
+sub perl_version_introduced {
+    my ( $self ) = @_;
+    $self->content() =~ m/ \A [[:^ascii:]] \z /smx
+	and return '5.008003';
+    return MINIMUM_PERL;
 }
 
 =head2 perl_version_removed
