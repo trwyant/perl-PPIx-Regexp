@@ -11,7 +11,7 @@ use base qw{ PPIx::Regexp::Token::GroupType };
 
 use PPIx::Regexp::Constant qw{ @CARP_NOT };
 
-our $VERSION = '0.060_04';
+our $VERSION = '0.061';
 
 {
     my $expl = 'All characters must be in same script';

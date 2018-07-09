@@ -1,30 +1,13 @@
-0.060_04	2018-07-02	T. R. Wyant
-    Weird delimiters did not work until 5.8.3.
+0.061		2018-07-09	T. R. Wyant
+    Only standalone graphemes and non-characters allowed as delimiters
+    starting with Perl 5.29.0.
     
-    This was determined the hard way. So we return that as the minimum
-    version for non-ASCII delimiters, and skip the tests on earlier Perls.
+    Non-ASCII delimiters started working in 5.8.3, so that is what
+    perl_version_introduced() returns for them.
 
-0.060_03	2018-06-30	T. R. Wyant
-    Silence test warnings under older Perls (I hope).
-
-0.060_02	2018-06-29	T. R. Wyant
-    Perl 5.29.0 also prohibits unassigned code points while explicitly
-    allowing non-characters (permanently unassigned code points) and
-    illegal code points (above 0x10FFFF).
-
-    I did not pick up on this the first time around. Sigh.
-
-0.060_01	2018-06-28	T. R. Wyant
-    Only standalone grapheme delimiters allowed starting w/ 5.29.0.
-
-    This actually means significantly expanding the delimiters allowed, and
-    then having perl_version_removed() return '5.029' if the delimiter
-    matches /\p{Mark}/. This code does not operate under Perl 5.6 because it
-    can not compile the regular expression.
-
-    Collateral with this, accept word characters as delimiters, but only
-    with at least one space between the operator and the expression -- that
-    is, 'qr xyxx' is OK, but 'qrxyxx' is not.
+    Collateral with all this, accept word characters as delimiters, but
+    only with at least one space between the operator and the expression
+    -- that is, 'qr xyx' is OK, but 'qrxyx' is not.
 
 0.060		2018-06-16	T. R. Wyant
     \N{} now parses as the unknown token, not NoOp, regardless of the
