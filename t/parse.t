@@ -11614,12 +11614,21 @@ SKIP: {
     SUFFICIENT_UTF8_SUPPORT_FOR_WEIRD_DELIMITERS
 	or skip 'Truly weird delimiters test requires Perl 5.8.3 or above', 114;
 
+=begin comment
+
     $ENV{AUTHOR_TESTING}
 	or skip 'Truly weird delimiters are noisy, therefore author tests', 114;
+
+=end comment
+
+=cut
 
     no warnings qw{ utf8 };
 
     my $delim = "\N{U+FFFE}";	# Permanent noncharacter
+    replace_characters(
+	$delim	=> '\\N{U+FFFE}',
+    );
 
     tokenize( "qr ${delim}x$delim" );
     count   ( 6 );
@@ -11697,6 +11706,9 @@ SKIP: {
     value   ( perl_version_removed => [], undef );
 
     $delim = "\N{U+11FFFF}";	# Illegal character
+    replace_characters(
+	$delim	=> '\\N{U+11FFFF}',
+    );
 
     tokenize( "qr ${delim}x$delim" );
     count   ( 6 );
@@ -11773,6 +11785,11 @@ SKIP: {
     value   ( perl_version_introduced => [], '5.000' );
     value   ( perl_version_removed => [], undef );
 }
+
+# The following is not needed at this point, but will be if I add any
+# tests below here that do not need the somewhat-expensive character
+# replacement machinery.
+replace_characters();
 
 done_testing;
 

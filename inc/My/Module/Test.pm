@@ -3,7 +3,9 @@ package My::Module::Test;
 use strict;
 use warnings;
 
-use Exporter qw{ import };
+use Exporter;
+
+our @ISA = ( qw{ Exporter } );
 
 use PPIx::Regexp;
 use PPIx::Regexp::Dumper;
@@ -40,6 +42,7 @@ our @EXPORT_OK = qw{
     plan
     ppi
     result
+    replace_characters
     skip
     tokenize
     true
@@ -62,6 +65,8 @@ my (
     $parse,		# Result of parse:
     			#    array ref if set by tokenize(), or
 			#    PPIx::Regexp object if set by parse()
+    %replace_characters, # Troublesome characters replaced in output
+			# before testing
     $result,		# Operation result.
 );
 
@@ -280,7 +285,8 @@ sub parse {		## no critic (RequireArgUnpacking)
     # cperl does not seem to like goto &xxx; it throws a deep recursion
     # error if you do it enough times.
     $Test::Builder::Level = $Test::Builder::Level + 1;
-    return isa_ok( $parse, 'PPIx::Regexp', $regexp );
+    return isa_ok( $parse, 'PPIx::Regexp',
+	_replace_characters( $regexp ) );
 }
 
 sub ppi {		## no critic (RequireArgUnpacking)
@@ -298,6 +304,11 @@ sub ppi {		## no critic (RequireArgUnpacking)
     # error if you do it enough times.
     $Test::Builder::Level = $Test::Builder::Level + 1;
     return is( $result, $expect, "$kind $nav ppi() content '$safe'" );
+}
+
+sub replace_characters {
+    %replace_characters	= @_;
+    return;
 }
 
 sub result {
@@ -320,7 +331,8 @@ sub tokenize {		## no critic (RequireArgUnpacking)
     $nav = '';
     $opt->{test} or return;
     $Test::Builder::Level = $Test::Builder::Level + 1;
-    return isa_ok( $obj, 'PPIx::Regexp::Tokenizer', $regexp );
+    return isa_ok( $obj, 'PPIx::Regexp::Tokenizer',
+	_replace_characters( $regexp ) );
 }
 
 sub true {		## no critic (RequireArgUnpacking)
@@ -401,7 +413,7 @@ sub _method_result {		## no critic (RequireArgUnpacking)
     } else {
 	$safe = 'undef';
     }
-    @_ = ( $result, $expect, "$kind $nav $method $safe" );
+    @_ = _replace_characters( $result, $expect, "$kind $nav $method $safe" );
     goto &is;
 }
 
@@ -448,6 +460,21 @@ sub __quote {
 	}
     }
     return join( ', ', @rslt );
+}
+
+sub _replace_characters {
+    my @arg = @_;
+    if ( keys %replace_characters ) {
+	foreach ( @arg ) {
+	    $_ = join '',
+	    # The following assumes I will never want to replace 0.
+	    map { $replace_characters{$_} || $_ }
+	    split qr<>;
+	}
+    }
+    wantarray
+	or return join '', @arg;
+    return @arg;
 }
 
 1;
