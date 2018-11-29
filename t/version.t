@@ -326,7 +326,7 @@ m_call	perl_version_introduced => MINIMUM_PERL, note => '5.3.7 perlre';
 m_call	perl_version_removed	=> undef;
 SKIP: {
     SUFFICIENT_UTF8_SUPPORT_FOR_WEIRD_DELIMITERS
-	or skip 'Weird delimiters test requires Perl 5.8.3 or above', 43;
+	or skip 'Weird delimiters test requires Perl 5.8.3 or above', 3;
 
     token	"\N{COMBINING CIRCUMFLEX ACCENT}";
     m_call	perl_version_introduced => '5.008003', note => 'experimentation';
