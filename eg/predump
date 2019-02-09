@@ -163,6 +163,10 @@ foreach my $re ( process_args( \%opt, @ARGV ) ) {
     sub extract_res {
 	my ( $doc, $opt ) = @_;
 	my $parse = $opt->{parse} || 'regex';
+	'regex' eq $parse
+	    and return PPIx::Regexp->extract_regexps( $doc );
+	# TODO get rid of this whole mess in favor of the above line
+	# once the string functionality goes away.
 	return (
 	    map { @{ $doc->find( $_ ) || [] } } @{
 	    $classes{$parse} || $classes{regex} }

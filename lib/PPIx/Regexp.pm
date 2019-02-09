@@ -523,6 +523,38 @@ sub explain {
     return;
 }
 
+=head2 extract_regexps
+
+ my $doc = PPI::Document->new( $path );
+ $doc->index_locations();
+ my @res = PPIx::Regexp->extract_regexps( $doc )
+
+This convenience (well, sort-of) static method takes as its argument a
+L<PPI::Document|PPI::Document> object and returns C<PPIx::Regexp>
+objects corresponding to all regular expressions found in it, in the
+order in which they occur in the document. You will need to keep a
+reference to the original L<PPI::Document|PPI::Document> object if you
+wish to be able to recover the original L<PPI::Element|PPI::Element>
+objects via the L<PPIx::Regexp::Element|PPIx::Regexp::Element>
+L<source()|PPIx::Regexp::Element/source> method.
+
+=cut
+
+sub extract_regexps {
+    my ( $class, $doc ) = @_;
+    my @found = map { @{ $doc->find( $_ ) || [] } } qw{
+	PPI::Token::QuoteLike::Regexp
+	PPI::Token::Regexp::Match
+	PPI::Token::Regexp::Substitute
+    };
+    return ( map { $class->new( $_ ) } map { $_->[0] }
+	sort { $a->[1][0] <=> $b->[1][0] || $a->[1][1] <=> $b->[1][1] }
+	map { [ $_, $_->location() ] }
+	@found
+    );
+}
+
+
 =head2 failures
 
  print "There were ", $re->failures(), " parse failures\n";
