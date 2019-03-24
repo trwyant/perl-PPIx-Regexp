@@ -250,6 +250,10 @@ m_call	perl_version_removed	=> undef;
 token	'\N', note => 'Match any character but a new-line character';
 m_call	perl_version_introduced => '5.011', note => 'perl5110delta';
 m_call	perl_version_removed	=> undef;
+token	'\\p{Script=/Latin|Greek/}',
+    note => 'Match a character with the given wildcard property value';
+m_call	perl_version_introduced => '5.029009', note => 'perl5299delta';
+m_call	perl_version_removed	=> undef;
 
 klass	'PPIx::Regexp::Token::Code', note => 'Code', report => 0;
 token	'{foo}', note => 'Code';
