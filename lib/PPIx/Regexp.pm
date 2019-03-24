@@ -124,28 +124,23 @@ L<perl_version_removed()|/perl_version_removed> will return the version
 in which they were removed. When the new functionality appears, the
 parse produced by this software will reflect the new functionality.
 
-B<NOTE> that a literal left curly after a literal character was made an
-error in Perl 5.25.1, but became a warning again in 5.27.1 due to its
-use in GNU Autoconf.  Whether it will ever become illegal again is not
-clear to me based on the contents of F<perl5271delta>. At the moment
-C<PPIx::Regexp> considers this usage to have been removed in 5.25.1, and
-this will not change based on anything in 5.27.x. But if 5.26.1 comes
-out allowing this usage, the removal version will become C<undef>. The
-same will apply to any other usages that were re-allowed in 5.27.1, if I
-can identify them.
+B<NOTE> that the situation with a literal left curly after a literal
+character is complicated. It was made an error in Perl 5.25.1, and
+remained so through all 5.26 releases, but became a warning again in
+5.27.1 due to its use in GNU Autoconf. Whether it will ever become
+illegal again is not clear to me based on the contents of
+F<perl5271delta>. At the moment
+L<perl_version_removed()|PPIx::Regexp::Element/perl_version_removed>
+returns C<undef>, but obviously that is not the whole story, and methods
+L<accepts_perl()|PPIx::Regexp::Element/accepts_perl> and
+L<requirements_for_perl()|PPIx::Regexp::Element/requirements_for_perl>
+were introduced to deal with this complication.
 
 =back
 
 There are very probably other examples of this. When they come to light
 they will be documented as producing the modern parse, and the code
 modified to produce this parse if necessary.
-
-The functionality that parses string literals (the C<parse> argument to
-C<new()>) was introduced in version 0.045, but its use is discouraged.
-The preferred package for string literals is
-L<PPIx::QuoteLike|PPIx::QuoteLike>, and once I consider that package to
-be stable the string literal functionality in this package will be put
-through a deprecation cycle and removed.
 
 =head1 METHODS
 
