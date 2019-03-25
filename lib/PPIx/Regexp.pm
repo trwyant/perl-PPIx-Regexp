@@ -136,6 +136,11 @@ L<accepts_perl()|PPIx::Regexp::Element/accepts_perl> and
 L<requirements_for_perl()|PPIx::Regexp::Element/requirements_for_perl>
 were introduced to deal with this complication.
 
+=item C<\o{...}>
+
+is parsed as the octal equivalent of C<\x{...}>. This is its meaning as
+of perl 5.13.2. Before 5.13.2 it was simply literal C<'o'> and so on.
+
 =back
 
 There are very probably other examples of this. When they come to light
