@@ -50,7 +50,7 @@ our $VERSION = '0.063';
 
 use constant UNICODE_PROPERTY_LITERAL =>
     qr/ \A \\ [Pp] (?:
-		\{ \s* \^? [\w:=\s-]+ \} |
+		\{ \s* \^? \w [\w:=\s-]* \} |
 		[CLMNPSZ]	# perluniprops for 5.26.1
     ) /smx;
 
@@ -258,6 +258,14 @@ sub __PPIX_TOKENIZER__regexp {
 
     if ( my $accept = $tokenizer->find_regexp( UNICODE_PROPERTY ) ) {
 	return $accept;
+    }
+
+    if ( my $accept = $tokenizer->find_regexp( qr< \A \\ p [{] \s* [}] >smx )
+    ) {
+	return $tokenizer->make_token( $accept, TOKEN_UNKNOWN, {
+		error => 'Empty \\p{} is an error',
+	    },
+	);
     }
 
     return;

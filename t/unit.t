@@ -1934,7 +1934,6 @@ content ( '\\o{ }' );
 value   ( ordinal => [], 0 );
 
 note	q</\\o{ }/ is an error if "use re 'strict'" is in effect>;
-
 parse   ( '/\\o{ }/', strict => 1 );
 value   ( failures => [], 1 );
 klass   ( 'PPIx::Regexp' );
@@ -1943,6 +1942,20 @@ choose  ( child => 1, child => 0 );
 klass   ( 'PPIx::Regexp::Token::Unknown' );
 content ( '\\o{ }' );
 error   ( 'Non-octal character in \\o{...}' );
+
+
+
+# \p{}
+
+note	q</\\p{ }/ is an error>;
+parse   ( '/\\p{ }/' );
+value   ( failures => [], 1 );
+klass   ( 'PPIx::Regexp' );
+count   ( 3 );
+choose  ( child => 1, child => 0 );
+klass   ( 'PPIx::Regexp::Token::Unknown' );
+content ( '\\p{ }' );
+error   ( 'Empty \\p{} is an error' );
 
 
 
