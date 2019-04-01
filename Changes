@@ -1,4 +1,4 @@
-0.063_01	2019-03-25	T. R. Wyant
+0.064		2019-04-01	T. R. Wyant
     Empty \p{} should be an error.
     
     \x{} and \x{ non-hex } should be errors under "use re 'strict'"
