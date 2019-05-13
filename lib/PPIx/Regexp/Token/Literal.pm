@@ -70,7 +70,13 @@ sub perl_version_introduced {
     my ( $self ) = @_;
     exists $self->{perl_version_introduced}
 	and return $self->{perl_version_introduced};
-    ( my $content = $self->content() ) =~ m/ \A \\ o /smx
+    my $content = $self->content();
+    my $main = $self->main_structure();
+    $main
+	and $content =~ m/ \A \\ N \{ /smx
+	and not $main->interpolates()
+	and return ( $self->{perl_version_introduced} = '5.029010' );
+    $content =~ m/ \A \\ o /smx
 	and return ( $self->{perl_version_introduced} = '5.013003' );
     $content =~ m/ \A \\ N [{] U [+] /smx
 	and return ( $self->{perl_version_introduced} = '5.008' );
