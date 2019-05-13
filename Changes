@@ -1,3 +1,10 @@
+0.064_02	2019-05-13	T. R. Wyant
+    Support proper version for qr'\N{name}'. Until 5.29.10 this
+    construction failed to parse because it did not interpolate. But
+    PPIx::Regexp blithely ignored this detail. As of 5.29.10, something
+    like m'\N{LATIN CAPITAL LETTER L}' matches identically to m'L'. So I
+    implemented that.
+
 0.064_01	2019-05-07	T. R. Wyant
     Have explain() recognize Unicode property wildcards.
 
