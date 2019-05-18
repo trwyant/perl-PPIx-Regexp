@@ -7,7 +7,7 @@ use warnings;
 
 use Carp;
 
-our $VERSION = '0.064_02';
+our $VERSION = '0.064_03';
 
 use constant ARRAY_REF	=> ref [];
 

@@ -1,3 +1,7 @@
+0.064_03	2019-05-18	T. R. Wyant
+    Quash undef error in __is_ppi_regexp_element() when passed a
+    PPI::Token::Regexp::Transliterate
+
 0.064_02	2019-05-13	T. R. Wyant
     Support proper version for qr'\N{name}'. Until 5.29.10 this
     construction failed to parse because it did not interpolate. But

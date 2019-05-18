@@ -40,7 +40,7 @@ use base qw{ PPIx::Regexp::Structure::Main };
 
 use PPIx::Regexp::Constant qw{ @CARP_NOT };
 
-our $VERSION = '0.064_02';
+our $VERSION = '0.064_03';
 
 sub can_be_quantified { return; }
 
