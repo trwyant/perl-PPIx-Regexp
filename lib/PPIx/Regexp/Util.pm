@@ -22,7 +22,7 @@ our $VERSION = '0.064_02';
 {
 
     my @ppi_zoo = (
-	[ 'PPI::Token::Regexp::Transliterate' ],
+	[ 'PPI::Token::Regexp::Transliterate', '' ],
 
 	[ 'PPI::Token::Regexp', 'PPIx::Regexp::Tokenizer' ],
 	[ 'PPI::Token::QuoteLike::Regexp', 'PPIx::Regexp::Tokenizer' ],
