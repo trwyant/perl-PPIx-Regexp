@@ -1423,8 +1423,8 @@ can be abbreviated by removing the leading 'PPIx::Regexp::'.
 If no class is specified, this method does nothing.
 
 The expectation lasts from the next time L</get_token> is called until
-the next time L<make_token> makes a significant token, or until the next
-C<expect> call if that is done sooner.
+the next time L</make_token> makes a significant token, or until the
+next C<expect> call if that is done sooner.
 
 =head2 find_regexp
 

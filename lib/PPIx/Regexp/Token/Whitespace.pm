@@ -11,7 +11,7 @@ PPIx::Regexp::Token::Whitespace - Represent whitespace
 =head1 INHERITANCE
 
 C<PPIx::Regexp::Token::Whitespace> is a
-L<PPIx::Regexp::NoOp|PPIx::Regexp::NoOp>.
+L<PPIx::Regexp::Token::NoOp|PPIx::Regexp::Token::NoOp>.
 
 C<PPIx::Regexp::Token::Whitespace> has no descendants.
 

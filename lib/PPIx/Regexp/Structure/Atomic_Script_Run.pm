@@ -31,9 +31,7 @@ PPIx::Regexp::Structure::Atomic_Script_Run - Represent an atomic script run grou
 =head1 INHERITANCE
 
 C<PPIx::Regexp::Structure::Atomic_Script_Run> is a
-L<PPIx::Regexp::Structure|PPIx::Regexp::Structure::Script_Run|PPIx::Regexp::Structure|PPIx::Regexp::Structure::Script_Run>
-and a
-L<PPIx::Regexp::Structure|PPIx::Regexp::Structure::Subexpression|PPIx::Regexp::Structure|PPIx::Regexp::Structure::Subexpression>
+L<PPIx::Regexp::Structure|PPIx::Regexp::Structure>.
 
 C<PPIx::Regexp::Structure::Atomic_Script_Run> has no descendants.
 
