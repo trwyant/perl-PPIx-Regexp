@@ -37,7 +37,7 @@ use 5.006;
 
 use Carp;
 use List::Util qw{ max min };
-use List::MoreUtils qw{ firstidx };
+use List::SomeUtils qw{ firstidx };
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr weaken };
 
