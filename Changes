@@ -1,4 +1,4 @@
-0.065_01	2019-08-08	T. R. Wyant
+0.066		2019-08-16	T. R. Wyant
     Fix broken POD, and add tests to ensure it remains fixed.
 
 0.065		2019-05-25	T. R. Wyant
