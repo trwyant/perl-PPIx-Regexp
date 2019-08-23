@@ -197,6 +197,8 @@ will be put through a deprecation cycle and retracted.
 
 sub explain {
     my ( $self ) = @_;
+    defined $self->{explanation}
+	and return $self->{explanation};
     my $explanation = $self->__explanation();
     my $content = $self->content();
     if ( my $main = $self->main_structure() ) {

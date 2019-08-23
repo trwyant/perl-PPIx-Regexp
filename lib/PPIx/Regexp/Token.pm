@@ -68,7 +68,9 @@ sub __new {
 	content => $content,
     };
 
-    foreach my $key ( qw{ perl_version_introduced perl_version_removed } ) {
+    foreach my $key ( qw{
+	    explanation perl_version_introduced perl_version_removed
+	} ) {
 	defined $arg{$key}
 	    and $self->{$key} = $arg{$key};
     }
