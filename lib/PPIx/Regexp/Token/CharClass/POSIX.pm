@@ -113,9 +113,12 @@ sub perl_version_introduced {
     }
 
     sub __no_explanation {
-##	my ( $self ) = @_;		# Invocant unused
-	my $msg = sprintf q<Unknown POSIX character class>;
-	return $msg;
+	my ( $self ) = @_;
+	local $_ = $self->content();
+	m/ \A \[ = ( . ) = \] \z /smx
+	    and return "POSIX Character Equivalent (to '$1'; " .
+		"unimplemented in Perl)";
+	return q<Unknown POSIX character class>;
     }
 
 }
