@@ -772,7 +772,7 @@ guess. That is, it employs various heuristics on the code to try to
 figure out what the programmer wanted. These heuristics are documented
 as being undocumented (!) and subject to change without notice. As an
 example of the problems even F<perl> faces in parsing Perl, see
-L<https://rt.perl.org/Public/Bug/Display.html?id=133027>.
+L<https://github.com/perl/perl5/issues/16478>.
 
 Given this situation, this module's chances of duplicating every Perl
 version's interpretation of every regular expression are pretty much nil.
@@ -908,7 +908,7 @@ is again supported.
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
-L<http://rt.cpan.org>, or in electronic mail to the author.
+L<https://rt.cpan.org>, or in electronic mail to the author.
 
 =head1 AUTHOR
 

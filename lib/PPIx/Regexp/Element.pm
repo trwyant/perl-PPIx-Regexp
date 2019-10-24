@@ -549,7 +549,7 @@ list context.
 
 This method was inspired by jb's question on Perl Monks about stripping
 comments and white space from a regular expression:
-L<http://www.perlmonks.org/?node_id=1207556>
+L<https://www.perlmonks.org/?node_id=1207556>
 
 This method was added in version 0.053_01
 
@@ -905,7 +905,7 @@ __END__
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
-L<http://rt.cpan.org>, or in electronic mail to the author.
+L<https://rt.cpan.org>, or in electronic mail to the author.
 
 =head1 AUTHOR
 
