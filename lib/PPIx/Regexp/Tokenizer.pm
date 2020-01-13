@@ -46,7 +46,7 @@ use PPIx::Regexp::Token::Recursion		();
 use PPIx::Regexp::Token::Structure		();
 use PPIx::Regexp::Token::Unknown		();
 use PPIx::Regexp::Token::Whitespace		();
-use PPIx::Regexp::Util qw{ __is_ppi_regexp_element __instance };
+use PPIx::Regexp::Util qw{ is_ppi_regexp_element __instance };
 use Scalar::Util qw{ looks_like_number };
 
 our $VERSION = '0.067';
@@ -157,7 +157,7 @@ defined $DEFAULT_POSTDEREF
 	};
 
 	if ( __instance( $re, 'PPI::Element' ) ) {
-	    __is_ppi_regexp_element( $re )
+	    is_ppi_regexp_element( $re )
 		or return __set_errstr( ref $re, 'not supported by', $class );
 	    # TODO conditionalizstion on PPI class does not really
 	    # belong here, but at the moment I have no other idea of
