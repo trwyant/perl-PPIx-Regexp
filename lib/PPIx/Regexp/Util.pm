@@ -119,6 +119,8 @@ sub __ns_can {
 sub __to_ordinal_en {
     my ( $num ) = @_;
     $num += 0;
+    1 == int( ( $num % 100 ) / 10 )	# teens
+	and return "${num}th";
     1 == $num % 10
 	and return "${num}st";
     2 == $num % 10
