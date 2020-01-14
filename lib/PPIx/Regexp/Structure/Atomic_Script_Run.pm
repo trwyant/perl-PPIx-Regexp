@@ -11,7 +11,7 @@ use base qw{ PPIx::Regexp::Structure };
 
 use PPIx::Regexp::Constant qw{ @CARP_NOT };
 
-our $VERSION = '0.067';
+our $VERSION = '0.067_01';
 
 
 1;
