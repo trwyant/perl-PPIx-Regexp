@@ -48,7 +48,6 @@ our @CARP_NOT = qw{
     PPIx::Regexp::Node
     PPIx::Regexp::Node::Range
     PPIx::Regexp::Node::Unknown
-    PPIx::Regexp::StringTokenizer
     PPIx::Regexp::Structure
     PPIx::Regexp::Structure::Assertion
     PPIx::Regexp::Structure::Atomic_Script_Run
