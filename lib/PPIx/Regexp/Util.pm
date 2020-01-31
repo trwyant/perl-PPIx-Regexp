@@ -18,7 +18,7 @@ our @EXPORT_OK = qw{
     __ns_can __to_ordinal_en
 };
 
-our $VERSION = '0.068';
+our $VERSION = '0.068_01';
 
 sub is_ppi_regexp_element {
     my ( $elem ) = @_;
