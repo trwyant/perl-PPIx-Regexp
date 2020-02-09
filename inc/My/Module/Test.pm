@@ -35,8 +35,10 @@ our @EXPORT_OK = qw{
     false
     finis
     equals
+    is
     navigate
     note
+    ok
     parse
     pass
     plan

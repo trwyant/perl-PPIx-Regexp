@@ -243,6 +243,34 @@ sub error {
     return $self->{error};
 }
 
+=begin comment
+
+=head2 first_element
+
+This method throws an exception saying that it must be overridden.
+
+=end comment
+
+=cut
+
+sub first_element {
+    confess 'Bug - first_element must be overridden';
+}
+
+=begin comment
+
+=head2 first_token
+
+This method throws an exception saying that it must be overridden.
+
+=end comment
+
+=cut
+
+sub first_token {
+    confess 'Bug - first_token must be overridden';
+}
+
 =head2 in_regex_set
 
 This method returns a true value if the invocant is contained in an
@@ -371,6 +399,25 @@ sub next_sibling {
     my ( $method, $inx ) = $self->__my_nav()
 	or return;
     return $self->_parent()->$method( $inx + 1 );
+}
+
+=head2 next_token
+
+This method returns the next token, or nothing if there is none.
+
+Unlike L<next_element()|/next_element>, this will walk the parse tree.
+
+=cut
+
+sub next_token {
+    my ( $self ) = @_;
+    if ( my $next = $self->next_element() ) {
+	return $next->first_token();
+    } elsif ( my $parent = $self->parent() ) {
+	return $parent->next_token();
+    } else {
+	return;
+    }
 }
 
 =head2 parent

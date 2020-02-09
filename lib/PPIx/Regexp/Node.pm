@@ -297,6 +297,25 @@ sub first_element {
     return $self->{children}[0];
 }
 
+=head2 first_token
+
+This method returns the first token in the node. If there is none, it
+returns nothing.
+
+=cut
+
+sub first_token {
+    my ( $self ) = @_;
+    my $elem = $self->first_element()
+	or return;
+    my $token;
+    while ( ! ( $token = $elem->first_token() ) ) {
+	$elem = $elem->next_element()
+	    or return;
+    }
+    return $token;
+}
+
 =head2 last_element
 
 This method returns the last element in the node.
