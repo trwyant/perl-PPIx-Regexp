@@ -306,6 +306,34 @@ greediness token is possible.
 
 sub is_quantifier { return; }
 
+=begin comment
+
+=head2 last_element
+
+This method throws an exception saying that it must be overridden.
+
+=end comment
+
+=cut
+
+sub last_element {
+    confess 'Bug - last_element must be overridden';
+}
+
+=begin comment
+
+=head2 last_token
+
+This method throws an exception saying that it must be overridden.
+
+=end comment
+
+=cut
+
+sub last_token {
+    confess 'Bug - last_token must be overridden';
+}
+
 =head2 main_structure
 
 This method returns the
@@ -520,6 +548,25 @@ sub previous_sibling {
 	or return;
     $inx or return;
     return $self->_parent()->$method( $inx - 1 );
+}
+
+=head2 previous_token
+
+This method returns the previous token, or nothing if there is none.
+
+Unlike L<previous_element()|/previous_element>, this will walk the parse tree.
+
+=cut
+
+sub previous_token {
+    my ( $self ) = @_;
+    if ( my $previous = $self->previous_element() ) {
+	return $previous->last_token();
+    } elsif ( my $parent = $self->parent() ) {
+	return $parent->previous_token();
+    } else {
+	return;
+    }
 }
 
 =head2 remove_insignificant

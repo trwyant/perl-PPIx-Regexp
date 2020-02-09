@@ -95,6 +95,17 @@ sub first_token {
     return $self;
 }
 
+=head2 last_token
+
+This method returns its invocant.
+
+=cut
+
+sub last_token {
+    my ( $self ) = @_;
+    return $self;
+}
+
 sub perl_version_introduced {
     my ( $self ) = @_;
     return defined $self->{perl_version_introduced} ?

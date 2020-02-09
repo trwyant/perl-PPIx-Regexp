@@ -327,6 +327,25 @@ sub last_element {
     return $self->{children}[-1];
 }
 
+=head2 last_token
+
+This method returns the last token in the node. If there is none, it
+returns nothing.
+
+=cut
+
+sub last_token {
+    my ( $self ) = @_;
+    my $elem = $self->last_element()
+	or return;
+    my $token;
+    while ( ! ( $token = $elem->last_token() ) ) {
+	$elem = $elem->previous_element()
+	    or return;
+    }
+    return $token;
+}
+
 =head2 perl_version_introduced
 
 This method returns the maximum value of C<perl_version_introduced>

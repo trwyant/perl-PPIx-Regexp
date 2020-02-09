@@ -2092,6 +2092,47 @@ value	( requirements_for_perl => [],
     ok ! navigate( 'next_token' ), 'There is no next token';
 }
 
+{
+    parse	( '/^(?i:foo)$/' );
+    navigate	( 'last_token' );
+    klass	( 'PPIx::Regexp::Token::Modifier' );
+    content	( '' );
+    navigate	( 'previous_token' );
+    klass	( 'PPIx::Regexp::Token::Delimiter' );
+    content	( '/' );
+    navigate	( 'previous_token' );
+    klass	( 'PPIx::Regexp::Token::Assertion' );
+    content	( '$' );
+    navigate	( 'previous_token' );
+    klass	( 'PPIx::Regexp::Token::Structure' );
+    content	( ')' );
+    navigate	( 'previous_token' );
+    klass	( 'PPIx::Regexp::Token::Literal' );
+    content	( 'o' );
+    navigate	( 'previous_token' );
+    klass	( 'PPIx::Regexp::Token::Literal' );
+    content	( 'o' );
+    navigate	( 'previous_token' );
+    klass	( 'PPIx::Regexp::Token::Literal' );
+    content	( 'f' );
+    navigate	( 'previous_token' );
+    klass	( 'PPIx::Regexp::Token::GroupType::Modifier' );
+    content	( '?i:' );
+    navigate	( 'previous_token' );
+    klass	( 'PPIx::Regexp::Token::Structure' );
+    content	( '(' );
+    navigate	( 'previous_token' );
+    klass	( 'PPIx::Regexp::Token::Assertion' );
+    content	( '^' );
+    navigate	( 'previous_token' );
+    klass	( 'PPIx::Regexp::Token::Delimiter' );
+    content	( '/' );
+    navigate	( 'previous_token' );
+    klass	( 'PPIx::Regexp::Token::Structure' );
+    content	( '' );
+    ok ! navigate( 'previous_token' ), 'There is no next token';
+}
+
 SKIP: {
     $is_ascii
 	or skip(
