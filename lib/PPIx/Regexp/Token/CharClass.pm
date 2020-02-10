@@ -60,6 +60,15 @@ our $VERSION = '0.069';
 ##    return;
 ##}
 
+=head2 is_matcher
+
+This method returns a true value because a character class actually
+matches something.
+
+=cut
+
+sub is_matcher { return 1; }
+
 1;
 
 __END__

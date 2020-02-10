@@ -94,6 +94,15 @@ sub explain {
     return 'Perl expression';
 }
 
+=head2 is_matcher
+
+This method returns C<undef> because a static analysis can not in
+general tell whether an interpolated value matches anything.
+
+=cut
+
+sub is_matcher { return undef; }	## no critic (ProhibitExplicitReturnUndef)
+
 =head2 ppi
 
 This convenience method returns the L<PPI::Document|PPI::Document>

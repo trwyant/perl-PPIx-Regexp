@@ -387,6 +387,13 @@ sub _format_default_modifiers {
     return sprintf '%-8s( %s );', $subr, join ', ', @arg;
 }
 
+sub _format_matcher_dump {
+    my ( undef, $elem ) = @_;
+    my $value = $elem->is_matcher();
+    return sprintf 'is_matcher=%s',
+	$value ? 'true' : defined $value ?  'false' : 'undef';
+}
+
 sub _format_modifiers_dump {
     my ( undef, $elem ) = @_;		# Invocant unused
     my %mods = $elem->modifiers();
@@ -574,6 +581,8 @@ sub _format_value {
 	    $self->isa( 'PPIx::Regexp::Structure::Modifier' )
 		and push @rslt, $dumper->_format_modifiers_dump(
 		$self->type( 0 ) );
+
+	    push @rslt, $dumper->_format_matcher_dump( $self );
 	}
 
 	foreach my $method ( 'start', undef, 'finish' ) {
@@ -700,6 +709,7 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__dump {
 		push @rslt, $dumper->_format_modifiers_dump( $self );
 	    }
 
+	    push @rslt, $dumper->_format_matcher_dump( $self );
 	}
 
 	@rslt = ( join "\t", @rslt );

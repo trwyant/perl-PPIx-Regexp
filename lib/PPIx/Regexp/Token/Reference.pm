@@ -136,6 +136,16 @@ sub is_relative {
     return $self->{is_relative};
 }
 
+=head2 is_matcher
+
+This method returns a true value because, although we do not actually
+perform an analysis on the referred-to entity, we presume it matches
+something.
+
+=cut
+
+sub is_matcher { return 1; }
+
 =head2 name
 
  print "The name is ", $ref->name(), "\n";

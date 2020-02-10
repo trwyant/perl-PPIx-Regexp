@@ -59,6 +59,15 @@ sub __new {
     return $self;
 }
 
+=head2 is_matcher
+
+This method returns C<undef> because a static analysis can not in
+general tell whether a piece of code matches anything.
+
+=cut
+
+sub is_matcher { return undef; }	## no critic (ProhibitExplicitReturnUndef)
+
 # Return true if the token can be quantified, and false otherwise
 # This can be quantified because it might interpolate a quantifiable
 # token. Of course, it might not, but we need to be permissive here.

@@ -346,6 +346,26 @@ sub last_token {
     return $token;
 }
 
+=head2 is_matcher
+
+This method returns a true value if any of the node's children does.
+Otherwise it returns C<undef> if any of the node's children does.
+Otherwise it returns a false (but defined) value.
+
+=cut
+
+sub is_matcher {
+    my ( $self ) = @_;
+    my $rslt = 0;
+    foreach my $kid ( @{ $self->{children} } ) {
+	my $kid_rslt = $kid->is_matcher()
+	    and return 1;
+	defined $kid_rslt
+	    or $rslt = $kid_rslt;
+    }
+    return $rslt;
+}
+
 =head2 perl_version_introduced
 
 This method returns the maximum value of C<perl_version_introduced>

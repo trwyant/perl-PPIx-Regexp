@@ -271,6 +271,37 @@ sub first_token {
     confess 'Bug - first_token must be overridden';
 }
 
+=head2 is_matcher
+
+This method reports on whether the element potentially matches
+something. Possible returns are a true value if it does, a false (but
+defined) value if it does not, or C<undef> if this can not be
+determined.
+
+The idea is to classify elements based on whether they potentially match
+something in the target string.
+
+This method is overridden to return C<undef> in
+L<PPIx::Regexp::Token::Code|PPIx::Regexp::Token::Code/is_matcher>,
+L<PPIx::Regexp::Token::Interpolation|PPIx::Regexp::Token::Interpolation/is_matcher>, and
+L<PPIx::Regexp::Token::Unknown|PPIx::Regexp::Token::Unknown/is_matcher>.
+
+This method is overridden to return a true value in
+L<PPIx::Regexp::Token::Assertion|PPIx::Regexp::Token::Assertion/is_matcher>,
+L<PPIx::Regexp::Token::CharClass|PPIx::Regexp::Token::CharClass/is_matcher>,
+L<PPIx::Regexp::Token::Literal|PPIx::Regexp::Token::Literal/is_matcher>,
+and
+L<PPIx::Regexp::Token::Reference|PPIx::Regexp::Token::Reference/is_matcher>.
+
+For L<PPIx::Regexp::Node|PPIx::Regexp::Node/is_matcher>, this method is
+overridden to return a value computed from the node's children.
+
+For anything else this method returns a false (but defined) value.
+
+=cut
+
+sub is_matcher { return 0; }
+
 =head2 in_regex_set
 
 This method returns a true value if the invocant is contained in an

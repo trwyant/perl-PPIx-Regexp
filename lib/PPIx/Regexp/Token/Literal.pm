@@ -66,6 +66,14 @@ sub explain {
     return 'Literal character';
 }
 
+=head2 is_matcher
+
+This method returns a true value because a literal matches itself.
+
+=cut
+
+sub is_matcher { return 1; }
+
 sub perl_version_introduced {
     my ( $self ) = @_;
     exists $self->{perl_version_introduced}

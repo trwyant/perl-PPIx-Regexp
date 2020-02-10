@@ -69,6 +69,15 @@ sub explain {
     return $self->{explanation};
 }
 
+=head2 is_matcher
+
+This method returns C<undef> because, since we could not identify the
+token, we have no idea whether it matches anything.
+
+=cut
+
+sub is_matcher { return undef; }	## no critic (ProhibitExplicitReturnUndef)
+
 =head2 ordinal
 
 This method returns the results of the ord built-in on the content

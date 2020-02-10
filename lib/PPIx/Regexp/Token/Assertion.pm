@@ -72,6 +72,15 @@ my @braced_assertions = (
     ],
 );
 
+=head2 is_matcher
+
+This method returns a true value because an assertion actually matches
+something.
+
+=cut
+
+sub is_matcher { return 1; }
+
 sub perl_version_introduced {
     my ( $self ) = @_;
     return ( $self->{perl_version_introduced} ||=
