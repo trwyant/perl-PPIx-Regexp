@@ -1,3 +1,16 @@
+0.069_001	2020-02-09	T. R. Wyant
+    NOT RELEASED TO CPAN.
+
+    Add method is_matcher(). This classifies objects as to whether they
+    actually match something in the target string. Possible returns are
+    true (they do), false but defined (they do not) and undef (no clue).
+
+    Add last_token(), previous_token(). These essentially walk the
+    parse tree backwards.
+
+    Add first_token(), next_token(). These essentially walk the parse
+    tree.
+
 0.069		2020-02-07	T. R. Wyant
     The PPIx::Regexp->new() 'parse' option is now fatal. This selected
     either string or regex parse. I consider the string parse a failed
