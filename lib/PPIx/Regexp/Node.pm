@@ -460,7 +460,8 @@ sub schild {
 
 =head2 schildren
 
-This method returns the significant children of the node.
+This method returns the significant children of the Node. If called in
+scalar context it returns the number of significant children.
 
 =cut
 
