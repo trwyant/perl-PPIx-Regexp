@@ -180,7 +180,7 @@ use PPIx::Regexp::Util qw{ __choose_tokenizer_class __instance };
 use Scalar::Util qw{ refaddr };
 use Text::Tabs ();
 
-our $VERSION = '0.069_001';
+our $VERSION = '0.069_002';
 
 =head2 new
 

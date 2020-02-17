@@ -1,3 +1,12 @@
+0.069_002	2020-02-17	T. R. Wyant
+    NOT RELEASED TO CPAN.
+
+    Support locations relative to containing document if specified to
+    PPIx::Regexp->new(), or if the string is a PPI::Element.
+    Specifically, add PPIx::Regexp->index_locations(),
+    PPIx::Regexp->flush_locations(), and
+    PPIx::Regexp::Element->location().
+
 0.069_001	2020-02-09	T. R. Wyant
     NOT RELEASED TO CPAN.
 
