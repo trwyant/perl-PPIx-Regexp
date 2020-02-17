@@ -346,6 +346,13 @@ sub last_token {
     return $token;
 }
 
+sub location {
+    my ( $self ) = @_;
+    my $token = $self->first_token()
+	or return undef;	## no critic (ProhibitExplicitReturnUndef)
+    return $token->location();
+}
+
 =head2 is_matcher
 
 This method returns a true value if any of the node's children does.

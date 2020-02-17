@@ -365,6 +365,30 @@ sub last_token {
     confess 'Bug - last_token must be overridden';
 }
 
+=head2 location
+
+This method returns a reference to an array describing the position of
+the element in the regular expression, or C<undef> if
+L<index_locations()|PPIx::Regexp/index_locations> has not been called on
+the parent L<PPIx::Regexp|PPIx::Regexp>.
+
+The array is compatible with the corresponding
+L<PPI::Element|PPI::Element> method.
+
+=cut
+
+sub location {
+    my ( $self ) = @_;
+    if ( ! $self->{location} ) {
+	my $top = $self->top()
+	    or return undef;	## no critic (ProhibitExplicitReturnUndef)
+	$top->can( 'index_locations' )
+	    or return undef;	## no critic (ProhibitExplicitReturnUndef)
+	$top->index_locations();
+    }
+    return [ @{ $self->{location} } ];	# Shallow clone.
+}
+
 =head2 main_structure
 
 This method returns the

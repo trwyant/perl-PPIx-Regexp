@@ -83,35 +83,12 @@ sub perl_version_introduced {
     return $self->{perl_version_introduced};
 }
 
-=head2 ppi
-
-This convenience method returns the L<PPI::Document|PPI::Document>
-representing the content. This document should be considered read only.
-
-Note that the content of the returned L<PPI::Document|PPI::Document> may
-not be the same as the content of the original
-C<PPIx::Regexp::Token::Interpolation>. This can happen because
-interpolated variable names may be enclosed in curly brackets, but this
-does not happen in normal code. For example, in C</${foo}bar/>, the
-content of the C<PPIx::Regexp::Token::Interpolation> object will be
-C<'${foo}'>, but the content of the C<PPI::Document> will be C<'$foo'>.
-
-=cut
-
-sub ppi {
+sub __ppi_normalize_content {
     my ( $self ) = @_;
-    if ( exists $self->{ppi} ) {
-	return $self->{ppi};
-    } elsif ( exists $self->{content} ) {
-	( my $code = $self->{content} ) =~
-	    s/ \A ( [\@\$] ) [{] ( .* ) [}] \z /$1$2/smx;
-	return ( $self->{ppi} = PPI::Document->new(
-		\$code, readonly => 1 ) );
-    } else {
-	return;
-    }
+    ( my $content = $self->{content} ) =~
+	s/ \A ( [\@\$] ) [{] ( .* ) [}] \z /$1$2/smx;
+    return $content;
 }
-
 
 # Match the beginning of an interpolation.
 

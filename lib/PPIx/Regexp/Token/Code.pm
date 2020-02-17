@@ -47,7 +47,13 @@ use warnings;
 use base qw{ PPIx::Regexp::Token };
 
 use PPI::Document;
-use PPIx::Regexp::Constant qw{ COOKIE_REGEX_SET @CARP_NOT };
+use PPIx::Regexp::Constant qw{
+    COOKIE_REGEX_SET
+    LOCATION_COLUMN
+    LOCATION_LOGICAL_LINE
+    LOCATION_LOGICAL_FILE
+    @CARP_NOT
+};
 use PPIx::Regexp::Util qw{ __instance };
 
 our $VERSION = '0.069_001';
@@ -108,6 +114,12 @@ sub is_matcher { return undef; }	## no critic (ProhibitExplicitReturnUndef)
 This convenience method returns the L<PPI::Document|PPI::Document>
 representing the content. This document should be considered read only.
 
+B<Note> that if the location of the invocant is available the PPI
+document will have stuff prefixed to it to make the location of the
+tokens in the new document consistent with the location. This "stuff"
+will include at least a C<#line> directive, and maybe leading white
+space.
+
 =cut
 
 sub ppi {
@@ -115,11 +127,36 @@ sub ppi {
     if ( exists $self->{ppi} ) {
 	return $self->{ppi};
     } elsif ( exists $self->{content} ) {
+	my $content;
+	if ( my $location = $self->{location} ) {
+	    my $fn;
+	    if( defined( $fn = $location->[LOCATION_LOGICAL_FILE] ) ) {
+		$fn =~ s/ (?= [\\"] ) /\\/smxg;
+		$content = qq{#line $location->[LOCATION_LOGICAL_LINE] "$fn"\n};
+	    } else {
+		$content = qq{#line $location->[LOCATION_LOGICAL_LINE]\n};
+	    }
+	    $content .= ' ' x ( $location->[LOCATION_COLUMN] - 1 );
+	}
+	$content .= $self->__ppi_normalize_content();
 	return ( $self->{ppi} = PPI::Document->new(
-		\($self->{content}), readonly => 1 ) );
+		\$content, readonly => 1 ) );
     } else {
 	return;
     }
+}
+
+sub __ppi_normalize_content {
+    my ( $self ) = @_;
+    return $self->{content};
+}
+
+# For the moment this is package-private and subject to change or
+# retraction without notice. If there is need, it will be made public
+# by stripping the leading underscores and documenting it.
+sub __purge_ppi {
+    my ( $self ) = @_;
+    return delete $self->{ppi};
 }
 
 # Return true if the token can be quantified, and false otherwise

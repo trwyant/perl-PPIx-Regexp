@@ -163,12 +163,22 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Node };
 
-use PPIx::Regexp::Constant qw{ @CARP_NOT };
+use Carp;
+use PPIx::Regexp::Constant qw{
+    ARRAY_REF
+    LOCATION_LINE
+    LOCATION_CHARACTER
+    LOCATION_COLUMN
+    LOCATION_LOGICAL_LINE
+    LOCATION_LOGICAL_FILE
+    @CARP_NOT
+};
 use PPIx::Regexp::Lexer ();
 use PPIx::Regexp::Token::Modifier ();	# For its modifier manipulations.
 use PPIx::Regexp::Tokenizer;
 use PPIx::Regexp::Util qw{ __choose_tokenizer_class __instance };
 use Scalar::Util qw{ refaddr };
+use Text::Tabs ();
 
 our $VERSION = '0.069_001';
 
@@ -225,6 +235,19 @@ string before it tokenizes it. For example:
  my $re = PPIx::Regexp->new( '/foo/',
      encoding => 'iso-8859-1',
  );
+
+=item location array_reference
+
+This option specifies the location of the new object in the document
+from which it was created. It is a reference to a five-element array
+compatible with that returned by the C<location()> method of
+L<PPI::Element|PPI::Element>.
+
+If not specified, the location of the original string is used if it was
+specified as a L<PPI::Element|PPI::Element>.
+
+If no location can be determined, the various C<location()> methods will
+return C<undef>.
 
 =item parse parse_type
 
@@ -317,6 +340,15 @@ is it supported.
 	$self->{failures} = $lexer->failures();
 	$self->{effective_modifiers} =
 	    $tokenizer->__effective_modifiers();
+	if ( $args{location} ) {
+	    ARRAY_REF eq ref $args{location}
+		or croak q<Argument 'location' must be an array reference>;
+	    foreach my $inx ( 0 .. 3 ) {
+		$args{location}[$inx] =~ m/ [^0-9] /smx
+		    and croak "Argument 'location' element $inx must be an unsigned integer";
+	    }
+	    $self->{location} = $args{location};
+	}
 	return $self;
     }
 
@@ -537,6 +569,84 @@ the number of unmatched right brackets of any sort.
 sub failures {
     my ( $self ) = @_;
     return $self->{failures};
+}
+
+
+=head2 index_locations
+
+This method computes the locations of all elements of the regular
+expression. It will fail if the location of the regular expression as a
+whole can not be determined.
+
+=cut
+
+sub _tab_width {
+    my ( $self ) = @_;
+    my $content = $self->content()
+	or return 1;
+    __instance( $content, 'PPI::Element' )
+	or return 1;
+    my $doc = $content->document()
+	or return 1;
+    return $doc->tab_width();
+}
+
+sub index_locations {
+    my ( $self ) = @_;
+    my $source = $self->source();
+    # [ $line, $rowchar, $col, $logical_line, $logical_file_name ]
+    my @location = $self->{location} ? @{ $self->{location} } :
+	__instance( $source, 'PPI::Element' ) ?
+	@{ $source->location() || [] } : ()
+	or return;
+    my $tab_width = $self->_tab_width();
+    $self->{_line_content} = '';
+    foreach my $token ( $self->tokens() ) {
+	# This MUST be done before the call to ppi().
+	$token->{location} = [ @location ];
+	my $token_content = $token->content();
+	# TODO It would be nice if I could just call
+	# $token->ppi()->flush_locations(), but the presence of the
+	# location changes the text from which the PPI::Document is
+	# generated.
+	$token->isa( 'PPIx::Regexp::Token::Code' )
+	    and $token->__purge_ppi();
+	if ( my $newlines = $token_content =~ tr/\n/\n/ ) {
+	    $location[LOCATION_LINE] += $newlines;
+	    $location[LOCATION_LOGICAL_LINE] += $newlines;
+	    $token_content =~ s/ .* \n //smx;
+	    $location[LOCATION_CHARACTER] = $location[LOCATION_COLUMN] = 1;
+	    $self->{_line_content} = '';
+	}
+	$location[LOCATION_CHARACTER] += length $token_content;
+	$self->{_line_content} .= $token_content;
+	local $Text::Tabs::tabstop = $tab_width;
+	$location[LOCATION_COLUMN] = 1 + length Text::Tabs::expand(
+	    $self->{_line_content} );
+    }
+    delete $self->{_line_content};
+    return 1;
+}
+
+=head2 flush_locations
+
+This subroutine removes the location data computed by
+L<index_locations()|/index_locations>.
+
+=cut
+
+sub flush_locations {
+    my ( $self ) = @_;
+    foreach my $token ( $self->tokens() ) {
+	delete $self->{location};
+	# TODO It would be nice if I could just call
+	# $token->ppi()->flush_locations(), but the presence of the
+	# location changes the text from which the PPI::Document is
+	# generated.
+	$token->isa( 'PPIx::Regexp::Token::Code' )
+	    and $token->__purge_ppi();
+    }
+    return 1;
 }
 
 =head2 max_capture_number
