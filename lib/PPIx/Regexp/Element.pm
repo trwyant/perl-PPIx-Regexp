@@ -868,6 +868,39 @@ sub sprevious_sibling {
     return;
 }
 
+=head2 statement
+
+This method returns the L<PPI::Statement|PPI::Statement> that contains
+this element, or nothing if the statement can not be determined.
+
+In general this method will return something only under the following
+conditions:
+
+=over
+
+=item * The element is contained in a L<PPIx::Regexp|PPIx::Regexp> object;
+
+=item * That object was initialized from a L<PPI::Element|PPI::Element>;
+
+=item * The L<PPI::Element|PPI::Element> is contained in a statement.
+
+=back
+
+=cut
+
+sub statement {
+    my ( $self ) = @_;
+    my $top = $self->top()
+	or return;
+    $top->can( 'source' )
+	or return;
+    my $source = $top->source()
+	or return;
+    $source->can( 'statement' )
+	or return;
+    return $source->statement();
+}
+
 # NOTE: This method is to be used ONLY for requirements_for_perl(). I
 # _may_ eventually expose it, but at the moment I do not consider it
 # stable. The exposure would be
