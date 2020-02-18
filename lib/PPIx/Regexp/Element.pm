@@ -44,6 +44,11 @@ use Scalar::Util qw{ refaddr weaken };
 use PPIx::Regexp::Constant qw{
     FALSE
     LITERAL_LEFT_CURLY_REMOVED_PHASE_1
+    LOCATION_LINE
+    LOCATION_CHARACTER
+    LOCATION_COLUMN
+    LOCATION_LOGICAL_LINE
+    LOCATION_LOGICAL_FILE
     MINIMUM_PERL
     TOKEN_UNKNOWN
     TRUE
@@ -144,6 +149,18 @@ C<ref $self>.
 sub class {
     my ( $self ) = @_;
     return ref $self;
+}
+
+=head2 column_number
+
+This method returns the column number of the first character in the
+element, or C<undef> if that can not be determined.
+
+=cut
+
+sub column_number {
+    my ( $self ) = @_;
+    return ( $self->location() || [] )->[LOCATION_CHARACTER];
 }
 
 =head2 comment
@@ -365,6 +382,18 @@ sub last_token {
     confess 'Bug - last_token must be overridden';
 }
 
+=head2 line_number
+
+This method returns the line number of the first character in the
+element, or C<undef> if that can not be determined.
+
+=cut
+
+sub line_number {
+    my ( $self ) = @_;
+    return ( $self->location() || [] )->[LOCATION_LINE];
+}
+
 =head2 location
 
 This method returns a reference to an array describing the position of
@@ -387,6 +416,34 @@ sub location {
 	$top->index_locations();
     }
     return [ @{ $self->{location} } ];	# Shallow clone.
+}
+
+=pod
+
+=head2 logical_filename
+
+This method returns the logical file name (taking C<#line> directives
+into account) of the file containing first character in the element, or
+C<undef> if that can not be determined.
+
+=cut
+
+sub logical_filename {
+    my ( $self ) = @_;
+    return ( $self->location() || [] )->[LOCATION_LOGICAL_FILE];
+}
+
+=head2 logical_line_number
+
+This method returns the logical line number (taking C<#line> directives
+into account) of the first character in the element, or C<undef> if that
+can not be determined.
+
+=cut
+
+sub logical_line_number {
+    my ( $self ) = @_;
+    return ( $self->location() || [] )->[LOCATION_LOGICAL_LINE];
 }
 
 =head2 main_structure
@@ -895,6 +952,19 @@ This method returns the content of the element, unescaped.
 
 sub unescaped_content {
     return;
+}
+
+=head2 visual_column_number
+
+This method returns the visual column number (taking tabs into account)
+of the first character in the element, or C<undef> if that can not be
+determined.
+
+=cut
+
+sub visual_column_number {
+    my ( $self ) = @_;
+    return ( $self->location() || [] )->[LOCATION_COLUMN];
 }
 
 =head2 whitespace

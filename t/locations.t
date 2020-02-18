@@ -11,13 +11,13 @@ use Test::More 0.88;	# Because of done_testing();
 
 {
     note 'Parse s/\\n    foo\\n/bar/smxg';
-    my $ppi = PPI::Document->new( \<<'EOD' );
+    my $doc = PPI::Document->new( \<<'EOD' );
 #line 42 the_answer
 s/
     foo
 /bar/smxg;
 EOD
-    my $subs = $ppi->find( 'PPI::Token::Regexp::Substitute' );
+    my $subs = $doc->find( 'PPI::Token::Regexp::Substitute' );
     ok $subs, 'Found PPI::Token::Regexp::Substitute';
     cmp_ok @{ $subs }, '==', 1,
 	'Found exactly one PPI::Token::Regexp::Substitute';
@@ -26,6 +26,16 @@ EOD
     cmp_ok scalar @token, '==', 13, 'Found 13 tokens in regex';
     is_deeply $token[0]->location(), [ 2, 1, 1, 42, 'the_answer' ],
 	q<Token 0 ('s') location>;
+    cmp_ok $token[0]->line_number(), '==', 2,
+	q<Token 0 ('s') line number>;
+    cmp_ok $token[0]->column_number(), '==', 1,
+	q<Token 0 ('s') column number>;
+    cmp_ok $token[0]->visual_column_number(), '==', 1,
+	q<Token 0 ('s') visual column number>;
+    cmp_ok $token[0]->logical_line_number(), '==', 42,
+	q<Token 0 ('s') logical line number>;
+    cmp_ok $token[0]->logical_filename(), 'eq', 'the_answer',
+	q<Token 0 ('s') logical file name>;
     is_deeply $token[1]->location(), [ 2, 2, 2, 42, 'the_answer' ],
 	q<Token 1 ('/') location>;
     is_deeply $token[2]->location(), [ 2, 3, 3, 42, 'the_answer' ],
@@ -56,11 +66,11 @@ EOD
 
 {
     note 'Parse s/([[:alpha:]]+)/ reverse $1 /smxge';
-    my $ppi = PPI::Document->new( \<<'EOD' );
+    my $doc = PPI::Document->new( \<<'EOD' );
 #line 86 "get_smart"
 s/([[:alpha:]]+)/ reverse $1 /smxge;
 EOD
-    my $subs = $ppi->find( 'PPI::Token::Regexp::Substitute' );
+    my $subs = $doc->find( 'PPI::Token::Regexp::Substitute' );
     ok $subs, 'Found PPI::Token::Regexp::Substitute';
     cmp_ok @{ $subs }, '==', 1,
 	'Found exactly one PPI::Token::Regexp::Substitute';
@@ -93,8 +103,8 @@ EOD
 	q<Token 11 ('smxge') location>;
 
     note q<PPI document corresponding to ' reverse $1 '>;
-    my $ppi2 = $token[9]->ppi();
-    @token = $ppi2->tokens();
+    my $code = $token[9]->ppi();
+    @token = $code->tokens();
     cmp_ok scalar @token, '==', 6,
 	'Found 6 PPI tokens in replacement expression';
     is_deeply $token[0]->location(), [ 1, 1, 1, 1, undef ],
