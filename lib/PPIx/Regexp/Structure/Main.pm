@@ -42,7 +42,7 @@ use base qw{ PPIx::Regexp::Structure };
 
 use PPIx::Regexp::Constant qw{ @CARP_NOT };
 
-our $VERSION = '0.069_002';
+our $VERSION = '0.069_003';
 
 =head2 delimiters
 
