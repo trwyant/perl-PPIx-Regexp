@@ -205,20 +205,6 @@ expression. The possible options are:
 
 =over
 
-=item auto_index boolean
-
-This Boolean option specifies whether the locations of the elements in
-the regular expression should be indexed automatically. If this is true,
-the index is produced during the parse and may not be modified.
-
-If unspecified or specified as C<undef> a default value is used. This
-default is true if the argument is a L<PPI::Element|PPI::Element> or the
-C<location> option was specified. Otherwise the default is false.
-
-The motivation for this option is the need (or at least perceived need)
-for multiple calls to the C<ppi()> method (where it exists) to return
-not just identical objects, but the same objects.
-
 =item default_modifiers array_reference
 
 This option specifies a reference to an array of default modifiers to
@@ -253,6 +239,15 @@ string before it tokenizes it. For example:
  my $re = PPIx::Regexp->new( '/foo/',
      encoding => 'iso-8859-1',
  );
+
+=item index_locations boolean
+
+This Boolean option specifies whether the locations of the elements in
+the regular expression should be indexed.
+
+If unspecified or specified as C<undef> a default value is used. This
+default is true if the argument is a L<PPI::Element|PPI::Element> or the
+C<location> option was specified. Otherwise the default is false.
 
 =item location array_reference
 
@@ -340,8 +335,8 @@ is it supported.
 	ref $class and $class = ref $class;
 
 	# We have to do this very early so the tokenizer can see it.
-	defined $args{auto_index}
-	    or $args{auto_index} = (
+	defined $args{index_locations}
+	    or $args{index_locations} = (
 	    $args{location} || __instance( $content, 'PPI::Element' ) );
 
 	$errstr = undef;
@@ -359,7 +354,7 @@ is it supported.
 	my $lexer = PPIx::Regexp::Lexer->new( $tokenizer, %args );
 	my @nodes = $lexer->lex();
 	my $self = $class->SUPER::__new( @nodes );
-	$self->{auto_index} = $args{auto_index};
+	$self->{index_locations} = $args{index_locations};
 	$self->{source} = $content;
 	$self->{failures} = $lexer->failures();
 	$self->{effective_modifiers} =
@@ -593,50 +588,6 @@ the number of unmatched right brackets of any sort.
 sub failures {
     my ( $self ) = @_;
     return $self->{failures};
-}
-
-
-=head2 index_locations
-
-This method computes the locations of all elements of the regular
-expression. It will fail if the location of the regular expression as a
-whole can not be determined, or if C<auto_index> was specified as or
-defaulted to a true value when the object was instantiated.
-
-=cut
-
-sub index_locations {
-    my ( $self ) = @_;
-    $self->{auto_index}
-	and croak 'Object created with auto_index true; may not re-index locations';
-    delete $self->{_location};
-    foreach my $token ( $self->tokens() ) {
-	$self->__update_location( $token );
-    }
-    return 1;
-}
-
-=head2 flush_locations
-
-This subroutine removes the location data computed by
-L<index_locations()|/index_locations>.
-
-=cut
-
-sub flush_locations {
-    my ( $self ) = @_;
-    $self->{auto_index}
-	and croak 'Object created with auto_index true; may not flush locations';
-    foreach my $token ( $self->tokens() ) {
-	delete $self->{location};
-	# TODO It would be nice if I could just call
-	# $token->ppi()->flush_locations(), but the presence of the
-	# location changes the text from which the PPI::Document is
-	# generated.
-	$token->isa( 'PPIx::Regexp::Token::Code' )
-	    and $token->__purge_ppi();
-    }
-    return 1;
 }
 
 =head2 max_capture_number

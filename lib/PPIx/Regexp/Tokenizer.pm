@@ -128,7 +128,7 @@ defined $DEFAULT_POSTDEREF
 	    };
 
 	my $self = {
-	    auto_index => $args{auto_index},	# Index locations
+	    index_locations => $args{index_locations},	# Index locations
 	    capture => undef,	# Captures from find_regexp.
 	    content => undef,	# The string we are tokenizing.
 	    cookie => {},	# Cookies
@@ -419,7 +419,7 @@ sub make_token {
 	%{ $arg || {} } )
 	or return;
 
-    $self->{auto_index}
+    $self->{index_locations}
 	and $self->__update_location( $token );
 
     $token->significant()
@@ -940,9 +940,10 @@ sub __PPIX_TOKENIZER__init {
     {
 	# We have to instantiate the trailing tokens now so we can
 	# figure out what modifiers are in effect. But we can't
-	# auto_index because they are being instantiated out of order
+	# index their locations (if desired) because they are being
+	# instantiated out of order
 
-	local $self->{auto_index} = 0;
+	local $self->{index_locations} = 0;
 
 	my @mods = @{ $self->{default_modifiers} };
 	pos $self->{content} = $self->{cursor_modifiers};
@@ -1195,9 +1196,9 @@ sub __PPIX_TOKENIZER__finish {
 # To common processing on trailing tokens.
 sub _get_trailing_tokens {
     my ( $self ) = @_;
-    if ( $self->{auto_index} ) {
-	# We turned off auto_index when these were created, because they
-	# were done out of order. Fix that now.
+    if ( $self->{index_locations} ) {
+	# We turned off index_locations when these were created, because
+	# they were done out of order. Fix that now.
 	foreach my $token ( @{ $self->{trailing_tokens} } ) {
 	    $self->__update_location( $token );
 	}
@@ -1261,6 +1262,11 @@ the details.
 This option specifies the encoding of the string to be tokenized. If
 specified, an C<Encode::decode> is done on the string (or the C<content>
 of the PPI class) before it is tokenized.
+
+=item index_locations
+
+This Boolean option specifies that the locations of the generated tokens
+are to be computed.
 
 =item postderef boolean
 
