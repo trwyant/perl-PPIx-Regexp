@@ -179,7 +179,6 @@ use PPIx::Regexp::Tokenizer;
 use PPIx::Regexp::Util qw{
     __choose_tokenizer_class
     __instance
-    __update_location
 };
 use Scalar::Util qw{ refaddr };
 use Text::Tabs ();

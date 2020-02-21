@@ -7,10 +7,6 @@ use warnings;
 
 use Carp;
 use PPIx::Regexp::Constant qw{
-    LOCATION_LINE
-    LOCATION_CHARACTER
-    LOCATION_COLUMN
-    LOCATION_LOGICAL_LINE
     @CARP_NOT
 };
 use Scalar::Util qw{ blessed };
@@ -20,10 +16,11 @@ use base qw{ Exporter };
 
 our @EXPORT_OK = qw{
     is_ppi_regexp_element
-    __choose_tokenizer_class __instance
+    __choose_tokenizer_class
+    __instance
     __is_ppi_regexp_element
-    __ns_can __to_ordinal_en
-    __update_location
+    __ns_can
+    __to_ordinal_en
 };
 
 our $VERSION = '0.069_004';
@@ -55,46 +52,6 @@ sub __choose_tokenizer_class {
 	croak $warning;
     }
     return 'PPIx::Regexp::Tokenizer';
-}
-
-# PACKAGE-PRIVATE.
-sub __update_location {
-    my ( $self, $token ) = @_;
-    $token->{location}	# Idempotent
-	and return;
-    my $loc = $self->{_location} ||= do {
-	my %loc = (
-	    line_content	=> '',
-	    location	=> $self->{location},
-	);
-	if ( __instance( $self->{source}, 'PPI::Element' ) ) {
-	    $loc{location} ||= $self->{source}->location();
-	    if ( my $doc = $self->{source}->document() ) {
-		$loc{tab_width} = $doc->tab_width();
-	    }
-	}
-	$loc{tab_width} ||= 1;
-	\%loc;
-    };
-    $loc->{location}
-	or return;
-    $token->{location} = [ @{ $loc->{location} } ];
-    if ( defined( my $content = $token->content() ) ) {
-	if ( my $newlines = $content =~ tr/\n/\n/ ) {
-	    $loc->{location}[LOCATION_LINE] += $newlines;
-	    $loc->{location}[LOCATION_LOGICAL_LINE] += $newlines;
-	    $content =~ s/ .* \n //smx;
-	    $loc->{location}[LOCATION_CHARACTER] =
-		$loc->{location}[LOCATION_COLUMN] = 1;
-	    $loc->{line_content} = '';
-	}
-	$loc->{location}[LOCATION_CHARACTER] += length $content;
-	$loc->{line_content} .= $content;
-	local $Text::Tabs::tabstop = $loc->{tab_width};
-	$loc->{location}[LOCATION_COLUMN] = 1 + length Text::Tabs::expand(
-	    $loc->{line_content} );
-    }
-    return;
 }
 
 sub __instance {

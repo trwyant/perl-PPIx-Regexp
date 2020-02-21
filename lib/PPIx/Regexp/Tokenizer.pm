@@ -10,6 +10,10 @@ use PPIx::Regexp::Constant qw{
     ARRAY_REF
     CODE_REF
     HASH_REF
+    LOCATION_LINE
+    LOCATION_CHARACTER
+    LOCATION_COLUMN
+    LOCATION_LOGICAL_LINE
     MINIMUM_PERL
     REGEXP_REF
     TOKEN_LITERAL
@@ -49,7 +53,6 @@ use PPIx::Regexp::Token::Whitespace		();
 use PPIx::Regexp::Util qw{
     is_ppi_regexp_element
     __instance
-    __update_location
 };
 
 use Scalar::Util qw{ looks_like_number };
@@ -420,7 +423,7 @@ sub make_token {
 	or return;
 
     $self->{index_locations}
-	and $self->__update_location( $token );
+	and $self->_update_location( $token );
 
     $token->significant()
 	and $self->{expect} = undef;
@@ -590,7 +593,7 @@ sub prior_significant_token {
 
 	    # This MUST be done before ppi() is called.
 	    $self->{index_locations}
-		and $self->__update_location( $token );
+		and $self->_update_location( $token );
 
 	    $ppi = $token->ppi();
 	    my @ops = grep { '->' eq $_->content() } @{
@@ -830,6 +833,45 @@ sub __init_error {
 	    error	=> $err,
 	},
     );
+}
+
+sub _update_location {
+    my ( $self, $token ) = @_;
+    $token->{location}	# Idempotent
+	and return;
+    my $loc = $self->{_location} ||= do {
+	my %loc = (
+	    line_content	=> '',
+	    location	=> $self->{location},
+	);
+	if ( __instance( $self->{source}, 'PPI::Element' ) ) {
+	    $loc{location} ||= $self->{source}->location();
+	    if ( my $doc = $self->{source}->document() ) {
+		$loc{tab_width} = $doc->tab_width();
+	    }
+	}
+	$loc{tab_width} ||= 1;
+	\%loc;
+    };
+    $loc->{location}
+	or return;
+    $token->{location} = [ @{ $loc->{location} } ];
+    if ( defined( my $content = $token->content() ) ) {
+	if ( my $newlines = $content =~ tr/\n/\n/ ) {
+	    $loc->{location}[LOCATION_LINE] += $newlines;
+	    $loc->{location}[LOCATION_LOGICAL_LINE] += $newlines;
+	    $content =~ s/ .* \n //smx;
+	    $loc->{location}[LOCATION_CHARACTER] =
+		$loc->{location}[LOCATION_COLUMN] = 1;
+	    $loc->{line_content} = '';
+	}
+	$loc->{location}[LOCATION_CHARACTER] += length $content;
+	$loc->{line_content} .= $content;
+	local $Text::Tabs::tabstop = $loc->{tab_width};
+	$loc->{location}[LOCATION_COLUMN] = 1 + length Text::Tabs::expand(
+	    $loc->{line_content} );
+    }
+    return;
 }
 
 sub __PPIX_TOKENIZER__init {
@@ -1206,7 +1248,7 @@ sub _get_trailing_tokens {
 	# We turned off index_locations when these were created, because
 	# they were done out of order. Fix that now.
 	foreach my $token ( @{ $self->{trailing_tokens} } ) {
-	    $self->__update_location( $token );
+	    $self->_update_location( $token );
 	}
     }
     return @{ delete $self->{trailing_tokens} };
