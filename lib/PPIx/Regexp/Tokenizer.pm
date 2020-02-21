@@ -54,7 +54,7 @@ use PPIx::Regexp::Util qw{
 
 use Scalar::Util qw{ looks_like_number };
 
-our $VERSION = '0.069_003';
+our $VERSION = '0.069_004';
 
 our $DEFAULT_POSTDEREF;
 defined $DEFAULT_POSTDEREF

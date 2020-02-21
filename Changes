@@ -1,3 +1,10 @@
+0.069_004	2020-02-20	T. R. Wyant
+    NOT RELEASED TO CPAN.
+
+    Add index_locations option to new(), and remove same-named method. I
+    need an implementation where there is no need to regenerate the PPI
+    returned by ppi(), so that the refaddrs can not change.
+
 0.069_003	2020-02-18	T. R. Wyant
     NOT RELEASED TO CPAN.
 

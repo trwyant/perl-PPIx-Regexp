@@ -58,7 +58,7 @@ use PPIx::Regexp::Constant qw{
 use PPIx::Regexp::Util qw{ __instance };
 use Scalar::Util qw{ refaddr };
 
-our $VERSION = '0.069_003';
+our $VERSION = '0.069_004';
 
 use constant ELEMENT_UNKNOWN => STRUCTURE_UNKNOWN;
 

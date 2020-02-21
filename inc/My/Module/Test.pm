@@ -15,7 +15,7 @@ use PPIx::Regexp::Util qw{ __choose_tokenizer_class __instance };
 use Scalar::Util qw{ looks_like_number refaddr };
 use Test::More 0.88;
 
-our $VERSION = '0.069_003';
+our $VERSION = '0.069_004';
 
 use constant ARRAY_REF	=> ref [];
 

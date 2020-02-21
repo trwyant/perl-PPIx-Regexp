@@ -26,7 +26,7 @@ our @EXPORT_OK = qw{
     __update_location
 };
 
-our $VERSION = '0.069_003';
+our $VERSION = '0.069_004';
 
 sub is_ppi_regexp_element {
     my ( $elem ) = @_;
