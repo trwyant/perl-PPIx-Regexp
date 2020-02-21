@@ -48,7 +48,7 @@ use PPIx::Regexp::Constant qw{
     @CARP_NOT
 };
 
-our $VERSION = '0.069_004';
+our $VERSION = '0.069_005';
 
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };

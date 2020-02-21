@@ -1,3 +1,12 @@
+0.069_005	2020-02-21	T. R. Wyant
+    NOT RELEASED TO CPAN.
+
+    Move __update_location() to tokenizer from PPIx::Regexp::Util, since
+    the tokenizer is now the only user.
+
+    Get rid of __purge_ppi().  This should have been done before the
+    release, but got missed.
+
 0.069_004	2020-02-20	T. R. Wyant
     NOT RELEASED TO CPAN.
 

@@ -105,7 +105,7 @@ use PPIx::Regexp::Constant qw{
     @CARP_NOT
 };
 
-our $VERSION = '0.069_004';
+our $VERSION = '0.069_005';
 
 # Define modifiers that are to be aggregated internally for ease of
 # computation.
