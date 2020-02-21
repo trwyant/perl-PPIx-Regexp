@@ -176,7 +176,11 @@ use PPIx::Regexp::Constant qw{
 use PPIx::Regexp::Lexer ();
 use PPIx::Regexp::Token::Modifier ();	# For its modifier manipulations.
 use PPIx::Regexp::Tokenizer;
-use PPIx::Regexp::Util qw{ __choose_tokenizer_class __instance };
+use PPIx::Regexp::Util qw{
+    __choose_tokenizer_class
+    __instance
+    __update_location
+};
 use Scalar::Util qw{ refaddr };
 use Text::Tabs ();
 
@@ -200,6 +204,20 @@ Optionally you can pass one or more name/value pairs after the regular
 expression. The possible options are:
 
 =over
+
+=item auto_index boolean
+
+This Boolean option specifies whether the locations of the elements in
+the regular expression should be indexed automatically. If this is true,
+the index is produced during the parse and may not be modified.
+
+If unspecified or specified as C<undef> a default value is used. This
+default is true if the argument is a L<PPI::Element|PPI::Element> or the
+C<location> option was specified. Otherwise the default is false.
+
+The motivation for this option is the need (or at least perceived need)
+for multiple calls to the C<ppi()> method (where it exists) to return
+not just identical objects, but the same objects.
 
 =item default_modifiers array_reference
 
@@ -321,6 +339,11 @@ is it supported.
 	my ( $class, $content, %args ) = @_;
 	ref $class and $class = ref $class;
 
+	# We have to do this very early so the tokenizer can see it.
+	defined $args{auto_index}
+	    or $args{auto_index} = (
+	    $args{location} || __instance( $content, 'PPI::Element' ) );
+
 	$errstr = undef;
 
 	# As of 0.068_01 this either fails or returns
@@ -336,6 +359,7 @@ is it supported.
 	my $lexer = PPIx::Regexp::Lexer->new( $tokenizer, %args );
 	my @nodes = $lexer->lex();
 	my $self = $class->SUPER::__new( @nodes );
+	$self->{auto_index} = $args{auto_index};
 	$self->{source} = $content;
 	$self->{failures} = $lexer->failures();
 	$self->{effective_modifiers} =
@@ -576,55 +600,19 @@ sub failures {
 
 This method computes the locations of all elements of the regular
 expression. It will fail if the location of the regular expression as a
-whole can not be determined.
+whole can not be determined, or if C<auto_index> was specified as or
+defaulted to a true value when the object was instantiated.
 
 =cut
 
-sub _tab_width {
-    my ( $self ) = @_;
-    my $content = $self->content()
-	or return 1;
-    __instance( $content, 'PPI::Element' )
-	or return 1;
-    my $doc = $content->document()
-	or return 1;
-    return $doc->tab_width();
-}
-
 sub index_locations {
     my ( $self ) = @_;
-    my $source = $self->source();
-    # [ $line, $rowchar, $col, $logical_line, $logical_file_name ]
-    my @location = $self->{location} ? @{ $self->{location} } :
-	__instance( $source, 'PPI::Element' ) ?
-	@{ $source->location() || [] } : ()
-	or return;
-    my $tab_width = $self->_tab_width();
-    $self->{_line_content} = '';
+    $self->{auto_index}
+	and croak 'Object created with auto_index true; may not re-index locations';
+    delete $self->{_location};
     foreach my $token ( $self->tokens() ) {
-	# This MUST be done before the call to ppi().
-	$token->{location} = [ @location ];
-	my $token_content = $token->content();
-	# TODO It would be nice if I could just call
-	# $token->ppi()->flush_locations(), but the presence of the
-	# location changes the text from which the PPI::Document is
-	# generated.
-	$token->isa( 'PPIx::Regexp::Token::Code' )
-	    and $token->__purge_ppi();
-	if ( my $newlines = $token_content =~ tr/\n/\n/ ) {
-	    $location[LOCATION_LINE] += $newlines;
-	    $location[LOCATION_LOGICAL_LINE] += $newlines;
-	    $token_content =~ s/ .* \n //smx;
-	    $location[LOCATION_CHARACTER] = $location[LOCATION_COLUMN] = 1;
-	    $self->{_line_content} = '';
-	}
-	$location[LOCATION_CHARACTER] += length $token_content;
-	$self->{_line_content} .= $token_content;
-	local $Text::Tabs::tabstop = $tab_width;
-	$location[LOCATION_COLUMN] = 1 + length Text::Tabs::expand(
-	    $self->{_line_content} );
+	$self->__update_location( $token );
     }
-    delete $self->{_line_content};
     return 1;
 }
 
@@ -637,6 +625,8 @@ L<index_locations()|/index_locations>.
 
 sub flush_locations {
     my ( $self ) = @_;
+    $self->{auto_index}
+	and croak 'Object created with auto_index true; may not flush locations';
     foreach my $token ( $self->tokens() ) {
 	delete $self->{location};
 	# TODO It would be nice if I could just call

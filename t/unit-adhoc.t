@@ -15,7 +15,6 @@ use Scalar::Util qw{ refaddr };
     note 'Test static method PPIx::Regexp->extract_regexps()';
 
     my $doc = PPI::Document->new( 'eg/predump' );
-    $doc->index_locations();
     my @re = PPIx::Regexp->extract_regexps( $doc );
 
     cmp_ok scalar @re, '==', 2, 'Found two regexps';

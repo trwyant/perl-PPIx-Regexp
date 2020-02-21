@@ -84,7 +84,6 @@ foreach my $re ( process_args( \%opt, @ARGV ) ) {
 
 		my $doc = PPI::Document->new( $datum, readonly => 1 )
 		    or die "Can not make PPI::Document from file '$datum'\n";
-		$doc->index_locations();
 		push @docs, $doc;
 		push @rslt, extract_res( $doc, $opt );
 		$file{ refaddr( $doc ) } = {

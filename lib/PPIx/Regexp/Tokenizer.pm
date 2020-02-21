@@ -46,7 +46,12 @@ use PPIx::Regexp::Token::Recursion		();
 use PPIx::Regexp::Token::Structure		();
 use PPIx::Regexp::Token::Unknown		();
 use PPIx::Regexp::Token::Whitespace		();
-use PPIx::Regexp::Util qw{ is_ppi_regexp_element __instance };
+use PPIx::Regexp::Util qw{
+    is_ppi_regexp_element
+    __instance
+    __update_location
+};
+
 use Scalar::Util qw{ looks_like_number };
 
 our $VERSION = '0.069_003';
@@ -123,6 +128,7 @@ defined $DEFAULT_POSTDEREF
 	    };
 
 	my $self = {
+	    auto_index => $args{auto_index},	# Index locations
 	    capture => undef,	# Captures from find_regexp.
 	    content => undef,	# The string we are tokenizing.
 	    cookie => {},	# Cookies
@@ -412,6 +418,9 @@ sub make_token {
 	tokenizer	=> $self,
 	%{ $arg || {} } )
 	or return;
+
+    $self->{auto_index}
+	and $self->__update_location( $token );
 
     $token->significant()
 	and $self->{expect} = undef;
@@ -929,6 +938,12 @@ sub __PPIX_TOKENIZER__init {
     }
 
     {
+	# We have to instantiate the trailing tokens now so we can
+	# figure out what modifiers are in effect. But we can't
+	# auto_index because they are being instantiated out of order
+
+	local $self->{auto_index} = 0;
+
 	my @mods = @{ $self->{default_modifiers} };
 	pos $self->{content} = $self->{cursor_modifiers};
 	local $self->{cursor_curr} = $self->{cursor_modifiers};
@@ -1105,8 +1120,8 @@ sub __PPIX_TOKENIZER__finish {
 
 	# We are out of string. Add the trailing tokens (created when we
 	# did the initial bracket scan) and close up shop.
-
-	push @tokens, @{ delete $self->{trailing_tokens} };
+	
+	push @tokens, $self->_get_trailing_tokens();
 
 	$self->_set_mode( 'kaput' );
 
@@ -1164,7 +1179,7 @@ sub __PPIX_TOKENIZER__finish {
 	    $self->{cursor_limit} = length $self->{content};
 	    push @tokens, $self->make_token( 1,
 		'PPIx::Regexp::Token::Delimiter' ),
-		@{ delete $self->{trailing_tokens} };
+		$self->_get_trailing_tokens();
 	    $self->_set_mode( 'kaput' );
 	} else {
 	    # Put our mode to replacement.
@@ -1175,6 +1190,19 @@ sub __PPIX_TOKENIZER__finish {
 
     return @tokens;
 
+}
+
+# To common processing on trailing tokens.
+sub _get_trailing_tokens {
+    my ( $self ) = @_;
+    if ( $self->{auto_index} ) {
+	# We turned off auto_index when these were created, because they
+	# were done out of order. Fix that now.
+	foreach my $token ( @{ $self->{trailing_tokens} } ) {
+	    $self->__update_location( $token );
+	}
+    }
+    return @{ delete $self->{trailing_tokens} };
 }
 
 1;
