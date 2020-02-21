@@ -151,14 +151,6 @@ sub __ppi_normalize_content {
     return $self->{content};
 }
 
-# For the moment this is package-private and subject to change or
-# retraction without notice. If there is need, it will be made public
-# by stripping the leading underscores and documenting it.
-sub __purge_ppi {
-    my ( $self ) = @_;
-    return delete $self->{ppi};
-}
-
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 

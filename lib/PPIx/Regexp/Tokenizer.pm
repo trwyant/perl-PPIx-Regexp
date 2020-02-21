@@ -582,10 +582,16 @@ sub prior_significant_token {
 	my ( $self, $token, $iterator ) = @_;
 	$self->{postderef}
 	    or return;
+
 	# Note that if ppi() gets called I have to hold a reference to
 	# the returned object until I am done with all its children.
 	my $ppi;
 	if ( ! defined $iterator ) {
+
+	    # This MUST be done before ppi() is called.
+	    $self->{index_locations}
+		and $self->__update_location( $token );
+
 	    $ppi = $token->ppi();
 	    my @ops = grep { '->' eq $_->content() } @{
 		$ppi->find( 'PPI::Token::Operator' ) || [] };

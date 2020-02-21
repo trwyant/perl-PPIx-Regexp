@@ -60,6 +60,8 @@ sub __choose_tokenizer_class {
 # PACKAGE-PRIVATE.
 sub __update_location {
     my ( $self, $token ) = @_;
+    $token->{location}	# Idempotent
+	and return;
     my $loc = $self->{_location} ||= do {
 	my %loc = (
 	    line_content	=> '',
@@ -78,8 +80,6 @@ sub __update_location {
 	or return;
     $token->{location} = [ @{ $loc->{location} } ];
     if ( defined( my $content = $token->content() ) ) {
-	$token->can( '__purge_ppi' )
-	    and $token->__purge_ppi();
 	if ( my $newlines = $content =~ tr/\n/\n/ ) {
 	    $loc->{location}[LOCATION_LINE] += $newlines;
 	    $loc->{location}[LOCATION_LOGICAL_LINE] += $newlines;
