@@ -105,24 +105,22 @@ EOD
     note q<PPI document corresponding to ' reverse $1 '>;
     my $code = $token[9]->ppi();
     @token = $code->tokens();
-    cmp_ok scalar @token, '==', 6,
-	'Found 6 PPI tokens in replacement expression';
-    is_deeply $token[0]->location(), [ 1, 1, 1, 1, undef ],
-	q<Token 0 (qq<#line 86 "get smart"\n>) location>;
-    is_deeply $token[1]->location(), [ 2, 1, 1, 86, 'get_smart' ],
-	q<Token 1 ('   ...') location>;
-    is_deeply $token[2]->location(), [ 2, 19, 19, 86, 'get_smart' ],
-	q<Token 2 ('reverse') location>;
+    cmp_ok scalar @token, '==', 5,
+	'Found 5 PPI tokens in replacement expression';
+    is_deeply $token[0]->location(), [ 2, 1, 1, 86, 'get_smart' ],
+	q<Token 0 ('   ...') location>;
+    is_deeply $token[1]->location(), [ 2, 19, 19, 86, 'get_smart' ],
+	q<Token 1 ('reverse') location>;
     note <<'EOD';
 The above is not the same as token 9 of the RE because of the leading
 white space in the expression.
 EOD
-    is_deeply $token[3]->location(), [ 2, 26, 26, 86, 'get_smart' ],
-	q<Token 3 (' ') location>;
-    is_deeply $token[4]->location(), [ 2, 27, 27, 86, 'get_smart' ],
-	q<Token 4 ('$1') location>;
-    is_deeply $token[5]->location(), [ 2, 29, 29, 86, 'get_smart' ],
-	q<Token 5 (' ') location>;
+    is_deeply $token[2]->location(), [ 2, 26, 26, 86, 'get_smart' ],
+	q<Token 2 (' ') location>;
+    is_deeply $token[3]->location(), [ 2, 27, 27, 86, 'get_smart' ],
+	q<Token 3 ('$1') location>;
+    is_deeply $token[4]->location(), [ 2, 29, 29, 86, 'get_smart' ],
+	q<Token 4 (' ') location>;
 }
 
 done_testing;
