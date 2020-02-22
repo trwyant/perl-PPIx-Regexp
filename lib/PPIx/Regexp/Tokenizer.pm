@@ -151,6 +151,7 @@ defined $DEFAULT_POSTDEREF
 	    failures => 0,	# Number of parse failures.
 	    find => undef,	# String for find_regexp
 	    known => {},	# Known tokenizers, by mode.
+	    location => $args{location},
 	    match => undef,	# Match from find_regexp.
 	    mode => 'init',	# Initialize
 	    modifiers => [{}],	# Modifier hash.

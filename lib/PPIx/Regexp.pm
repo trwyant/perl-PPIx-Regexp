@@ -336,7 +336,7 @@ is it supported.
 	# We have to do this very early so the tokenizer can see it.
 	defined $args{index_locations}
 	    or $args{index_locations} = (
-	    $args{location} || __instance( $content, 'PPI::Element' ) );
+	    !! $args{location} || __instance( $content, 'PPI::Element' ) );
 
 	$errstr = undef;
 
