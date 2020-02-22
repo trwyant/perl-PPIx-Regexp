@@ -119,6 +119,10 @@ displayed.
 If true, postfix dereferences are recognized in code and interpolations.
 See the tokenizer's L<new()|PPIx::Regexp::Tokenizer/new> for details.
 
+=item ppi boolean
+
+If true, any Perl code contained in the object will be dumped.
+
 =item strict boolean
 
 This option is passed on to the parser, where it specifies whether the
@@ -350,6 +354,32 @@ sub _perl_version {
     my ( undef, $elem ) = @_;		# Invocant unused
 
     return $elem->requirements_for_perl();
+}
+
+sub _ppi {
+    my ( $self, $elem ) = @_;
+
+    $self->{ppi}
+	and $elem->can( 'ppi' )
+	or return;
+
+    require PPI::Dumper;
+
+    # PPI::Dumper reports line_number(), but I want
+    # logical_line_number(). There is no configuration for this, but the
+    # interface is public, so I mung it to do what I want.
+    my $locn = PPI::Element->can( 'location' );
+    local *PPI::Element::location = sub {
+	my $loc = $locn->( @_ );
+	$loc->[0] = $loc->[3];
+	return $loc;
+    };
+
+    my $dumper = PPI::Dumper->new( $elem->ppi(),
+	map { $_ => $self->{$_} } qw{ indent locations },
+    );
+
+    return $dumper->list();
 }
 
 sub _content {
@@ -703,6 +733,18 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__dump {
 		    $self->column_number(),
 		    $self->visual_column_number();
 
+    my @ppi;
+    @ppi = $dumper->_ppi( $self )
+	and shift @ppi;	# Ignore PPI::Document
+    foreach ( @ppi ) {
+	if ( $dumper->{locations} ) {
+	    s/ ( [0-9]+ \s+ \] ) /$1  /smxg
+		or substr $_, 0, 0, '  ';
+	} else {
+	    substr $_, 0, 0, '  ';
+	}
+    }
+
     $dumper->{perl_version}
 	and push @rslt, $dumper->_perl_version( $self );
 
@@ -751,6 +793,8 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__dump {
 	$dumper->{explain}
 	    and push @rslt, $self->__PPIX_DUMPER__dump_explanation(
 		$dumper, pop @rslt );
+
+	push @rslt, @ppi;
 
 	return @rslt;
     }

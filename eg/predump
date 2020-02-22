@@ -39,7 +39,7 @@ GetOptions( \%opt,
         default_modifiers|default-modifiers=s@
 	encoding=s explain! files!
 	indent=i locations! margin=i objectify! ordinal! perl_version!
-	postderef!  significant! strict!
+	postderef! ppi! significant! strict!
 	test! tokens! trace+ unescape! verbose+
     } )
     and @ARGV
