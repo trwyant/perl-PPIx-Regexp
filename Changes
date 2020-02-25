@@ -1,50 +1,25 @@
-0.069_005	2020-02-21	T. R. Wyant
-    NOT RELEASED TO CPAN.
+0.069_01	2020-02-25	T. R. Wyant
+    Add index_locations option to PPIx::Regexp->new(). This defaults to
+    true if the regexp is specified as a PPI::Element object. The
+    locations are consistent with the containing PPI::Document.
 
-    Move __update_location() to tokenizer from PPIx::Regexp::Util, since
-    the tokenizer is now the only user.
+    Add methods location(), column_number(), line_number(),
+    logical_filename(), logical_line_number(), and
+    visual_column_number() to PPIx::Regexp::Element. All return undef if
+    the locations could not be determined.
 
-    Get rid of __purge_ppi().  This should have been done before the
-    release, but got missed.
+    Add method statement() to PPIx::Regexp::Element. This returns the
+    PPI statement containing the regexp element, or nothing if none.
 
-0.069_004	2020-02-20	T. R. Wyant
-    NOT RELEASED TO CPAN.
+    Add method is_matcher() to PPIx::Regexp::Element. This classifies
+    objects as to whether they actually match something in the target
+    string. Possible returns are true (they do), false but defined (they
+    do not) and undef (no clue).
 
-    Add index_locations option to new(), and remove same-named method. I
-    need an implementation where there is no need to regenerate the PPI
-    returned by ppi(), so that the refaddrs can not change.
+    Add methods first_token() and last_token() to PPIx::Regexp::Node.
 
-0.069_003	2020-02-18	T. R. Wyant
-    NOT RELEASED TO CPAN.
-
-    Add method statement(), which returns the PPI statement containing
-    the regexp element, or nothing if none.
-
-    Add the rest of the PPI::Element location methods, to wit:
-    column_number(), line_number(), logical_filename(),
-    logical_line_number(), and visual_column_number().
-
-0.069_002	2020-02-17	T. R. Wyant
-    NOT RELEASED TO CPAN.
-
-    Support locations relative to containing document if specified to
-    PPIx::Regexp->new(), or if the string is a PPI::Element.
-    Specifically, add PPIx::Regexp->index_locations(),
-    PPIx::Regexp->flush_locations(), and
-    PPIx::Regexp::Element->location().
-
-0.069_001	2020-02-09	T. R. Wyant
-    NOT RELEASED TO CPAN.
-
-    Add method is_matcher(). This classifies objects as to whether they
-    actually match something in the target string. Possible returns are
-    true (they do), false but defined (they do not) and undef (no clue).
-
-    Add last_token(), previous_token(). These essentially walk the
-    parse tree backwards.
-
-    Add first_token(), next_token(). These essentially walk the parse
-    tree.
+    Add methods next_token() and previous_token() to
+    PPIx::Regexp::Element.
 
 0.069		2020-02-07	T. R. Wyant
     The PPIx::Regexp->new() 'parse' option is now fatal. This selected
