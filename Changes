@@ -1,4 +1,4 @@
-0.069_01	2020-02-25	T. R. Wyant
+0.070		2020-02-27	T. R. Wyant
     Add index_locations option to PPIx::Regexp->new(). This defaults to
     true if the regexp is specified as a PPI::Element object. The
     locations are consistent with the containing PPI::Document.
