@@ -82,7 +82,7 @@ specified, it is passed through to
 L<< PPIx::Regexp->new()|PPIx::Regexp/new >>. It also causes an
 C<Encode::encode> to be done on any parse content dumped.
 
-=item explain boolean
+=item explain Boolean
 
 If true, this option causes the C<explain()> output of each object to be
 dumped.
@@ -102,28 +102,33 @@ hierarchy. This is ignored if the C<test> argument is true.
 
 The default is zero.
 
-=item ordinal boolean
+=item ordinal Boolean
 
 If true, this option causes the C<ordinal> values of
 L<PPIx::Regexp::Token::Literal|PPIx::Regexp::Token::Literal> objects to
 be dumped.
 
-=item perl_version boolean
+=item perl_version Boolean
 
 If true, this option causes the C<perl_version_introduced> and
 C<perl_version_removed> values associated with each object dumped to be
 displayed.
 
-=item postderef boolean
+=item postderef Boolean
 
 If true, postfix dereferences are recognized in code and interpolations.
 See the tokenizer's L<new()|PPIx::Regexp::Tokenizer/new> for details.
 
-=item ppi boolean
+=item ppi Boolean
 
 If true, any Perl code contained in the object will be dumped.
 
-=item strict boolean
+=item short Boolean
+
+If true, leading C<'PPIx::Regexp::'> will be removed from the class
+names in the output.
+
+=item strict Boolean
 
 This option is passed on to the parser, where it specifies whether the
 parse should assume C<use re 'strict'> is in effect.
@@ -135,13 +140,13 @@ parse produced when this option is asserted.
 
 The default is false.
 
-=item significant boolean
+=item significant Boolean
 
 If true, this option causes only significant elements to be dumped.
 
 The default is false.
 
-=item test boolean
+=item test Boolean
 
 If true, this option causes the output to be formatted as a regression
 test rather than as a straight dump. The output produced by asserting
@@ -151,7 +156,7 @@ kind.
 
 The default is false.
 
-=item tokens boolean
+=item tokens Boolean
 
 If true, this option causes a dump of tokenizer output rather than of a
 full parse of the regular expression. This is forced true if the dump is
@@ -193,6 +198,7 @@ ignored.
 	ordinal	=> 0,
 	perl_version => 0,
 	ppi	=> 0,
+	short	=> 0,
 	significant => 0,
 	test	=> 0,
 	tokens	=> 0,
@@ -516,7 +522,9 @@ sub PPIx::Regexp::Node::__PPIX_DUMPER__dump {
 
     not $dumper->{significant} or $self->significant() or return;
 
-    my @rslt = ref $self;
+    my @rslt = ( ref $self );
+    $dumper->{short}
+	and $rslt[0] =~ s/ \A PPIx::Regexp:: //smx;
     $self->isa( 'PPIx::Regexp' )
 	and $rslt[-1] .= $dumper->{verbose}
 	    ? sprintf "\tfailures=%d\tmax_capture_number=%d",
@@ -611,6 +619,8 @@ sub _format_value {
 	    push @delim, @elem ? $dumper->_content( \@elem ) : $dflt{$method};
 	}
 	my @rslt = ( ref $self, "$delim[0]$delim[1] ... $delim[2]" );
+	$dumper->{short}
+	    and $rslt[0] =~ s/ \A PPIx::Regexp:: //smx;
 
 	substr $rslt[0], 0, 0, ' ' x ( $depth * $dumper->{indent} );
 
@@ -723,6 +733,8 @@ sub PPIx::Regexp::Token::__PPIX_DUMPER__dump {
 	or return;
 
     my @rslt = ( ref $self, $dumper->_safe( $self ) );
+    $dumper->{short}
+	and $rslt[0] =~ s/ \A PPIx::Regexp:: //smx;
 
     substr $rslt[0], 0, 0, ' ' x ( $depth * $dumper->{indent} );
 
