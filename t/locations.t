@@ -66,9 +66,9 @@ EOD
 
 {
     note 'Parse s/([[:alpha:]]+)/ reverse $1 /smxge';
-    my $doc = PPI::Document->new( \<<'EOD' );
-#line 86 "get_smart"
-s/([[:alpha:]]+)/ reverse $1 /smxge;
+    my $doc = PPI::Document->new( \<<"EOD" );
+#line 2 "get_smart"@{[ "\n" x 84 ]}
+s/([[:alpha:]]+)/ reverse \$1 /smxge;
 EOD
     my $subs = $doc->find( 'PPI::Token::Regexp::Substitute' );
     ok $subs, 'Found PPI::Token::Regexp::Substitute';
@@ -77,49 +77,52 @@ EOD
     my $re = PPIx::Regexp->new( $subs->[0] );
     my @token = $re->tokens();
     cmp_ok scalar @token, '==', 12, 'Found 12 tokens in regex';
-    is_deeply $token[0]->location(), [ 2, 1, 1, 86, 'get_smart' ],
+    is_deeply $token[0]->location(), [ 86, 1, 1, 86, 'get_smart' ],
 	q<Token 0 ('s') location>;
-    is_deeply $token[1]->location(), [ 2, 2, 2, 86, 'get_smart' ],
+    is_deeply $token[1]->location(), [ 86, 2, 2, 86, 'get_smart' ],
 	q<Token 1 ('/') location>;
-    is_deeply $token[2]->location(), [ 2, 3, 3, 86, 'get_smart' ],
+    is_deeply $token[2]->location(), [ 86, 3, 3, 86, 'get_smart' ],
 	q<Token 2 ('(') location>;
-    is_deeply $token[3]->location(), [ 2, 4, 4, 86, 'get_smart' ],
+    is_deeply $token[3]->location(), [ 86, 4, 4, 86, 'get_smart' ],
 	q<Token 3 ('[') location>;
-    is_deeply $token[4]->location(), [ 2, 5, 5, 86, 'get_smart' ],
+    is_deeply $token[4]->location(), [ 86, 5, 5, 86, 'get_smart' ],
 	q<Token 4 ('[:alpha:]') location>;
-    is_deeply $token[5]->location(), [ 2, 14, 14, 86, 'get_smart' ],
+    is_deeply $token[5]->location(), [ 86, 14, 14, 86, 'get_smart' ],
 	q<Token 5 (']') location>;
-    is_deeply $token[6]->location(), [ 2, 15, 15, 86, 'get_smart' ],
+    is_deeply $token[6]->location(), [ 86, 15, 15, 86, 'get_smart' ],
 	q<Token 6 ('+') location>;
-    is_deeply $token[7]->location(), [ 2, 16, 16, 86, 'get_smart' ],
+    is_deeply $token[7]->location(), [ 86, 16, 16, 86, 'get_smart' ],
 	q<Token 7 (')') location>;
-    is_deeply $token[8]->location(), [ 2, 17, 17, 86, 'get_smart' ],
+    is_deeply $token[8]->location(), [ 86, 17, 17, 86, 'get_smart' ],
 	q<Token 8 ('/') location>;
-    is_deeply $token[9]->location(), [ 2, 18, 18, 86, 'get_smart' ],
+    is_deeply $token[9]->location(), [ 86, 18, 18, 86, 'get_smart' ],
 	q<Token 9 (' reverse $1 ') location>;
-    is_deeply $token[10]->location(), [ 2, 30, 30, 86, 'get_smart' ],
+    is_deeply $token[10]->location(), [ 86, 30, 30, 86, 'get_smart' ],
 	q<Token 10 ('/') location>;
-    is_deeply $token[11]->location(), [ 2, 31, 31, 86, 'get_smart' ],
+    is_deeply $token[11]->location(), [ 86, 31, 31, 86, 'get_smart' ],
 	q<Token 11 ('smxge') location>;
 
     note q<PPI document corresponding to ' reverse $1 '>;
     my $code = $token[9]->ppi();
     @token = $code->tokens();
     cmp_ok scalar @token, '==', 5,
-	'Found 5 PPI tokens in replacement expression';
-    is_deeply $token[0]->location(), [ 2, 1, 1, 86, 'get_smart' ],
+	'Found 5 PPI tokens in replacement expression'
+	    or diag explain \@token;
+    # The following is the previous line because for some reason the
+    # PPI parse begins with a "\n";
+    is_deeply $token[0]->location(), [ 85, 1, 1, 85, 'get_smart' ],
 	q<Token 0 ('   ...') location>;
-    is_deeply $token[1]->location(), [ 2, 19, 19, 86, 'get_smart' ],
+    is_deeply $token[1]->location(), [ 86, 19, 19, 86, 'get_smart' ],
 	q<Token 1 ('reverse') location>;
     note <<'EOD';
 The above is not the same as token 9 of the RE because of the leading
 white space in the expression.
 EOD
-    is_deeply $token[2]->location(), [ 2, 26, 26, 86, 'get_smart' ],
+    is_deeply $token[2]->location(), [ 86, 26, 26, 86, 'get_smart' ],
 	q<Token 2 (' ') location>;
-    is_deeply $token[3]->location(), [ 2, 27, 27, 86, 'get_smart' ],
+    is_deeply $token[3]->location(), [ 86, 27, 27, 86, 'get_smart' ],
 	q<Token 3 ('$1') location>;
-    is_deeply $token[4]->location(), [ 2, 29, 29, 86, 'get_smart' ],
+    is_deeply $token[4]->location(), [ 86, 29, 29, 86, 'get_smart' ],
 	q<Token 4 (' ') location>;
 }
 
