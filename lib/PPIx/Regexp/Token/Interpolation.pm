@@ -83,10 +83,24 @@ sub perl_version_introduced {
     return $self->{perl_version_introduced};
 }
 
+# Normalize the content of an interpolation object before making it into
+# a PPI document. The issue here is that things like ${x} are at least
+# warnings outside strings, but are normal inside them.
 sub __ppi_normalize_content {
     my ( $self ) = @_;
-    ( my $content = $self->{content} ) =~
-	s/ \A ( [\@\$] ) [{] ( .* ) [}] \z /$1$2/smx;
+    my $content;
+    defined( $content = $self->content() )
+	or return $content;
+    # NOTE: perldata gives a regexp for this, but it requires Perl 5.10.
+    # I believe the following caputures the intent, except possibly for
+    # various weird combinations of '::' and "'".
+    $content =~
+	s/ \A
+	    ( \$ \# \$* | [\@\$] \$* )	# Sigil and possible casts
+	    [{] \s* (?: :: )* '?	# per perldata
+	    ( ^? (?: \w+ (?: (?: :: | ' ) \w+ )* (?: :: )? | [[:punct:]] ) )
+	    \s* [}] \z
+	/$1$2/smx;
     return $content;
 }
 
