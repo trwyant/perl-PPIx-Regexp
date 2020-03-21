@@ -1,3 +1,6 @@
+0.070_03	2020-03-21	T. R. Wyant
+    Recognize wildcard Unicode names (Perl 5.31.10).
+
 0.070_02	2020-03-19	T. R. Wyant
     Revert "Try to get correct line number in derived PPI"
     
