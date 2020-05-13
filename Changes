@@ -1,3 +1,7 @@
+0.071_01	2020-05-12	T. R. Wyant
+    Drop dependency on List::MoreUtils.  Thanks to plicease for bringing
+    the issues with this module to my attention.
+
 0.071		2020-03-28	T. R. Wyant
     Recognize wildcard Unicode names (Perl 5.31.10).
 
