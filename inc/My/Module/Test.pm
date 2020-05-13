@@ -233,7 +233,7 @@ sub finis {
 
 {
 
-    my %array = map { $_ => 1} qw{
+    my %array = map { $_ => 1 } qw{
 	children delimiters finish schildren start tokens type
     };
 
