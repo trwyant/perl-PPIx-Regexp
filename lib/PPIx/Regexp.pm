@@ -186,7 +186,7 @@ use PPIx::Regexp::Util qw{
 use Scalar::Util qw{ refaddr };
 use Text::Tabs ();
 
-our $VERSION = '0.073_01';
+our $VERSION = '0.074';
 
 =head2 new
 
