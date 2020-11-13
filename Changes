@@ -1,3 +1,9 @@
+0.075_01	2020-11-13	T. R. Wyant
+    Variable-lemgth look-behind is version 5.029009.
+    
+    Look-behinds quantified longer than 255 characters are an error, and are
+    made into unknown tokens or structures.
+
 0.075		2020-10-08	T. R. Wyant
     Warn on first use of attribute 'postderef'.
 
