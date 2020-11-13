@@ -318,6 +318,50 @@ For anything else this method returns a false (but defined) value.
 
 sub is_matcher { return 0; }
 
+=head2 in_assertion
+
+This method returns an array of assertions that contain the element,
+most-local first. For the purpose of this method, a look-around
+structure does not contain itself. If called in scalar context you get
+the size of the array.
+
+This method was added in version 0.075_01.
+
+=cut
+
+sub in_assertion {
+    my ( $self ) = @_;
+    my $elem = $self;
+    my @assertions;
+    while ( $elem = $elem->parent() ) {
+	$elem->isa( 'PPIx::Regexp::Structure::Assertion' )
+	    and push @assertions, $elem;
+    }
+    return @assertions;
+}
+
+{
+    my $look_behind = { map { $_ => 1 } qw/ ?<= ?<! / };
+
+    # Convenience method that returns the number of look-behind
+    # assertions that contain the current element. This is really only
+    # here so it can be shared between PPIx::Regexp::Token::Quantifier
+    # and PPIx::Regexp::Structure::Quantifier
+
+    sub __in_look_behind {
+	my ( $self ) = @_;
+	my @look_behind;
+	foreach my $assertion ( $self->in_assertion() ) {
+	    my $type = $assertion->type()
+		or next;
+	    $look_behind->{ $type->content() }
+		or next;
+	    push @look_behind, $assertion;
+	}
+	return @look_behind;
+    }
+}
+
 =head2 in_regex_set
 
 This method returns a true value if the invocant is contained in an

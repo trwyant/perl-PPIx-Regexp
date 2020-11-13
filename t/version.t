@@ -14,6 +14,7 @@ use 5.006;
 use strict;
 use warnings;
 
+use PPIx::Regexp;
 use PPIx::Regexp::Constant qw{
     HASH_REF
     SUFFICIENT_UTF8_SUPPORT_FOR_WEIRD_DELIMITERS
@@ -809,6 +810,24 @@ m_call(	perl_version_removed	=> undef );
 token(	'*asr:' );
 m_call(	perl_version_introduced	=> '5.027009', note => 'perl5279delta' );
 m_call(	perl_version_removed	=> undef );
+
+{
+    note <<'EOD';
+Test variable-length look-behind. This can not be done using the
+version-testing framework because it is too dependent on context.
+EOD
+    foreach my $test (
+	[ '=f?',	'5.000' ],
+	[ '=f{1,2}',	'5.000' ],
+	[ '<=f?',	'5.029009' ],
+	[ '<=f{1,2}',	'5.029009' ],
+    ) {
+	my $re = "/(?$test->[0])/";
+	my $pre = PPIx::Regexp->new( $re );
+	is $pre->perl_version_introduced(), $test->[1],
+	    "$re requires Perl $test->[1]";
+    }
+}
 
 finis();
 
