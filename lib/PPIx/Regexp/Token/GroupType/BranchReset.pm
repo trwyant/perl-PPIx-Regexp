@@ -65,14 +65,14 @@ sub __defining_string {
 
 =cut
 
-__PACKAGE__->__setup_class(
-    {
-	'?|'	=> {
-	    expl	=> 'Re-use capture group numbers',
-	    intro	=> '5.009005',
-	},
+use constant DEF	=> {
+    '?|'	=> {
+	expl	=> 'Re-use capture group numbers',
+	intro	=> '5.009005',
     },
-);
+};
+
+__PACKAGE__->__setup_class();
 
 1;
 

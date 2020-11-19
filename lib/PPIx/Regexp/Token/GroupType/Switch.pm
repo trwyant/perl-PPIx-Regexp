@@ -45,13 +45,14 @@ sub __match_setup {
     return;
 }
 
-__PACKAGE__->__setup_class(
-    {
-	'?'	=> {
-	    expl	=> q<Match one of the following '|'-delimited alternatives>,
-	    intro	=> '5.005',
-	},
+use constant DEF	=> {
+    '?'	=> {
+	expl	=> q<Match one of the following '|'-delimited alternatives>,
+	intro	=> '5.005',
     },
+};
+
+__PACKAGE__->__setup_class(
     {
 	suffix	=> '(',
     },

@@ -51,21 +51,23 @@ sub __match_setup {
     return;
 }
 
-__PACKAGE__->__setup_class( {
-	'??'	=> {
-	    expl	=> 'Evaluate code, use as regexp at this point',
-	    intro	=> '5.006',
-	},
-	'?p'	=> {
-	    expl	=> 'Evaluate code, use as regexp at this point (removed in 5.9.5)',
-	    intro	=> '5.005',	# Presumed. I can find no documentation.
-	    remov	=> '5.009005',
-	},
-	'?'		=> {
-	    expl	=> 'Evaluate code. Always matches.',
-	    intro	=> '5.005',
-	},
+use constant DEF	=> {
+    '??'	=> {
+	expl	=> 'Evaluate code, use as regexp at this point',
+	intro	=> '5.006',
     },
+    '?p'	=> {
+	expl	=> 'Evaluate code, use as regexp at this point (removed in 5.9.5)',
+	intro	=> '5.005',	# Presumed. I can find no documentation.
+	remov	=> '5.009005',
+    },
+    '?'		=> {
+	expl	=> 'Evaluate code. Always matches.',
+	intro	=> '5.005',
+    },
+};
+
+__PACKAGE__->__setup_class(
     {
 	suffix	=> '{',
     },

@@ -209,20 +209,22 @@ this key and value.
 =cut
 
 sub __setup_class {
-    my ( $class, $def, $opt ) = @_;
+    my ( $class, $opt ) = @_;
 
     $opt ||= {};
 
     unless ( $class->__ns_can( '__defining_string' ) ) {
 	my $method = "${class}::__defining_string";
-	my @def_str = sort keys %{ $def };
+	my @def_str = sort keys %{ $class->DEF };
 	defined $opt->{suffix}
 	    and unshift @def_str, {
 	    suffix	=> $opt->{suffix},
 	};
+	$class->DEF->{__defining_string} = \@def_str;
 	no strict qw{ refs };
 	*$method = sub {
-	    return @def_str;
+	    my ( $self ) = @_;
+	    return @{ $self->DEF->{__defining_string} };
 	};
     }
 
@@ -231,7 +233,8 @@ sub __setup_class {
 	no strict qw{ refs };
 	*$method = sub {
 	    my ( $self ) = @_;
-	    return $def->{ $self->unescaped_content() }{expl};
+	    $DB::single = 1;
+	    return $self->DEF->{ $self->unescaped_content() }{expl};
 	};
     }
 
@@ -240,7 +243,7 @@ sub __setup_class {
 	no strict qw{ refs };
 	*$method = sub {
 	    my ( $self ) = @_;
-	    return $def->{ $self->unescaped_content() }{intro} || MINIMUM_PERL;
+	    return $self->DEF->{ $self->unescaped_content() }{intro} || MINIMUM_PERL;
 	};
     }
 
@@ -249,7 +252,7 @@ sub __setup_class {
 	no strict qw{ refs };
 	*$method = sub {
 	    my ( $self ) = @_;
-	    return $def->{ $self->unescaped_content() }{remov};
+	    return $self->DEF->{ $self->unescaped_content() }{remov};
 	};
     }
 

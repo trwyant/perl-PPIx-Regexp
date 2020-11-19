@@ -38,20 +38,20 @@ use PPIx::Regexp::Constant qw{ @CARP_NOT };
 
 our $VERSION = '0.075_01';
 
-{
-    my $expl = 'Match subexpression without backtracking';
-    __PACKAGE__->__setup_class( {
-	    '?>'		=> {
-		expl	=> $expl,
-		intro	=> '5.005',
-	    },
-	    '*atomic:'	=> {
-		expl	=> $expl,
-		intro 	=>'5.027009',
-	    },
-	}
-    );
-}
+use constant EXPL	=> 'Match subexpression without backtracking';
+
+use constant DEF	=> {
+    '?>'		=> {
+	expl	=> EXPL,
+	intro	=> '5.005',
+    },
+    '*atomic:'	=> {
+	expl	=> EXPL,
+	intro 	=>'5.027009',
+    },
+};
+
+__PACKAGE__->__setup_class();
 
 1;
 
