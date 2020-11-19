@@ -1,5 +1,10 @@
+0.075_02	2020-11-19	T. R. Wyant
+    Recognize alphanumeric look-behinds (e.g. (*nla)). I ended up
+    refactoring the PPIx::Regexp::Token::GroupType class initialization
+    for this.
+
 0.075_01	2020-11-13	T. R. Wyant
-    Variable-lemgth look-behind is version 5.029009.
+    Variable-length look-behind is version 5.029009.
     
     Look-behinds quantified longer than 255 characters are an error, and are
     made into unknown tokens or structures.

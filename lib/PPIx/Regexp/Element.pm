@@ -54,7 +54,7 @@ use PPIx::Regexp::Constant qw{
     @CARP_NOT
 };
 
-our $VERSION = '0.075_01';
+our $VERSION = '0.075_02';
 
 =head2 accepts_perl
 
@@ -318,18 +318,21 @@ For anything else this method returns a false (but defined) value.
 
 sub is_matcher { return 0; }
 
-=head2 in_assertion
+# NOTE retracted this as a public method until I can investigate whether
+# the tokenizer can actually produce nested assertions.
 
-This method returns an array of assertions that contain the element,
-most-local first. For the purpose of this method, a look-around
-structure does not contain itself. If called in scalar context you get
-the size of the array.
+#=head2 in_assertion
+#
+#This method returns an array of assertions that contain the element,
+#most-local first. For the purpose of this method, a look-around
+#structure does not contain itself. If called in scalar context you get
+#the size of the array.
+#
+#This method was added in version 0.075_01.
+#
+#=cut
 
-This method was added in version 0.075_01.
-
-=cut
-
-sub in_assertion {
+sub __in_assertion {
     my ( $self ) = @_;
     my $elem = $self;
     my @assertions;
@@ -348,7 +351,7 @@ sub in_assertion {
 sub __in_look_behind {
     my ( $self ) = @_;
     my @look_behind;
-    foreach my $assertion ( $self->in_assertion() ) {
+    foreach my $assertion ( $self->__in_assertion() ) {
 	$assertion->is_look_ahead()
 	    and next;
 	push @look_behind, $assertion;
