@@ -203,7 +203,7 @@ sub __PPIX_TOKENIZER__regexp {
     # We special-case '\K' because it was retracted inside look-around
     # assertions in 5.31.3.
     if ( 'K' eq $next && __PACKAGE__ eq $make &&
-	$tokenizer->cookie( COOKIE_LOOKAROUND_ASSERTION ) ) {
+	$tokenizer->__cookie_exists( COOKIE_LOOKAROUND_ASSERTION ) ) {
 	return $tokenizer->make_token( 2, $make, {
 		perl_version_removed	=> '5.031003',
 		explanation		=> KEEP_EXPLANATION .

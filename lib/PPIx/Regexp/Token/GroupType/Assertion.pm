@@ -112,10 +112,13 @@ __PACKAGE__->__setup_class();
 
 sub __match_setup {
     my ( undef, $tokenizer ) = @_;	# $class not used
+    $tokenizer->__cookie_exists( COOKIE_LOOKAROUND_ASSERTION )
+	and return;
     my $nest_depth = 1;
     $tokenizer->cookie( COOKIE_LOOKAROUND_ASSERTION, sub {
 	    my ( undef, $token ) = @_;	# $tokenizer not used
-	    $token->isa( 'PPIx::Regexp::Token::Structure' )
+	    $token
+		and $token->isa( 'PPIx::Regexp::Token::Structure' )
 		and $nest_depth += ( {
 		    '('	=> 1,
 		    ')'	=> -1,
