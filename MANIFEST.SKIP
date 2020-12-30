@@ -22,4 +22,5 @@ CVS/
 \.swp$
 ^tools/
 ^TODO$
+^\.travis\.yml$
 ^PPIx-Regexp
