@@ -297,7 +297,8 @@ L<PPIx::Regexp::Dumper|PPIx::Regexp::Dumper>.
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
-L<https://rt.cpan.org>, or in electronic mail to the author.
+L<https://github.com/trwyant/perl-PPIx-Regexp/issues>, or in electronic
+mail to the author.
 
 =head1 AUTHOR
 
@@ -316,6 +317,5 @@ without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
 =cut
-
 
 # ex: set textwidth=72 :

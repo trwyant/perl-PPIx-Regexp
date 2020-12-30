@@ -11,7 +11,6 @@ use PPIx::Regexp::Constant qw{ @CARP_NOT };
 
 our $VERSION = '0.076';
 
-
 1;
 
 __END__
@@ -47,7 +46,8 @@ superclass.
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
-L<https://rt.cpan.org>, or in electronic mail to the author.
+L<https://github.com/trwyant/perl-PPIx-Regexp/issues>, or in electronic
+mail to the author.
 
 =head1 AUTHOR
 

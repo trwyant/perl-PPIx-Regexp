@@ -454,7 +454,6 @@ any objects specified are removed from the cache.
 
 sub can_be_quantified { return; }
 
-
 =head2 capture_names
 
  foreach my $name ( $re->capture_names() ) {
@@ -567,7 +566,6 @@ sub extract_regexps {
 	@found
     );
 }
-
 
 =head2 failures
 
@@ -921,7 +919,8 @@ is again supported.
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
-L<https://rt.cpan.org>, or in electronic mail to the author.
+L<https://github.com/trwyant/perl-PPIx-Regexp/issues>, or in electronic
+mail to the author.
 
 =head1 AUTHOR
 

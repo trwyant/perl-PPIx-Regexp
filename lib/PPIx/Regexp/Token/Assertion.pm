@@ -63,7 +63,6 @@ our $VERSION = '0.076';
 # Return true if the token can be quantified, and false otherwise
 # sub can_be_quantified { return };
 
-
 my @braced_assertions = (
     [ qr< \\ [bB] [{] (?: g | gcb | wb | sb ) [}] >smx, '5.021009' ],
     [ qr< \\ [bB] [{] (?: lb ) [}] >smx, '5.023007' ],
@@ -225,7 +224,8 @@ __END__
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
-L<https://rt.cpan.org>, or in electronic mail to the author.
+L<https://github.com/trwyant/perl-PPIx-Regexp/issues>, or in electronic
+mail to the author.
 
 =head1 AUTHOR
 

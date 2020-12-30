@@ -107,11 +107,12 @@ L<PPIx::Regexp::Tokenizer|PPIx::Regexp::Tokenizer>
 
 =head1 SUPPORT
 
-This module is private to the C<PPIx-Regexp> package. It is unsupported
-in the sense that the author reserves the right to modify or retract it
-without prior appeoval. Bug reports filed via L<https://rt.cpan.org>, or
-in electronic mail to the author will be accepted if they document a
-problem with this module that results in spurious test results.
+This module is private to the C<PPIx-Regexp> package. It is unsupported in
+the sense that the author reserves the right to modify or retract it
+without prior appeoval. Bug reports filed via
+L<https://github.com/trwyant/perl-PPIx-Regexp/issues>, or in electronic
+mail to the author will be accepted if they document a problem with this
+module that results in spurious test results.
 
 =head1 AUTHOR
 

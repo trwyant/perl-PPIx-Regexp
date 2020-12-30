@@ -128,7 +128,6 @@ sub __make_group_type_matcher {
     return \%rslt;
 }
 
-
 =head2 __match_setup
 
  $class->__match_setup( $tokenizer );
@@ -150,7 +149,6 @@ This method need not be overridden. The default does nothing.
 sub __match_setup {
     return;
 }
-
 
 =head2 __setup_class
 
@@ -286,7 +284,8 @@ __END__
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
-L<https://rt.cpan.org>, or in electronic mail to the author.
+L<https://github.com/trwyant/perl-PPIx-Regexp/issues>, or in electronic
+mail to the author.
 
 =head1 AUTHOR
 

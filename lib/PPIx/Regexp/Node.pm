@@ -534,7 +534,6 @@ sub __error {
     return 1;
 }
 
-
 # Called by the lexer once it has done its worst to all the tokens.
 # Called as a method with the lexer as argument. The return is the
 # number of parse failures discovered when finalizing.
@@ -563,7 +562,8 @@ __END__
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
-L<https://rt.cpan.org>, or in electronic mail to the author.
+L<https://github.com/trwyant/perl-PPIx-Regexp/issues>, or in electronic
+mail to the author.
 
 =head1 AUTHOR
 

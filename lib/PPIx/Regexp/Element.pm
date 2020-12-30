@@ -137,7 +137,6 @@ This method returns true if the element can be quantified.
 
 sub can_be_quantified { return 1; }
 
-
 =head2 class
 
 This method returns the class name of the element. It is the same as
@@ -1085,7 +1084,6 @@ sub __my_inx {
     return first { refaddr( $elem[$_] ) == $addr } 0 .. $#elem;
 }
 
-
 # Find our location and index among the parent's children. If not found,
 # just returns.
 
@@ -1189,7 +1187,8 @@ __END__
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
-L<https://rt.cpan.org>, or in electronic mail to the author.
+L<https://github.com/trwyant/perl-PPIx-Regexp/issues>, or in electronic
+mail to the author.
 
 =head1 AUTHOR
 

@@ -165,7 +165,6 @@ representing its ordinal in English. For example
 
 =cut
 
-
 =head1 SEE ALSO
 
 L<Params::Util|Params::Util>, which I recommend, but in the case of
@@ -173,11 +172,11 @@ C<PPIx::Regexp> I did not want to introduce a dependency on an XS module
 when all I really wanted was the function of that module's
 C<_INSTANCE()> subroutine.
 
-
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
-L<https://rt.cpan.org>, or in electronic mail to the author.
+L<https://github.com/trwyant/perl-PPIx-Regexp/issues>, or in electronic
+mail to the author.
 
 =head1 AUTHOR
 

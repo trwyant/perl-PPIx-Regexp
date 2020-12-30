@@ -64,10 +64,8 @@ use constant UNICODE_PROPERTY_LITERAL =>
 use constant UNICODE_PROPERTY_WILDCARD =>
     qr/ \A \\ [Pp] \{ \s* [\w\s-]+ [:=] [^}]+ \} /smx;
 
-
 use constant UNICODE_PROPERTY_NAME_MATCH =>
     qr< \A \\ [Pp] \{ \s* na (?: me? )? [:=] / [^/]+ / \} >smx;
-
 
 use constant UNICODE_PROPERTY =>
     qr/ @{[ UNICODE_PROPERTY_LITERAL ]} |
@@ -301,7 +299,8 @@ __END__
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
-L<https://rt.cpan.org>, or in electronic mail to the author.
+L<https://github.com/trwyant/perl-PPIx-Regexp/issues>, or in electronic
+mail to the author.
 
 =head1 AUTHOR
 
