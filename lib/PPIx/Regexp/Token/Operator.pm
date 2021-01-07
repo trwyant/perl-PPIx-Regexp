@@ -43,7 +43,7 @@ use PPIx::Regexp::Constant qw{
 };
 use PPIx::Regexp::Util qw{ __instance };
 
-our $VERSION = '0.076';
+our $VERSION = '0.076_01';
 
 use constant TOKENIZER_ARGUMENT_REQUIRED => 1;
 
