@@ -1,6 +1,4 @@
-# Cargo cult to try to prevent CPAN from indexing
-package
-PPIx::Regexp::Structure::Atomic_Script_Run;
+package PPIx::Regexp::Structure::Atomic_Script_Run;
 
 use 5.006;
 
