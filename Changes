@@ -1,3 +1,7 @@
+0.077_02	2021-01-21	T. R. Wyant
+    Allow CPAN to index Script_Run, Atomic_Script_Run, since they made
+    it into a production release.
+
 0.077_01	2021-01-21	T. R. Wyant
     Allow {,3} and { 0 , 3 } as quantifiers, requiring at least Perl
     5.33.6. Previously these parsed as literals. This parse will be
