@@ -20,6 +20,8 @@ sub new {
 sub build_requires {
     return +{
 	'Test::More'	=> 0.88,	# Because of done_testing().
+	charnames	=> 0,
+	lib		=> 0,
     };
 }
 
