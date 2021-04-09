@@ -775,7 +775,7 @@ sub tokens {
 
     my %deprecate = (
 	attribute => {
-	    postderef	=> 1,
+	    postderef	=> 2,
 	},
     );
 
