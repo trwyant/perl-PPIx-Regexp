@@ -927,6 +927,14 @@ L<Regexp::Parser|Regexp::Parser>, which parses a bare regular expression
 navigation model. After a long hiatus, this module has been adopted, and
 is again supported.
 
+L<YAPE::Regex|YAPE::Regex>, which provides the parse tree, and has a
+mechanism to subclass the various element classes for customization. The
+most-recent release is 2011, but the CPAN testers results are still all
+green. Companion module L<YAPE::Regex::Explain|YAPE::Regex::Explain>
+says what the various pieces of a regex do, though constructs added in
+perl 5.10 and later are not supported. I have no idea how I missed this
+when I originally went looking for C<Regexp> parsers.
+
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
