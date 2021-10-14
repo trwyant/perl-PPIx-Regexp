@@ -18,8 +18,9 @@ postfix dereferences will always be recognized. This is the default
 behaviour now.
 
 Starting with version 0.074_01, the first use of this argument warned.
-warn. With version 0.079_01, all uses will warn. With the first release
-after October 15 2021, all uses will become fatal.
+warn. With version 0.079_01, all uses will warn. With version 0.080_01,
+all uses will become fatal. With the first release on or after April 15
+2022 all mention of this argument will be removed.
 
 =head1 INHERITANCE
 
