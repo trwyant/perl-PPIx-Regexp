@@ -1,4 +1,4 @@
-0.080_01	2021-10-15	T. R. Wyant
+0.081		2021-10-22	T. R. Wyant
     Any use of the postderef argument is now fatal.
 
     Correct generation of 'provides' metadata.  Thanks to Favio Poletti
