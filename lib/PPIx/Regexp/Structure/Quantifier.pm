@@ -112,6 +112,9 @@ sub __PPIX_LEXER__finalize {
 
 	    my ( $lo, $hi ) = split qr{ , }smx, $quant;
 
+	    defined $hi
+		or $hi = $lo;
+
 	    my $numeric = 1;
 	    foreach ( $lo, $hi ) {
 		if ( m/ \A [0-9]+ \z /smx ) {
