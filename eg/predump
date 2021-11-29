@@ -217,7 +217,7 @@ If true, this option specifies that the arguments are files whose
 regular expressions are to be analyzed. If this options is asserted,
 C<--objectify> and C<--unescape> are ignored.
 
-=head2 --help
+=item --help
 
 This option displays the documentation for this script. The script then
 exits.
@@ -309,7 +309,7 @@ author makes no commitment to what it will do, and reserves the right to
 change it without notice. This is simply passed through to L<<
 PPIx::Regexp::Dumper->new()|PPIx::Regexp::Dumper/new >>.
 
-=head2 --version
+=item --version
 
 This option displays the version of this script. The script then exits.
 
