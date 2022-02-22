@@ -876,6 +876,48 @@ sub _update_location {
 	or return;
     $token->{location} = [ @{ $loc->{location} } ];
     if ( defined( my $content = $token->content() ) ) {
+
+	### New code
+
+	my $lines;
+	pos( $content ) = 0;
+	$lines++ while $content =~ m/ \n /smxgc;
+	if ( pos $content ) {
+	    $loc->{location}[LOCATION_LINE] += $lines;
+	    $loc->{location}[LOCATION_LOGICAL_LINE] += $lines;
+	    $loc->{location}[LOCATION_CHARACTER] =
+		$loc->{location}[LOCATION_COLUMN] = 1;
+	    $loc->{line_content} = '';
+	}
+
+	if ( my $chars = length( $content ) - pos( $content ) ) {
+	    $loc->{line_content} .= substr $content, pos $content;
+	    $loc->{location}[LOCATION_CHARACTER] += $chars;
+	    if ( $loc->{tab_width} > 1 && $loc->{line_content} =~ m/ \t /smx ) {
+		my $pos = $loc->{location}[LOCATION_COLUMN];
+		my $tab_width = $loc->{tab_width};
+		# Stolen shamelessly from PPI::Document::_visual_length
+		my ( $length, $vis_inc );
+		foreach my $part ( split /(\t)/, $loc->{line_content} ) {
+		    if ($part eq "\t") {
+			$vis_inc = $tab_width - ($pos-1) % $tab_width;
+		    } else {
+			$vis_inc = length $part;
+		    }
+		    $length += $vis_inc;
+		    $pos    += $vis_inc;
+		}
+		$loc->{location}[LOCATION_COLUMN] = $length;
+
+	    } else {
+		$loc->{location}[LOCATION_COLUMN] += $chars;
+	    }
+	}
+
+=begin comment
+
+	### Old code
+
 	if ( my $newlines = $content =~ tr/\n/\n/ ) {
 	    $loc->{location}[LOCATION_LINE] += $newlines;
 	    $loc->{location}[LOCATION_LOGICAL_LINE] += $newlines;
@@ -886,9 +928,18 @@ sub _update_location {
 	}
 	$loc->{location}[LOCATION_CHARACTER] += length $content;
 	$loc->{line_content} .= $content;
+	# FIXME this is wrong if the line_content contains a \n. It is
+	# also slow on extremely long lines. Maybe I should also look
+	# into special-casing $loc->{tab_width} == 1, since that means I
+	# do not have to do tab expansion at all.
 	local $Text::Tabs::tabstop = $loc->{tab_width};
 	$loc->{location}[LOCATION_COLUMN] = 1 + length Text::Tabs::expand(
 	    $loc->{line_content} );
+
+=end comment
+
+=cut
+
     }
     return;
 }
