@@ -196,7 +196,6 @@ use PPIx::Regexp::Util qw{
     __instance
 };
 use Scalar::Util qw{ refaddr };
-use Text::Tabs ();
 
 our $VERSION = '0.082';
 

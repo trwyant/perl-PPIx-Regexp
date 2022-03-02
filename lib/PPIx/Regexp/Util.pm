@@ -10,7 +10,6 @@ use PPIx::Regexp::Constant qw{
     @CARP_NOT
 };
 use Scalar::Util qw{ blessed };
-use Text::Tabs ();
 
 use base qw{ Exporter };
 
