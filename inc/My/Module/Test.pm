@@ -104,7 +104,9 @@ sub klass {
     # error if you do it enough times.
     $Test::Builder::Level = $Test::Builder::Level + 1;
     if ( defined $class ) {
-	return isa_ok( $obj, $class, "$kind $nav" );
+	my $rslt = isa_ok( $obj, $class, "$kind $nav" )
+	    or diag "    Instead, $kind $nav isa $result";
+	return $rslt;
     } else {
 	return is( ref $obj || undef, $class, "Class of $kind $nav" );
     }
