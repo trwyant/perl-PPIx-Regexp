@@ -526,8 +526,7 @@ sub __error {
     my ( $self, $msg, %arg ) = @_;
     defined $msg
 	or $msg = 'Was class ' . ref $self;
-    $self->{error} = $msg;
-    bless $self, $self->ELEMENT_UNKNOWN();
+    $self->ELEMENT_UNKNOWN()->__PPIX_ELEM__rebless( $self, error => $msg );
     foreach my $key ( keys %arg ) {
 	$self->{$key} = $arg{$key};
     }

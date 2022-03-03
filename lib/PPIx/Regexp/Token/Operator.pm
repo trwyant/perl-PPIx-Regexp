@@ -183,7 +183,7 @@ sub __PPIX_TOKENIZER__regexp {
 	push @tokens, $tokenizer->get_token();
 	
 	_treat_as_literal( $tokens[1] )
-	    or bless $tokens[0], TOKEN_LITERAL;
+	    or TOKEN_LITERAL->__PPIX_ELEM__rebless( $tokens[0] );
 	
 	return ( @tokens );
     }

@@ -181,7 +181,7 @@ sub __PPIX_LEXER__rebless {
     # be octal literals.
     my $content = $self->content();
     if ( $content =~ m/ \A \\ [0-7]{2,} \z /smx ) {
-	bless $self, TOKEN_LITERAL;
+	TOKEN_LITERAL->__PPIX_ELEM__rebless( $self );
 	return 0;
     }
 
@@ -193,8 +193,7 @@ sub __error {
     my ( $self, $msg ) = @_;
     defined $msg
 	or $msg = 'No corresponding capture group';
-    $self->{error} = $msg;
-    bless $self, TOKEN_UNKNOWN;
+    TOKEN_UNKNOWN->__PPIX_ELEM__rebless( $self, error => $msg );
     return 1;
 }
 

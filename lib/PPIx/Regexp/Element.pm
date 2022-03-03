@@ -1139,8 +1139,7 @@ sub __error {
     my ( $self, $msg ) = @_;
     defined $msg
 	or $msg = 'Was ' . ref $self;
-    $self->{error} = $msg;
-    bless $self, TOKEN_UNKNOWN;
+    TOKEN_UNKNOWN->__PPIX_ELEM__rebless( $self, error => $msg );
     return 1;
 }
 
@@ -1165,13 +1164,14 @@ sub __PPIX_LEXER__record_capture_number {
 
 # Called by the lexer to rebless
 sub __PPIX_ELEM__rebless {
-    my ( $class, $self ) = @_;		# %arg unused
+    my ( $class, $self, %arg ) = @_;
     $self ||= {};
     bless $self, $class;
     delete $self->{error};
-    defined $self->{error}
-	and return 1;
-    delete $self->{error};
+    return $self->__PPIX_ELEM__post_reblessing( %arg );
+}
+
+sub __PPIX_ELEM__post_reblessing {
     return 0;
 }
 
