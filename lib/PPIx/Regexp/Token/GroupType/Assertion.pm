@@ -39,7 +39,7 @@ use PPIx::Regexp::Constant qw{
     @CARP_NOT
 };
 
-our $VERSION = '0.082';
+our $VERSION = '0.082_01';
 
 use constant EXPL_NLA	=> 'Negative look-ahead assertion';
 use constant EXPL_NLB	=> 'Negative look-behind assertion';
