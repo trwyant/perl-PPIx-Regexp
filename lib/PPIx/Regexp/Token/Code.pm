@@ -188,7 +188,7 @@ sub __ppi_normalize_content {
 
     my %accept = map { $_ => 1 } qw{ $ $# @ % & * };
 
-    # Say what casts are accepted, since not all are in am
+    # Say what casts are accepted, since not all are in an
     # interpolation.
     sub __postderef_accept_cast {
 	return \%accept;
