@@ -114,15 +114,6 @@ If true, this option causes the C<perl_version_introduced> and
 C<perl_version_removed> values associated with each object dumped to be
 displayed.
 
-=item postderef Boolean
-
-B<THIS ARGUMENT IS DEPRECATED>.  See L<DEPRECATION
-NOTICE|PPIx::QuoteLike/DEPRECATION NOTICE> in
-L<PPIx::QuoteLike|PPIx::QuoteLike> for the details.
-
-If true, postfix dereferences are recognized in code and interpolations.
-See the tokenizer's L<new()|PPIx::Regexp::Tokenizer/new> for details.
-
 =item ppi Boolean
 
 If true, any Perl code contained in the object will be dumped.
