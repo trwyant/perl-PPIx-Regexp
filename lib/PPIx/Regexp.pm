@@ -933,6 +933,10 @@ says what the various pieces of a regex do, though constructs added in
 perl 5.10 and later are not supported. I have no idea how I missed this
 when I originally went looking for C<Regexp> parsers.
 
+L<PPR|PPR>, which recognizes Perl of all sorts, including regular
+expressions, but does not actually provide a parse of the recognized
+constructs.
+
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
