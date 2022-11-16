@@ -723,7 +723,7 @@ you will get back a deep clone, but without the insignificant elements.
 
 If you call this method on any other L<PPIx::Regexp|PPIx::Regexp> class
 you will get back either the invocant or nothing. This may change to a
-clone of the invocant or nothing if unforseen problems arise with
+clone of the invocant or nothing if unforeseen problems arise with
 returning the invocant, or if objects become mutable (unlikely, but not
 impossible.)
 
