@@ -20,6 +20,7 @@ our @EXPORT_OK = qw{
     COOKIE_REGEX_SET
     FALSE
     HASH_REF
+    INFINITY
     LITERAL_LEFT_CURLY_ALLOWED
     LITERAL_LEFT_CURLY_REMOVED_PHASE_1
     LITERAL_LEFT_CURLY_REMOVED_PHASE_2
@@ -122,6 +123,8 @@ use constant COOKIE_LOOKAROUND_ASSERTION	=> 'lookaround';
 
 use constant FALSE		=> 0;
 use constant TRUE		=> 1;
+
+use constant INFINITY	=> 0 + 'inf';	# Infinity, per perldata.
 
 use constant ARRAY_REF		=> ref [];
 use constant CODE_REF		=> ref sub {};
@@ -268,9 +271,19 @@ C<\Q> is encountered, and it persists until the next C<\E>.
 
 The name of the cookie used to control regular expression sets.
 
+=head2 FALSE
+
+A false value. The author makes no commitment what the exact value is,
+only that Boolean operations will see it as false.
+
 =head2 HASH_REF
 
 This is the result of C<ref {}>.
+
+=head2 INFINITY
+
+This is the result of C<0 + 'inf'>, which according to L<perldata>
+generates the IEEE value C<Inf>.
 
 =head2 LITERAL_LEFT_CURLY_ALLOWED
 
@@ -363,6 +376,11 @@ L<PPIx::Regexp::Token::Literal|PPIx::Regexp::Token::Literal>.
 
 The name of the class that represents the unknown token. That is,
 L<PPIx::Regexp::Token::Unknown|PPIx::Regexp::Token::Unknown>.
+
+=head2 TRUE
+
+A true value. The author makes no commitment what the exact value is,
+only that Boolean operations will see it as true.
 
 =head2 VARIABLE_LENGTH_LOOK_BEHIND_INTRODUCED
 

@@ -765,7 +765,7 @@ This method was added in version 0.051_01.
 sub requirements_for_perl {
     my ( $self ) = @_;
     my @req;
-    foreach my $r ( @{ $self->__structured_requirements_for_perl() || [] } ) {
+    foreach my $r ( $self->__perl_requirements() ) {
 	push @req, defined $r->{removed} ?
 	"$r->{introduced} <= \$] < $r->{removed}" :
 	"$r->{introduced} <= \$]";
@@ -930,56 +930,6 @@ sub statement {
     $source->can( 'statement' )
 	or return;
     return $source->statement();
-}
-
-# NOTE: This method is to be used ONLY for requirements_for_perl(). I
-# _may_ eventually expose it, but at the moment I do not consider it
-# stable. The exposure would be
-# sub structured_requirements_for_perl {
-#     my ( $self ) = @_;
-#     return $self->__structured_requirements_for_perl();
-# }
-# The return ia a reference to an array of hashes. Each hash contains
-# key {introduced} (the version the element was introduced) and MAYBE
-# key {removed} (the version the element was removed). There may be more
-# than one such, and their ranges will not overlap.
-sub __structured_requirements_for_perl {
-    my ( $self, $rslt ) = @_;
-    $rslt ||= $self->__structured_requirements_for_any_perl();
-
-    my @merged;
-    foreach my $left ( $self->__perl_requirements() ) {
-	foreach my $right ( @{ $rslt } ) {
-	    my $min = max( $left->{introduced}, $right->{introduced} );
-	    my $max = defined $left->{removed} ?
-		defined $right->{removed} ?
-		    min( $left->{removed}, $right->{removed} ) :
-		    $left->{removed} :
-		$right->{removed};
-	    defined $max
-		and $max <= $min
-		and next;
-	    push @merged, {
-		introduced	=> $min,
-		removed		=> $max,
-	    };
-	}
-    }
-    @{ $rslt } = @merged;
-
-    return $rslt;
-}
-
-# NOTE: This method is to be used ONLY to initialize
-# __structured_requirements_for_perl(). It returns a structure that
-# matches any Perl.
-sub __structured_requirements_for_any_perl {
-    return [
-	{
-	    introduced	=> MINIMUM_PERL,
-	    removed	=> undef,
-	},
-    ];
 }
 
 =head2 tokens

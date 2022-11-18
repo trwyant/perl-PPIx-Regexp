@@ -135,14 +135,6 @@ sub __PPIX_LEXER__finalize {
 		}
 
 	    }
-
-	    # The problem I am having is that the dumper uses
-	    # __structured_requirements_for_perl(), which is not
-	    # sensitive to the minimum perl of structures, only
-	    # elements. But there is no logical element to hang the
-	    # minimum version on. Maybe the opening bracket is less bad
-	    # than the other choices?
-
 	}
     }
 

@@ -46,7 +46,7 @@ use PPIx::Regexp::Constant qw{
     TRUE
     @CARP_NOT
 };
-use PPIx::Regexp::Util qw{ __instance };
+use PPIx::Regexp::Util qw{ __instance __merge_perl_requirements };
 use Scalar::Util qw{ refaddr };
 
 our $VERSION = '0.085';
@@ -66,28 +66,6 @@ sub __new {
 	$elem->_parent( $self );
     }
     return $self;
-}
-
-sub accepts_perl {
-    my ( $self, $version ) = @_;
-    foreach my $elem ( $self->elements() ) {
-	$elem->accepts_perl( $version )
-	    or return FALSE;
-    }
-    return TRUE;
-}
-
-# NOTE: this method is to be used ONLY for requirements_for_perl(). See
-# PPIx::Regexp::Element for exposure plans. IF it is exposed, that is
-# where it will be documented.
-sub __structured_requirements_for_perl {
-    my ( $self, $rslt ) = @_;
-    $rslt ||= $self->__structured_requirements_for_any_perl();
-
-    foreach my $elem ( $self->elements() ) {
-	$elem->__structured_requirements_for_perl( $rslt );
-    }
-    return $rslt;
 }
 
 =head2 child
@@ -531,6 +509,18 @@ sub __error {
 	$self->{$key} = $arg{$key};
     }
     return 1;
+}
+
+sub __perl_requirements {
+    my ( $self ) = @_;
+    unless ( $self->{perl_requirements} ) {
+	my @req = $self->__perl_requirements_setup();
+	foreach my $kid ( $self->children() ) {
+	    push @req, $kid->__perl_requirements();
+	}
+	$self->{perl_requirements} = [ __merge_perl_requirements( @req ) ];
+    }
+    return @{ $self->{perl_requirements} };
 }
 
 # Called by the lexer once it has done its worst to all the tokens.

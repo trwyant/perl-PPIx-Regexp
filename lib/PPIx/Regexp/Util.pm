@@ -7,6 +7,8 @@ use warnings;
 
 use Carp;
 use PPIx::Regexp::Constant qw{
+    INFINITY
+    MINIMUM_PERL
     @CARP_NOT
 };
 use Scalar::Util qw{ blessed };
@@ -18,6 +20,7 @@ our @EXPORT_OK = qw{
     __choose_tokenizer_class
     __instance
     __is_ppi_regexp_element
+    __merge_perl_requirements
     __ns_can
     __post_rebless_error
     __to_ordinal_en
@@ -58,6 +61,33 @@ sub __instance {
     my ( $object, $class ) = @_;
     blessed( $object ) or return;
     return $object->isa( $class );
+}
+
+sub __merge_perl_requirements {	## no critic (RequireArgUnpacking)
+    my @work =
+    sort { $a->[0] <=> $b->[0] || $b->[1] <=> $a->[1] }
+    map { ( [ $_->[0], 1 ], [ $_->[1], 0 ] ) }
+    map { [ $_->{introduced}, defined $_->{removed} ? $_->{removed} : INFINITY ] } @_;
+    my @rslt;
+    while ( @work ) {
+	my ( $intro, $rem );
+	$intro = ( shift @work )->[0] while @work && $work[0][1];
+	if ( @work ) {
+	    $rem = $work[0][0];
+	    shift @work while @work && ! $work[0][1];
+	} else {
+	    $rem = INFINITY;
+	}
+	$intro != $rem
+	    and push @rslt, {
+		introduced	=> $intro,
+		removed	=> $rem,
+	    };
+    }
+    @rslt
+	and $rslt[-1]{removed} == INFINITY
+	and delete $rslt[-1]{removed};
+    return @rslt;
 }
 
 sub __ns_can {
@@ -161,6 +191,13 @@ This subroutine is B<private> to the C<PPIx-Regexp> package.
 This is a synonym for L<is_ppi_regexp_element()|/is_ppi_regexp_element>,
 and is deprecated in favor of it. If called, it will complain via
 C<Carp::cluck()> and then C<goto &is_ppi_regexp_element>.
+
+=head2 __merge_perl_requirements
+
+This subroutine is B<private> to the C<PPIx-Regexp> package.
+
+This subroutine merges perl requirements as returned by the various
+C<__perl_requirements()> methods.
 
 =head2 __ns_can
 
