@@ -52,7 +52,7 @@ use PPIx::Regexp::Constant qw{
     @CARP_NOT
 };
 
-our $VERSION = '0.085';
+our $VERSION = '0.085_01';
 
 sub can_be_quantified {
     return;
