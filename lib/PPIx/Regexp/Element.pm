@@ -712,6 +712,27 @@ sub previous_token {
     }
 }
 
+=head2 raw_width
+
+ my ( $raw_min, $raw_max ) = $self->raw_width();
+
+This public method returns the minimum and maximum width matched by the
+element before taking into account such details as what the element
+actually is and how it is quantified. Either or both elements can be
+C<undef> if the width can not be determined, and the maximum can be
+C<Inf>.
+
+This method was added in version 0.085_01.
+
+=cut
+
+# This implementation is appropriate to a structural element -- i.e. it
+# returns C<( 0, 0 )>.
+
+sub raw_width {
+    return ( 0, 0 );
+}
+
 =head2 remove_insignificant
 
 This method returns a new object manufactured from the invocant, but
@@ -990,6 +1011,36 @@ otherwise.
 
 sub whitespace {
     return;
+}
+
+=head2 width
+
+ my ( $min, $max ) = $self->width();
+
+This method returns the minimum and maximum number of characters this
+element can match.
+
+Either element can be C<undef> if it cannot be determined. For example,
+for C</$foo/> both elements will be C<undef>.  Recursions will return
+C<undef> because they can not be analyzed statically -- or at least I am
+not smart enough to do so. Back references B<may> return C<undef> if the
+referred-to group can not be uniquely determined.
+
+It is possible for C<$max> to be C<Inf>. For example, for C</x*/>
+C<$max> will be C<Inf>.
+
+Elements that do not actually match anything will return zeroes.
+
+B<Note:> This method was added because I wanted better detection of
+variable-length look-behinds. Both it and L<raw_width()|/raw_width>
+(above) should be considered somewhat experimental.
+
+This method was added in version 0.085_01.
+
+=cut
+
+sub width {
+    return ( 0, 0 );
 }
 
 =head2 nav

@@ -31,11 +31,13 @@ our @EXPORT_OK = qw{
     different
     done_testing
     dump_result
+    equals
     error
     fail
     false
     finis
-    equals
+    format_want
+    invocant
     is
     navigate
     note
@@ -238,6 +240,15 @@ sub finis {
     return is( $result, 0, 'Should be no leftover objects' );
 }
 
+sub format_want {
+    my ( $want ) = @_;
+    return _format_args( $want, bare => ref $want ? 0 : 1 );
+}
+
+sub invocant {
+    return $obj;
+}
+
 {
 
     my %array = map { $_ => 1 } qw{
@@ -363,7 +374,7 @@ sub true {		## no critic (RequireArgUnpacking)
 }
 
 sub value {		## no critic (RequireArgUnpacking)
-    my ( $method, $args, $expect ) = @_;
+    my ( $method, $args, $want, $name ) = @_;
     ARRAY_REF eq ref $args
 	or $args = [ $args ];
 
@@ -376,22 +387,25 @@ sub value {		## no critic (RequireArgUnpacking)
 	return ok( undef, "$class->$method() exists" );
     }
 
-    $result = ARRAY_REF eq ref $expect ?
+    $result = ARRAY_REF eq ref $want ?
 	[ $invocant->$method( @{ $args } ) ] :
 	$invocant->$method( @{ $args } );
 
     my $fmtd = _format_args( $args );
-    my $answer = _format_args( [ $expect ], bare => 1 );
+    my $answer = format_want( $want, bare => ref $want ? 0 : 1 );
+    defined $name
+	or $name = "${class}->$method$fmtd is $answer";
     if ( ref $result ) {
-	return is_deeply( $result, $expect,
-	    "${class}->$method$fmtd is $answer" );
+	return is_deeply( $result, $want, $name );
     } else {
-	return is( $result, $expect, "${class}->$method$fmtd is $answer" );
+	return is( $result, $want, $name );
     }
 }
 
 sub _format_args {
     my ( $args, %opt ) = @_;
+    ARRAY_REF eq ref $args
+	or $args = [ $args ];
     my @rslt;
     foreach my $arg ( @{ $args } ) {
 	if ( ! defined $arg ) {
@@ -629,6 +643,13 @@ are compared by reference address and scalars by value (numeric or string
 comparison as appropriate). If the first argument is omitted it defaults
 to the current object.
 
+=head2 format_want
+
+ is $got, $want, 'Want ' . format_want( $want );
+
+This convenience subroutine formats the wanted result. If an ARRAY
+reference, the contents are enclosed in parentheses.
+
 =head2 false
 
  false( significant => [] );
@@ -643,6 +664,12 @@ on the current object, returns a false value.
 This test should be last in a series, and no references to parse objects
 should be held when it is run. It checks the number of objects in the
 internal C<%parent> hash, and succeeds if it is zero.
+
+=head2 invocant
+
+ invocant();
+
+Returns the current object.
 
 =head2 navigate
 
@@ -671,7 +698,7 @@ constructor.
 
 This subroutine is exported from L<Test::More|Test::More>.
 
-=head2 content
+=head2 ppi
 
  ppi( '$foo' );
 
@@ -722,7 +749,9 @@ on the current object, returns a true value.
  value( max_capture_number => [], 3 );
 
 This test succeeds if the given method, with the given arguments, called
-on the current object, returns the given value.
+on the current object, returns the given value. If the wanted value is
+a reference, C<is_deeply()> is used for the comparison; otherwise
+C<is()> is used.
 
 If the current object is undefined, the given method is called on the
 intended initial class, otherwise there would be no way to test the
@@ -730,6 +759,10 @@ errstr() method.
 
 The result of the method call is accessable via the L<result()|/result>
 subroutine.
+
+An optional fourth argument specifies the name of the test. If this is
+omitted or specified as C<undef>, a name is generated describing the
+arguments.
 
 =head1 SUPPORT
 

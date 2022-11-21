@@ -92,6 +92,10 @@ sub ordinal {
     return ord $self->content();
 }
 
+sub width {
+    return ( undef, undef );
+}
+
 *__PPIX_ELEM__post_reblessing = \&PPIx::Regexp::Util::__post_rebless_error;
 
 # Since the lexer does not count these on the way in (because it needs

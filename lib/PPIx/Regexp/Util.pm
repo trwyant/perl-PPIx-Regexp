@@ -23,8 +23,15 @@ our @EXPORT_OK = qw{
     __merge_perl_requirements
     __ns_can
     __post_rebless_error
+    raw_width
     __to_ordinal_en
+    width
 };
+
+our %EXPORT_TAGS = (
+    all		=> \@EXPORT_OK,
+    width_one	=> [ qw{ raw_width width } ],
+);
 
 our $VERSION = '0.085';
 
@@ -113,6 +120,11 @@ sub __post_rebless_error {
 
 }
 
+# Unquantified number of characters matched.
+sub raw_width {
+    return ( 1, 1 );
+}
+
 sub __to_ordinal_en {
     my ( $num ) = @_;
     $num += 0;
@@ -125,6 +137,16 @@ sub __to_ordinal_en {
     3 == $num % 10
 	and return "${num}rd";
     return "${num}th";
+}
+
+sub width {
+    my ( $self ) = @_;
+    my @raw_width = $self->raw_width();
+    my ( $code, $next_sib );
+    $next_sib = $self->snext_sibling()
+	and $code = $next_sib->can( '__quantified_width' )
+	or return @raw_width;
+    return $code->( $next_sib, @raw_width );
 }
 
 1;
@@ -217,6 +239,15 @@ C<{explanation}> defaults to C<{error}>.
 
 It returns the number of errors to add to the parse.
 
+=head2 raw_width
+
+This public method returns the minimum and maximum width matched by the
+element before taking into account such details as what the element
+actually is and how it is quantified.
+
+This implementation is appropriate to things that match exactly one
+character -- i.e. it returns C<( 1, 1 )>.
+
 =head2 __to_ordinal_en
 
 This subroutine is B<private> to the C<PPIx-Regexp> package.
@@ -226,6 +257,30 @@ representing its ordinal in English. For example
 
  say __to_ordinal_en( 17 );
  # 17th
+
+=head2 width
+
+ my ( $min_wid, $max_wid ) = $self->width();
+
+This public method (well, mixin) returns the minimum and maximum width
+of the text matched by the element.
+
+Elements which import this method must also implement a C<raw_width()>
+method which returns the unquantified width of the element.
+
+=head1 EXPORT TAGS
+
+The following export tags are defined by this module. All are private to
+the C<PPIx-Regexp> package unless otherwise documented.
+
+=head2 all
+
+This tag exports everything exportable by this module.
+
+=head2 width_one
+
+This tag is appropriate to an element which, when unquantified, matches
+exactly one character. It exports C<raw_width()> and C<width()>.
 
 =head1 SEE ALSO
 

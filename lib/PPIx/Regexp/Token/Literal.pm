@@ -45,6 +45,8 @@ use PPIx::Regexp::Constant qw{
     @CARP_NOT
 };
 
+use PPIx::Regexp::Util qw{ :width_one };
+
 our $VERSION = '0.085';
 
 sub __new {

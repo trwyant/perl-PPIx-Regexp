@@ -53,6 +53,10 @@ sub __new {
     return $self;
 }
 
+sub width {
+    return ( undef, undef );
+}
+
 sub explain {
     my ( $self ) = @_;
     return $self->{explanation} || $self->SUPER::explain();

@@ -175,6 +175,10 @@ sub ppi {
     }
 }
 
+sub width {
+    return ( undef, undef );
+}
+
 sub __ppi_normalize_content {
     my ( $self ) = @_;
     return $self->{content};

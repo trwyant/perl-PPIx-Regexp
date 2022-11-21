@@ -37,16 +37,17 @@ use warnings;
 use base qw{ PPIx::Regexp::Element };
 
 use Carp;
-use List::Util qw{ max };
+use List::Util qw{ max min };
 use PPIx::Regexp::Constant qw{
     CODE_REF
     FALSE
+    INFINITY
     MINIMUM_PERL
     NODE_UNKNOWN
     TRUE
     @CARP_NOT
 };
-use PPIx::Regexp::Util qw{ __instance __merge_perl_requirements };
+use PPIx::Regexp::Util qw{ __instance __merge_perl_requirements width };
 use Scalar::Util qw{ refaddr };
 
 our $VERSION = '0.085';
@@ -489,6 +490,79 @@ sub unescaped_content {
     return join '', map { $_->unescaped_content() } $self->elements();
 }
 
+use constant ALTERNATION	=> q<|>;
+
+{
+    my $obj;
+    sub _alternation_object {
+	unless ( $obj ) {
+
+=begin comment
+
+	    # This is a pain because PPIx::Regexp::Token requires a
+	    # tokenizer object.
+	    require PPIx::Regexp::Tokenizer;
+	    require PPIx::Regexp::Token::Operator;
+	    $obj = PPIx::Regexp::Token::Operator->__new(
+		ALTERNATION,
+		tokenizer	=> PPIx::Regexp::Tokenizer->new( ALTERNATION ),
+	    );
+
+=end comment
+
+=cut
+
+	    # DANGER WILL ROBINSON!
+	    # This is a horrible encapsulation violation, which I get
+	    # away with because I am using the object as a sentinel.
+
+	    $obj = bless {
+		content	=> ALTERNATION,
+	    }, 'PPIx::Regexp::Token::Operator';
+	}
+	return $obj;
+    }
+}
+
+sub raw_width {
+    my ( $self ) = @_;
+    return ( $self->__raw_width() )[ 0, 1 ];
+}
+
+# PRIVATE TO THIS PACKAGE.
+# This is the machinery for raw_width(), but because the datum is needed
+# internally it also returns the number of alternatives found.
+sub __raw_width {
+    my ( $self ) = @_;
+    my ( $node_min, $node_max ) = ( INFINITY, 0 );
+    my ( $raw_min, $raw_max ) = ( 0, 0 );
+    my $alternatives = 0;
+    foreach my $elem ( $self->elements(), _alternation_object() ) {
+	if ( $elem->isa( 'PPIx::Regexp::Token::Operator' ) &&
+	    $elem->content() eq ALTERNATION
+	) {
+	    $alternatives++;
+	    defined $node_min
+		and $node_min = defined $raw_min ?
+		    min( $node_min, $raw_min ) :
+		    undef;
+	    $raw_min = 0;
+	    defined $node_max
+		and $node_max = defined $raw_max ?
+		    max( $node_max, $raw_max ) :
+		    undef;
+	    $raw_max = 0;
+	} else {
+	    my ( $e_min, $e_max ) = $elem->width();
+	    defined $raw_min
+		and $raw_min = defined $e_min ? $raw_min + $e_min : undef;
+	    defined $raw_max
+		and $raw_max = defined $e_max ? $raw_max + $e_max : undef;
+	}
+    }
+    return ( $node_min, $node_max, $alternatives );
+}
+
 # Help for nav();
 sub __nav {
     my ( $self, $child ) = @_;
@@ -521,6 +595,38 @@ sub __perl_requirements {
 	$self->{perl_requirements} = [ __merge_perl_requirements( @req ) ];
     }
     return @{ $self->{perl_requirements} };
+}
+
+sub _token_order {
+    my ( $self ) = @_;
+    my $order = 0;
+    delete $self->{_token_order};
+    foreach my $elem ( $self->tokens() ) {
+	$self->{_token_order}{ refaddr $elem } = $order++;
+    }
+    return;
+}
+
+# Order two elements according to the position of their last tokens. The
+# elements must both be descendants of the invocant or an exception is
+# thrown. The return is equivalent to the space ship operator (<=>).
+#
+# For the moment at least this is private to the PPIx-Regexp package.
+# It is needed by the width() functionality to (try to) determine which
+# capture group a back reference refers to.
+sub __token_post_order {
+    my ( $self, $left, $right ) = @_;
+    $self->{_token_order}
+	or $self->_token_order();
+    my @order;
+    foreach ( $left, $right ) {
+	ref $_
+	    or confess 'Bug - Operand must be a PPIx::Regexp::Element';
+	defined( my $inx = $self->{_token_order}{ refaddr( $_->last_token() ) } )
+	    or confess 'Bug - Operand not descendant of invocant';
+	push @order, $inx;
+    }
+    return $order[0] <=> $order[1];
 }
 
 # Called by the lexer once it has done its worst to all the tokens.

@@ -68,6 +68,14 @@ sub perl_version_introduced {
     return '5.009005';
 }
 
+sub raw_width {
+    return ( undef, undef );
+}
+
+sub width {
+    return ( undef, undef );
+}
+
 # This must be implemented by tokens which do not recognize themselves.
 # The return is a list of list references. Each list reference must
 # contain a regular expression that recognizes the token, and optionally
