@@ -82,9 +82,11 @@ sub __merge_perl_requirements {	## no critic (RequireArgUnpacking)
 	if ( @work ) {
 	    $rem = $work[0][0];
 	    shift @work while @work && ! $work[0][1];
-	} else {
-	    $rem = INFINITY;
 	}
+	defined $intro
+	    or $intro = MINIMUM_PERL;
+	defined $rem
+	    or $rem = INFINITY;
 	$intro != $rem
 	    and push @rslt, {
 		introduced	=> $intro,
