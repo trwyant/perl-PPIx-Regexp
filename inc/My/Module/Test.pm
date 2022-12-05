@@ -8,6 +8,7 @@ use Exporter;
 our @ISA = ( qw{ Exporter } );
 
 use PPIx::Regexp;
+use PPIx::Regexp::Constant qw{ INFINITY };
 use PPIx::Regexp::Dumper;
 use PPIx::Regexp::Element;
 use PPIx::Regexp::Tokenizer;
@@ -46,12 +47,15 @@ our @EXPORT_OK = qw{
     pass
     plan
     ppi
+    raw_width
     result
     replace_characters
     skip
     tokenize
     true
     value
+    width
+    INFINITY
 };
 
 our @EXPORT = @EXPORT_OK;	## no critic (ProhibitAutomaticExportation)
@@ -326,6 +330,16 @@ sub ppi {		## no critic (RequireArgUnpacking)
     return is( $result, $expect, "$kind $nav ppi() content '$safe'" );
 }
 
+sub raw_width {
+    my ( $min, $max, $name ) = @_;
+    defined $name
+	or $name = sprintf q<%s '%s'>, ref $obj, $obj->content();
+    $Test::Builder::Level = $Test::Builder::Level + 1;
+    my @width = $obj->raw_width();
+    return is( $width[0], $min, "$name raw minimum witdh" ) && is(
+	$width[1], $max, "$name raw maximum width" );
+}
+
 sub replace_characters {
     %replace_characters	= @_;
     return;
@@ -400,6 +414,16 @@ sub value {		## no critic (RequireArgUnpacking)
     } else {
 	return is( $result, $want, $name );
     }
+}
+
+sub width {
+    my ( $min, $max, $name ) = @_;
+    defined $name
+	or $name = sprintf q<%s '%s'>, ref $obj, $obj->content();
+    $Test::Builder::Level = $Test::Builder::Level + 1;
+    my @width = $obj->width();
+    return is( $width[0], $min, "$name minimum witdh" ) && is(
+	$width[1], $max, "$name maximum width" );
 }
 
 sub _format_args {
@@ -707,6 +731,19 @@ if the content of the returned L<PPI::Document|PPI::Document> is equal
 to the given string. If the current object is C<undef> or does not have
 a C<ppi()> method, the test fails.
 
+=head2 raw_width
+
+ raw_width( 0, undef, "Some title" );
+
+This tests invokes the raw_width() method on the current object. The
+arguments are the expected minimum width, the expected maximum width,
+and a test title. The title defaults to the class and content of the
+current object.
+
+Two tests are actually run. The titles of these will have
+C<' raw minimum width'> and C<' raw maximum width'> appended. This
+subroutine returns true if both tests pass.
+
 =head2 result
 
  my $val = result();
@@ -763,6 +800,19 @@ subroutine.
 An optional fourth argument specifies the name of the test. If this is
 omitted or specified as C<undef>, a name is generated describing the
 arguments.
+
+=head2 width
+
+ width( 0, undef, "Some title" );
+
+This tests invokes the width() method on the current object. The
+arguments are the expected minimum width, the expected maximum width,
+and a test title. The title defaults to the class and content of the
+current object.
+
+Two tests are actually run. The titles of these will have
+C<' minimum width'> and C<' maximum width'> appended. This subroutine
+returns true if both tests pass.
 
 =head1 SUPPORT
 
