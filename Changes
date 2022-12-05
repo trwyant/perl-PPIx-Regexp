@@ -1,3 +1,6 @@
+0.085_03	2022-12-05	T. R. Wyant
+    Beef up t/width.t to get more detail on failures.
+
 0.085_02	2022-11-25	T. R. Wyant
     Try to quash undef errors merging Perl requirements.
 
