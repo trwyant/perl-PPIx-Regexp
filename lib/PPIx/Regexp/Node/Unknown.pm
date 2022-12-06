@@ -10,7 +10,7 @@ use base qw{ PPIx::Regexp::Node };
 use PPIx::Regexp::Constant qw{ @CARP_NOT };
 use PPIx::Regexp::Util;
 
-our $VERSION = '0.085_03';
+our $VERSION = '0.085_04';
 
 *__PPIX_ELEM__post_reblessing = \&PPIx::Regexp::Util::__post_rebless_error;
 

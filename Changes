@@ -1,3 +1,8 @@
+0.085_04	2022-12-06	T. R. Wyant
+    Try to hack the INFINITY constant for old Strawberry Perl.
+
+    Skip dodgy author test under old perls.
+
 0.085_03	2022-12-05	T. R. Wyant
     Beef up t/width.t to get more detail on failures.
 
