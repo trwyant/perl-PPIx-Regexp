@@ -124,12 +124,9 @@ use constant COOKIE_LOOKAROUND_ASSERTION	=> 'lookaround';
 use constant FALSE		=> 0;
 use constant TRUE		=> 1;
 
-# This horrible hack is because it appears that Strawberry Perl
-# evaluates 0 + 'inf' as zero under Perl 5.12.3 and below.
-use constant INFINITY	=>
-    ( "$]" < 5.014 && { MSWin32 => 1 }->{$^O} ) ?
-    9 ** 9 ** 9 :
-    0 + 'inf';
+# This hack is because it appears that Strawberry Perl evaluates 0 +
+# 'inf' as zero under Perl 5.12.3 and below.
+use constant INFINITY	=> 0 + 'inf' || 9 ** 9 ** 9;
 
 use constant ARRAY_REF		=> ref [];
 use constant CODE_REF		=> ref sub {};
