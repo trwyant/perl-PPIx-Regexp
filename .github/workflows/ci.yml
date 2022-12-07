@@ -92,8 +92,17 @@ jobs:
         echo MY_IS_UNIX=${{ env.MY_IS_UNIX }}
         echo MY_IS_WINDOWS=${{ env.MY_IS_WINDOWS }}
 
+    # Non-core toolchain Module::Build needs Pod::Man, which is in
+    # distro RRA/podlators. As of podlators-5.00 (2022-11-25) this
+    # requires Perl 5.10. If we are on Perl 5.8 we need to pre-emptively
+    # install the next-older version of podlators.
+    - name: Install old podlators distro if on old Perl
+      if: "! env.MY_PERL_IS_5_10"
+      run: cpanm RRA/podlators-4.14.tar.gz
+
     - name: Install module dependencies
       run: |
+        cpanm Module::Build
         cpanm --with-configure --notest --installdeps .
 
     - name: Run ExtUtils::MakeMaker tests
@@ -104,7 +113,6 @@ jobs:
 
     - name: Run Module::Build tests
       run: |
-        cpanm Module::Build
         perl Build.PL
         ./Build
         ./Build test
