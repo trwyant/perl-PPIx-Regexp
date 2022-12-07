@@ -37,6 +37,7 @@ lexes
 merchantability
 nav
 navigational
+numification
 perlrecharclass
 perluniprops
 POSIX

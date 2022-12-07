@@ -1,5 +1,103 @@
 package PPIx::Regexp::Constant;
 
+# Yes, I know this is horrible style. But I need a separate package for
+# overloading to work, and I do *NOT* want stray files lying around if I
+# end up ditching this mess.
+package PPIx::Regexp::Constant::Inf;	## no critic (ProhibitMultiplePackages)
+
+use 5.006;
+
+use strict;
+use warnings;
+
+use Carp;
+use Scalar::Util qw{ refaddr };
+
+our $VERSION = '0.085_04';
+
+use overload
+    # Arithmetic
+    '+'		=> \&__preserve,
+    '-'		=> \&__subtract,
+    '*'		=> \&__preserve,
+    neg		=> \&__err_neg_inf,
+    # Comparison
+    '<=>'	=> \&__space_ship,
+    cmp		=> \&__cmp,
+    # Conversion
+    '""'	=> \&__stringify,
+    '0+'	=> \&__stringify,	# For looks_like_number
+    bool	=> \&__bool,
+    # Catch all
+    nomethod	=> \&__bug_unimplemented,
+    ;
+
+{
+    my $inf;
+
+    # Scheduled block because __pos_inf() can be called at compile time.
+    BEGIN {
+	$inf = bless( \( my $x = 1 ), __PACKAGE__ );
+    }
+
+    sub __pos_inf { return $inf }
+
+    sub __is_inf { return ref $_[0] && refaddr( $_[0] ) == refaddr( $inf ) }
+}
+
+sub __bool { return 1 }
+
+sub __bug_unimplemented {
+    confess "Bug - Operation '$_[3]' is unimplemented";
+}
+
+sub __cmp {
+    my ( $x, $y, $swap ) = @_;
+    $swap
+	and return "$y" cmp "$x";
+    return "$x" cmp "$y";
+}
+
+sub __err_nan {
+    croak 'NaN not supported';
+}
+
+sub __err_neg_inf {
+    croak 'Negative infinity not supported';
+}
+
+# Any operation that does not change the value
+sub __preserve { return $_[0] };
+
+sub __space_ship {
+    my ( undef, $y, $swap ) = @_;	# We don't need our invocant
+    # Infinity is equal to itself
+    __is_inf( $y )
+	and return 0;
+    # Any number is less than infinity
+    $swap
+	and return -1;
+    # Infinity is greater than any number
+    return 1;
+}
+
+sub __stringify {
+    return 'Inf';
+}
+
+sub __subtract {
+    my ( $x, $y, $swap ) = @_;
+    __is_inf( $y )
+	and __err_nan();	# Which croaks
+    $swap
+	and __err_neg_inf();	# Which croaks
+    return $x;
+}
+
+1;
+
+package PPIx::Regexp::Constant;	## no critic (ProhibitMultiplePackages)
+
 use strict;
 use warnings;
 
@@ -125,8 +223,21 @@ use constant FALSE		=> 0;
 use constant TRUE		=> 1;
 
 # This hack is because it appears that Strawberry Perl evaluates 0 +
-# 'inf' as zero under Perl 5.12.3 and below.
-use constant INFINITY	=> 0 + 'inf' || 9 ** 9 ** 9;
+# 'inf' as zero under Perl 5.12.3 and below. But the real problem is
+# from a pure portability standpoint I can not count on IEEE 754 being
+# in use. So if 0 + 'Inf' (documented in perldata) is zero or an error I
+# fall back to an object that mimics its behavior to the extent I think
+# I need.
+# NOTE that the only way I have to test the ::Inf object is to comment
+# out the eval{} code. This is ugly, but I can not think of anything
+# better.
+BEGIN {
+    local $@ = undef;
+    require constant;
+    constant->import( INFINITY =>
+	eval { 0 + 'Inf' } || 
+	PPIx::Regexp::Constant::Inf->__pos_inf() );
+}
 
 use constant ARRAY_REF		=> ref [];
 use constant CODE_REF		=> ref sub {};
@@ -284,7 +395,13 @@ This is the result of C<ref {}>.
 
 =head2 INFINITY
 
-This is the IEEE value of C<Inf>.
+This is the IEEE 754 value of C<Inf> if that can be generated, or an
+opaque overloaded object if not. Because the object does not (and I
+think can not) implement the complete behavior of IEEE 754 C<Inf>, this
+manifest constant should only be used for stringification and numeric
+comparison. Be aware that the numification of the object has to be the
+same as its stringification to keep C<looks_like_number()> happy.
+B<Caveat coder>.
 
 =head2 LITERAL_LEFT_CURLY_ALLOWED
 
