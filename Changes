@@ -1,16 +1,9 @@
-0.085_04	2022-12-06	T. R. Wyant
-    Try to hack the INFINITY constant for old Strawberry Perl.
-
-    Skip dodgy author test under old perls.
-
-0.085_03	2022-12-05	T. R. Wyant
-    Beef up t/width.t to get more detail on failures.
-
-0.085_02	2022-11-25	T. R. Wyant
-    Try to quash undef errors merging Perl requirements.
-
-0.085_01	2022-11-21	T. R. Wyant
-    Add width(), which returns the number of characters matched.
+0.086		2022-12-13	T. R. Wyant
+    Add width(), which returns the number of characters matched. Note
+    that an indefinite upper boumd is represented as IEEE 754 Inf if
+    that appears to be supported; otherwise by a singleton object
+    overloaded to allow stringification, numification, and numeric
+    tests.
 
     Use width() to enhance the detection of variable-width look-behinds.
 

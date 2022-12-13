@@ -49,7 +49,7 @@ use PPIx::Regexp::Constant qw{
 use PPIx::Regexp::Tokenizer;
 use PPIx::Regexp::Util qw{ __choose_tokenizer_class __instance };
 
-our $VERSION = '0.085_04';
+our $VERSION = '0.086';
 
 use constant LOCATION_WIDTH	=> 19;
 
