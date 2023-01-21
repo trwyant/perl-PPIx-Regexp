@@ -114,8 +114,12 @@ sub perl_version_introduced {
 # Note that we have to require a non-lowercase letter after the asterisk
 # to avoid grabbing the so-caled alpha_assertions introduced with
 # 5.27.9.
+# Optimized code ( (*{...}) and (**{...}) ), introduced in 5.37.8, broke
+# the non-lowercase requirement. I replaced that with requiring an
+# uppercase or a colon (the latter because in (*MARK:foo) you can omit
+# the 'MARK').
 sub __PPIX_TOKEN__recognize {
-    return ( [ qr{ \A \( \* (?! [[:lower:]] ) [^\)]* \) }smx ] );
+    return ( [ qr{ \A \( \* [[:upper:]:] [^\)]* \) }smx ] );
 }
 
 # This class gets recognized by PPIx::Regexp::Token::Structure as part
