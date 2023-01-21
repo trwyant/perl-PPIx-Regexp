@@ -10,7 +10,7 @@ use base qw{ PPIx::Regexp::Token };
 use Carp;
 use PPIx::Regexp::Constant qw{ MINIMUM_PERL @CARP_NOT };
 
-our $VERSION = '0.086';
+our $VERSION = '0.086_01';
 
 {
     my %when_removed = (

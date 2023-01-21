@@ -1,3 +1,8 @@
+0.086_01	2023-01-21	T. R. Wyant
+    Add support for code in optimized regex, a.k.a. (*{...}).  This
+    involved making the recognition of backtracking control more
+    specific, since it also uses (?*...).
+
 0.086		2022-12-13	T. R. Wyant
     Add width(), which returns the number of characters matched. Note
     that an indefinite upper boumd is represented as IEEE 754 Inf if

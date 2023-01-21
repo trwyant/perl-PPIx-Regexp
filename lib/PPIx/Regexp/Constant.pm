@@ -13,7 +13,7 @@ use warnings;
 use Carp;
 use Scalar::Util qw{ refaddr };
 
-our $VERSION = '0.086';
+our $VERSION = '0.086_01';
 
 use overload
     # Arithmetic
