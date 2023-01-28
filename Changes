@@ -1,4 +1,4 @@
-0.086_01	2023-01-21	T. R. Wyant
+0.087		2023-01-28	T. R. Wyant
     Add support for code in optimized regex, a.k.a. (*{...}).  This
     involved making the recognition of backtracking control more
     specific, since it also uses (?*...).

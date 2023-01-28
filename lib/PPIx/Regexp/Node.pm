@@ -50,7 +50,7 @@ use PPIx::Regexp::Constant qw{
 use PPIx::Regexp::Util qw{ __instance __merge_perl_requirements width };
 use Scalar::Util qw{ refaddr };
 
-our $VERSION = '0.086_01';
+our $VERSION = '0.087';
 
 use constant ELEMENT_UNKNOWN	=> NODE_UNKNOWN;
 
