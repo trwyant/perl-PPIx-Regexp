@@ -65,10 +65,11 @@ use constant DEF	=> {
 	expl	=> 'Evaluate code. Always matches.',
 	intro	=> '5.005',
     },
-    '**'	=> {
-	expl	=> 'Evaluate code, use as regexp at this point. Optimized.',
-	intro	=> '5.037008',
-    },
+#   Removed in 5.37.9.
+#   '**'	=> {
+#	expl	=> 'Evaluate code, use as regexp at this point. Optimized.',
+#	intro	=> '5.037008',
+#   },
     '*'		=> {
 	expl	=> 'Evaluate code. Always matches. Optimized.',
 	intro	=> '5.037008',
