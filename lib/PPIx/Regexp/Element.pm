@@ -144,7 +144,7 @@ C<ref $self>.
 
 =cut
 
-sub class {
+sub class : method {	## no critic (ProhibitBuiltinHomonyms)
     my ( $self ) = @_;
     return ref $self;
 }
