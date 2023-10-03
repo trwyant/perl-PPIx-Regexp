@@ -309,8 +309,7 @@ sub parse {		## no critic (RequireArgUnpacking)
     # cperl does not seem to like goto &xxx; it throws a deep recursion
     # error if you do it enough times.
     $Test::Builder::Level = $Test::Builder::Level + 1;
-    return isa_ok( $parse, 'PPIx::Regexp',
-	_replace_characters( $regexp ) );
+    return isa_ok( $parse, 'PPIx::Regexp' );
 }
 
 sub ppi {		## no critic (RequireArgUnpacking)
@@ -365,8 +364,7 @@ sub tokenize {		## no critic (RequireArgUnpacking)
     $nav = '';
     $opt->{test} or return;
     $Test::Builder::Level = $Test::Builder::Level + 1;
-    return isa_ok( $obj, 'PPIx::Regexp::Tokenizer',
-	_replace_characters( $regexp ) );
+    return isa_ok( $obj, 'PPIx::Regexp::Tokenizer' );
 }
 
 sub true {		## no critic (RequireArgUnpacking)
