@@ -110,7 +110,7 @@ sub klass {
     # error if you do it enough times.
     $Test::Builder::Level = $Test::Builder::Level + 1;
     if ( defined $class ) {
-	my $rslt = isa_ok( $obj, $class, "$kind $nav" )
+	my $rslt = isa_ok( $obj, $class )
 	    or diag "    Instead, $kind $nav isa $result";
 	return $rslt;
     } else {
