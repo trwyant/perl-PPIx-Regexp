@@ -446,7 +446,7 @@ It is analogous to the C<ord> built-in.
 
 It will not attempt to determine the ordinal of a unicode name
 (C<\N{...}>) unless L<charnames|charnames> has been loaded, and supports
-the L<vianame()|charnames/charnames::vianame(I<name>)> function.
+the L<vianame()|charnames/charnames::vianame(name)> function.
 Instead, it will return C<undef>. Users of Perl 5.6.2 and older may be
 out of luck here.
 
