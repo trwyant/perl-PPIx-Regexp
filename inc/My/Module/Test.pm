@@ -21,7 +21,6 @@ our $VERSION = '0.088';
 use constant ARRAY_REF	=> ref [];
 
 our @EXPORT_OK = qw{
-    builder
     cache_count
     choose
     klass
@@ -78,10 +77,6 @@ my (
 			# before testing
     $result,		# Operation result.
 );
-
-sub builder {
-    return Test::More->builder();
-}
 
 sub cache_count {
     my ( $expect ) = @_;
@@ -562,11 +557,6 @@ tests to be performed on that object. A few tests do not test parse
 objects, but rather the state of the system as a whole.
 
 The following subroutines are exported:
-
-=head2 builder
-
-This subroutine returns the underlying L<Test::Builder|Test::Builder>
-object.
 
 =head2 cache_count
 

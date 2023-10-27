@@ -4,26 +4,20 @@ use strict;
 use warnings;
 
 use PPIx::Regexp::Constant qw{ SUFFICIENT_UTF8_SUPPORT_FOR_WEIRD_DELIMITERS };
+
+BEGIN {
+    # NOTE that this MUST be done before Test::More is loaded.
+    if ( SUFFICIENT_UTF8_SUPPORT_FOR_WEIRD_DELIMITERS ) {
+	require 'open.pm';
+	'open'->import( qw{ :std :encoding(utf-8) } );
+    }
+}
+
 use Test::More 0.88;
 
 use lib qw{ inc };
 
 use My::Module::Test;
-
-# NOTE we use this circumlocution to hide the :encoding() from
-# xt/author/minimum_perl.t and Perl::MinimumVersion. The two-argument
-# binmode itself is OK under Perl 5.6 but the :encoding() is not. But if
-# we're 5.6 then SUFFICIENT_UTF8_SUPPORT_FOR_WEIRD_DELIMITERS is false,
-# so the binmode() never gets executed.
-use constant OUTPUT_ENCODING	=> ':encoding(utf-8)';
-
-if ( SUFFICIENT_UTF8_SUPPORT_FOR_WEIRD_DELIMITERS ) {
-    my $builder = My::Module::Test->builder();
-    foreach my $method ( qw{ output failure_output todo_output } ) {
-	my $handle = $builder->$method();
-	binmode $handle, OUTPUT_ENCODING;
-    }
-}
 
 use charnames qw{ :full };
 
