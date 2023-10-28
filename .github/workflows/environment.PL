@@ -5,7 +5,8 @@ use 5.006002;
 use strict;
 use warnings;
 
-use File::HomeDir;
+use Config;
+use File::Spec;
 use Getopt::Long;
 use version;
 
@@ -45,11 +46,15 @@ sub compute_environment {
         dos         => 1,
     }->{$^O} || '';
     my $is_unix = $is_windows ? '' : 1;
+    my $my_home = $is_windows ?
+        __PACKAGE__->my_home_windows() :
+        __PACKAGE__->my_home_unix();
     my %env = (
-        MY_HOME             => File::HomeDir->my_home(),
+        MY_HOME             => $my_home,
         MY_IS_GITHUB_ACTION => 1,
         MY_IS_UNIX          => $is_unix,
         MY_IS_WINDOWS       => $is_windows,
+        MY_MAKE             => $Config{make},
         MY_WANT_POD_MAN     => want_pod_man(),
     );
 
@@ -58,6 +63,92 @@ sub compute_environment {
 
     return \%env;
 }
+
+# BEGIN Stolen shamelessly from File::HomeDir::Windows
+
+sub my_home_windows
+{
+    my $class = shift;
+
+    # A lot of unix people and unix-derived tools rely on
+    # the ability to overload HOME. We will support it too
+    # so that they can replace raw HOME calls with File::HomeDir.
+    if (exists $ENV{HOME} and defined $ENV{HOME} and length $ENV{HOME})
+    {
+        return $ENV{HOME};
+    }
+
+    # Do we have a user profile?
+    if (exists $ENV{USERPROFILE} and $ENV{USERPROFILE})
+    {
+        return $ENV{USERPROFILE};
+    }
+
+    # Some Windows use something like $ENV{HOME}
+    if (exists $ENV{HOMEDRIVE} and exists $ENV{HOMEPATH} and $ENV{HOMEDRIVE} and $ENV{HOMEPATH})
+    {
+        return File::Spec->catpath($ENV{HOMEDRIVE}, $ENV{HOMEPATH}, '',);
+    }
+
+    return undef;
+}
+
+sub my_home_unix
+{
+    my $class = shift;
+    my $home  = $class->_guess_home(@_);
+
+    # On Unix in general, a non-existent home means "no home"
+    # For example, "nobody"-like users might use /nonexistent
+    if (defined $home and not -d $home)
+    {
+        $home = undef;
+    }
+
+    return $home;
+}
+
+sub _guess_env_home
+{
+    my $class = shift;
+    if (exists $ENV{HOME} and defined $ENV{HOME} and length $ENV{HOME})
+    {
+        return $ENV{HOME};
+    }
+
+    # This is from the original code, but I'm guessing
+    # it means "login directory" and exists on some Unixes.
+    if (exists $ENV{LOGDIR} and $ENV{LOGDIR})
+    {
+        return $ENV{LOGDIR};
+    }
+
+    return;
+}
+
+sub _guess_determined_home
+{
+    my $class = shift;
+
+    # Light desperation on any (Unixish) platform
+  SCOPE:
+    {
+        my $home = (getpwuid($<))[7];
+        return $home if $home and -d $home;
+    }
+
+    return;
+}
+
+sub _guess_home
+{
+    my $class = shift;
+    my $home  = $class->_guess_env_home($@);
+    $home ||= $class->_guess_determined_home($@);
+    return $home;
+}
+
+# END Stolen shamelessly from File::HomeDir::Windows
 
 sub want_pod_man {
     my ( $perl_ver ) = @_;
@@ -102,8 +193,8 @@ environment. The following environment variables are added:
 
 =head2 MY_HOME
 
-The job's home directory, as determined by
-L<File::HomeDir|File::HomeDir>.
+The job's home directory, as determined by internal code stolen
+shamelessly from L<File::HomeDir|File::HomeDir>.
 
 =head2 MY_IS_GITHUB_ACTION
 
@@ -121,15 +212,10 @@ True (i.e. C<1>) if running under Windows, and false (i.e. C<''>)
 othewise. At the moment this is true if C<$^O> is C<'MSWin32'> or
 C<'dos'>.
 
-=head2 MY_PERL_IS_5_10
-
-True (i.e. C<1>) if running under at least Perl 5.10.0, and false
-(i.e. C<''>) otherwise.
-
 =head2 MY_WANT_POD_MAN
 
 The specification of the C<podlators> distribution to install.
-Emptu if the version that comes with the running Perl is OK. This
+Empty if the version that comes with the running Perl is OK. This
 is needed because Module::Build requires it.
 
 =head1 AUTHOR
