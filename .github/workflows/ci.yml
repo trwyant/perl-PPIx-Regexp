@@ -57,7 +57,7 @@ jobs:
     steps:
 
     - name: Check out code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up perl
       # Specify the action performed by this step. In this case it is a
@@ -78,11 +78,14 @@ jobs:
       run: |
         perl -v
 
+    - name: Install support modules
+      continue-on-error: true
+      run: |
+        cpanm -v
+        cpanm File::HomeDir Getopt::Long version
+
     - name: Customize environment
       run: |
-        perl -V:make
-        cpanm -v
-        cpanm File::Spec Getopt::Long version
         perl .github/workflows/environment.PL
 
     - name: Display local envoronment variables
@@ -91,7 +94,6 @@ jobs:
         echo MY_IS_GITHUB_ACTION=${{ env.MY_IS_GITHUB_ACTION }}
         echo MY_IS_UNIX=${{ env.MY_IS_UNIX }}
         echo MY_IS_WINDOWS=${{ env.MY_IS_WINDOWS }}
-        echo MY_MAKE=${{ env.MY_MAKE }}
         echo MY_WANT_POD_MAN=${{ env.MY_WANT_POD_MAN }}
 
     # Non-core toolchain Module::Build needs Pod::Man, which is in
@@ -113,8 +115,8 @@ jobs:
     - name: Run ExtUtils::MakeMaker tests
       run: |
         perl Makefile.PL
-        ${{ env.MY_MAKE }}
-        ${{ env.MY_MAKE }} test
+        perl .github/workflows/make.PL
+        perl .github/workflows/make.PL test
 
     - name: Run Module::Build tests
       run: |
