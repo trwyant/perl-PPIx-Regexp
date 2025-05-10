@@ -36,7 +36,7 @@ use base qw{ PPIx::Regexp::Structure };
 
 use PPIx::Regexp::Constant qw{ @CARP_NOT };
 
-our $VERSION = '0.088';
+our $VERSION = '0.088_01';
 
 sub __raw_width {
     my ( $self ) = @_;

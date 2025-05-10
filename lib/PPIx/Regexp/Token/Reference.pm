@@ -43,7 +43,7 @@ use Carp qw{ confess };
 use List::Util qw{ first };
 use PPIx::Regexp::Constant qw{ @CARP_NOT };
 
-our $VERSION = '0.088';
+our $VERSION = '0.088_01';
 
 sub __new {
     my ( $class, $content, %arg ) = @_;
