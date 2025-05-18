@@ -37,7 +37,7 @@ use base qw{ PPIx::Regexp::Structure };
 
 use PPIx::Regexp::Constant qw{ @CARP_NOT };
 
-our $VERSION = '0.088_01';
+our $VERSION = '0.089';
 
 # This is a kluge for both determining whether the object asserts
 # modifiers (hence the 'ductype') and determining whether the given

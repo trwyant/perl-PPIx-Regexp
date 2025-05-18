@@ -195,7 +195,7 @@ use PPIx::Regexp::Util qw{
 };
 use Scalar::Util qw{ refaddr };
 
-our $VERSION = '0.088_01';
+our $VERSION = '0.089';
 
 =head2 new
 
