@@ -94,6 +94,7 @@ jobs:
         echo MY_IS_GITHUB_ACTION=${{ env.MY_IS_GITHUB_ACTION }}
         echo MY_IS_UNIX=${{ env.MY_IS_UNIX }}
         echo MY_IS_WINDOWS=${{ env.MY_IS_WINDOWS }}
+        echo MY_WANT_EXTUTILS_PARSEXS=${{ env.MY_WANT_EXTUTILS_PARSEXS }}
         echo MY_WANT_POD_MAN=${{ env.MY_WANT_POD_MAN }}
 
     # Non-core toolchain Module::Build needs Pod::Man, which is in
@@ -104,6 +105,10 @@ jobs:
     # Pod::Man 2.16 to cope with t/manifypods_with_utf8.t, and
     # Perl 5.10 only comes with 2.16. So ..
     - name: Install old podlators distro if on old Perl
+      if: env.MY_WANT_POD_MAN
+      run: cpanm ${{ env.MY_WANT_POD_MAN }}
+
+    - name: Install old XS parser if on old Perl
       if: env.MY_WANT_POD_MAN
       run: cpanm ${{ env.MY_WANT_POD_MAN }}
 

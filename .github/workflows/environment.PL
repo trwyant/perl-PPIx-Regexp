@@ -62,6 +62,7 @@ sub compute_environment {
         MY_IS_GITHUB_ACTION => 1,
         MY_IS_UNIX          => $is_unix,
         MY_IS_WINDOWS       => $is_windows,
+        MY_WANT_EXTUTILS_PARSEXS    => want_extutils_parsexs(),
         MY_WANT_POD_MAN     => want_pod_man(),
     );
 
@@ -69,6 +70,18 @@ sub compute_environment {
         and @env{ qw{ LINES COLUMNS } } = ( 24, 80 );
 
     return \%env;
+}
+
+sub want_extutils_parsexs {
+    my ( $perl_ver ) = @_;
+    defined $perl_ver
+        or $perl_ver = THIS_PERL;
+
+    # NOTE that if we need to play this game with higher versions of
+    # Perl, the github-actions script needs to be modified too,
+    $perl_ver < PERL_5_10
+        and return 'SMUELLER/ExtUtils-ParseXS-3.30.tar.gz';
+    return '';
 }
 
 sub want_pod_man {
@@ -153,6 +166,14 @@ this, the following subroutines get loaded into C<main::>:
 
 This subroutine takes no arguments. It returns a reference to a hash
 that describes the environment variables to be added to the environment.
+
+=head2 want_extutils_parsexs
+
+This subroutine takes as its argument a L<version|version> object. It
+returns the computed value of the C<MY_WANT_EXTUTILS_PARSEXS>
+environment variable. If no argument is given, the computation is for
+the running Perl.
+
 
 =head2 want_pod_man
 
