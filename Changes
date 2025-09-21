@@ -1,4 +1,4 @@
-0.089_01	2025-09-14	T. R. Wyant
+0.090		2025-09-21	T. R. Wyant
     Explain s///eee... Perl commit 040a4d7 (perlop: properly document
     s///e modifier) by mauke, makes perlop explicitly state that more
     than 2 'e' modifiers are permitted, and cause the result of the
