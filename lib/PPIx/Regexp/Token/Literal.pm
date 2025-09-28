@@ -34,7 +34,6 @@ use warnings;
 
 use base qw{ PPIx::Regexp::Token };
 
-use PPI::Document;
 use PPIx::Regexp::Constant qw{
     COOKIE_CLASS COOKIE_REGEX_SET
     LITERAL_LEFT_CURLY_ALLOWED

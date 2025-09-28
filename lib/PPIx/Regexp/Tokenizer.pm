@@ -6,6 +6,7 @@ use warnings;
 use base qw{ PPIx::Regexp::Support };
 
 use Carp qw{ carp croak confess };
+use PPI::Document;
 use PPIx::Regexp::Constant qw{
     ARRAY_REF
     CODE_REF

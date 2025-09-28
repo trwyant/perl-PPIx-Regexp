@@ -44,7 +44,6 @@ use warnings;
 use base qw{ PPIx::Regexp::Token::Code };
 
 use Carp qw{ confess };
-use PPI::Document;
 use PPIx::Regexp::Constant qw{
     COOKIE_CLASS
     COOKIE_REGEX_SET
