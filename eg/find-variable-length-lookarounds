@@ -12,7 +12,7 @@ use Pod::Usage;
 use PPI::Document;
 use PPIx::Regexp;
 
-our $VERSION = '0.090_01';
+our $VERSION = '0.090_02';
 
 my %opt;
 
