@@ -202,7 +202,7 @@ my $white_space_re = $] >= 5.008 ?
 'qr< \\A [\\t\\n\\cK\\f\\r ]+ >smx';
 $white_space_re = eval $white_space_re;  ## no critic (ProhibitStringyEval)
 
-my %regex_pass_on = map { $_ => 1 } qw{ [ ] ( ) $ \ };
+my %regex_pass_on = map { $_ => 1 } ( qw{ [ ] ( ) $ }, "\\");
 
 sub __PPIX_TOKENIZER__regexp {
     my ( undef, $tokenizer, $character ) = @_;	# Invocant, $char_type unused
