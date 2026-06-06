@@ -807,7 +807,7 @@ list context.
 
 This method was inspired by jb's question on Perl Monks about stripping
 comments and white space from a regular expression:
-L<https://www.perlmonks.org/?node_id=1207556>
+L<https://perlmonks.org/?node_id=1207556>
 
 This method was added in version 0.053_01
 
@@ -1029,7 +1029,7 @@ referred-to group can not be uniquely determined.
 It is possible for C<$max> to be C<Inf>. For example, for C</x*/>
 C<$max> will be C<Inf>.
 
-Elements that do not actually match anything will return zeroes.
+Elements that do not actually match anything will return zeros.
 
 B<Note:> This method was added because I wanted better detection of
 variable-length look-behinds. Both it and L<raw_width()|/raw_width>
