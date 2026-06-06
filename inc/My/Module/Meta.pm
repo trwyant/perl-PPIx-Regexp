@@ -54,7 +54,6 @@ sub distribution {
     return $self->{distribution};
 }
 
-
 sub license {
     return 'perl';
 }
@@ -68,8 +67,7 @@ sub meta_merge {
 	dynamic_config	=> 1,
 	resources	=> {
 	    bugtracker	=> {
-		web	=> 'https://rt.cpan.org/Public/Dist/Display.html?Name=PPIx-Regexp',
-		# web	=> 'https://github.com/trwyant/perl-PPIx-Regexp/issues',
+		web	=> 'https://github.com/trwyant/perl-PPIx-Regexp/issues',
 		mailto  => 'harryfmudd@comcast.net',
 	    },
 	    license	=> 'http://dev.perl.org/licenses/',
@@ -82,7 +80,6 @@ sub meta_merge {
 	@extra,
     };
 }
-
 
 sub module_name {
     return 'PPIx::Regexp';
@@ -339,8 +336,7 @@ information makes it into F<META.yml>.
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
-L<https://rt.cpan.org/Public/Dist/Display.html?Name=PPIx-Regexp>,
-L<https://github.com/trwyant/perl-PPIx-Regexp/issues>, or in
+L<https://github.com/trwyant/perl-PPIx-Regexp/issues> or in
 electronic mail to the author.
 
 =head1 AUTHOR
